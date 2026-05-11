@@ -1,0 +1,37 @@
+<nav class="navbar">
+
+  <div class="logo">
+    <h2>Turf Booking</h2>
+  </div>
+
+  <ul class="nav-links">
+
+    <li>
+      <a routerLink="/">Home</a>
+    </li>
+
+    <li *ngIf="isLoggedIn()">
+      <a routerLink="/bookings">Bookings</a>
+    </li>
+
+    <li *ngIf="isLoggedIn()">
+      <a routerLink="/dashboard">Dashboard</a>
+    </li>
+
+    <!-- NOT LOGGED IN -->
+    <li *ngIf="!isLoggedIn()">
+      <a routerLink="/auth/login">Login</a>
+    </li>
+
+    <li *ngIf="!isLoggedIn()">
+      <a routerLink="/auth/register">Register</a>
+    </li>
+
+    <!-- LOGGED IN -->
+    <li *ngIf="isLoggedIn()">
+      <button (click)="logout()">Logout</button>
+    </li>
+
+  </ul>
+
+</nav>

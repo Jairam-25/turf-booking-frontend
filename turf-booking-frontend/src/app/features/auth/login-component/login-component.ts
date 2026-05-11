@@ -11,36 +11,44 @@ import {
 
 @Component({
   selector: 'app-login',
-
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
-
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-component.html',
   styleUrl: './login-component.css'
 })
-
 export class LoginComponent {
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
 
     this.loginForm = this.fb.group({
-
       email: ['', [Validators.required, Validators.email]],
-
-      password: ['', Validators.required, Validators.minLength(6)]
-
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
   }
 
   onSubmit() {
 
-    console.log(this.loginForm.value);
+    if (this.loginForm.invalid) return;
+
+    this.authService.login(this.loginForm.value)
+      .subscribe({
+        next: (res: any) => {
+
+          console.log('Login Success:', res);
+
+          // store JWT
+          localStorage.setItem('token', res.token);
+
+        },
+        error: (err) => {
+          console.log('Login Failed:', err.error);
+        }
+      });
 
   }
-
 }
