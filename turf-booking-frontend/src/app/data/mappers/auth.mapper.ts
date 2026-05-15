@@ -3,19 +3,18 @@ import { AuthResponse } from '../../domain/models/user.model';
 
 export class AuthMapper {
   static fromDto(dto: AuthResponseDto): AuthResponse {
-    if (!dto) return {} as AuthResponse;
+    const data = (dto || {}) as any;
     
-    const data = dto as any;
     return {
       user: {
-        name: dto.name || data.Name,
-        email: dto.email || data.Email,
-        phoneNumber: dto.number || data.Number,
-        role: dto.role || data.Role
+        name: data.name || data.Name || '',
+        email: data.email || data.Email || '',
+        phoneNumber: data.phoneNumber || data.PhoneNumber || data.number || data.Number || '',
+        role: data.role || data.Role || 'User'
       },
       auth: {
-        token: dto.token || data.Token,
-        refreshToken: dto.refreshToken || data.RefreshToken
+        token: data.token || data.Token || '',
+        refreshToken: data.refreshToken || data.RefreshToken || ''
       }
     };
   }

@@ -46,16 +46,20 @@ export class LoginComponent {
 
     this.authRepository.login(credentials).subscribe({
       next: (response) => {
-        this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
-        this.notificationService.success('Logged in successfully!');
-        this.router.navigate(['/home']);
+        if (response && response.auth && response.auth.token) {
+          this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
+          this.notificationService.success('Logged in successfully!');
+          this.router.navigate(['/home']);
+        } else {
+          this.notificationService.error('Login failed. Invalid response from server.');
+        }
         this.isLoading.set(false);
       },
       error: (err) => {
         let message = 'Login failed. Please check your credentials.';
         
         if (err.status === 401) {
-          message = 'Invalid email or password.';
+          message = err.error?.message || 'Invalid email or password.';
         } else if (err.status === 429) {
           message = 'Too many attempts. Please try again later.';
         }

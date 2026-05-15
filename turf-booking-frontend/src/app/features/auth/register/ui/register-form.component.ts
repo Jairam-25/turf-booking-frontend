@@ -39,15 +39,23 @@ import { RouterModule } from '@angular/router';
 
       <div class="form-group">
         <label for="phoneNumber">Phone Number</label>
-        <input 
-          id="phoneNumber" 
-          type="tel" 
-          formControlName="phoneNumber" 
-          placeholder="1234567890"
-          [class.invalid]="isFieldInvalid('phoneNumber')"
-        >
+        <div class="phone-input-group">
+          <select class="country-code glass" formControlName="countryCode">
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+971">🇦🇪 +971</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+          </select>
+          <input 
+            id="phoneNumber" 
+            type="tel" 
+            formControlName="phoneNumber" 
+            placeholder="9876543210"
+            [class.invalid]="isFieldInvalid('phoneNumber')"
+          >
+        </div>
         <span class="error-text" *ngIf="isFieldInvalid('phoneNumber')">
-          Enter a valid 10-digit number (e.g. 9876543210)
+          Enter a valid 10-digit number (starts with 6-9)
         </span>
       </div>
 
@@ -106,6 +114,33 @@ import { RouterModule } from '@angular/router';
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+    }
+    .phone-input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .country-code {
+      width: 110px;
+      padding: 0 0.75rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+    }
+    .country-code:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+    .country-code option {
+      background: #0f172a;
+      color: white;
+      padding: 10px;
     }
     label {
       font-size: 0.875rem;
@@ -170,7 +205,8 @@ export class RegisterFormComponent {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^(\+91)?[0-9]{10}$/)]],
+      countryCode: ['+91'],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)]],
       password: ['', [
         Validators.required, 
         Validators.minLength(8),
@@ -195,7 +231,11 @@ export class RegisterFormComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.register.emit(this.registerForm.value);
+      const { countryCode, phoneNumber, ...otherData } = this.registerForm.value;
+      this.register.emit({
+        ...otherData,
+        phoneNumber: `${countryCode}${phoneNumber}`
+      });
     } else {
       Object.keys(this.registerForm.controls).forEach(key => {
         const control = this.registerForm.get(key);
