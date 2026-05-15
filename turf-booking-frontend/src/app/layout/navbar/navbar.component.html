@@ -1,0 +1,31 @@
+<nav class="navbar">
+
+  <div class="logo">
+    <img src="/images/logo.png" alt="Turf Booking Logo" class="nav-logo">
+    <h2 class="logo-text">Turf Booking</h2>
+  </div>
+
+  <ul class="nav-links">
+
+    <li *ngIf="isLoggedIn()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    </li>
+
+    <li *ngIf="isLoggedIn()">
+      <a routerLink="/bookings" routerLinkActive="active">Bookings</a>
+    </li>
+
+    <li *ngIf="isLoggedIn()">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    </li>
+
+
+    <!-- LOGGED IN -->
+    <li *ngIf="isLoggedIn()" class="user-profile">
+      <span class="welcome-text">Welcome, <strong>{{ authStore.user()?.name }}</strong></span>
+      <button (click)="logout()" class="nav-btn logout-btn">Logout</button>
+    </li>
+
+  </ul>
+
+</nav>
