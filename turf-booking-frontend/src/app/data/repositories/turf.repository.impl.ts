@@ -31,7 +31,7 @@ export class TurfRepositoryImpl implements TurfRepository {
     return this.http.get<any>(this.apiUrl, { params: httpParams }).pipe(
       map(response => {
         // Handle Result wrapper if present
-        const result = response.value || response.Value || response;
+        const result = response.data || response.Data || response.value || response.Value || response;
         
         const items = (result.items || result.Items || []).map((item: any, index: number) => ({
           id: item.id || item.Id,
@@ -56,7 +56,7 @@ export class TurfRepositoryImpl implements TurfRepository {
   getById(id: number): Observable<Turf> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map(response => {
-        const item = response.value || response.Value || response;
+        const item = response.data || response.Data || response.value || response.Value || response;
         return {
           id: item.id || item.Id,
           name: item.name || item.Name,

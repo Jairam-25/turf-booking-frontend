@@ -18,7 +18,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials)
       .pipe(
         map(response => {
-          const dto = response.value || response.Value;
+          const dto = response.data || response.Data || response.value || response.Value;
           return AuthMapper.fromDto(dto);
         })
       );
@@ -27,17 +27,17 @@ export class AuthRepositoryImpl implements AuthRepository {
   register(data: RegisterRequestDto): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, data)
       .pipe(
-        map(response => response.value || response.Value)
+        map(response => response.data || response.Data || response.value || response.Value)
       );
   }
 
   forgotPassword(email: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/forgot-password`, { email })
-      .pipe(map(response => response.value || response.Value || response.message || response.Message || response));
+      .pipe(map(response => response.data || response.Data || response.value || response.Value || response.message || response.Message || response));
   }
 
   resetPassword(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/reset-password`, data)
-      .pipe(map(response => response.value || response.Value || response.message || response.Message || response));
+      .pipe(map(response => response.data || response.Data || response.value || response.Value || response.message || response.Message || response));
   }
 }

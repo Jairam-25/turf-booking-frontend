@@ -15,14 +15,14 @@ export class BookingRepositoryImpl implements BookingRepository {
 
   bookSlot(dto: CreateBookingDto): Observable<any> {
     return this.http.post<any>(this.bookingUrl, dto).pipe(
-      map(response => response.value || response.Value || response)
+      map(response => response.data || response.Data || response.value || response.Value || response)
     );
   }
 
   getMyBookings(): Observable<Booking[]> {
     return this.http.get<any>(`${this.bookingUrl}/my`).pipe(
       map(response => {
-        const result = response.value || response.Value || response;
+        const result = response.data || response.Data || response.value || response.Value || response;
         return (Array.isArray(result) ? result : []).map((b: any) => ({
           bookingId: b.bookingId || b.BookingId,
           bookedOn: b.bookedOn || b.BookedOn,
@@ -40,7 +40,7 @@ export class BookingRepositoryImpl implements BookingRepository {
     const params = new HttpParams().set('turfId', turfId);
     return this.http.get<any>(this.slotUrl, { params }).pipe(
       map(response => {
-        const result = response.value || response.Value || response;
+        const result = response.data || response.Data || response.value || response.Value || response;
         return (Array.isArray(result) ? result : []).map((s: any) => ({
           id: s.slotId || s.SlotId,
           turfId: s.turfId || s.TurfId,
