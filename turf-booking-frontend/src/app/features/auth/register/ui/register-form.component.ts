@@ -111,54 +111,56 @@ import { RouterModule } from '@angular/router';
     .register-form {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 0.75rem;
       width: 100%;
     }
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.35rem;
     }
     .phone-input-group {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     .country-code {
-      width: 110px;
-      padding: 0 0.75rem;
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
+      width: 100px;
+      padding: 0 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       color: var(--text-primary);
       font-weight: 600;
       cursor: pointer;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1rem;
+      background-position: right 0.5rem center;
+      background-size: 0.8rem;
+      background-color: var(--bg-card);
     }
     .country-code:focus {
       border-color: var(--primary);
       outline: none;
     }
     .country-code option {
-      background: #0f172a;
-      color: white;
-      padding: 10px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 8px;
     }
     label {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 500;
       color: var(--text-secondary);
     }
     .error-text {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--secondary);
+      margin-top: 1px;
     }
     .invalid {
       border-color: var(--secondary) !important;
@@ -166,8 +168,8 @@ import { RouterModule } from '@angular/router';
     .form-footer {
       display: flex;
       justify-content: center;
-      margin-top: 1rem;
-      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
     }
     .form-footer p {
       color: var(--text-secondary);
@@ -180,11 +182,11 @@ import { RouterModule } from '@angular/router';
     }
     .btn-premium {
       width: 100%;
-      height: 48px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
     }
     .spinner {
       width: 20px;
@@ -200,6 +202,7 @@ import { RouterModule } from '@angular/router';
     @media (max-width: 480px) {
       .form-row {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
       }
     }
   `]

@@ -61,16 +61,16 @@ import { RouterModule } from '@angular/router';
     .login-form {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 0.85rem;
       width: 100%;
     }
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.3rem;
     }
     label {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 500;
       color: var(--text-secondary);
     }
@@ -111,9 +111,9 @@ import { RouterModule } from '@angular/router';
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      font-size: 0.875rem;
+      gap: 0.3rem;
+      margin-top: 0.35rem;
+      font-size: 0.825rem;
     }
     .form-footer p {
       color: var(--text-secondary);
@@ -128,7 +128,7 @@ import { RouterModule } from '@angular/router';
       color: var(--accent);
     }
     .forgot-link {
-      font-size: 0.8125rem;
+      font-size: 0.775rem;
     }
     .btn-premium {
       width: 100%;
