@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
   z-index: 100;
@@ -131,4 +131,48 @@ button {
 button:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--primary);
+}
+
+/* Theme Toggle Styles */
+.theme-toggle-li {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  padding: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--primary);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.2);
+}
+
+.theme-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary);
+  transition: transform 0.3s ease;
+}
+
+.sun-icon {
+  color: #fbbf24;
+}
+
+.moon-icon {
+  color: #38bdf8;
 }

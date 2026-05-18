@@ -1,18 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
 :root {
+  /* Common Brand Colors */
   --primary: #6366f1;
   --primary-hover: #4f46e5;
   --secondary: #ec4899;
   --accent: #8b5cf6;
+  --font-family: 'Outfit', sans-serif;
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Dark Theme Default Values */
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.1);
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --font-family: 'Outfit', sans-serif;
   --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-color: #ffffff;
+  --nav-bg: rgba(15, 23, 42, 0.6);
+}
+
+body[data-theme="light"] {
+  /* Light Theme Values */
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(99, 102, 241, 0.15);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --shadow-float: 0 20px 25px -5px rgba(99, 102, 241, 0.08), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --input-color: #0f172a;
+  --nav-bg: rgba(255, 255, 255, 0.75);
 }
 
 * {
@@ -86,13 +105,27 @@ body {
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
 }
 
+.btn-premium.secondary {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.btn-premium.secondary:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+}
+
 /* Input Styles */
 input {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg);
   border: 1px solid var(--glass-border);
   padding: 14px 18px;
   border-radius: 12px;
-  color: white;
+  color: var(--input-color);
   width: 100%;
   transition: var(--transition-smooth);
 }

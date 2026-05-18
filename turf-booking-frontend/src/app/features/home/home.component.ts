@@ -53,7 +53,7 @@ import { RouterModule } from '@angular/router';
     .hero h1 {
       font-size: 4rem;
       margin-bottom: 1.5rem;
-      background: linear-gradient(to right, #fff, var(--text-secondary));
+      background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1.1;

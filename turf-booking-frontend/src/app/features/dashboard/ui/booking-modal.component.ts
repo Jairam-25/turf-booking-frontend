@@ -91,7 +91,10 @@ import { NotificationService } from '../../../core/services/notification.service
     .modal-content {
       width: 100%;
       max-width: 500px;
-      background: rgba(30, 41, 59, 0.7);
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
       border-radius: 24px;
       overflow: hidden;
       display: flex;
@@ -188,7 +191,7 @@ import { NotificationService } from '../../../core/services/notification.service
 
     .modal-footer {
       padding: 1.5rem 2rem;
-      background: rgba(15, 23, 42, 0.3);
+      border-top: 1px solid var(--glass-border);
       display: flex;
       gap: 1rem;
     }

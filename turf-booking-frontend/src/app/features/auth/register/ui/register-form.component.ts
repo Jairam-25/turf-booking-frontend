@@ -17,6 +17,7 @@ import { RouterModule } from '@angular/router';
           formControlName="name" 
           placeholder="John Doe"
           [class.invalid]="isFieldInvalid('name')"
+          (blur)="trimField('name')"
         >
         <span class="error-text" *ngIf="isFieldInvalid('name')">
           Full name is required
@@ -31,6 +32,9 @@ import { RouterModule } from '@angular/router';
           formControlName="email" 
           placeholder="name@example.com"
           [class.invalid]="isFieldInvalid('email')"
+          (input)="onEmailInput($event)"
+          (keydown.space)="$event.preventDefault()"
+          (blur)="trimField('email')"
         >
         <span class="error-text" *ngIf="isFieldInvalid('email')">
           Please enter a valid email address
@@ -52,6 +56,9 @@ import { RouterModule } from '@angular/router';
             formControlName="phoneNumber" 
             placeholder="9876543210"
             [class.invalid]="isFieldInvalid('phoneNumber')"
+            (input)="onPhoneInput($event)"
+            (keydown.space)="$event.preventDefault()"
+            (blur)="trimField('phoneNumber')"
           >
         </div>
         <span class="error-text" *ngIf="isFieldInvalid('phoneNumber')">
@@ -68,6 +75,7 @@ import { RouterModule } from '@angular/router';
             formControlName="password" 
             placeholder="••••••••"
             [class.invalid]="isFieldInvalid('password')"
+            (blur)="trimField('password')"
           >
           <span class="error-text" *ngIf="isFieldInvalid('password')">
             Min 8 chars, with A-Z, a-z, 0-9 & special char
@@ -81,6 +89,7 @@ import { RouterModule } from '@angular/router';
             formControlName="confirmPassword" 
             placeholder="••••••••"
             [class.invalid]="isFieldInvalid('confirmPassword')"
+            (blur)="trimField('confirmPassword')"
           >
           <span class="error-text" *ngIf="isFieldInvalid('confirmPassword')">
             Passwords must match
@@ -216,6 +225,33 @@ export class RegisterFormComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
+  trimField(field: string) {
+    const control = this.registerForm.get(field);
+    if (control && typeof control.value === 'string') {
+      control.setValue(control.value.trim());
+    }
+  }
+
+  onEmailInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    let val = inputElement.value;
+    // Strip all spaces
+    val = val.replace(/\s+/g, '');
+    this.registerForm.get('email')?.setValue(val, { emitEvent: false });
+    inputElement.value = val;
+  }
+
+  onPhoneInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    let val = inputElement.value;
+    // Strip all non-digits
+    val = val.replace(/\D/g, '');
+    // Limit to 10 digits
+    val = val.substring(0, 10);
+    this.registerForm.get('phoneNumber')?.setValue(val, { emitEvent: false });
+    inputElement.value = val;
+  }
+
   passwordMatchValidator(g: FormGroup) {
     return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : { 'mismatch': true };
@@ -230,6 +266,11 @@ export class RegisterFormComponent {
   }
 
   onSubmit() {
+    // Trim all fields in the form to ignore whitespaces
+    Object.keys(this.registerForm.controls).forEach(key => {
+      this.trimField(key);
+    });
+
     if (this.registerForm.valid) {
       const { countryCode, phoneNumber, ...otherData } = this.registerForm.value;
       this.register.emit({

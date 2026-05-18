@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { WelcomeComponent } from './features/auth/welcome/welcome.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
@@ -7,6 +8,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 
 export const authRoutes: Routes = [
+  { path: '', component: WelcomeComponent, canActivate: [guestGuard] },
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [guestGuard] },
