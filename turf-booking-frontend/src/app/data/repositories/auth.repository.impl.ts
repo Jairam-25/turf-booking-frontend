@@ -10,7 +10,7 @@ import { AuthMapper } from '../mappers/auth.mapper';
   providedIn: 'root'
 })
 export class AuthRepositoryImpl implements AuthRepository {
-  private apiUrl = 'https://localhost:7273/api/Auth';
+  private apiUrl = 'https://localhost:7273/api/v1/Auth';
 
   constructor(private http: HttpClient) {}
 

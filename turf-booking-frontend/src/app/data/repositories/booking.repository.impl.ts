@@ -8,8 +8,8 @@ import { Booking, CreateBookingDto, Slot } from '../../domain/models/booking.mod
   providedIn: 'root'
 })
 export class BookingRepositoryImpl implements BookingRepository {
-  private bookingUrl = 'https://localhost:7273/api/Booking';
-  private slotUrl = 'https://localhost:7273/api/Slot';
+  private bookingUrl = 'https://localhost:7273/api/v1/Booking';
+  private slotUrl = 'https://localhost:7273/api/v1/Slot';
 
   constructor(private http: HttpClient) {}
 

@@ -8,7 +8,7 @@ import { Turf, TurfResponse } from '../../domain/models/turf.model';
   providedIn: 'root'
 })
 export class TurfRepositoryImpl implements TurfRepository {
-  private apiUrl = 'https://localhost:7273/api/Turf';
+  private apiUrl = 'https://localhost:7273/api/v1/Turf';
 
   // Mock images to make it look professional
   private mockImages = [
