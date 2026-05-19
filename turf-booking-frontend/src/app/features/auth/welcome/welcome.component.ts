@@ -91,20 +91,18 @@ import { Router, RouterModule } from '@angular/router';
               </div>
 
               <!-- Soccer Kicker Silhouette -->
-              <svg *ngIf="activeSport() === 'football'" class="kicker-player" [class.kick-swing]="isKicked()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="28" cy="12" r="4"/>
-                <path d="M 28,16 C 24,20 20,28 18,34 L 14,32 L 16,42 L 24,38 L 26,26 L 32,32 L 36,44 L 42,42 L 36,30 L 32,20 Z" />
-                <path d="M 28,16 L 38,18 L 44,14 L 46,18 L 38,24 Z"/>
-                <path class="kicking-leg" d="M 26,26 L 32,36 L 40,40 L 42,37 L 34,32 Z"/>
-              </svg>
+              <img *ngIf="activeSport() === 'football'" 
+                   class="kicker-player-img" 
+                   [class.kick-swing]="isKicked()" 
+                   src="/images/striker.png" 
+                   alt="Striker" />
 
               <!-- Soccer Goalkeeper Silhouette (dives/misses on landing page!) -->
-              <svg *ngIf="activeSport() === 'football'" class="goalkeeper-player" [class.goalkeeper-miss]="isKicked()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="32" cy="12" r="4"/>
-                <path d="M 32,16 C 26,18 22,24 22,30 L 26,45 L 30,45 L 30,32 L 34,32 L 34,45 L 38,45 L 42,30 C 42,24 38,18 32,16 Z"/>
-                <path class="gk-left-arm" d="M 22,18 L 10,14 L 8,18 L 20,24 Z"/>
-                <path class="gk-right-arm" d="M 42,18 L 54,14 L 56,18 L 44,24 Z"/>
-              </svg>
+              <img *ngIf="activeSport() === 'football'" 
+                   class="goalkeeper-player-img" 
+                   [class.goalkeeper-miss]="isKicked()" 
+                   src="/images/goalkeeper.png" 
+                   alt="Goalkeeper" />
 
               <!-- Cricket: Wooden Wickets & Batsman Silhouette -->
               <div *ngIf="activeSport() === 'cricket'" class="cricket-wickets">
@@ -115,24 +113,33 @@ import { Router, RouterModule } from '@angular/router';
                 <div class="bail bail-2"></div>
               </div>
 
-              <svg *ngIf="activeSport() === 'cricket'" class="batsman-player" [class.bat-swing]="isKicked()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="36" cy="12" r="4"/>
-                <path d="M 36,16 C 30,18 24,24 22,32 L 18,48 L 24,48 L 28,36 L 34,36 L 36,48 L 42,48 L 44,32 Z"/>
-                <path class="batting-arms" d="M 32,18 L 22,24 L 20,32 Z"/>
-                <rect class="cricket-bat" x="14" y="24" width="6" height="24" rx="2" transform="rotate(-35 14 24)" />
-              </svg>
+              <!-- Cricket: Bowler Image -->
+              <img *ngIf="activeSport() === 'cricket'" 
+                   class="bowler-player-img" 
+                   [class.bowler-release]="isKicked()" 
+                   src="/images/bowler.png" 
+                   alt="Bowler" />
 
-              <!-- Ping-Pong: Table Net & Paddle Silhouette -->
+              <!-- Cricket: Batsman Image -->
+              <img *ngIf="activeSport() === 'cricket'" 
+                   class="batsman-player-img" 
+                   [class.bat-swing]="isKicked()" 
+                   src="/images/batsman.png" 
+                   alt="Batsman" />
+
+              <!-- Ping-Pong: Table Net -->
               <div *ngIf="activeSport() === 'pingpong'" class="pingpong-net" [class.net-shake]="isNetShaking()">
                 <div class="pingpong-post left-post"></div>
                 <div class="pingpong-post right-post"></div>
                 <div class="pingpong-net-mesh"></div>
               </div>
 
-              <svg *ngIf="activeSport() === 'pingpong'" class="pingpong-paddle" [class.paddle-swing]="isKicked()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="36" cy="24" r="14" />
-                <rect x="33" y="34" width="6" height="18" rx="2" transform="rotate(-25 33 34)" />
-              </svg>
+              <!-- Ping-Pong: Paddle Image -->
+              <img *ngIf="activeSport() === 'pingpong'" 
+                   class="pingpong-paddle-img" 
+                   [class.paddle-swing]="isKicked()" 
+                   src="/images/pingpong.png" 
+                   alt="Paddle" />
 
               <!-- Penalty markings (Soccer only) -->
               <div *ngIf="activeSport() === 'football'" class="penalty-box"></div>
@@ -146,6 +153,7 @@ import { Router, RouterModule } from '@angular/router';
 
               <!-- Interactive Dynamic Ball -->
               <div class="football-wrapper" 
+                   [class.cricket-active]="activeSport() === 'cricket'"
                    [class.kicked-success]="isKicked() && activeSport() === 'football'"
                    [class.cricket-success]="isKicked() && activeSport() === 'cricket'"
                    [class.pingpong-success]="isKicked() && activeSport() === 'pingpong'">

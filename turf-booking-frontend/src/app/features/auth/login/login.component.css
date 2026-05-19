@@ -260,91 +260,101 @@
   75% { transform: translateX(-50%) translateY(-2px) skewX(2deg); }
 }
 
-/* Kicker silhouette styling */
-.kicker-player {
+/* Soccer Kicker (Striker) Image Styling */
+.kicker-player-img {
   position: absolute;
-  bottom: 12px;
-  left: 18%;
-  width: 36px;
-  height: 36px;
-  color: rgba(255, 255, 255, 0.9);
+  bottom: 8px;
+  left: 16%;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
   z-index: 3;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
-.kicker-player.kick-swing {
-  transform: rotate(15deg) scale(1.05);
+.kicker-player-img.kick-swing {
+  transform: translate(14px, -10px) rotate(-15deg) scale(1.08);
 }
 
-.kicker-player.kick-swing .kicking-leg {
-  transform-origin: 26px 26px;
-  transform: rotate(-35deg);
-  transition: transform 0.15s ease-out;
-}
-
-/* Goalkeeper silhouette styling */
-.goalkeeper-player {
+/* Soccer Goalkeeper Image Styling */
+.goalkeeper-player-img {
   position: absolute;
-  top: 15px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 36px;
-  height: 36px;
-  color: rgba(255, 255, 255, 0.95);
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
   z-index: 3;
   transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
 /* Success: Goalkeeper dives but misses the ball (dives left while ball goes right!) */
-.goalkeeper-player.goalkeeper-miss {
-  transform: translate(-38px, 10px) rotate(-65deg);
-  color: rgba(255, 255, 255, 0.65);
+.goalkeeper-player-img.goalkeeper-miss {
+  transform: translate(-42px, -12px) rotate(-65deg) scale(0.95);
+  opacity: 0.85;
 }
 
 /* Failure: Goalkeeper dives and blocks the ball in the top-right corner! */
-.goalkeeper-player.goalkeeper-save {
-  transform: translate(22px, 2px) rotate(65deg);
-  color: #ef4444; /* Glows red upon block save! */
-  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+.goalkeeper-player-img.goalkeeper-save {
+  transform: translate(32px, -8px) rotate(65deg) scale(1.05);
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.85)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
 }
 
-/* Batsman silhouette styling */
-.batsman-player {
+/* Cricket Batsman Image Styling */
+.batsman-player-img {
   position: absolute;
-  bottom: 12px;
-  left: 28%;
-  width: 38px;
-  height: 38px;
-  color: rgba(255, 255, 255, 0.95);
+  bottom: 8px;
+  left: 25%;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
   z-index: 3;
-  transition: transform 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
-.batsman-player.bat-swing {
-  transform: scale(1.05);
+.batsman-player-img.bat-swing {
+  transform: translate(14px, -8px) rotate(15deg) scale(1.1);
 }
 
-.batsman-player.bat-swing .cricket-bat {
-  transform-origin: 14px 24px;
-  transform: rotate(95deg) translate(6px, -6px);
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* Cricket Bowler Image Styling */
+.bowler-player-img {
+  position: absolute;
+  top: 10px;
+  right: 15%;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
-/* Ping Pong Paddle silhouette styling */
-.pingpong-paddle {
+/* Bowler bowling release animation */
+.bowler-player-img.bowler-release {
+  transform: translate(-14px, 14px) scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+/* Ping Pong Paddle Image Styling */
+.pingpong-paddle-img {
   position: absolute;
   bottom: 12px;
   left: 18%;
-  width: 32px;
-  height: 32px;
-  color: rgba(255, 255, 255, 0.95);
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
   z-index: 3;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
-.pingpong-paddle.paddle-swing {
-  transform: translate(12px, -10px) rotate(45deg) scale(1.1);
-  color: #ea580c; /* Paddles shine orange on swing! */
+.pingpong-paddle-img.paddle-swing {
+  transform: translate(18px, -15px) rotate(35deg) scale(1.15);
+  filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.65)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
 }
 
 /* Cricket Wickets */
