@@ -159,11 +159,11 @@ import { RouterModule } from '@angular/router';
     }
     .error-text {
       font-size: 0.7rem;
-      color: var(--secondary);
+      color: var(--error-color);
       margin-top: 1px;
     }
     .invalid {
-      border-color: var(--secondary) !important;
+      border-color: var(--error-color) !important;
     }
     .form-footer {
       display: flex;
@@ -193,7 +193,7 @@ import { RouterModule } from '@angular/router';
       height: 20px;
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      border-top-color: white;
+      border-top-color: var(--on-primary);
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin {

@@ -1,50 +1,140 @@
-<nav class="navbar">
-
-  <div class="logo">
-    <svg class="nav-logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--primary)" stroke-width="2.5"/>
-      <path d="M12 2V22M2 12H22" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="3 3"/>
-      <circle cx="12" cy="12" r="4" fill="var(--accent)"/>
+<nav class="navbar-shell relative z-30 flex items-center justify-between w-full py-4 px-6 md:px-[120px] bg-transparent border-b font-manrope">
+  <!-- Logo (Left) -->
+  <a routerLink="/" class="flex items-center gap-3 group">
+    <svg class="navbar-logo-icon w-8 h-8 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1.04356 6.35771L13.6437 0.666504L26.2438 6.35771L21.2001 21.2825L13.6437 17.5L6.08726 21.2825L1.04356 6.35771Z" fill="currentColor" />
     </svg>
-    <h2 class="logo-text">TurfXpert</h2>
+    <span class="navbar-brand-text font-bold text-xl tracking-wide">TurfXpert</span>
+  </a>
+
+  <!-- Navigation Links (Center-Left, Desktop Only) -->
+  <div class="hidden lg:flex items-center gap-8 mr-auto ml-12">
+    <!-- Logged Out Links -->
+    <ng-container *ngIf="!isLoggedIn()">
+      <a routerLink="/" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Home</a>
+      <div class="navbar-link relative group cursor-pointer flex items-center gap-1 font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">
+        <span>Services</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <a href="#reviews" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Reviews</a>
+      <a href="#contact" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Contact us</a>
+    </ng-container>
+
+    <!-- Logged In Links -->
+    <ng-container *ngIf="isLoggedIn()">
+      <a routerLink="/home" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Home</a>
+      <a routerLink="/bookings" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Bookings</a>
+      <a routerLink="/dashboard" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Dashboard</a>
+    </ng-container>
   </div>
 
-  <ul class="nav-links">
+  <!-- Action Buttons / Profile (Right, Desktop Only) -->
+  <div class="hidden lg:flex items-center gap-4">
+    <!-- Logged Out Buttons -->
+    <ng-container *ngIf="!isLoggedIn()">
+      <button (click)="navigate('login')" class="btn-nav-outline active:scale-95">
+        Sign In
+      </button>
+      <button (click)="navigate('register')" class="btn-nav-primary active:scale-95">
+        Get Started
+      </button>
+    </ng-container>
 
-    <li *ngIf="isLoggedIn()">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-    </li>
-
-    <li *ngIf="isLoggedIn()">
-      <a routerLink="/bookings" routerLinkActive="active">Bookings</a>
-    </li>
-
-    <li *ngIf="isLoggedIn()">
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    </li>
-
-
-    <!-- LOGGED IN -->
-    <li *ngIf="isLoggedIn()" class="user-profile">
-      <span class="welcome-text">Welcome, <strong>{{ authStore.user()?.name }}</strong></span>
-      <button (click)="logout()" class="nav-btn logout-btn">Logout</button>
-    </li>
+    <!-- Logged In Profile -->
+    <div *ngIf="isLoggedIn()" class="flex items-center gap-4">
+      <span class="navbar-muted text-[14px]">
+        Welcome, <strong>{{ authStore.user()?.name }}</strong>
+      </span>
+      <button
+        (click)="logout()"
+        class="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-[8px] text-red-400 font-semibold text-[13px] transition-all duration-200 hover:bg-red-500/20"
+      >
+        Logout
+      </button>
+    </div>
 
     <!-- Theme Toggle Switcher -->
-    <li class="theme-toggle-li">
-      <button (click)="toggleTheme()" class="theme-toggle-btn" aria-label="Toggle theme">
-        <!-- Sun icon (for dark mode, to switch to light) -->
-        <svg *ngIf="theme === 'dark'" viewBox="0 0 24 24" fill="none" class="theme-icon sun-icon" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/>
-          <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke-linecap="round"/>
-        </svg>
-        <!-- Moon icon (for light mode, to switch to dark) -->
-        <svg *ngIf="theme === 'light'" viewBox="0 0 24 24" fill="currentColor" class="theme-icon moon-icon">
-          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-        </svg>
-      </button>
-    </li>
+    <button (click)="toggleTheme()" class="theme-toggle-btn" aria-label="Toggle theme">
+      <svg *ngIf="themeService.theme() === 'dark'" viewBox="0 0 24 24" fill="none" class="w-5 h-5 text-amber-400" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke-linecap="round"/>
+      </svg>
+      <svg *ngIf="themeService.theme() === 'light'" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-sky-500">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+      </svg>
+    </button>
+  </div>
 
-  </ul>
+  <!-- Hamburger Icon (Mobile Only) -->
+  <button
+    (click)="toggleMobileMenu()"
+    class="navbar-menu-btn lg:hidden p-2 transition-opacity duration-200 hover:opacity-80"
+    aria-label="Toggle Menu"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
 
+  <!-- Full-screen Mobile Overlay Menu (z-50) -->
+  <div
+    *ngIf="isMobileMenuOpen"
+    class="navbar-mobile-overlay fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-md transition-all duration-300"
+  >
+    <!-- Close Button -->
+    <button
+      (click)="toggleMobileMenu()"
+      class="navbar-menu-btn absolute top-6 right-6 p-2 transition-opacity duration-200 hover:opacity-80"
+      aria-label="Close Menu"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Mobile Navigation Links -->
+    <div class="flex flex-col items-center gap-6 mb-8 text-center">
+      <ng-container *ngIf="!isLoggedIn()">
+        <a routerLink="/" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Home</a>
+        <a routerLink="/" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Services</a>
+        <a routerLink="/" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Reviews</a>
+        <a routerLink="/" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Contact us</a>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn()">
+        <a routerLink="/home" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Home</a>
+        <a routerLink="/bookings" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Bookings</a>
+        <a routerLink="/dashboard" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Dashboard</a>
+      </ng-container>
+    </div>
+
+    <!-- Mobile Action Buttons -->
+    <div class="flex flex-col gap-4 w-64">
+      <ng-container *ngIf="!isLoggedIn()">
+        <button (click)="navigate('login')" class="btn-nav-outline w-full py-3 text-lg">
+          Sign In
+        </button>
+        <button (click)="navigate('register')" class="btn-nav-primary w-full py-3 text-lg">
+          Get Started
+        </button>
+        <button (click)="toggleTheme()" class="theme-toggle-btn w-full py-3 text-lg flex gap-2">
+          <span>{{ themeService.theme() === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
+        </button>
+      </ng-container>
+
+      <div *ngIf="isLoggedIn()" class="flex flex-col items-center gap-4">
+        <span class="navbar-muted text-lg">
+          Welcome, <strong>{{ authStore.user()?.name }}</strong>
+        </span>
+        <button
+          (click)="logout()"
+          class="w-full py-3 bg-red-500/10 border border-red-500/20 rounded-[8px] text-red-400 font-semibold text-lg transition-all duration-200 hover:bg-red-500/20"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
 </nav>

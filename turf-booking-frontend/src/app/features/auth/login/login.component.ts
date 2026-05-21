@@ -1,27 +1,42 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { LoginFormComponent } from './ui/login-form.component';
+import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
+import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-background-videos';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, LoginFormComponent],
+  imports: [CommonModule, LoginFormComponent, ThemeToggleComponent],
   template: `
     <div class="auth-container" [class.transitioning]="isTransitioning()">
-      <!-- Ambient Loop Video Background -->
-      <video *ngIf="backgroundVideo()" class="bg-video" autoplay loop muted playsinline [src]="backgroundVideo()"></video>
+      <div class="auth-theme-bar">
+        <app-theme-toggle />
+      </div>
+
+      <!-- Sports turf background video (full screen, behind form) -->
+      <video
+        #bgVideo
+        class="auth-bg-video bg-video"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+        src="/videos/turf-bg.mp4"
+      ></video>
       <div class="video-overlay"></div>
 
       <!-- High-End Split Grid Layout -->
       <div class="split-layout">
         
         <!-- Left Side: App Specs & Points -->
-        <div class="info-pane fade-in">
-          <div class="brand-header">
+        <div class="info-pane">
+          <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--primary)" stroke-width="2.5"/>
@@ -35,7 +50,7 @@ import { LoginFormComponent } from './ui/login-form.component';
 
           <!-- Specs matching user requirements -->
           <div class="specs-list">
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-100">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
@@ -47,7 +62,7 @@ import { LoginFormComponent } from './ui/login-form.component';
               </div>
             </div>
 
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-200">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
@@ -59,7 +74,7 @@ import { LoginFormComponent } from './ui/login-form.component';
               </div>
             </div>
 
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-300">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -75,7 +90,7 @@ import { LoginFormComponent } from './ui/login-form.component';
         </div>
 
         <!-- Right Side: The Interactive Shootout Login Card -->
-        <div class="card-pane scale-in">
+        <div class="card-pane animate-fade-in-up animation-delay-200">
           <div class="glass auth-card">
             
             <div class="auth-header">
@@ -230,30 +245,27 @@ import { LoginFormComponent } from './ui/login-form.component';
 
       </div>
 
-      <!-- Transition Overlay with dynamic sport backgrounds -->
-      <div class="goal-overlay" 
-           [class.active]="isOverlayActive()"
-           [class.football-bg]="activeSport() === 'football'"
-           [class.cricket-bg]="activeSport() === 'cricket'"
-           [class.pingpong-bg]="activeSport() === 'pingpong'">
-        <div class="goal-text-popup" [class.visible]="isOverlayActive()">
-          <span class="welcome-tag">Welcome!</span>
-          <span class="app-brand">TurfXpert</span>
+      <!-- Global Animated Circular Transition Overlay -->
+      <div class="goal-overlay" [class.active]="isOverlayActive()">
+        <div class="transition-content">
+          <span class="overlay-label">Welcome To</span>
+          <span class="overlay-brand">TurfXpert</span>
         </div>
       </div>
     </div>
   `,
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
+  @ViewChild('bgVideo') bgVideo?: ElementRef<HTMLVideoElement>;
   isLoading = signal(false);
   activeSport = signal<'football' | 'cricket' | 'pingpong'>('football');
-  backgroundVideo = signal<string>('');
+  backgroundVideo = signal<string>(DEFAULT_AUTH_BACKGROUND_VIDEO);
 
   isKickedSuccess = signal(false);
   isKickedFailure = signal(false);
   isNetShaking = signal(false);
-  isOverlayActive = signal(false);
+  isOverlayActive = signal(true);
   isTransitioning = signal(false);
   errorMessage = signal<string>('');
 
@@ -264,19 +276,22 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
 
+  ngAfterViewInit() {
+    const video = this.bgVideo?.nativeElement;
+    if (!video) return;
+    video.muted = true;
+    void video.play();
+  }
+
   ngOnInit() {
     // 1. Pick randomly from three active sports!
     const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
     this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
 
-    // 2. Pick a random background video loop (soccer, basketball, cricket, volleyball)
-    const videos = [
-      'https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0b395d98fa6a8bda7e72251a37c5f5a&profile_id=139&oauth2_token_id=57447761', // Soccer
-      'https://player.vimeo.com/external/435674703.sd.mp4?s=7f37fe17449ad15fa25f1896700c5bc9ab9994c6&profile_id=139&oauth2_token_id=57447761', // Basketball
-      'https://player.vimeo.com/external/481921203.sd.mp4?s=d0db588c889a744212ee56d1f05786f4c39f1c7d&profile_id=139&oauth2_token_id=57447761', // Cricket
-      'https://player.vimeo.com/external/393282496.sd.mp4?s=9106cd4d673620853dc9a7465ebcd3be9cc1a93b&profile_id=139&oauth2_token_id=57447761'  // Volleyball
-    ];
-    this.backgroundVideo.set(videos[Math.floor(Math.random() * videos.length)]);
+    // Fade out the entry overlay transition after component loads
+    setTimeout(() => {
+      this.isOverlayActive.set(false);
+    }, 150);
   }
 
   handleLogin(credentials: any) {

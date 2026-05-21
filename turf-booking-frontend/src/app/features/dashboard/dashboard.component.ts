@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TurfRepository } from '../../domain/repositories/turf.repository';
-import { Turf } from '../../domain/models/turf.model';
+import { MockDataService } from '../../core/services/mock-data.service';
+import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
 import { BookingModalComponent } from './ui/booking-modal.component';
 import { NotificationService } from '../../core/services/notification.service';
+import { TurfRepository } from '../../domain/repositories/turf.repository';
 
 @Component({
   selector: 'app-dashboard',
@@ -76,16 +77,17 @@ import { NotificationService } from '../../core/services/notification.service';
       padding: 4rem 2rem;
       border-radius: 24px;
       text-align: center;
-      background: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.4)),
-                  url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2000&auto=format&fit=crop');
+      background:
+        linear-gradient(rgba(var(--primary-rgb), 0.35), rgba(15, 23, 42, 0.75)),
+        url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2000&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
     }
     .header-content h1 {
       font-size: 3rem;
       margin-bottom: 2.5rem;
-      color: white;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      color: var(--on-primary);
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
     }
     .search-bar {
       max-width: 600px;
@@ -93,27 +95,39 @@ import { NotificationService } from '../../core/services/notification.service';
       padding: 8px;
       display: flex;
       gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
     }
     .search-bar input {
       flex-grow: 1;
       background: transparent;
       border: none;
-      color: white;
+      color: var(--text-primary);
       padding: 0 1rem;
       font-size: 1rem;
     }
     .search-bar input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--text-secondary);
     }
     .btn-search {
       padding: 10px 24px;
       border-radius: 12px;
       background: var(--primary);
-      color: white;
+      color: var(--on-primary);
       border: none;
       font-weight: 600;
       cursor: pointer;
+    }
+
+    :host-context(body[data-theme="light"]) .dashboard-header {
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.75), rgba(248, 250, 252, 0.9)),
+        url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2000&auto=format&fit=crop');
+    }
+
+    :host-context(body[data-theme="light"]) .header-content h1 {
+      color: var(--text-primary);
+      text-shadow: none;
     }
 
     .turf-grid-container {
@@ -186,7 +200,7 @@ export class DashboardComponent implements OnInit {
   loadTurfs(search?: string) {
     this.isLoading.set(true);
     this.turfRepository.getAll({ search }).subscribe({
-      next: (response) => {
+      next: (response: TurfResponse) => {
         this.turfs.set(response.items);
         this.isLoading.set(false);
       },

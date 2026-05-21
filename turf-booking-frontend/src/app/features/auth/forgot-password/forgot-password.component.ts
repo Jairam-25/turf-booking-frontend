@@ -3,13 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
+import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
+import { pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ThemeToggleComponent],
   template: `
     <div class="auth-container">
+      <div class="auth-theme-bar">
+        <app-theme-toggle />
+      </div>
+      <video class="auth-bg-video bg-video" autoplay loop muted playsinline preload="auto" src="/videos/turf-bg.mp4"></video>
+      <div class="video-overlay"></div>
       <div class="glass auth-card floating">
         <div class="auth-header">
           <h1>Forgot Password?</h1>
@@ -67,7 +74,7 @@ import { AuthRepository } from '../../../domain/repositories/auth.repository';
     }
     .icon {
       font-size: 3rem;
-      color: #10b981;
+      color: var(--primary);
       margin-bottom: 1rem;
     }
     .success-message h2 {
@@ -79,6 +86,7 @@ import { AuthRepository } from '../../../domain/repositories/auth.repository';
   `]
 })
 export class ForgotPasswordComponent {
+  backgroundVideo = pickRandomAuthVideo();
   isLoading = signal(false);
   emailSent = signal(false);
   errorMessage = signal<string | null>(null);

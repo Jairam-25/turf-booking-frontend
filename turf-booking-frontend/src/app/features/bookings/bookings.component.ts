@@ -116,7 +116,7 @@ import { NotificationService } from '../../core/services/notification.service';
 
     .status-badge {
       background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
+      color: var(--success-color);
       padding: 6px 16px;
       border-radius: 20px;
       font-size: 0.8125rem;

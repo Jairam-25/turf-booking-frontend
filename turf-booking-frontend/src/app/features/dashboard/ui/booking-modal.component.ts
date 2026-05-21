@@ -206,7 +206,7 @@ import { NotificationService } from '../../../core/services/notification.service
     .slot-card.selected {
       background: var(--primary);
       border-color: var(--primary);
-      color: white;
+      color: var(--on-primary);
       animation: select-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
     }
     .slot-card .time {
@@ -397,7 +397,7 @@ import { NotificationService } from '../../../core/services/notification.service
       height: 20px;
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      border-top-color: white;
+      border-top-color: var(--on-primary);
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin {

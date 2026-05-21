@@ -1,27 +1,42 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
+import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
+import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-background-videos';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RegisterFormComponent],
+  imports: [CommonModule, RegisterFormComponent, ThemeToggleComponent],
   template: `
     <div class="auth-container" [class.transitioning]="isTransitioning()">
-      <!-- Ambient Loop Video Background -->
-      <video *ngIf="backgroundVideo()" class="bg-video" autoplay loop muted playsinline [src]="backgroundVideo()"></video>
+      <div class="auth-theme-bar">
+        <app-theme-toggle />
+      </div>
+
+      <!-- Sports turf background video (full screen, behind form) -->
+      <video
+        #bgVideo
+        class="auth-bg-video bg-video"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+        src="/videos/turf-bg.mp4"
+      ></video>
       <div class="video-overlay"></div>
 
       <!-- High-End Split Grid Layout -->
       <div class="split-layout">
         
         <!-- Left Side: App Specs & Points -->
-        <div class="info-pane fade-in">
-          <div class="brand-header">
+        <div class="info-pane">
+          <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--primary)" stroke-width="2.5"/>
@@ -35,7 +50,7 @@ import { RegisterFormComponent } from './ui/register-form.component';
 
           <!-- Specs matching user requirements -->
           <div class="specs-list">
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-100">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
@@ -47,7 +62,7 @@ import { RegisterFormComponent } from './ui/register-form.component';
               </div>
             </div>
 
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-200">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
@@ -59,7 +74,7 @@ import { RegisterFormComponent } from './ui/register-form.component';
               </div>
             </div>
 
-            <div class="spec-item">
+            <div class="spec-item animate-fade-in-up animation-delay-300">
               <div class="spec-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -75,7 +90,7 @@ import { RegisterFormComponent } from './ui/register-form.component';
         </div>
 
         <!-- Right Side: The Interactive Shootout Register Card -->
-        <div class="card-pane scale-in">
+        <div class="card-pane animate-fade-in-up animation-delay-200">
           <div class="glass auth-card">
             
             <div class="auth-header">
@@ -93,21 +108,20 @@ import { RegisterFormComponent } from './ui/register-form.component';
                 <div class="goal-net"></div>
               </div>
 
-              <!-- Soccer: Striker Silhouette -->
-              <svg *ngIf="activeSport() === 'football'" class="kicker-player" [class.kick-swing]="isKickedSuccess() || isKickedFailure()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="28" cy="12" r="4"/>
-                <path d="M 28,16 C 24,20 20,28 18,34 L 14,32 L 16,42 L 24,38 L 26,26 L 32,32 L 36,44 L 42,42 L 36,30 L 32,20 Z" />
-                <path d="M 28,16 L 38,18 L 44,14 L 46,18 L 38,24 Z"/>
-                <path class="kicking-leg" d="M 26,26 L 32,36 L 40,40 L 42,37 L 34,32 Z"/>
-              </svg>
+              <!-- Soccer: Striker Image -->
+              <img *ngIf="activeSport() === 'football'" 
+                   class="kicker-player-img" 
+                   [class.kick-swing]="isKickedSuccess() || isKickedFailure()" 
+                   src="/images/striker.png" 
+                   alt="Striker" />
 
-              <!-- Soccer: Goalkeeper Silhouette -->
-              <svg *ngIf="activeSport() === 'football'" class="goalkeeper-player" [class.goalkeeper-miss]="isKickedSuccess()" [class.goalkeeper-save]="isKickedFailure()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="32" cy="12" r="4"/>
-                <path d="M 32,16 C 26,18 22,24 22,30 L 26,45 L 30,45 L 30,32 L 34,32 L 34,45 L 38,45 L 42,30 C 42,24 38,18 32,16 Z"/>
-                <path class="gk-left-arm" d="M 22,18 L 10,14 L 8,18 L 20,24 Z"/>
-                <path class="gk-right-arm" d="M 42,18 L 54,14 L 56,18 L 44,24 Z"/>
-              </svg>
+              <!-- Soccer: Goalkeeper Image -->
+              <img *ngIf="activeSport() === 'football'" 
+                   class="goalkeeper-player-img" 
+                   [class.goalkeeper-miss]="isKickedSuccess()" 
+                   [class.goalkeeper-save]="isKickedFailure()" 
+                   src="/images/goalkeeper.png" 
+                   alt="Goalkeeper" />
 
               <!-- Cricket: Wooden Wickets & Batsman Silhouette -->
               <div *ngIf="activeSport() === 'cricket'" class="cricket-wickets" [class.wickets-shattered]="isNetShaking() && isKickedFailure()">
@@ -118,24 +132,33 @@ import { RegisterFormComponent } from './ui/register-form.component';
                 <div class="bail bail-2"></div>
               </div>
 
-              <svg *ngIf="activeSport() === 'cricket'" class="batsman-player" [class.bat-swing]="isKickedSuccess() || isKickedFailure()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="36" cy="12" r="4"/>
-                <path d="M 36,16 C 30,18 24,24 22,32 L 18,48 L 24,48 L 28,36 L 34,36 L 36,48 L 42,48 L 44,32 Z"/>
-                <path class="batting-arms" d="M 32,18 L 22,24 L 20,32 Z"/>
-                <rect class="cricket-bat" x="14" y="24" width="6" height="24" rx="2" transform="rotate(-35 14 24)" />
-              </svg>
+              <!-- Cricket: Bowler Image -->
+              <img *ngIf="activeSport() === 'cricket'" 
+                   class="bowler-player-img" 
+                   [class.bowler-release]="isKickedSuccess() || isKickedFailure()" 
+                   src="/images/bowler.png" 
+                   alt="Bowler" />
 
-              <!-- Ping-Pong: Table Net & Paddle Silhouette -->
+              <!-- Cricket: Batsman Image -->
+              <img *ngIf="activeSport() === 'cricket'" 
+                   class="batsman-player-img" 
+                   [class.bat-swing]="isKickedSuccess() || isKickedFailure()" 
+                   src="/images/batsman.png" 
+                   alt="Batsman" />
+
+              <!-- Ping-Pong: Table Net -->
               <div *ngIf="activeSport() === 'pingpong'" class="pingpong-net" [class.net-shake]="isNetShaking() && (isKickedSuccess() || isKickedFailure())">
                 <div class="pingpong-post left-post"></div>
                 <div class="pingpong-post right-post"></div>
                 <div class="pingpong-net-mesh"></div>
               </div>
 
-              <svg *ngIf="activeSport() === 'pingpong'" class="pingpong-paddle" [class.paddle-swing]="isKickedSuccess() || isKickedFailure()" viewBox="0 0 64 64" fill="currentColor">
-                <circle cx="36" cy="24" r="14" />
-                <rect x="33" y="34" width="6" height="18" rx="2" transform="rotate(-25 33 34)" />
-              </svg>
+              <!-- Ping-Pong: Paddle Image -->
+              <img *ngIf="activeSport() === 'pingpong'" 
+                   class="pingpong-paddle-img" 
+                   [class.paddle-swing]="isKickedSuccess() || isKickedFailure()" 
+                   src="/images/pingpong.png" 
+                   alt="Paddle" />
 
               <!-- Penalty markings (Soccer only) -->
               <div *ngIf="activeSport() === 'football'" class="penalty-box"></div>
@@ -222,30 +245,27 @@ import { RegisterFormComponent } from './ui/register-form.component';
 
       </div>
 
-      <!-- Transition Overlay with dynamic sport backgrounds -->
-      <div class="goal-overlay" 
-           [class.active]="isOverlayActive()"
-           [class.football-bg]="activeSport() === 'football'"
-           [class.cricket-bg]="activeSport() === 'cricket'"
-           [class.pingpong-bg]="activeSport() === 'pingpong'">
-        <div class="goal-text-popup" [class.visible]="isOverlayActive()">
-          <span class="welcome-tag">Welcome!</span>
-          <span class="app-brand">TurfXpert</span>
+      <!-- Global Animated Circular Transition Overlay -->
+      <div class="goal-overlay" [class.active]="isOverlayActive()">
+        <div class="transition-content">
+          <span class="overlay-label">Welcome To</span>
+          <span class="overlay-brand">TurfXpert</span>
         </div>
       </div>
     </div>
   `,
   styleUrls: ['../login/login.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, AfterViewInit {
+  @ViewChild('bgVideo') bgVideo?: ElementRef<HTMLVideoElement>;
   isLoading = signal(false);
   activeSport = signal<'football' | 'cricket' | 'pingpong'>('football');
-  backgroundVideo = signal<string>('');
+  backgroundVideo = signal<string>(DEFAULT_AUTH_BACKGROUND_VIDEO);
 
   isKickedSuccess = signal(false);
   isKickedFailure = signal(false);
   isNetShaking = signal(false);
-  isOverlayActive = signal(false);
+  isOverlayActive = signal(true);
   isTransitioning = signal(false);
   errorMessage = signal<string>('');
 
@@ -256,19 +276,22 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
 
+  ngAfterViewInit() {
+    const video = this.bgVideo?.nativeElement;
+    if (!video) return;
+    video.muted = true;
+    void video.play();
+  }
+
   ngOnInit() {
     // 1. Pick randomly from three active sports!
     const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
     this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
 
-    // 2. Pick a random background video loop (soccer, basketball, cricket, volleyball)
-    const videos = [
-      'https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0b395d98fa6a8bda7e72251a37c5f5a&profile_id=139&oauth2_token_id=57447761', // Soccer
-      'https://player.vimeo.com/external/435674703.sd.mp4?s=7f37fe17449ad15fa25f1896700c5bc9ab9994c6&profile_id=139&oauth2_token_id=57447761', // Basketball
-      'https://player.vimeo.com/external/481921203.sd.mp4?s=d0db588c889a744212ee56d1f05786f4c39f1c7d&profile_id=139&oauth2_token_id=57447761', // Cricket
-      'https://player.vimeo.com/external/393282496.sd.mp4?s=9106cd4d673620853dc9a7465ebcd3be9cc1a93b&profile_id=139&oauth2_token_id=57447761'  // Volleyball
-    ];
-    this.backgroundVideo.set(videos[Math.floor(Math.random() * videos.length)]);
+    // Fade out the entry overlay transition after component loads
+    setTimeout(() => {
+      this.isOverlayActive.set(false);
+    }, 150);
   }
 
   handleRegister(data: any) {

@@ -43,7 +43,7 @@ import { Turf } from '../../../domain/models/turf.model';
     }
     .turf-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-float);
       border-color: var(--primary);
     }
     .card-image {
@@ -59,14 +59,14 @@ import { Turf } from '../../../domain/models/turf.model';
       position: absolute;
       top: 1rem;
       right: 1rem;
-      background: rgba(15, 23, 42, 0.8);
+      background: var(--glass-bg);
       backdrop-filter: blur(4px);
       padding: 4px 10px;
       border-radius: 20px;
-      color: #fbbf24;
+      color: var(--accent);
       font-weight: 700;
       font-size: 0.8125rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
     }
     .card-content {
       padding: 1.5rem;

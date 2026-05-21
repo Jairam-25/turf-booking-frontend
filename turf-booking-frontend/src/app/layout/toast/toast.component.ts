@@ -10,7 +10,7 @@ import { NotificationService } from '../../core/services/notification.service';
     <div class="toast-container">
       <div 
         *ngFor="let n of notificationService.notifications()" 
-        class="toast" 
+        class="toast toast-themed" 
         [ngClass]="n.type"
         (click)="notificationService.remove(n.id)"
       >
@@ -48,9 +48,7 @@ import { NotificationService } from '../../core/services/notification.service';
       display: flex;
       align-items: center;
       gap: 1rem;
-      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       border-left: 5px solid var(--primary);
       animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
@@ -91,7 +89,6 @@ import { NotificationService } from '../../core/services/notification.service';
     .toast-content p {
       margin: 0;
       font-size: 0.9375rem;
-      color: #1f2937;
       font-weight: 500;
     }
 
@@ -99,7 +96,6 @@ import { NotificationService } from '../../core/services/notification.service';
       background: none;
       border: none;
       font-size: 1.25rem;
-      color: #9ca3af;
       cursor: pointer;
       padding: 0;
       line-height: 1;

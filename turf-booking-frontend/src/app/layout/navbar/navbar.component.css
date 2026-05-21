@@ -1,191 +1,37 @@
-.navbar {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  background: var(--nav-bg);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
-  z-index: 100;
+.navbar-shell {
+  border-bottom-color: var(--glass-border);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.navbar-brand-text {
+  color: var(--text-primary);
 }
 
-.nav-logo-svg {
-  width: 32px;
-  height: 32px;
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
-  animation: float 4s ease-in-out infinite;
+.navbar-logo-icon {
+  color: var(--text-primary);
 }
 
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
+.navbar-link {
+  color: var(--text-primary);
 }
 
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  list-style: none;
-}
-
-.nav-links a {
+.navbar-muted {
   color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: var(--transition-smooth);
 }
 
-.nav-links a:hover {
+.navbar-muted strong {
   color: var(--text-primary);
 }
 
-.nav-links a.active {
-  color: var(--primary);
-}
-
-/* Auth Buttons and User Profile */
-.auth-buttons, .user-profile {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.welcome-text {
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  margin-right: 0.5rem;
-}
-
-.welcome-text strong {
+.navbar-theme-btn {
   color: var(--text-primary);
-  font-weight: 600;
-}
-
-.nav-btn {
-  padding: 8px 18px;
-  border-radius: 10px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition-smooth);
-  cursor: pointer;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-}
-
-.nav-btn.primary {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  border: none;
-  color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-}
-
-.nav-btn.primary:hover {
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
-}
-
-.logout-btn {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-}
-
-body[data-theme="light"] .logout-btn {
-  background: rgba(220, 38, 38, 0.06);
-  border-color: rgba(220, 38, 38, 0.15);
-  color: #dc2626;
-}
-
-.logout-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: #ef4444;
-  color: #ffffff;
-}
-
-button {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
-  padding: 8px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--primary);
-}
-
-/* Theme Toggle Styles */
-.theme-toggle-li {
-  display: flex;
-  align-items: center;
-}
-
-.theme-toggle-btn {
   background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  border-color: var(--glass-border);
+}
+
+.navbar-menu-btn {
   color: var(--text-primary);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-  padding: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.theme-toggle-btn:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: var(--primary);
-  transform: scale(1.1) rotate(15deg);
-  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.2);
-}
-
-.theme-icon {
-  width: 20px;
-  height: 20px;
-  color: var(--text-primary);
-  transition: transform 0.3s ease;
-}
-
-.sun-icon {
-  color: #fbbf24;
-}
-
-.moon-icon {
-  color: #38bdf8;
+.navbar-mobile-overlay {
+  background: var(--nav-bg);
 }
