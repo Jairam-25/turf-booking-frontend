@@ -9,7 +9,7 @@ import { Turf } from '../../../domain/models/turf.model';
   template: `
     <div class="turf-card glass scale-in">
       <div class="card-image">
-        <img [src]="turf.imageUrl" [alt]="turf.name">
+        <img [src]="turf.imageUrl" [alt]="turf.name" (error)="onImageError($event)">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
       </div>
       
@@ -43,7 +43,7 @@ import { Turf } from '../../../domain/models/turf.model';
     }
     .turf-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: var(--shadow-float);
+      box-shadow: 0 12px 30px rgba(var(--primary-rgb), 0.2), var(--shadow-float);
       border-color: var(--primary);
     }
     .card-image {
@@ -121,5 +121,9 @@ export class TurfCardComponent {
 
   onBook() {
     this.book.emit(this.turf);
+  }
+
+  onImageError(event: any) {
+    event.target.src = '/images/turf_sports_ground.png';
   }
 }

@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { MagicShinyButtonComponent } from '../../../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MagicShinyButtonComponent],
   template: `
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
@@ -46,10 +47,12 @@ import { RouterModule } from '@angular/router';
         </span>
       </div>
 
-      <button type="submit" class="btn-premium" [disabled]="loading">
-        <span *ngIf="!loading">Sign In</span>
-        <span *ngIf="loading" class="spinner"></span>
-      </button>
+      <magic-shiny-button 
+        type="submit" 
+        [loading]="loading"
+      >
+        Sign In
+      </magic-shiny-button>
 
       <div class="form-footer">
         <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>

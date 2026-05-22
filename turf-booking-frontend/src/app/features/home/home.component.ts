@@ -1,15 +1,17 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { getRandomHomeVideo } from '../../core/constants/home-background-videos';
+import { TurfBackgroundComponent } from '../../shared/components/turf-background/turf-background.component';
+import { MagicAnimatedBeamComponent } from '../../shared/components/magic-ui/magic-animated-beam/magic-animated-beam.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TurfBackgroundComponent, MagicAnimatedBeamComponent],
   template: `
     <div class="hero-page font-inter overflow-x-hidden">
-      <video autoplay loop muted playsinline preload="auto" class="hero-video" [src]="selectedVideoUrl()"></video>
+      <!-- Custom realistic animated turf background -->
+      <app-turf-background></app-turf-background>
 
       <div class="hero-overlay"></div>
 
@@ -38,6 +40,14 @@ import { getRandomHomeVideo } from '../../core/constants/home-background-videos'
           </div>
         </div>
       </div>
+
+      <!-- How it Works section with Magic Animated Beam -->
+      <section class="relative z-10 w-full max-w-4xl mx-auto px-6 py-6 text-center animate-fade-in-up animation-delay-400">
+        <h2 class="font-instrument-serif text-3xl md:text-5xl mb-8">Instant Booking Flow</h2>
+        <div class="glass p-6 rounded-3xl backdrop-blur-md">
+          <magic-animated-beam></magic-animated-beam>
+        </div>
+      </section>
 
       <section class="relative z-10 w-full max-w-6xl mx-auto px-6 py-24">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -82,13 +92,8 @@ import { getRandomHomeVideo } from '../../core/constants/home-background-videos'
 })
 export class HomeComponent implements OnInit {
   isOverlayActive = signal(true);
-  selectedVideoUrl = signal('');
 
   ngOnInit() {
-    // Select a random Football or Cricket background video
-    const video = getRandomHomeVideo();
-    this.selectedVideoUrl.set(video.url);
-
     setTimeout(() => {
       this.isOverlayActive.set(false);
     }, 100);

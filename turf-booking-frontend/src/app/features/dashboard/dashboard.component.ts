@@ -21,6 +21,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
             <input 
               type="text" 
               placeholder="Search by name or location..." 
+              class="search-input"
               (input)="onSearch($event)"
             >
             <button class="btn-search">Search</button>
@@ -201,7 +202,17 @@ export class DashboardComponent implements OnInit {
     this.isLoading.set(true);
     this.turfRepository.getAll({ search }).subscribe({
       next: (response: TurfResponse) => {
-        this.turfs.set(response.items);
+        let items = response.items;
+        // Failsafe client-side filtering to guarantee exact match search results
+        if (search) {
+          const query = search.toLowerCase().trim();
+          items = items.filter(t => 
+            t.name.toLowerCase().includes(query) || 
+            t.location.toLowerCase().includes(query) ||
+            (t.description && t.description.toLowerCase().includes(query))
+          );
+        }
+        this.turfs.set(items);
         this.isLoading.set(false);
       },
       error: () => {
@@ -213,9 +224,7 @@ export class DashboardComponent implements OnInit {
 
   onSearch(event: any) {
     const term = event.target.value;
-    if (term.length >= 3 || term.length === 0) {
-      this.loadTurfs(term);
-    }
+    this.loadTurfs(term);
   }
 
   openBooking(turf: Turf) {

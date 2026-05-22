@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
@@ -6,29 +6,21 @@ import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { LoginFormComponent } from './ui/login-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
+import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
+import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/magic-border-beam/magic-border-beam.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, LoginFormComponent, ThemeToggleComponent],
+  imports: [CommonModule, LoginFormComponent, ThemeToggleComponent, TurfBackgroundComponent, MagicBorderBeamComponent],
   template: `
     <div class="auth-container" [class.transitioning]="isTransitioning()">
       <div class="auth-theme-bar">
         <app-theme-toggle />
       </div>
 
-      <!-- Sports turf background video (full screen, behind form) -->
-      <video
-        #bgVideo
-        class="auth-bg-video bg-video"
-        autoplay
-        loop
-        muted
-        playsinline
-        preload="auto"
-        [src]="backgroundVideo()"
-      ></video>
+      <!-- Custom realistic animated turf background -->
+      <app-turf-background></app-turf-background>
       <div class="video-overlay"></div>
 
       <!-- High-End Split Grid Layout -->
@@ -38,11 +30,7 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../cor
         <div class="info-pane">
           <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--primary)" stroke-width="2.5"/>
-                <path d="M12 2V22M2 12H22" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="3 3"/>
-                <circle cx="12" cy="12" r="4" stroke="var(--accent)" stroke-width="2"/>
-              </svg>
+              <img src="/images/logo.png" alt="TurfXpert Logo" class="w-12 h-12 object-contain animate-float-logo">
             </div>
             <h1 class="glow-brand-title">TurfXpert</h1>
             <p class="brand-tagline">Elite Arena Booking</p>
@@ -92,6 +80,8 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../cor
         <!-- Right Side: The Interactive Shootout Login Card -->
         <div class="card-pane animate-fade-in-up animation-delay-200">
           <div class="glass auth-card">
+            <!-- Glowing Magic Border Beam -->
+            <magic-border-beam [duration]="'6s'" [borderWidth]="3"></magic-border-beam>
             
             <div class="auth-header">
               <h1>Welcome Back</h1>
@@ -256,11 +246,9 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../cor
   `,
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
-  @ViewChild('bgVideo') bgVideo?: ElementRef<HTMLVideoElement>;
+export class LoginComponent implements OnInit {
   isLoading = signal(false);
   activeSport = signal<'football' | 'cricket' | 'pingpong'>('football');
-  backgroundVideo = signal<string>(DEFAULT_AUTH_BACKGROUND_VIDEO);
 
   isKickedSuccess = signal(false);
   isKickedFailure = signal(false);
@@ -276,20 +264,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private router: Router
   ) {}
 
-  ngAfterViewInit() {
-    const video = this.bgVideo?.nativeElement;
-    if (!video) return;
-    video.muted = true;
-    void video.play();
-  }
-
   ngOnInit() {
     // 1. Pick randomly from three active sports!
     const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
     this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
-
-    // 2. Select a random Football or Cricket background video
-    this.backgroundVideo.set(pickRandomAuthVideo());
 
     // Fade out the entry overlay transition after component loads
     setTimeout(() => {

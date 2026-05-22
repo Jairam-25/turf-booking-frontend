@@ -2,15 +2,16 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
+import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, RouterModule, ThemeToggleComponent],
+  imports: [CommonModule, RouterModule, ThemeToggleComponent, TurfBackgroundComponent],
   template: `
     <div class="hero-page font-inter">
-      <video autoplay loop muted playsinline preload="auto" class="hero-video" [src]="backgroundVideo"></video>
+      <!-- Custom realistic animated turf background -->
+      <app-turf-background></app-turf-background>
       <div class="hero-overlay"></div>
 
       <div class="auth-theme-bar">
@@ -56,7 +57,6 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../cor
 export class WelcomeComponent implements OnInit {
   isOverlayActive = signal(false);
   isTransitioning = signal(false);
-  backgroundVideo = pickRandomAuthVideo();
 
   constructor(private router: Router) {}
 
