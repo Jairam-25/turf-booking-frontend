@@ -6,7 +6,7 @@ import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-background-videos';
+import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
 
 @Component({
   selector: 'app-register',
@@ -27,7 +27,7 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-back
         muted
         playsinline
         preload="auto"
-        src="/videos/turf-bg.mp4"
+        [src]="backgroundVideo()"
       ></video>
       <div class="video-overlay"></div>
 
@@ -287,6 +287,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     // 1. Pick randomly from three active sports!
     const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
     this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
+
+    // 2. Select a random Football or Cricket background video
+    this.backgroundVideo.set(pickRandomAuthVideo());
 
     // Fade out the entry overlay transition after component loads
     setTimeout(() => {

@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-background-videos';
+import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
 
 @Component({
   selector: 'app-welcome',
@@ -56,7 +56,7 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO } from '../../../core/constants/auth-back
 export class WelcomeComponent implements OnInit {
   isOverlayActive = signal(false);
   isTransitioning = signal(false);
-  backgroundVideo = DEFAULT_AUTH_BACKGROUND_VIDEO;
+  backgroundVideo = pickRandomAuthVideo();
 
   constructor(private router: Router) {}
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { getRandomHomeVideo } from '../../core/constants/home-background-videos';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="hero-page font-inter overflow-x-hidden">
-      <video autoplay loop muted playsinline preload="auto" class="hero-video" src="https://cdn.coverr.co/videos/coverr-man-playing-football-on-a-grass-field-5698/1080p.mp4"></video>
+      <video autoplay loop muted playsinline preload="auto" class="hero-video" [src]="selectedVideoUrl()"></video>
 
       <div class="hero-overlay"></div>
 
@@ -81,8 +82,13 @@ import { RouterModule } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   isOverlayActive = signal(true);
+  selectedVideoUrl = signal('');
 
   ngOnInit() {
+    // Select a random Football or Cricket background video
+    const video = getRandomHomeVideo();
+    this.selectedVideoUrl.set(video.url);
+
     setTimeout(() => {
       this.isOverlayActive.set(false);
     }, 100);

@@ -15,7 +15,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
       <div class="auth-theme-bar">
         <app-theme-toggle />
       </div>
-      <video class="auth-bg-video bg-video" autoplay loop muted playsinline preload="auto" src="/videos/turf-bg.mp4"></video>
+      <video class="auth-bg-video bg-video" autoplay loop muted playsinline preload="auto" [src]="backgroundVideo"></video>
       <div class="video-overlay"></div>
       <div class="glass auth-card floating">
         <div class="auth-header">
