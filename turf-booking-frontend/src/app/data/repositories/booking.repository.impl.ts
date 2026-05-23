@@ -51,4 +51,11 @@ export class BookingRepositoryImpl implements BookingRepository {
       })
     );
   }
+
+  cancelBooking(bookingId: number): Observable<any> {
+    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`).pipe(
+      map(response => response.data || response.Data || response.value || response.Value || response)
+    );
+  }
 }
+

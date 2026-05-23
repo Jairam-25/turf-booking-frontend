@@ -15,7 +15,12 @@ import { CommonModule } from '@angular/common';
       <!-- Content Container -->
       <span class="btn-content-inner flex items-center justify-center gap-2 relative z-10">
         <span *ngIf="!loading"><ng-content></ng-content></span>
-        <span *ngIf="loading" class="spinner"></span>
+        <div *ngIf="loading" class="dot-wave" aria-hidden="true">
+          <span class="dot-wave__dot"></span>
+          <span class="dot-wave__dot"></span>
+          <span class="dot-wave__dot"></span>
+          <span class="dot-wave__dot"></span>
+        </div>
       </span>
 
       <!-- Glowing backdrop -->
@@ -99,28 +104,8 @@ import { CommonModule } from '@angular/common';
       opacity: 1;
     }
 
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2.5px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--on-primary);
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes shiny-glow-sweep {
-      0% { left: -150%; }
-      100% { left: 250%; }
-    }
-
-    @keyframes shiny-glow-sweep-auto {
-      0%, 70% { left: -150%; }
-      80%, 100% { left: 250%; }
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    /* Loader uses global .dot-wave from styles.css */
+    .btn-content-inner .dot-wave { display: inline-flex; }
   `]
 })
 export class MagicShinyButtonComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
@@ -54,13 +54,11 @@ import { TurfBackgroundComponent } from '../../../shared/components/turf-backgro
   `,
   styles: []
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent {
   isOverlayActive = signal(false);
   isTransitioning = signal(false);
 
   constructor(private router: Router) {}
-
-  ngOnInit() {}
 
   onNavigate(action: 'login' | 'register') {
     if (this.isTransitioning()) return;

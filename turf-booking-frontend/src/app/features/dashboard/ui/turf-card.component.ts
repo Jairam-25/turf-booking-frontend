@@ -1,15 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Turf } from '../../../domain/models/turf.model';
+import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
 
 @Component({
   selector: 'app-turf-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PixelImageComponent],
   template: `
     <div class="turf-card glass scale-in">
       <div class="card-image">
-        <img [src]="turf.imageUrl" [alt]="turf.name" (error)="onImageError($event)">
+        <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
+        <img class="fallback" [src]="getImageSrc()" [alt]="turf.name" (error)="onImageError($event)" style="display:none;">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
       </div>
       
@@ -118,6 +120,10 @@ import { Turf } from '../../../domain/models/turf.model';
 export class TurfCardComponent {
   @Input({ required: true }) turf!: Turf;
   @Output() book = new EventEmitter<Turf>();
+
+  getImageSrc(): string {
+    return this.turf?.imageUrl ?? '/images/turf_sports_ground.png';
+  }
 
   onBook() {
     this.book.emit(this.turf);

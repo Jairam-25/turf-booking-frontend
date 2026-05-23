@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
@@ -7,11 +8,14 @@ import { NotificationService } from '../../../core/services/notification.service
 import { RegisterFormComponent } from './ui/register-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
 import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
+import { LottieHeroComponent } from '../../../shared/components/magic-ui/lottie-hero/lottie-hero.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, RegisterFormComponent, ThemeToggleComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
   template: `
     <div class="auth-container" [class.transitioning]="isTransitioning()">
       <div class="auth-theme-bar">
@@ -37,14 +41,13 @@ import { DEFAULT_AUTH_BACKGROUND_VIDEO, pickRandomAuthVideo } from '../../../cor
         <!-- Left Side: App Specs & Points -->
         <div class="info-pane">
           <div class="brand-header animate-fade-in-down">
-            <div class="app-logo">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--primary)" stroke-width="2.5"/>
-                <path d="M12 2V22M2 12H22" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="3 3"/>
-                <circle cx="12" cy="12" r="4" stroke="var(--accent)" stroke-width="2"/>
-              </svg>
+            <div class="flex items-center gap-3">
+              <app-lottie-hero [width]="64" [height]="64" [src]="'https://assets9.lottiefiles.com/packages/lf20_lk80fpsm.json'"></app-lottie-hero>
+              <div>
+                <h1 class="glow-brand-title"><span>Turf</span> <magic-aurora-text>Xpert</magic-aurora-text></h1>
+                <p class="brand-tagline">Elite Arena Booking</p>
+              </div>
             </div>
-            <h1 class="glow-brand-title">TurfXpert</h1>
             <p class="brand-tagline">Elite Arena Booking</p>
           </div>
 

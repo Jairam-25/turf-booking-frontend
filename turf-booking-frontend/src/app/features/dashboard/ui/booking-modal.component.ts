@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnInit, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Turf } from '../../../domain/models/turf.model';
 import { Slot } from '../../../domain/models/booking.model';
 import { BookingRepository } from '../../../domain/repositories/booking.repository';
 import { NotificationService } from '../../../core/services/notification.service';
+import { SignalrService } from '../../../core/services/signalr.service';
 
 @Component({
   selector: 'app-booking-modal',
@@ -419,10 +420,15 @@ export class BookingModalComponent implements OnInit {
   constructor(
     private bookingRepository: BookingRepository,
     private notificationService: NotificationService
+    , private signalr: SignalrService
   ) {}
 
   ngOnInit() {
     this.loadSlots();
+    // join signalr turf group so backend can push updates for this turf
+    try {
+      this.signalr.joinTurfGroup(String(this.turf.id));
+    } catch {}
   }
 
   loadSlots() {
@@ -468,7 +474,12 @@ export class BookingModalComponent implements OnInit {
 
   onClose() {
     if (this.isBookedSuccess()) return; // Prevent closing while success animation runs
+    try { this.signalr.leaveTurfGroup(String(this.turf.id)); } catch {}
     this.close.emit();
+  }
+
+  ngOnDestroy(): void {
+    try { this.signalr.leaveTurfGroup(String(this.turf.id)); } catch {}
   }
 
   formatTime(isoString: string): string {

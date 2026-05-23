@@ -8,6 +8,7 @@ import { LoginFormComponent } from './ui/login-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
 import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
 import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/magic-border-beam/magic-border-beam.component';
+import { LottieHeroComponent } from '../../../shared/components/magic-ui/lottie-hero/lottie-hero.component';
 
 @Component({
   selector: 'app-login',
