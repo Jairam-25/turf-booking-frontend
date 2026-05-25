@@ -1,0 +1,861 @@
+.auth-container {
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  perspective: 1000px;
+  isolation: isolate;
+}
+
+/* Full-viewport background video (fixed so height:100% parent issues don't hide it) */
+.bg-video,
+.auth-bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.video-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.split-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  width: 100%;
+  max-width: 1100px;
+  z-index: 10;
+  position: relative;
+}
+
+/* Left Side Info Panel */
+.info-pane {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 2.25rem;
+}
+
+.brand-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.app-logo {
+  width: 50px;
+  height: 50px;
+  animation: float-logo 4s ease-in-out infinite;
+}
+
+@keyframes float-logo {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+.glow-brand-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: var(--welcome-brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.25);
+  margin: 0;
+}
+
+.brand-tagline {
+  color: var(--primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.spec-item {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.spec-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.spec-item:hover .spec-icon {
+  background: var(--primary);
+  color: var(--on-primary);
+  transform: translateY(-2px);
+}
+
+.spec-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.spec-details h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+  color: var(--text-primary);
+}
+
+.spec-details p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Right Side Card Panel */
+.card-pane {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 2.25rem 2.5rem;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.auth-header h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 0.15rem;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.auth-header p {
+  color: var(--text-secondary);
+  font-size: 0.825rem;
+}
+
+/* Sports Field Preview Styling */
+.football-field-preview {
+  width: 100%;
+  height: 165px;
+  background: linear-gradient(180deg, #15803d 0%, #166534 100%);
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+/* Cricket Field colors */
+.football-field-preview.cricket-field {
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+}
+
+/* Ping-pong Field colors */
+.football-field-preview.pingpong-field {
+  background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
+}
+
+.field-grass-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 20px, transparent 20px, transparent 40px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Goal Post */
+.goal-post {
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 45px;
+  border: 2.5px solid #ffffff;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  z-index: 2;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.goal-net {
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.15) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.15) 75%);
+  background-size: 6px 6px;
+  opacity: 0.8;
+}
+
+.net-shake {
+  animation: shake 0.4s ease-in-out 3;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  25% { transform: translateX(-50%) translateY(3px) skewX(-2deg); }
+  75% { transform: translateX(-50%) translateY(-2px) skewX(2deg); }
+}
+
+/* Soccer Kicker (Striker) Image Styling */
+.kicker-player-img {
+  position: absolute;
+  bottom: 8px;
+  left: 16%;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  z-index: 3;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+.kicker-player-img.kick-swing {
+  transform: translate(14px, -10px) rotate(-15deg) scale(1.08);
+}
+
+/* Soccer Goalkeeper Image Styling */
+.goalkeeper-player-img {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  z-index: 3;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* Success: Goalkeeper dives but misses the ball (dives left while ball goes right!) */
+.goalkeeper-player-img.goalkeeper-miss {
+  transform: translate(-42px, -12px) rotate(-65deg) scale(0.95);
+  opacity: 0.85;
+}
+
+/* Failure: Goalkeeper dives and blocks the ball in the top-right corner! */
+.goalkeeper-player-img.goalkeeper-save {
+  transform: translate(32px, -8px) rotate(65deg) scale(1.05);
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.85)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+/* Cricket Batsman Image Styling */
+.batsman-player-img {
+  position: absolute;
+  bottom: 8px;
+  left: 25%;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  z-index: 3;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+.batsman-player-img.bat-swing {
+  transform: translate(14px, -8px) rotate(15deg) scale(1.1);
+}
+
+/* Cricket Bowler Image Styling */
+.bowler-player-img {
+  position: absolute;
+  top: 10px;
+  right: 15%;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* Bowler bowling release animation */
+.bowler-player-img.bowler-release {
+  transform: translate(-14px, 14px) scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+/* Ping Pong Paddle Image Styling */
+.pingpong-paddle-img {
+  position: absolute;
+  bottom: 12px;
+  left: 18%;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  z-index: 3;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+.pingpong-paddle-img.paddle-swing {
+  transform: translate(18px, -15px) rotate(35deg) scale(1.15);
+  filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.65)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+/* Cricket Wickets */
+.cricket-wickets {
+  position: absolute;
+  top: 20px;
+  display: flex;
+  gap: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 44px;
+  z-index: 2;
+  align-items: flex-end;
+  transition: all 0.3s ease;
+}
+
+.wicket {
+  width: 3.5px;
+  height: 40px;
+  background: #f59e0b;
+  border-radius: 1.5px;
+  border: 1px solid #d97706;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bail {
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: #f59e0b;
+  border: 0.5px solid #d97706;
+  border-radius: 0.5px;
+  top: 2px;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bail-1 { left: 0px; }
+.bail-2 { right: 0px; }
+
+.wickets-shattered .stump-1 { transform: rotate(-25deg) translate(-6px, -4px); }
+.wickets-shattered .stump-2 { transform: translateY(3px) rotate(5deg); }
+.wickets-shattered .stump-3 { transform: rotate(25deg) translate(6px, -4px); }
+.wickets-shattered .bail-1 { transform: translate(-12px, -14px) rotate(-110deg); }
+.wickets-shattered .bail-2 { transform: translate(12px, -14px) rotate(110deg); }
+
+/* Ping-Pong Net */
+.pingpong-net {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.85);
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  z-index: 2;
+}
+
+.pingpong-net-mesh {
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 2px, transparent 2px, transparent 4px);
+}
+
+.pingpong-post {
+  position: absolute;
+  width: 3px;
+  height: 10px;
+  background: #ffffff;
+  top: -3px;
+}
+.left-post { left: 0; }
+.right-post { right: 0; }
+
+.pingpong-net.net-shake {
+  animation: pp-net-shake 0.3s ease-in-out 3;
+}
+
+@keyframes pp-net-shake {
+  0%, 100% { transform: translateY(0); }
+  33% { transform: translateY(-1.5px); }
+  66% { transform: translateY(1.5px); }
+}
+
+/* Penalty markings */
+.penalty-box {
+  position: absolute;
+  top: 0;
+  width: 130px;
+  height: 50px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-top: none;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.penalty-spot {
+  position: absolute;
+  bottom: 58px;
+  width: 5px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Cricket Pitch marking */
+.cricket-pitch-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: rgba(253, 230, 138, 0.25);
+  border-left: 1px dashed rgba(255, 255, 255, 0.4);
+  border-right: 1px dashed rgba(255, 255, 255, 0.4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Ping-pong Table markings */
+.pingpong-table-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Ball Wrapper & Positioning */
+.football-wrapper {
+  width: 36px;
+  height: 36px;
+  position: relative;
+  z-index: 3;
+}
+
+.football, .cricket-ball, .pingpong-ball {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+  animation: float-ball 3s ease-in-out infinite alternate;
+}
+
+.football-shadow {
+  position: absolute;
+  bottom: -3px;
+  left: 5%;
+  width: 90%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  filter: blur(1.5px);
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+@keyframes float-ball {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+/* Success Kick Path */
+.football-wrapper.kicked-success {
+  pointer-events: none;
+  animation: kick-success 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.football-wrapper.kicked-success .football {
+  animation: spin-ball 0.7s linear forwards;
+}
+
+@keyframes kick-success {
+  0% { transform: translateY(0) scale(1) translateX(0); }
+  20% { transform: translateY(-20px) scale(1.1) translateX(-5px); }
+  100% { transform: translateY(-130px) scale(0.35) translateX(-25px); opacity: 0.1; }
+}
+
+/* Failure Kick Path (Goalie saves it) */
+.football-wrapper.kicked-failure {
+  pointer-events: none;
+  animation: kick-fail 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.football-wrapper.kicked-failure .football {
+  animation: spin-ball 0.7s linear forwards;
+}
+
+@keyframes kick-fail {
+  0% { transform: translateY(0) scale(1) translateX(0); }
+  35% { transform: translateY(-105px) scale(0.6) translateX(20px); }
+  60% { transform: translateY(-105px) scale(0.6) translateX(20px); } /* Hits goalie glove */
+  100% { transform: translateY(-50px) scale(0.8) translateX(45px); opacity: 0.8; }
+}
+
+/* Cricket Success Path */
+.football-wrapper.cricket-success {
+  pointer-events: none;
+  animation: cricket-six 0.75s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+}
+
+.football-wrapper.cricket-success .cricket-ball {
+  animation: spin-ball 0.75s linear forwards;
+}
+
+@keyframes cricket-six {
+  0% { transform: translateY(0) scale(1) rotate(0deg); }
+  30% { transform: translateY(-40px) scale(1.3) rotate(45deg); }
+  100% { transform: translateY(-140px) scale(0.4) rotate(360deg); opacity: 0.15; }
+}
+
+/* Cricket Failure Path (Bowled OUT) */
+.football-wrapper.cricket-failure {
+  pointer-events: none;
+  animation: cricket-bowled 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.football-wrapper.cricket-failure .cricket-ball {
+  animation: spin-ball 0.7s linear forwards;
+}
+
+@keyframes cricket-bowled {
+  0% { transform: translateY(0) scale(1) translateX(0); }
+  100% { transform: translateY(-120px) scale(0.45) translateX(0); }
+}
+
+/* Ping Pong Success Path */
+.football-wrapper.pingpong-success {
+  pointer-events: none;
+  animation: pp-smash 0.65s cubic-bezier(0.18, 1, 0.22, 1) forwards;
+}
+
+.football-wrapper.pingpong-success .pingpong-ball {
+  animation: spin-ball 0.65s linear forwards;
+}
+
+@keyframes pp-smash {
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-45px) scale(0.7) translateX(-15px); }
+  50% { transform: translateY(-85px) scale(0.9) translateX(20px); }
+  100% { transform: translateY(-135px) scale(0.3) translateX(0); opacity: 0.1; }
+}
+
+/* Ping Pong Failure Path (Hits Net) */
+.football-wrapper.pingpong-failure {
+  pointer-events: none;
+  animation: pp-net-hit 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.football-wrapper.pingpong-failure .pingpong-ball {
+  animation: spin-ball 0.7s linear forwards;
+}
+
+@keyframes pp-net-hit {
+  0% { transform: translateY(0) scale(1) translateX(0); }
+  45% { transform: translateY(-75px) scale(0.65) translateX(0); } /* Hits net */
+  100% { transform: translateY(-45px) scale(0.75) translateX(-8px); }
+}
+
+@keyframes spin-ball {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(720deg); }
+}
+
+.football-wrapper.kicked-success .football-shadow,
+.football-wrapper.cricket-success .football-shadow,
+.football-wrapper.pingpong-success .football-shadow {
+  opacity: 0;
+  transform: scale(0.1);
+}
+
+.error-banner {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(239, 68, 68, 0.08);
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 0.825rem;
+  text-align: left;
+}
+
+body[data-theme="light"] .error-banner {
+  background: rgba(220, 38, 38, 0.06);
+  border-left-color: #dc2626;
+  color: #dc2626;
+}
+
+
+
+/* Background Orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: 1;
+  opacity: 0.35;
+}
+
+.orb-1 {
+  width: 450px;
+  height: 450px;
+  background: var(--primary);
+  top: -150px;
+  right: -100px;
+  animation: float-orb-1 12s ease-in-out infinite alternate;
+}
+
+@keyframes float-orb-1 {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-30px) scale(1.05); }
+}
+
+.orb-2 {
+  width: 350px;
+  height: 350px;
+  background: var(--secondary);
+  bottom: -100px;
+  left: -80px;
+  animation: float-orb-2 9s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float-orb-2 {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(30px) scale(0.95); }
+}
+
+.orb-3 {
+  width: 250px;
+  height: 250px;
+  background: var(--accent);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.15;
+}
+
+/* ==========================================================================
+   Welcome Component Styling (Interactive Entrance Screen)
+   ========================================================================== */
+.welcome-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.welcome-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 2.25rem 2.5rem;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+}
+
+.welcome-card .header-section {
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.welcome-card .card-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.welcome-card .subtitle {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.instruction-text {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0 0;
+  min-height: 1.5rem;
+}
+
+.instruction-text.kicking-text {
+  color: var(--primary);
+  animation: pulse 1s infinite;
+}
+
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.btn-kick {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  transition: var(--transition-smooth);
+}
+
+.btn-secondary-glass {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  box-shadow: var(--shadow-flat);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary-glass:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-glass:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+body[data-theme="light"] .btn-secondary-glass {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+body[data-theme="light"] .btn-secondary-glass:hover:not(:disabled) {
+  background: rgba(var(--primary-rgb), 0.08);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+body[data-theme="light"] .spec-icon {
+  background: rgba(var(--primary-rgb), 0.08);
+  border-color: rgba(var(--primary-rgb), 0.15);
+}
+
+body[data-theme="light"] .glow-brand-title {
+  text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.15);
+}
+
+body[data-theme="light"] .auth-card,
+body[data-theme="light"] .welcome-card {
+  box-shadow: var(--shadow-float);
+}
+
+@media (max-width: 992px) {
+  .split-layout {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 0;
+  }
+  .info-pane {
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .glow-brand-title {
+    font-size: 2.75rem;
+  }
+  .specs-list {
+    max-width: 500px;
+  }
+  .spec-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card, .welcome-card {
+    padding: 1.5rem 1.25rem;
+    gap: 1rem;
+  }
+}
