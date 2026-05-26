@@ -52,8 +52,9 @@ export class BookingRepositoryImpl implements BookingRepository {
     );
   }
 
-  cancelBooking(bookingId: number): Observable<any> {
-    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`).pipe(
+  cancelBooking(bookingId: number, reason: string): Observable<any> {
+    const params = new HttpParams().set('reason', reason);
+    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`, { params }).pipe(
       map(response => response.data || response.Data || response.value || response.Value || response)
     );
   }
