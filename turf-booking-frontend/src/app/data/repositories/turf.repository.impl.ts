@@ -22,9 +22,14 @@ export class TurfRepositoryImpl implements TurfRepository {
 
   getAll(params?: any): Observable<TurfResponse> {
     let httpParams = new HttpParams();
+    // Default to pageSize 100 to ensure all active turfs are fetched
+    httpParams = httpParams.set('pageSize', '100');
+
     if (params) {
       Object.keys(params).forEach(key => {
-        if (params[key]) httpParams = httpParams.set(key, params[key]);
+        if (params[key] !== undefined && params[key] !== null) {
+          httpParams = httpParams.set(key, params[key]);
+        }
       });
     }
 

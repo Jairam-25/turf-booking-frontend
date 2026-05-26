@@ -1,16 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MockDataService } from '../../core/services/mock-data.service';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
-import { BookingModalComponent } from './ui/booking-modal.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TurfCardComponent, BookingModalComponent],
+  imports: [CommonModule, TurfCardComponent],
   template: `
     <div class="dashboard-page fade-in">
       <!-- ... existing template ... -->
@@ -39,7 +37,6 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
           <app-turf-card 
             *ngFor="let turf of turfs()" 
             [turf]="turf"
-            (book)="openBooking($event)"
           ></app-turf-card>
         </div>
 
@@ -55,14 +52,6 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
           </div>
         </ng-template>
       </main>
-
-      <!-- Booking Modal -->
-      <app-booking-modal
-        *ngIf="selectedTurf()"
-        [turf]="selectedTurf()!"
-        (close)="closeBooking()"
-        (booked)="onBookingSuccess()"
-      ></app-booking-modal>
     </div>
   `,
   styles: [`
@@ -187,8 +176,6 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
 export class DashboardComponent implements OnInit {
   turfs = signal<Turf[]>([]);
   isLoading = signal(true);
-  selectedTurf = signal<Turf | null>(null);
-  
   constructor(
     private turfRepository: TurfRepository,
     private notificationService: NotificationService
@@ -225,18 +212,5 @@ export class DashboardComponent implements OnInit {
   onSearch(event: any) {
     const term = event.target.value;
     this.loadTurfs(term);
-  }
-
-  openBooking(turf: Turf) {
-    this.selectedTurf.set(turf);
-  }
-
-  closeBooking() {
-    this.selectedTurf.set(null);
-  }
-
-  onBookingSuccess() {
-    this.closeBooking();
-    this.loadTurfs(); // Refresh slots
   }
 }

@@ -46,7 +46,7 @@ export class BookingRepositoryImpl implements BookingRepository {
           turfId: s.turfId || s.TurfId,
           startTime: s.startTime || s.StartTime,
           endTime: s.endTime || s.EndTime,
-          isBooked: false // API only returns available slots
+          isBooked: s.isBooked !== undefined ? s.isBooked : (s.IsBooked !== undefined ? s.IsBooked : false)
         }));
       })
     );

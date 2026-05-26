@@ -24,7 +24,14 @@ import { NotificationService } from '../../core/services/notification.service';
           <div class="booking-main">
             <div class="turf-details">
               <h3>{{ booking.turfName }}</h3>
-              <p class="location">{{ booking.location }}</p>
+              <a 
+                [href]="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.turfName + ' ' + booking.location)"
+                target="_blank" 
+                class="location-link"
+                title="Open in Google Maps"
+              >
+                {{ booking.location }} ↗
+              </a>
             </div>
             <div class="booking-status">
               <span class="status-badge">Booking Confirmed</span>
@@ -133,9 +140,15 @@ import { NotificationService } from '../../core/services/notification.service';
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
     }
-    .location {
+    .location-link {
       color: var(--text-secondary);
       font-size: 0.9375rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: var(--transition-smooth);
+    }
+    .location-link:hover {
+      color: var(--primary);
     }
 
     .status-badge {
@@ -379,6 +392,10 @@ export class BookingsComponent implements OnInit {
         this.isCancelling.set(false);
       }
     });
+  }
+
+  encodeURIComponent(val: string): string {
+    return encodeURIComponent(val);
   }
 
   formatDateTime(isoString: string): string {
