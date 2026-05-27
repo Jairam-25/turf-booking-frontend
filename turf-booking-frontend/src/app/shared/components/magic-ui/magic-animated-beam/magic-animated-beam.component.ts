@@ -74,7 +74,7 @@ import { CommonModule } from '@angular/common';
       </svg>
 
       <!-- HTML Interactive Overlaid Nodes -->
-      <div class="relative z-10 w-full flex justify-between items-center h-48 px-12 md:px-24">
+      <div class="relative z-10 w-full flex justify-between items-center h-48 px-2 sm:px-12 md:px-24">
         
         <!-- Node 1: Player/User -->
         <div class="beam-node flex flex-col items-center gap-2 group">
@@ -196,6 +196,29 @@ import { CommonModule } from '@angular/common';
 
     .animate-pulse-subtle {
       animation: pulse-subtle 2s ease-in-out infinite;
+    }
+
+    @media (max-width: 480px) {
+      .node-circle {
+        width: 48px;
+        height: 48px;
+        border-width: 2px;
+      }
+      .app-node {
+        width: 56px;
+        height: 56px;
+      }
+      .beam-node {
+        width: 75px;
+      }
+      .node-label {
+        font-size: 0.65rem;
+        letter-spacing: 0px;
+      }
+      .beam-node .text-3xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+      }
     }
   `]
 })

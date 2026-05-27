@@ -40,4 +40,19 @@ export class AuthRepositoryImpl implements AuthRepository {
     return this.http.post<any>(`${this.apiUrl}/reset-password`, data)
       .pipe(map(response => response.data || response.Data || response.value || response.Value || response.message || response.Message || response));
   }
+
+  sendOtp(emailOrPhone: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/send-otp`, { emailOrPhone })
+      .pipe(map(response => response.data || response.Data || response.value || response.Value || response.message || response.Message || response));
+  }
+
+  verifyOtp(emailOrPhone: string, otpCode: string): Observable<AuthResponse> {
+    return this.http.post<any>(`${this.apiUrl}/verify-otp`, { emailOrPhone, otpCode })
+      .pipe(
+        map(response => {
+          const dto = response.data || response.Data || response.value || response.Value;
+          return AuthMapper.fromDto(dto);
+        })
+      );
+  }
 }

@@ -325,6 +325,62 @@ import { NotificationService } from '../../core/services/notification.service';
       align-items: center;
       gap: 1.5rem;
     }
+
+    /* Tablet and Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .bookings-container {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      .header-card {
+        padding: 1.5rem;
+      }
+      .header-card h1 {
+        font-size: 1.8rem;
+      }
+      .booking-card {
+        padding: 1.25rem;
+        gap: 1.25rem;
+      }
+      .booking-main {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      .booking-footer {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding-top: 1rem;
+      }
+      .cancel-action {
+        grid-column: 1 / -1;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
+      .btn-cancel {
+        width: 100%;
+      }
+      .empty-state {
+        padding: 3rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .booking-footer {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .modal-content {
+        padding: 1.5rem;
+      }
+      .modal-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .modal-actions button {
+        width: 100%;
+      }
+    }
   `]
 })
 export class BookingsComponent implements OnInit {

@@ -984,6 +984,97 @@ interface CategorizedSlot extends Slot {
         padding: 1rem;
       }
     }
+
+    @media (max-width: 768px) {
+      .turf-details-content,
+      .booking-panel {
+        padding: 1.5rem;
+      }
+      .turf-name {
+        font-size: 2rem;
+      }
+      .rules-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+      }
+      .rule-item {
+        padding: 1rem 0.5rem;
+      }
+      .rule-label {
+        font-size: 0.75rem;
+      }
+      .rule-hours {
+        font-size: 0.7rem;
+      }
+      .rule-price {
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+      .payment-options-grid {
+        grid-template-columns: 1fr;
+      }
+      .success-card {
+        padding: 2rem 1.5rem;
+      }
+      .success-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .turf-hero-image {
+        height: 200px;
+      }
+      .turf-details-content,
+      .booking-panel {
+        padding: 1.25rem;
+      }
+      .turf-name {
+        font-size: 1.6rem;
+      }
+      .location-bar {
+        font-size: 0.95rem;
+      }
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+      .rule-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        text-align: left;
+      }
+      .rule-item > span {
+        margin: 0;
+      }
+      .rule-price {
+        font-size: 1.2rem;
+      }
+      .day-chip {
+        flex: 0 0 50px;
+        padding: 8px 2px;
+      }
+      .slot-card-v3 {
+        padding: 0.75rem;
+      }
+      .time {
+        font-size: 0.85rem;
+      }
+      .price-tag {
+        font-size: 0.95rem;
+      }
+      .summary-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .summary-row.total {
+        flex-direction: row;
+      }
+      .success-details-list {
+        padding: 1rem;
+      }
+    }
   `]
 })
 export class TurfDetailComponent implements OnInit, OnDestroy {

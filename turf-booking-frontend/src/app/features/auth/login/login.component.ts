@@ -249,6 +249,27 @@ export class LoginComponent implements OnInit {
     this.isKickedFailure.set(false);
     this.isNetShaking.set(false);
 
+    // If pre-authenticated via OTP
+    if (credentials && credentials.auth && credentials.auth.token) {
+      this.isKickedSuccess.set(true);
+
+      setTimeout(() => {
+        this.isNetShaking.set(true);
+      }, 300);
+
+      setTimeout(() => {
+        this.isOverlayActive.set(true);
+      }, 500);
+
+      setTimeout(() => {
+        this.authStore.setSession(credentials.user, credentials.auth.token, credentials.auth.refreshToken);
+        this.notificationService.success('Logged in successfully!');
+        this.router.navigate(['/home']);
+        this.isLoading.set(false);
+      }, 1500);
+      return;
+    }
+
     this.authRepository.login(credentials).subscribe({
       next: (response) => {
         if (response && response.auth && response.auth.token) {

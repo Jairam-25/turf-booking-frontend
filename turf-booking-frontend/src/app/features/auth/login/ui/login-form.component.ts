@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MagicShinyButtonComponent } from '../../../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
+import { AuthRepository } from '../../../../domain/repositories/auth.repository';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login-form',
@@ -27,11 +29,12 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
           >
         </div>
         <span class="error-text" *ngIf="isFieldInvalid('emailOrPhone')">
-          Please enter a valid email or phone number
+          Please enter a valid email or 10-digit phone number
         </span>
       </div>
 
-      <div class="form-group">
+      <!-- Password Mode Input -->
+      <div class="form-group animate-fade-in-up" *ngIf="!isOtpMode">
         <label for="password">Password</label>
         <input 
           id="password" 
@@ -47,16 +50,45 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
         </span>
       </div>
 
+      <!-- OTP Mode Verification Input -->
+      <div class="form-group animate-fade-in-up" *ngIf="isOtpMode && otpSent">
+        <div class="otp-info-message">
+          OTP has been sent to your registered email: <strong>{{ maskedEmail }}</strong>
+        </div>
+        <label for="otpCode">OTP Verification Code</label>
+        <input 
+          id="otpCode" 
+          type="text" 
+          formControlName="otpCode" 
+          placeholder="Enter 6-digit OTP"
+          maxlength="6"
+          [class.invalid]="isFieldInvalid('otpCode')"
+          (keydown.space)="$event.preventDefault()"
+          (input)="onOtpInput($event)"
+        >
+        <span class="error-text" *ngIf="isFieldInvalid('otpCode')">
+          Please enter a valid 6-digit OTP code
+        </span>
+        <div class="otp-timer-container">
+          <span class="timer-text" *ngIf="countdown > 0">Resend OTP in {{ countdown }}s</span>
+          <button type="button" class="btn-resend" *ngIf="countdown === 0" (click)="sendOtp()">Resend OTP</button>
+        </div>
+      </div>
+
       <magic-shiny-button 
         type="submit" 
-        [loading]="loading"
+        [loading]="loading || sendingOtp || verifyingOtp"
       >
-        Sign In
+        {{ isOtpMode ? (otpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In' }}
       </magic-shiny-button>
 
       <div class="form-footer">
         <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>
-        <a routerLink="/auth/forgot-password" class="forgot-link">Forgot password?</a>
+        
+        <a href="javascript:void(0)" (click)="toggleMode()" class="forgot-link">
+          <i class="bi bi-unlock-fill"></i> {{ isOtpMode ? 'Login with Password' : 'Login with OTP' }}
+        </a>
+        <a routerLink="/auth/forgot-password" class="forgot-link" *ngIf="!isOtpMode">Forgot password?</a>
       </div>
     </form>
   `,
@@ -114,7 +146,7 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.5rem;
       margin-top: 0.35rem;
       font-size: 0.825rem;
     }
@@ -132,63 +164,123 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
     }
     .forgot-link {
       font-size: 0.775rem;
+      cursor: pointer;
     }
-    .btn-premium {
-      width: 100%;
-      height: 48px;
+    .otp-timer-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
+      margin-top: 0.25rem;
     }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      position: relative;
-      display: inline-block;
-      box-sizing: border-box;
+    .timer-text {
+      font-size: 0.775rem;
+      color: var(--text-secondary);
     }
-
-    .spinner:before {
-      transform: rotateX(60deg) rotateY(45deg) rotateZ(45deg);
-      animation: 750ms rotateBefore infinite linear reverse;
+    .btn-resend {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.775rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      transition: var(--transition-smooth);
     }
-
-    .spinner:after {
-      transform: rotateX(240deg) rotateY(45deg) rotateZ(45deg);
-      animation: 750ms rotateAfter infinite linear;
+    .btn-resend:hover {
+      color: var(--accent);
+      text-decoration: underline;
     }
-
-    .spinner:before,
-    .spinner:after {
-      box-sizing: border-box;
-      content: '';
-      display: block;
-      position: absolute;
-      margin-top: -10px;
-      margin-left: -10px;
-      width: 20px;
-      height: 20px;
-      transform-style: preserve-3d;
-      transform-origin: 50%;
-      perspective-origin: 50% 50%;
-      perspective: 340px;
-      background-size: 20px 20px;
-      background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI2NnB4IiBoZWlnaHQ9IjI5N3B4IiB2aWV3Qm94PSIwIDAgMjY2IDI5NyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaC9ucyI+CiAgICA8dGl0bGU+c3Bpbm5lcjwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMTcxLjUwNzgxMywzLjI1MDAwMDM4IEMyMjYuMjA4MTgzLDEyLjg1NzcxMTEgMjk3LjExMjcyMiw3MS40OTEyODIzIDI1MC44OTU1OTksMTA4LjQxMDE1NSBDMjE2LjU4MjAyNCwxMzUuODIwMzEgMTg2LjUyODQwNSw5Ny4wNjI0OTY0IDE1Ni44MDA3NzQsODUuNzczNDM0NiBDMTI3LjA3MzE0Myw3NC40ODQzNzIxIDc2Ljg4ODQ2MzIsODQuMjE2MTQ2MiA2MC4xMjg5MDY1LDEwOC40MTAxNTMgQy0xNS45ODA0Njg1LDIxOC4yODEyNDcgMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IDE0NS4yNzczNDQsMjk2LjY2Nzk2OCBDMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IC0yNS40NDkyMTg3LDI1Ny4yNDIxOTggMy4zOTg0Mzc1LDEwOC40MTAxNTUgQzE2LjMwNzA2NjEsNDEuODExNDE3NCA4NC43Mjc1ODI5LC0xMS45OTIyOTg1IDE3MS41MDc4MTMsMy4yNTAwMDAzOCBaIiBpZD0iUGF0aC0xIiBmaWxsPSIjMDAwMDAwIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==");
+    .animate-fade-in-up {
+      animation: fadeInUp 0.3s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .otp-info-message {
+      background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.65rem;
+    }
+    .otp-info-message strong {
+      color: var(--primary);
     }
   `]
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnDestroy {
   @Input() loading = false;
   @Output() login = new EventEmitter<any>();
 
   loginForm: FormGroup;
-  isPhoneType = false;
+  isPhoneType = false; // Start as false since field is empty
+  isOtpMode = true; // OTP Mode is default per requirements
+  otpSent = false;
+  maskedEmail = '';
+  
+  sendingOtp = false;
+  verifyingOtp = false;
+  countdown = 60;
+  countdownInterval: any;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authRepository: AuthRepository,
+    private notificationService: NotificationService
+  ) {
     this.loginForm = this.fb.group({
-      emailOrPhone: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      emailOrPhone: ['', [Validators.required, this.emailOrPhoneValidator()]],
+      password: [''],
+      otpCode: ['']
     });
+  }
+
+  ngOnDestroy() {
+    this.clearInterval();
+  }
+
+  emailOrPhoneValidator() {
+    return (control: any) => {
+      const val = control.value;
+      if (!val) return null;
+      
+      if (val.includes('@')) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(val) ? null : { invalidEmail: true };
+      } else {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        return phoneRegex.test(val) ? null : { invalidPhone: true };
+      }
+    };
+  }
+
+  toggleMode() {
+    this.isOtpMode = !this.isOtpMode;
+    this.otpSent = false;
+    this.maskedEmail = '';
+    this.clearInterval();
+    this.loginForm.patchValue({ emailOrPhone: '', password: '', otpCode: '' });
+    
+    // Clear flag state
+    this.isPhoneType = false;
+    
+    const emailOrPhoneControl = this.loginForm.get('emailOrPhone');
+    const passwordControl = this.loginForm.get('password');
+    const otpControl = this.loginForm.get('otpCode');
+    
+    if (this.isOtpMode) {
+      passwordControl?.clearValidators();
+      otpControl?.clearValidators();
+    } else {
+      otpControl?.clearValidators();
+      passwordControl?.setValidators([Validators.required]);
+    }
+    
+    emailOrPhoneControl?.updateValueAndValidity();
+    passwordControl?.updateValueAndValidity();
+    otpControl?.updateValueAndValidity();
   }
 
   onEmailOrPhoneInput(event: Event) {
@@ -197,26 +289,30 @@ export class LoginFormComponent {
 
     if (!val) {
       this.isPhoneType = false;
-      this.loginForm.get('emailOrPhone')?.setValue('', { emitEvent: false });
+      this.loginForm.get('emailOrPhone')?.setValue('');
       return;
     }
 
-    // Strip all spaces
+    // Strip spaces
     val = val.replace(/\s+/g, '');
-
-    // Check if the entire string consists ONLY of digits
     const isOnlyDigits = /^[0-9]+$/.test(val);
 
     if (isOnlyDigits) {
       this.isPhoneType = true;
-      // Limit to 10 digits
       val = val.substring(0, 10);
     } else {
       this.isPhoneType = false;
     }
 
     // Update form control and input element value
-    this.loginForm.get('emailOrPhone')?.setValue(val, { emitEvent: false });
+    this.loginForm.get('emailOrPhone')?.setValue(val);
+    inputElement.value = val;
+  }
+
+  onOtpInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    let val = inputElement.value.replace(/\D/g, '').substring(0, 6);
+    this.loginForm.get('otpCode')?.setValue(val);
     inputElement.value = val;
   }
 
@@ -232,23 +328,114 @@ export class LoginFormComponent {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
+  sendOtp() {
+    const emailOrPhoneControl = this.loginForm.get('emailOrPhone');
+    emailOrPhoneControl?.updateValueAndValidity();
+    if (emailOrPhoneControl?.invalid) {
+      emailOrPhoneControl.markAsTouched();
+      return;
+    }
+
+    let val = emailOrPhoneControl?.value?.trim() || '';
+    if (!val.includes('@')) {
+      if (val.length === 10 && /^\d+$/.test(val)) {
+        val = `+91${val}`;
+      }
+    }
+
+    this.sendingOtp = true;
+    this.authRepository.sendOtp(val).subscribe({
+      next: (maskedEmail: string) => {
+        this.sendingOtp = false;
+        this.otpSent = true;
+        this.maskedEmail = maskedEmail || 'your registered email';
+        this.startTimer();
+        this.notificationService.success(`OTP sent to ${this.maskedEmail}`);
+        
+        const otpControl = this.loginForm.get('otpCode');
+        otpControl?.setValidators([Validators.required, Validators.pattern(/^\d{6}$/)]);
+        otpControl?.updateValueAndValidity();
+      },
+      error: (err) => {
+        this.sendingOtp = false;
+        const msg = err.error?.message || err.error?.Message || 'Failed to send OTP. Please try again.';
+        this.notificationService.error(msg);
+      }
+    });
+  }
+
+  verifyOtp() {
+    const otpControl = this.loginForm.get('otpCode');
+    if (otpControl?.invalid) {
+      otpControl.markAsTouched();
+      return;
+    }
+
+    let emailOrPhone = this.loginForm.value.emailOrPhone;
+    if (!emailOrPhone.includes('@') && emailOrPhone.length === 10 && /^\d+$/.test(emailOrPhone)) {
+      emailOrPhone = `+91${emailOrPhone}`;
+    }
+
+    const otpCode = this.loginForm.value.otpCode;
+
+    this.verifyingOtp = true;
+    this.authRepository.verifyOtp(emailOrPhone, otpCode).subscribe({
+      next: (response) => {
+        this.verifyingOtp = false;
+        this.notificationService.success('OTP verified successfully!');
+        this.login.emit(response);
+      },
+      error: (err) => {
+        this.verifyingOtp = false;
+        const msg = err.error?.message || err.error?.Message || 'Invalid or expired OTP. Please try again.';
+        this.notificationService.error(msg);
+      }
+    });
+  }
+
+  startTimer() {
+    this.countdown = 60;
+    this.clearInterval();
+    this.countdownInterval = setInterval(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        this.clearInterval();
+      }
+    }, 1000);
+  }
+
+  clearInterval() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
   onSubmit() {
-    // Trim all fields in the form to ignore whitespaces
     Object.keys(this.loginForm.controls).forEach(key => {
       this.trimField(key);
     });
 
-    if (this.loginForm.valid) {
-      const credentials = { ...this.loginForm.value };
-      // Prepend +91 if it's phone number
-      if (this.isPhoneType) {
-        credentials.emailOrPhone = `+91${credentials.emailOrPhone}`;
+    if (this.isOtpMode) {
+      if (!this.otpSent) {
+        this.sendOtp();
+      } else {
+        this.verifyOtp();
       }
-      this.login.emit(credentials);
     } else {
-      Object.keys(this.loginForm.controls).forEach(key => {
-        const control = this.loginForm.get(key);
-        control?.markAsTouched();
+      if (this.loginForm.get('emailOrPhone')?.invalid || this.loginForm.get('password')?.invalid) {
+        this.loginForm.markAllAsTouched();
+        return;
+      }
+      
+      let emailOrPhone = this.loginForm.value.emailOrPhone;
+      if (!emailOrPhone.includes('@') && emailOrPhone.length === 10 && /^\d+$/.test(emailOrPhone)) {
+        emailOrPhone = `+91${emailOrPhone}`;
+      }
+
+      this.login.emit({
+        emailOrPhone: emailOrPhone,
+        password: this.loginForm.value.password
       });
     }
   }

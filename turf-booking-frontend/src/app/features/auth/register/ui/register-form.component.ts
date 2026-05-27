@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { MagicShinyButtonComponent } from '../../../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
 
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MagicShinyButtonComponent],
   template: `
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
       <div class="form-group">
@@ -66,44 +67,45 @@ import { RouterModule } from '@angular/router';
         </span>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input 
-            id="password" 
-            type="password" 
-            formControlName="password" 
-            placeholder="••••••••"
-            [class.invalid]="isFieldInvalid('password')"
-            (blur)="trimField('password')"
-          >
-          <span class="error-text" *ngIf="isFieldInvalid('password')">
-            Min 8 chars, with A-Z, a-z, 0-9 & special char
-          </span>
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm</label>
-          <input 
-            id="confirmPassword" 
-            type="password" 
-            formControlName="confirmPassword" 
-            placeholder="••••••••"
-            [class.invalid]="isFieldInvalid('confirmPassword')"
-            (blur)="trimField('confirmPassword')"
-          >
-          <span class="error-text" *ngIf="isFieldInvalid('confirmPassword')">
-            Passwords must match
-          </span>
-        </div>
+      <div class="form-group">
+        <label for="password">Create Password</label>
+        <input 
+          id="password" 
+          type="password" 
+          formControlName="password" 
+          placeholder="••••••••"
+          [class.invalid]="isFieldInvalid('password')"
+          (blur)="trimField('password')"
+        >
+        <span class="error-text" *ngIf="isFieldInvalid('password')">
+          Min 8 chars, with A-Z, a-z, 0-9 & special char
+        </span>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          id="confirmPassword" 
+          type="password" 
+          formControlName="confirmPassword" 
+          placeholder="••••••••"
+          [class.invalid]="isFieldInvalid('confirmPassword')"
+          (blur)="trimField('confirmPassword')"
+        >
+        <span class="error-text" *ngIf="isFieldInvalid('confirmPassword')">
+          Passwords must match
+        </span>
       </div>
 
-      <button type="submit" class="btn-premium" [disabled]="loading">
-        <span *ngIf="!loading">Create Account</span>
-        <span *ngIf="loading" class="spinner"></span>
-      </button>
+      <magic-shiny-button 
+        type="submit" 
+        [loading]="loading"
+      >
+        Create Account
+      </magic-shiny-button>
 
-      <div class="form-footer">
-        <p>Already have an account? <a routerLink="/auth/login">Sign in</a></p>
+      <div class="form-footer" style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center;">
+        <p style="margin: 0;">Already have an account? <a routerLink="/auth/login">Sign in</a></p>
+        <p style="margin: 0;"><a routerLink="/auth/login" style="font-size: 0.8rem; font-weight: 600; color: var(--primary);"><i class="bi bi-phone"></i> Sign up / Login instantly with OTP</a></p>
       </div>
     </form>
   `,
@@ -114,10 +116,9 @@ import { RouterModule } from '@angular/router';
       gap: 0.75rem;
       width: 100%;
     }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
+    .register-form input {
+      padding: 12px 16px;
+      font-size: 0.95rem;
     }
     .form-group {
       display: flex;
@@ -129,8 +130,9 @@ import { RouterModule } from '@angular/router';
       gap: 0.4rem;
     }
     .country-code {
-      width: 100px;
-      padding: 0 0.5rem;
+      width: 96px;
+      height: 48px;
+      padding: 0 1rem 0 0.4rem;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       color: var(--text-primary);
@@ -139,8 +141,8 @@ import { RouterModule } from '@angular/router';
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.5rem center;
-      background-size: 0.8rem;
+      background-position: right 0.4rem center;
+      background-size: 0.75rem;
       background-color: var(--bg-card);
     }
     .country-code:focus {
@@ -150,15 +152,15 @@ import { RouterModule } from '@angular/router';
     .country-code option {
       background: var(--bg-card);
       color: var(--text-primary);
-      padding: 8px;
+      padding: 6px;
     }
     label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--text-secondary);
     }
     .error-text {
-      font-size: 0.7rem;
+      font-size: 0.675rem;
       color: var(--error-color);
       margin-top: 1px;
     }
@@ -168,8 +170,8 @@ import { RouterModule } from '@angular/router';
     .form-footer {
       display: flex;
       justify-content: center;
-      margin-top: 0.25rem;
-      font-size: 0.85rem;
+      margin-top: 0.15rem;
+      font-size: 0.8rem;
     }
     .form-footer p {
       color: var(--text-secondary);
@@ -178,15 +180,16 @@ import { RouterModule } from '@angular/router';
       color: var(--primary);
       text-decoration: none;
       font-weight: 600;
-      margin-left: 0.5rem;
+      margin-left: 0.4rem;
     }
     .btn-premium {
       width: 100%;
-      height: 44px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 0.25rem;
+      margin-top: 0.15rem;
+      font-size: 0.9rem;
     }
     .spinner {
       width: 20px;
@@ -198,12 +201,6 @@ import { RouterModule } from '@angular/router';
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
-    }
-    @media (max-width: 480px) {
-      .form-row {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-      }
     }
   `]
 })

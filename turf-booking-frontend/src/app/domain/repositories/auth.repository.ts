@@ -6,4 +6,6 @@ export abstract class AuthRepository {
   abstract register(data: any): Observable<any>;
   abstract forgotPassword(email: string): Observable<any>;
   abstract resetPassword(data: any): Observable<any>;
+  abstract sendOtp(emailOrPhone: string): Observable<any>;
+  abstract verifyOtp(emailOrPhone: string, otpCode: string): Observable<AuthResponse>;
 }
