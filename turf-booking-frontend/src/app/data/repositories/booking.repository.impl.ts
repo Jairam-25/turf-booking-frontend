@@ -46,14 +46,15 @@ export class BookingRepositoryImpl implements BookingRepository {
           turfId: s.turfId || s.TurfId,
           startTime: s.startTime || s.StartTime,
           endTime: s.endTime || s.EndTime,
-          isBooked: false // API only returns available slots
+          isBooked: s.isBooked !== undefined ? s.isBooked : (s.IsBooked !== undefined ? s.IsBooked : false)
         }));
       })
     );
   }
 
-  cancelBooking(bookingId: number): Observable<any> {
-    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`).pipe(
+  cancelBooking(bookingId: number, reason: string): Observable<any> {
+    const params = new HttpParams().set('reason', reason);
+    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`, { params }).pipe(
       map(response => response.data || response.Data || response.value || response.Value || response)
     );
   }

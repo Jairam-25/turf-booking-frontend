@@ -165,10 +165,10 @@ body[data-theme="light"] {
 
   /* Turf Background Adaptability Tokens for Light Theme */
   --turf-bg-base: #f8fafc;
-  --turf-opacity: 0.25;
-  --turf-filter: brightness(1.25) contrast(0.85) saturate(0.85) blur(1.5px);
-  --turf-vignette: radial-gradient(circle at center, rgba(248, 250, 252, 0.15) 20%, rgba(248, 250, 252, 0.85) 100%),
-                   linear-gradient(to bottom, rgba(248, 250, 252, 0.3) 0%, rgba(241, 245, 249, 0.95) 100%);
+  --turf-opacity: 0.85;
+  --turf-filter: brightness(1.05) contrast(1.05) saturate(1.1);
+  --turf-vignette: radial-gradient(circle at center, rgba(248, 250, 252, 0.1) 20%, rgba(248, 250, 252, 0.7) 100%),
+                   linear-gradient(to bottom, rgba(248, 250, 252, 0.2) 0%, rgba(241, 245, 249, 0.8) 100%);
 }
 
 * {

@@ -180,14 +180,31 @@ import { SignalrService } from '../../../core/services/signalr.service';
       font-weight: 600;
     }
     .slots-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      display: flex;
+      flex-direction: row;
       gap: 1rem;
-      max-height: 250px;
-      overflow-y: auto;
-      padding-right: 0.5rem;
+      overflow-x: auto;
+      padding: 0.5rem 0.25rem 1rem 0.25rem;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slots-grid::-webkit-scrollbar {
+      height: 6px;
+    }
+    .slots-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+    .slots-grid::-webkit-scrollbar-thumb {
+      background: rgba(var(--primary-rgb), 0.3);
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+    .slots-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
     }
     .slot-card {
+      flex: 0 0 120px;
       padding: 1rem;
       text-align: center;
       cursor: pointer;

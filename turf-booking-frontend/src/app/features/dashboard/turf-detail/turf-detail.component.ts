@@ -1,0 +1,1230 @@
+import { Component, OnInit, signal, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { TurfRepository } from '../../../domain/repositories/turf.repository';
+import { BookingRepository } from '../../../domain/repositories/booking.repository';
+import { NotificationService } from '../../../core/services/notification.service';
+import { SignalrService } from '../../../core/services/signalr.service';
+import { Turf } from '../../../domain/models/turf.model';
+import { Slot } from '../../../domain/models/booking.model';
+import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
+
+interface CategorizedSlot extends Slot {
+  category: 'Day' | 'Afternoon' | 'Night';
+  calculatedPrice: number;
+}
+
+@Component({
+  selector: 'app-turf-detail',
+  standalone: true,
+  imports: [CommonModule, RouterModule, PixelImageComponent],
+  template: `
+    <div class="detail-page-container fade-in">
+      
+      <!-- Header Bar / Back Navigation -->
+      <div class="navigation-bar">
+        <button class="btn-back" routerLink="/dashboard">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+
+      <div class="detail-grid" *ngIf="!isLoading(); else loadingTemplate">
+        
+        <!-- Left Side: Turf Media & Info -->
+        <div class="turf-main-info glass">
+          <div class="turf-hero-image">
+            <magic-pixel-image [src]="turf()?.imageUrl ?? '/images/turf_sports_ground.png'"></magic-pixel-image>
+            <div class="rating-badge">★ {{ turf()?.rating?.toFixed(1) }}</div>
+          </div>
+
+          <div class="turf-details-content">
+            <h1 class="turf-name">{{ turf()?.name }}</h1>
+            
+            <a 
+              [href]="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(turf()?.name + ' ' + turf()?.location)"
+              target="_blank"
+              class="location-bar link-map"
+              title="Open in Google Maps"
+            >
+              <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
+                <circle cx="12" cy="10.5" r="2.5" />
+              </svg>
+              <span>{{ turf()?.location }}</span>
+              <span class="map-tag">View on Map ↗</span>
+            </a>
+
+            <p class="turf-description">
+              Experience the best-in-class sports infrastructure at {{ turf()?.name }}. 
+              Equipped with professional-grade turf, ambient night floodlighting, change rooms, 
+              and pure athletic vibes. Perfect for friendly matches, corporate tournaments, and skill sessions.
+            </p>
+
+            <div class="pricing-rules-card glass">
+              <h3>Pricing Tiers</h3>
+              <div class="rules-grid">
+                <div class="rule-item day">
+                  <span class="rule-label">Day Time</span>
+                  <span class="rule-hours">6:00 AM - 12:00 PM</span>
+                  <span class="rule-price">₹{{ getTierPrice('Day') }}/hr</span>
+                </div>
+                <div class="rule-item afternoon">
+                  <span class="rule-label">Afternoon</span>
+                  <span class="rule-hours">12:00 PM - 5:00 PM</span>
+                  <span class="rule-price">₹{{ getTierPrice('Afternoon') }}/hr</span>
+                </div>
+                <div class="rule-item night">
+                  <span class="rule-label">Night Time</span>
+                  <span class="rule-hours">5:00 PM - Midnight</span>
+                  <span class="rule-price">₹{{ getTierPrice('Night') }}/hr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Slots Booking & Checkout Panel -->
+        <div class="booking-panel-container">
+          
+          <!-- Standard Booking State -->
+          <div class="booking-panel glass" *ngIf="!isBookedSuccess()">
+            <h2>Reserve Your Time Slots</h2>
+            <p class="panel-subtitle">Select multiple slots below to play for longer duration.</p>
+
+            <!-- Slots Grid -->
+            <div class="slots-section">
+              <div class="section-header">
+                <h3>Select Slots</h3>
+                <span class="selected-count-badge" *ngIf="selectedSlots().length > 0">
+                  {{ selectedSlots().length }} selected
+                </span>
+              </div>
+
+              <!-- Calendar Section -->
+              <div class="calendar-section">
+                <div class="quick-days-strip">
+                  <div 
+                    *ngFor="let day of upcomingDays" 
+                    class="day-chip glass" 
+                    [class.active]="selectedDate() === day.dateStr"
+                    (click)="selectDate(day.dateStr)"
+                  >
+                    <span class="day-num">{{ day.dayNum }}</span>
+                    <span class="day-name">{{ day.label }}</span>
+                  </div>
+
+                  <!-- Custom Date Picker Trigger -->
+                  <div class="custom-date-picker glass" title="Pick custom date">
+                    <input 
+                      type="date" 
+                      [value]="selectedDate()" 
+                      (change)="onCustomDateChange($event)" 
+                      [min]="minDate"
+                      [max]="maxDate"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status Legend -->
+              <div class="legend-bar">
+                <div class="legend-item"><span class="legend-dot available"></span> Available</div>
+                <div class="legend-item"><span class="legend-dot selected"></span> Selected</div>
+                <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
+                <div class="legend-item"><span class="legend-dot unavailable"></span> Unavailable</div>
+              </div>
+              
+              <div class="slots-grid-view" *ngIf="!isLoadingSlots(); else loadingSlotsTemplate">
+                <div 
+                  *ngFor="let slot of filteredSlots()" 
+                  class="slot-card-v3"
+                  [class.selected]="getSlotStatus(slot) === 'Selected'"
+                  [class.booked]="getSlotStatus(slot) === 'Booked'"
+                  [class.unavailable]="getSlotStatus(slot) === 'Unavailable'"
+                  (click)="toggleSlotSelection(slot)"
+                >
+                  <span class="status-badge" [class]="getSlotStatus(slot).toLowerCase()">
+                    {{ getSlotStatus(slot) }}
+                  </span>
+                  <span class="time">{{ formatTime(slot.startTime) }}</span>
+                  <span class="category-tag" [class]="slot.category.toLowerCase()">
+                    {{ slot.category }}
+                  </span>
+                  <span class="price-tag">₹{{ slot.calculatedPrice }}</span>
+                </div>
+
+                <div class="empty-slots" *ngIf="filteredSlots().length === 0">
+                  <p>No slots found for this date.</p>
+                </div>
+              </div>
+
+              <ng-template #loadingSlotsTemplate>
+                <div class="slots-grid-view">
+                  <div class="slot-card-v3 skeleton" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
+                </div>
+              </ng-template>
+            </div>
+
+            <!-- Payment Option Cards (Dummy Payment Options) -->
+            <div class="payment-options-section" *ngIf="selectedSlots().length > 0">
+              <h3>Select Payment Option</h3>
+              <div class="payment-options-grid">
+                <div 
+                  class="payment-option-card glass" 
+                  [class.active]="paymentOption() === 'full'"
+                  (click)="paymentOption.set('full')"
+                >
+                  <div class="option-header">
+                    <input type="radio" name="paymentOption" [checked]="paymentOption() === 'full'" readOnly />
+                    <span class="option-title">Full Payment</span>
+                  </div>
+                  <p class="option-description">Pay 100% now for standard checkout.</p>
+                  <span class="option-price">₹{{ getTotalPrice() }}</span>
+                </div>
+
+                <div 
+                  class="payment-option-card glass" 
+                  [class.active]="paymentOption() === 'advance'"
+                  (click)="paymentOption.set('advance')"
+                >
+                  <div class="option-header">
+                    <input type="radio" name="paymentOption" [checked]="paymentOption() === 'advance'" readOnly />
+                    <span class="option-title">Advance Pay</span>
+                  </div>
+                  <p class="option-description">Pay ₹30 × {{ selectedSlots().length }} now, rest at venue.</p>
+                  <span class="option-price">₹{{ getAdvancePrice() }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="checkout-summary glass" *ngIf="selectedSlots().length > 0">
+              <h3>Reservation Summary</h3>
+              <div class="selected-slots-list">
+                <div class="summary-slot-item" *ngFor="let slot of selectedSlots()">
+                  <span>{{ formatTime(slot.startTime) }} ({{ slot.category }})</span>
+                  <span>₹{{ slot.calculatedPrice }}</span>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="summary-row">
+                <span>Total Duration</span>
+                <span>{{ selectedSlots().length }} Hour(s)</span>
+              </div>
+              <div class="summary-row">
+                <span>Base Total</span>
+                <span>₹{{ getTotalPrice() }}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Amount to Pay Now</span>
+                <span>₹{{ paymentOption() === 'full' ? getTotalPrice() : getAdvancePrice() }}</span>
+              </div>
+              <p class="payment-note" *ngIf="paymentOption() === 'advance'">
+                *Remaining balance of ₹{{ getTotalPrice() - getAdvancePrice() }} to be paid at the turf venue.
+              </p>
+            </div>
+
+            <div class="booking-actions">
+              <button 
+                class="btn-premium book-btn"
+                [disabled]="selectedSlots().length === 0 || isBooking()"
+                (click)="confirmBooking()"
+              >
+                <span *ngIf="!isBooking()">Confirm Booking ({{ selectedSlots().length }} Slots)</span>
+                <span *ngIf="isBooking()" class="spinner"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Apple/Stripe Success Screen -->
+          <div class="success-card glass scale-in" *ngIf="isBookedSuccess()">
+            <div class="success-header">
+              <div class="success-icon-wrapper">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                  <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                  <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+              </div>
+              <h2>Booking Confirmed!</h2>
+              <p>Your premium turf reservation is active.</p>
+            </div>
+
+            <div class="success-details-list glass">
+              <div class="detail-row">
+                <span class="label">Turf Arena</span>
+                <span class="value">{{ turf()?.name }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Payment Plan</span>
+                <span class="value">{{ paymentOption() === 'full' ? 'Full Payment' : 'Advance Booking Plan' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Amount Paid Now</span>
+                <span class="value price">₹{{ paymentOption() === 'full' ? getTotalPrice() : getAdvancePrice() }}</span>
+              </div>
+              <div class="detail-row" *ngIf="paymentOption() === 'advance'">
+                <span class="label">Balance Due at Venue</span>
+                <span class="value" style="color: var(--accent);">₹{{ getTotalPrice() - getAdvancePrice() }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Selected Hours</span>
+                <span class="value">{{ selectedSlots().length }} hr(s)</span>
+              </div>
+            </div>
+
+            <button class="btn-premium" routerLink="/bookings" style="margin-top: 1rem; width: 100%;">
+              Go to My Bookings
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Main Loader -->
+      <ng-template #loadingTemplate>
+        <div class="main-loader-container">
+          <div class="loader-spinner"></div>
+          <p>Loading Turf Details...</p>
+        </div>
+      </ng-template>
+
+    </div>
+  `,
+  styles: [`
+    .detail-page-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .navigation-bar {
+      display: flex;
+      align-items: center;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--primary);
+    }
+    .back-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1.2fr;
+      gap: 2.5rem;
+      align-items: start;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .turf-main-info {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 24px;
+    }
+    .turf-hero-image {
+      position: relative;
+      height: 400px;
+      width: 100%;
+    }
+    .rating-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .turf-details-content {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .turf-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 0;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .location-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    .link-map {
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      transition: var(--transition-smooth);
+    }
+    .link-map:hover {
+      color: var(--primary);
+    }
+    .map-tag {
+      font-size: 0.75rem;
+      background: rgba(var(--primary-rgb), 0.08);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 8px;
+      margin-left: 0.5rem;
+      font-weight: 600;
+    }
+    .location-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+    .turf-description {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .pricing-rules-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.01);
+    }
+    .pricing-rules-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      color: var(--text-primary);
+    }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .rule-item {
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.01);
+    }
+    .rule-item.day { border-color: rgba(99, 102, 241, 0.2); }
+    .rule-item.afternoon { border-color: rgba(245, 158, 11, 0.2); }
+    .rule-item.night { border-color: rgba(123, 57, 252, 0.2); }
+
+    .rule-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+    .rule-hours {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+    .rule-price {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    /* Booking Checkout Panel */
+    .booking-panel-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      min-width: 0;
+      width: 100%;
+    }
+    .booking-panel {
+      padding: 2.5rem;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+    .booking-panel h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .panel-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin: -1rem 0 0 0;
+    }
+
+    .slots-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .selected-count-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--primary);
+      color: var(--on-primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Calendar styles */
+    .calendar-section {
+      margin-bottom: 0.5rem;
+    }
+    .quick-days-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px;
+      align-items: center;
+    }
+    .quick-days-strip::-webkit-scrollbar {
+      height: 4px;
+    }
+    .quick-days-strip::-webkit-scrollbar-thumb {
+      background: rgba(var(--primary-rgb), 0.2);
+      border-radius: 4px;
+    }
+    .day-chip {
+      flex: 0 0 56px;
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.02);
+      transition: var(--transition-smooth);
+    }
+    .day-chip:hover {
+      border-color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.03);
+    }
+    .day-chip.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25);
+    }
+    .day-chip .day-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .day-chip .day-name {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .day-chip.active .day-name {
+      opacity: 1;
+    }
+
+    .custom-date-picker {
+      flex: 0 0 48px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.02);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .custom-date-picker:hover {
+      border-color: var(--primary);
+    }
+    .custom-date-picker input[type="date"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .custom-date-picker::after {
+      content: "📅";
+      font-size: 1.25rem;
+    }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 0.25rem 0 0.5rem 0;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .legend-dot.available { background: #10b981; }
+    .legend-dot.selected { background: #6366f1; }
+    .legend-dot.booked { background: #ef4444; }
+    .legend-dot.unavailable { background: #64748b; }
+
+    .slots-grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 0.5rem 0.25rem;
+    }
+    .slots-grid-view::-webkit-scrollbar {
+      width: 6px;
+    }
+    .slots-grid-view::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+    .slots-grid-view::-webkit-scrollbar-thumb {
+      background: rgba(var(--primary-rgb), 0.3);
+      border-radius: 10px;
+    }
+
+    .slot-card-v3 {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+    .slot-card-v3:hover:not(.booked):not(.unavailable) {
+      border-color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.04);
+      transform: translateY(-2px);
+    }
+    .slot-card-v3.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--on-primary);
+      box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2);
+    }
+    .slot-card-v3.booked {
+      border-color: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.05);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .slot-card-v3.unavailable {
+      border-color: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.01);
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .status-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+    .status-badge.available {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+    .status-badge.selected {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+    .status-badge.booked {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+    }
+    .status-badge.unavailable {
+      background: rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+    }
+
+    .slot-card-v3 .time {
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .category-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .category-tag.day {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+    .category-tag.afternoon {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+    .category-tag.night {
+      background: rgba(123, 57, 252, 0.15);
+      color: #a78bfa;
+    }
+
+    .slot-card-v3.selected .category-tag {
+      background: rgba(255,255,255,0.2) !important;
+      color: white !important;
+    }
+
+    .price-tag {
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    /* Payment selection styles */
+    .payment-options-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .payment-options-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-primary);
+    }
+    .payment-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .payment-option-card {
+      padding: 1.25rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+    .payment-option-card:hover {
+      border-color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.03);
+    }
+    .payment-option-card.active {
+      border-color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.06);
+      box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.1);
+    }
+    .option-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .option-header input {
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .option-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .option-description {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.3;
+    }
+    .option-price {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: auto;
+    }
+    .payment-note {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin: 0;
+      font-style: italic;
+    }
+
+    .checkout-summary {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: rgba(255,255,255,0.01);
+      border-radius: 16px;
+    }
+    .checkout-summary h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .selected-slots-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .summary-slot-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .divider {
+      height: 1px;
+      background: var(--border-color);
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    .summary-row.total {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .book-btn {
+      width: 100%;
+      height: 52px;
+      font-size: 1.05rem;
+    }
+
+    /* Success Card */
+    .success-card {
+      padding: 3rem 2.5rem;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+    .success-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .success-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .success-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+    }
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: block;
+      stroke-width: 3;
+      stroke: var(--primary);
+      stroke-miterlimit: 10;
+      box-shadow: inset 0px 0px 0px var(--primary);
+      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+    .checkmark-circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 3;
+      stroke-miterlimit: 10;
+      stroke: var(--primary);
+      fill: none;
+      animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    .checkmark-check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      stroke-width: 3;
+      stroke: #ffffff;
+      animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+    }
+    @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+    @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 40px var(--primary); } }
+    @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.08, 1.08, 1); } }
+
+    .success-details-list {
+      width: 100%;
+      padding: 1.5rem;
+      background: rgba(16, 185, 129, 0.01);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: left;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .detail-row .label { color: var(--text-secondary); }
+    .detail-row .value { color: var(--text-primary); font-weight: 600; }
+    .detail-row .value.price { color: var(--primary); font-weight: 800; }
+
+    /* Loader */
+    .main-loader-container {
+      padding: 8rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      color: var(--text-secondary);
+    }
+    .loader-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .skeleton {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+
+    .empty-slots {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-secondary);
+      width: 100%;
+    }
+
+    @media (max-width: 992px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .turf-hero-image {
+        height: 280px;
+      }
+      .detail-page-container {
+        padding: 1rem;
+      }
+    }
+  `]
+})
+export class TurfDetailComponent implements OnInit, OnDestroy {
+  turfId!: number;
+  turf = signal<Turf | null>(null);
+  slots = signal<CategorizedSlot[]>([]);
+  selectedSlots = signal<CategorizedSlot[]>([]);
+  paymentOption = signal<'full' | 'advance'>('full');
+  selectedDate = signal<string>('');
+  upcomingDays: { dateStr: string; label: string; dayNum: string }[] = [];
+  minDate = '';
+  maxDate = '';
+  
+  isLoading = signal(true);
+  isLoadingSlots = signal(true);
+  isBooking = signal(false);
+  isBookedSuccess = signal(false);
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private turfRepository: TurfRepository,
+    private bookingRepository: BookingRepository,
+    private notificationService: NotificationService,
+    private signalr: SignalrService
+  ) {}
+
+  ngOnInit() {
+    const today = new Date();
+    this.selectedDate.set(this.getLocalDateString(today));
+    this.minDate = this.getLocalDateString(today);
+    
+    const futureLimit = new Date();
+    futureLimit.setDate(today.getDate() + 6); // Max 7 days
+    this.maxDate = this.getLocalDateString(futureLimit);
+    this.upcomingDays = this.getUpcomingDays();
+
+    this.route.paramMap.subscribe(params => {
+      const idStr = params.get('id');
+      if (idStr) {
+        this.turfId = parseInt(idStr, 10);
+        this.loadTurfDetails();
+        this.loadSlots();
+        
+        try {
+          this.signalr.joinTurfGroup(String(this.turfId));
+        } catch {}
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
+
+  loadTurfDetails() {
+    this.isLoading.set(true);
+    this.turfRepository.getById(this.turfId).subscribe({
+      next: (data) => {
+        this.turf.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.notificationService.error('Failed to load turf details.');
+        this.isLoading.set(false);
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
+
+  loadSlots() {
+    this.isLoadingSlots.set(true);
+    this.bookingRepository.getSlotsByTurf(this.turfId).subscribe({
+      next: (slotsList) => {
+        // Map raw slots to categorized pricing
+        const mapped = slotsList.map(s => {
+          const catInfo = this.getSlotCategory(s.startTime);
+          const basePrice = this.turf()?.pricePerHour ?? 40;
+          return {
+            ...s,
+            category: catInfo.category,
+            calculatedPrice: Math.round(basePrice * catInfo.multiplier)
+          } as CategorizedSlot;
+        });
+
+        // Sort slots chronologically by start time
+        mapped.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
+        this.slots.set(mapped);
+        this.isLoadingSlots.set(false);
+      },
+      error: () => {
+        this.notificationService.error('Failed to load slots.');
+        this.isLoadingSlots.set(false);
+      }
+    });
+  }
+
+  getLocalDateString(date: Date): string {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+    return localDate.toISOString().split('T')[0];
+  }
+
+  getUpcomingDays(): { dateStr: string; label: string; dayNum: string }[] {
+    const days = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      const dateStr = this.getLocalDateString(d);
+      
+      const weekday = d.toLocaleDateString([], { weekday: 'short' });
+      const dayNum = d.toLocaleDateString([], { day: '2-digit' });
+      
+      days.push({
+        dateStr,
+        label: weekday,
+        dayNum: dayNum
+      });
+    }
+    return days;
+  }
+
+  filteredSlots(): CategorizedSlot[] {
+    const dateStr = this.selectedDate();
+    if (!dateStr) return [];
+    return this.slots().filter(s => {
+      const localDate = new Date(s.startTime);
+      const slotLocalStr = this.getLocalDateString(localDate);
+      return slotLocalStr === dateStr;
+    });
+  }
+
+  selectDate(dateStr: string) {
+    this.selectedDate.set(dateStr);
+  }
+
+  onCustomDateChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      this.selectedDate.set(input.value);
+    }
+  }
+
+  getSlotCategory(startTimeStr: string): { category: 'Day' | 'Afternoon' | 'Night', multiplier: number } {
+    const date = new Date(startTimeStr);
+    const hour = date.getHours();
+    
+    // Day time: 6 AM to 12 PM (noon)
+    if (hour >= 6 && hour < 12) {
+      return { category: 'Day', multiplier: 0.75 };
+    } 
+    // Afternoon: 12 PM to 5 PM
+    else if (hour >= 12 && hour < 17) {
+      return { category: 'Afternoon', multiplier: 1.0 };
+    } 
+    // Night: 5 PM to Midnight
+    else {
+      return { category: 'Night', multiplier: 1.125 };
+    }
+  }
+
+  getTierPrice(tier: 'Day' | 'Afternoon' | 'Night'): number {
+    const basePrice = this.turf()?.pricePerHour ?? 40;
+    if (tier === 'Day') return Math.round(basePrice * 0.75);
+    if (tier === 'Afternoon') return basePrice;
+    return Math.round(basePrice * 1.125);
+  }
+
+  getSlotStatus(slot: CategorizedSlot): 'Available' | 'Selected' | 'Booked' | 'Unavailable' {
+    if (slot.isBooked) {
+      return 'Booked';
+    }
+    const isPast = new Date(slot.startTime).getTime() < new Date().getTime();
+    if (isPast) {
+      return 'Unavailable';
+    }
+    if (this.isSlotSelected(slot)) {
+      return 'Selected';
+    }
+    return 'Available';
+  }
+
+  toggleSlotSelection(slot: CategorizedSlot) {
+    const status = this.getSlotStatus(slot);
+    if (status === 'Booked' || status === 'Unavailable') {
+      return; // Cannot select booked or past slots
+    }
+    const current = this.selectedSlots();
+    const exists = current.find(s => s.id === slot.id);
+    if (exists) {
+      this.selectedSlots.set(current.filter(s => s.id !== slot.id));
+    } else {
+      this.selectedSlots.set([...current, slot]);
+    }
+  }
+
+  isSlotSelected(slot: CategorizedSlot): boolean {
+    return !!this.selectedSlots().find(s => s.id === slot.id);
+  }
+
+  getTotalPrice(): number {
+    return this.selectedSlots().reduce((sum, slot) => sum + slot.calculatedPrice, 0);
+  }
+
+  getAdvancePrice(): number {
+    // Flat advance fee of ₹30 per slot selected
+    return 30 * this.selectedSlots().length;
+  }
+
+  confirmBooking() {
+    const selected = this.selectedSlots();
+    if (selected.length === 0) return;
+
+    this.isBooking.set(true);
+
+    const bookings = selected.map(slot => this.bookingRepository.bookSlot({ slotId: slot.id }));
+
+    forkJoin(bookings).subscribe({
+      next: () => {
+        this.isBooking.set(false);
+        this.isBookedSuccess.set(true);
+        this.notificationService.success('All slots booked successfully!');
+      },
+      error: (err) => {
+        this.notificationService.error(err.error?.message || 'Booking failed.');
+        this.isBooking.set(false);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    try {
+      this.signalr.leaveTurfGroup(String(this.turfId));
+    } catch {}
+  }
+
+  encodeURIComponent(val: string | undefined): string {
+    return val ? encodeURIComponent(val) : '';
+  }
+
+  formatTime(isoString: string): string {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+}

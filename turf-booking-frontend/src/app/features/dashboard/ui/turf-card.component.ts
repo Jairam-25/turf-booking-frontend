@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Turf } from '../../../domain/models/turf.model';
 import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
 
@@ -119,14 +120,15 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
 })
 export class TurfCardComponent {
   @Input({ required: true }) turf!: Turf;
-  @Output() book = new EventEmitter<Turf>();
+
+  constructor(private router: Router) {}
 
   getImageSrc(): string {
     return this.turf?.imageUrl ?? '/images/turf_sports_ground.png';
   }
 
   onBook() {
-    this.book.emit(this.turf);
+    this.router.navigate(['/dashboard/turf', this.turf.id]);
   }
 
   onImageError(event: any) {
