@@ -1,13 +1,16 @@
 import { Component, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { TurfRepository } from '../../../domain/repositories/turf.repository';
 import { BookingRepository } from '../../../domain/repositories/booking.repository';
+import { ReviewRepository } from '../../../domain/repositories/review.repository';
 import { NotificationService } from '../../../core/services/notification.service';
 import { SignalrService } from '../../../core/services/signalr.service';
 import { Turf } from '../../../domain/models/turf.model';
 import { Slot } from '../../../domain/models/booking.model';
+import { Review } from '../../../domain/models/review.model';
 import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
 
 interface CategorizedSlot extends Slot {
@@ -18,7 +21,7 @@ interface CategorizedSlot extends Slot {
 @Component({
   selector: 'app-turf-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, PixelImageComponent],
+  imports: [CommonModule, RouterModule, PixelImageComponent, FormsModule],
   template: `
     <div class="detail-page-container fade-in">
       
@@ -82,6 +85,87 @@ interface CategorizedSlot extends Slot {
                   <span class="rule-hours">5:00 PM - Midnight</span>
                   <span class="rule-price">₹{{ getTierPrice('Night') }}/hr</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews Section -->
+          <div class="reviews-section-card glass" style="border-top: 1px solid var(--border-color); border-radius: 0 0 24px 24px;">
+            <h2 class="section-title">Player Reviews & Ratings</h2>
+            
+            <!-- Review Summary & Form Row -->
+            <div class="reviews-layout">
+              <!-- Summary Column -->
+              <div class="reviews-summary glass">
+                <div class="avg-score">
+                  <span class="score-num">{{ turf()?.rating?.toFixed(1) || '0.0' }}</span>
+                  <span class="stars">
+                    <span class="star-filled" *ngFor="let s of [1,2,3,4,5]">
+                      {{ s <= (turf()?.rating || 0) ? '★' : '☆' }}
+                    </span>
+                  </span>
+                  <span class="total-reviews">{{ reviews().length }} reviews</span>
+                </div>
+              </div>
+
+              <!-- Review Form -->
+              <div class="write-review-form glass">
+                <h3>Share your experience</h3>
+                <p class="form-desc">Help other athletes find the best fields. Only players who have booked this turf can leave a review.</p>
+                
+                <div class="rating-input">
+                  <span class="label">Your Rating:</span>
+                  <div class="star-rating-selector">
+                    <span 
+                      *ngFor="let star of [1,2,3,4,5]" 
+                      class="selector-star" 
+                      [class.active]="newReviewRating() >= star"
+                      (click)="setNewReviewRating(star)"
+                    >★</span>
+                  </div>
+                </div>
+
+                <div class="comment-input">
+                  <textarea 
+                    [(ngModel)]="newReviewComment" 
+                    placeholder="Tell us about the turf quality, lighting, facilities..." 
+                    rows="3"
+                    class="review-textarea glass"
+                  ></textarea>
+                </div>
+
+                <button 
+                  class="btn-premium btn-submit-review" 
+                  [disabled]="newReviewRating() === 0 || isSubmittingReview()"
+                  (click)="submitReview()"
+                >
+                  <span *ngIf="!isSubmittingReview()">Submit Review</span>
+                  <span *ngIf="isSubmittingReview()" class="spinner"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reviews List -->
+            <div class="reviews-list">
+              <h3>Player Feedback</h3>
+              <div class="review-item-card glass" *ngFor="let review of reviews()">
+                <div class="review-header">
+                  <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
+                  <div class="review-meta">
+                    <span class="username">{{ review.userName }}</span>
+                    <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+                  </div>
+                  <div class="review-stars">
+                    <span class="star" *ngFor="let s of [1,2,3,4,5]">
+                      {{ s <= review.rating ? '★' : '☆' }}
+                    </span>
+                  </div>
+                </div>
+                <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
+              </div>
+
+              <div class="empty-reviews" *ngIf="reviews().length === 0">
+                <p>No reviews yet. Be the first player to review this turf!</p>
               </div>
             </div>
           </div>
@@ -972,6 +1056,195 @@ interface CategorizedSlot extends Slot {
       width: 100%;
     }
 
+    /* Reviews Section Styling */
+    .reviews-section-card {
+      margin-top: 2rem;
+      padding: 2.5rem;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 0;
+      color: var(--text-primary);
+    }
+    .reviews-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 1.5rem;
+    }
+    .reviews-summary {
+      padding: 2rem;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-color);
+    }
+    .avg-score {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-num {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .stars {
+      font-size: 1.25rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+    .total-reviews {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .write-review-form {
+      padding: 2rem;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-color);
+    }
+    .write-review-form h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .form-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: -0.75rem 0 0 0;
+      line-height: 1.4;
+    }
+    .rating-input {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .rating-input .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .star-rating-selector {
+      display: flex;
+      gap: 6px;
+    }
+    .selector-star {
+      font-size: 1.6rem;
+      color: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .selector-star:hover,
+    .selector-star.active {
+      color: var(--accent);
+      transform: scale(1.15);
+    }
+    .review-textarea {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      background: rgba(0,0,0,0.2) !important;
+      font-size: 0.95rem;
+      outline: none;
+      resize: vertical;
+      transition: var(--transition-smooth);
+    }
+    .review-textarea:focus {
+      border-color: var(--primary);
+    }
+    .btn-submit-review {
+      height: 44px;
+      font-size: 0.95rem;
+      align-self: flex-start;
+      padding: 0 2rem;
+    }
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .reviews-list h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+    }
+    .review-item-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border: 1px solid var(--border-color);
+    }
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.3);
+    }
+    .review-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .username {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .review-date {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .review-stars {
+      margin-left: auto;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+    .review-comment {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .empty-reviews {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-secondary);
+      border: 1px dashed var(--border-color);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.01);
+    }
+
     @media (max-width: 992px) {
       .detail-grid {
         grid-template-columns: 1fr;
@@ -1093,11 +1366,18 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   isBooking = signal(false);
   isBookedSuccess = signal(false);
 
+  // Reviews signals & properties
+  reviews = signal<Review[]>([]);
+  newReviewRating = signal<number>(0);
+  newReviewComment = '';
+  isSubmittingReview = signal(false);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private turfRepository: TurfRepository,
     private bookingRepository: BookingRepository,
+    private reviewRepository: ReviewRepository,
     private notificationService: NotificationService,
     private signalr: SignalrService
   ) {}
@@ -1118,6 +1398,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.turfId = parseInt(idStr, 10);
         this.loadTurfDetails();
         this.loadSlots();
+        this.loadReviews();
         
         try {
           this.signalr.joinTurfGroup(String(this.turfId));
@@ -1302,6 +1583,53 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.isBooking.set(false);
       }
     });
+  }
+
+  loadReviews() {
+    this.reviewRepository.getReviewsByTurf(this.turfId).subscribe({
+      next: (data) => {
+        this.reviews.set(data);
+      },
+      error: () => {
+        this.notificationService.error('Failed to load reviews.');
+      }
+    });
+  }
+
+  setNewReviewRating(rating: number) {
+    this.newReviewRating.set(rating);
+  }
+
+  submitReview() {
+    if (this.newReviewRating() === 0) return;
+    this.isSubmittingReview.set(true);
+
+    const dto = {
+      turfId: this.turfId,
+      rating: this.newReviewRating(),
+      comment: this.newReviewComment
+    };
+
+    this.reviewRepository.createReview(dto).subscribe({
+      next: () => {
+        this.isSubmittingReview.set(false);
+        this.newReviewRating.set(0);
+        this.newReviewComment = '';
+        this.notificationService.success('Review submitted successfully!');
+        this.loadReviews();
+        this.loadTurfDetails(); // Reload turf to get updated average rating!
+      },
+      error: (err) => {
+        this.isSubmittingReview.set(false);
+        this.notificationService.error(err.error?.message || 'Only users who have booked this turf can leave a review.');
+      }
+    });
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
   ngOnDestroy(): void {
