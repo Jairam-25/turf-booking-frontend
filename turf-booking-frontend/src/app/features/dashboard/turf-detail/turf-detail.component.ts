@@ -1017,7 +1017,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     this.minDate = this.getLocalDateString(today);
     
     const futureLimit = new Date();
-    futureLimit.setDate(today.getDate() + 6); // Max 7 days
+    futureLimit.setDate(today.getDate() + 2); // Max 3 days
     this.maxDate = this.getLocalDateString(futureLimit);
     this.upcomingDays = this.getUpcomingDays();
 
@@ -1089,7 +1089,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   getUpcomingDays(): { dateStr: string; label: string; dayNum: string }[] {
     const days = [];
     const today = new Date();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
       const dateStr = this.getLocalDateString(d);
       

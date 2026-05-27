@@ -111,21 +111,6 @@ import { LottieHeroComponent } from '../../../shared/components/magic-ui/lottie-
                 <div class="goal-net"></div>
               </div>
 
-              <!-- Soccer: Striker Image -->
-              <img *ngIf="activeSport() === 'football'" 
-                   class="kicker-player-img" 
-                   [class.kick-swing]="isKickedSuccess() || isKickedFailure()" 
-                   src="/images/striker.png" 
-                   alt="Striker" />
-
-              <!-- Soccer: Goalkeeper Image -->
-              <img *ngIf="activeSport() === 'football'" 
-                   class="goalkeeper-player-img" 
-                   [class.goalkeeper-miss]="isKickedSuccess()" 
-                   [class.goalkeeper-save]="isKickedFailure()" 
-                   src="/images/goalkeeper.png" 
-                   alt="Goalkeeper" />
-
               <!-- Cricket: Wooden Wickets & Batsman Silhouette -->
               <div *ngIf="activeSport() === 'cricket'" class="cricket-wickets" [class.wickets-shattered]="isNetShaking() && isKickedFailure()">
                 <div class="wicket stump-1"></div>
@@ -135,33 +120,12 @@ import { LottieHeroComponent } from '../../../shared/components/magic-ui/lottie-
                 <div class="bail bail-2"></div>
               </div>
 
-              <!-- Cricket: Bowler Image -->
-              <img *ngIf="activeSport() === 'cricket'" 
-                   class="bowler-player-img" 
-                   [class.bowler-release]="isKickedSuccess() || isKickedFailure()" 
-                   src="/images/bowler.png" 
-                   alt="Bowler" />
-
-              <!-- Cricket: Batsman Image -->
-              <img *ngIf="activeSport() === 'cricket'" 
-                   class="batsman-player-img" 
-                   [class.bat-swing]="isKickedSuccess() || isKickedFailure()" 
-                   src="/images/batsman.png" 
-                   alt="Batsman" />
-
               <!-- Ping-Pong: Table Net -->
               <div *ngIf="activeSport() === 'pingpong'" class="pingpong-net" [class.net-shake]="isNetShaking() && (isKickedSuccess() || isKickedFailure())">
                 <div class="pingpong-post left-post"></div>
                 <div class="pingpong-post right-post"></div>
                 <div class="pingpong-net-mesh"></div>
               </div>
-
-              <!-- Ping-Pong: Paddle Image -->
-              <img *ngIf="activeSport() === 'pingpong'" 
-                   class="pingpong-paddle-img" 
-                   [class.paddle-swing]="isKickedSuccess() || isKickedFailure()" 
-                   src="/images/pingpong.png" 
-                   alt="Paddle" />
 
               <!-- Penalty markings (Soccer only) -->
               <div *ngIf="activeSport() === 'football'" class="penalty-box"></div>
