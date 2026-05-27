@@ -11,6 +11,8 @@ import { TurfRepository } from './domain/repositories/turf.repository';
 import { TurfRepositoryImpl } from './data/repositories/turf.repository.impl';
 import { BookingRepository } from './domain/repositories/booking.repository';
 import { BookingRepositoryImpl } from './data/repositories/booking.repository.impl';
+import { ReviewRepository } from './domain/repositories/review.repository';
+import { ReviewRepositoryImpl } from './data/repositories/review.repository.impl';
 
 export const appConfig: ApplicationConfig = {
 
@@ -21,7 +23,8 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: AuthRepository, useClass: AuthRepositoryImpl },
     { provide: TurfRepository, useClass: TurfRepositoryImpl },
-    { provide: BookingRepository, useClass: BookingRepositoryImpl }
+    { provide: BookingRepository, useClass: BookingRepositoryImpl },
+    { provide: ReviewRepository, useClass: ReviewRepositoryImpl }
   ]
 
 };

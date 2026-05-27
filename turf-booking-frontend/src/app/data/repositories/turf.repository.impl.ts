@@ -44,7 +44,7 @@ export class TurfRepositoryImpl implements TurfRepository {
           location: item.location || item.Location,
           pricePerHour: item.pricePerHour || item.PricePerHour,
           imageUrl: this.mockImages[index % this.mockImages.length],
-          rating: 4.5 + (Math.random() * 0.5),
+          rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
           description: 'Experience professional-grade turf with premium facilities and easy booking.'
         }));
 
@@ -68,7 +68,7 @@ export class TurfRepositoryImpl implements TurfRepository {
           location: item.location || item.Location,
           pricePerHour: item.pricePerHour || item.PricePerHour,
           imageUrl: this.mockImages[0],
-          rating: 4.8
+          rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0)
         };
       })
     );
