@@ -57,8 +57,8 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
           Please enter a valid 6-digit OTP code
         </span>
         <div class="otp-timer-container">
-          <span class="timer-text" *ngIf="countdown > 0">Resend OTP in {{ countdown }}s</span>
-          <button type="button" class="btn-resend" *ngIf="countdown === 0" (click)="sendGoogleOtp()">Resend OTP</button>
+          <span class="timer-text" *ngIf="countdown() > 0">Resend OTP in {{ countdown() }}s</span>
+          <button type="button" class="btn-resend" *ngIf="countdown() === 0" (click)="sendGoogleOtp()">Resend OTP</button>
         </div>
       </div>
 
@@ -135,8 +135,8 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
           Please enter a valid 6-digit OTP code
         </span>
         <div class="otp-timer-container">
-          <span class="timer-text" *ngIf="countdown > 0">Resend OTP in {{ countdown }}s</span>
-          <button type="button" class="btn-resend" *ngIf="countdown === 0" (click)="sendOtp()">Resend OTP</button>
+          <span class="timer-text" *ngIf="countdown() > 0">Resend OTP in {{ countdown() }}s</span>
+          <button type="button" class="btn-resend" *ngIf="countdown() === 0" (click)="sendOtp()">Resend OTP</button>
         </div>
       </div>
 
@@ -414,7 +414,7 @@ export class LoginFormComponent implements OnDestroy {
   maskedEmail = '';
   sendingOtp = false;
   verifyingOtp = false;
-  countdown = 60;
+  countdown = signal(60);
   countdownInterval: any;
 
   // Google OTP state
@@ -655,10 +655,10 @@ export class LoginFormComponent implements OnDestroy {
   }
 
   startTimer() {
-    this.countdown = 60;
+    this.countdown.set(60);
     this.clearInterval();
     this.countdownInterval = setInterval(() => {
-      if (this.countdown > 0) { this.countdown--; } else { this.clearInterval(); }
+      if (this.countdown() > 0) { this.countdown.update(c => c - 1); } else { this.clearInterval(); }
     }, 1000);
   }
 
