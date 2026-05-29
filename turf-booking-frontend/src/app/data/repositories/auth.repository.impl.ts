@@ -55,4 +55,18 @@ export class AuthRepositoryImpl implements AuthRepository {
         })
       );
   }
+
+  /**
+   * Step 1 of Google login: sends an OTP to the selected Gmail address using standard OTP.
+   */
+  googleSignIn(idToken: string, email: string, displayName: string): Observable<any> {
+    return this.sendOtp(email);
+  }
+
+  /**
+   * Step 2 of Google login: verifies the OTP using the standard OTP endpoint.
+   */
+  googleVerifyOtp(email: string, otpCode: string): Observable<AuthResponse> {
+    return this.verifyOtp(email, otpCode);
+  }
 }
