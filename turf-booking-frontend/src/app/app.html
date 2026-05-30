@@ -4,4 +4,8 @@
 
 <router-outlet></router-outlet>
 
+@if (!hideNavbar()) {
+  <app-footer-component></app-footer-component>
+}
+
 <app-toast></app-toast>

@@ -1,1 +1,138 @@
-<p>footer-component works!</p>
+<footer class="footer-container relative z-10 w-full pt-16 pb-8 px-6 md:px-[120px] font-manrope">
+  <!-- Glowing border beam separator at the top -->
+  <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
+  
+  <!-- Subtle Retro Grid Animation Backdrop -->
+  <div class="retro-grid">
+    <div class="retro-grid-lines"></div>
+  </div>
+
+  <!-- Decorative Ambient Light Blobs -->
+  <div class="glow-blob -top-40 -left-40"></div>
+  <div class="glow-blob bottom-[-200px] right-[-200px]" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto">
+    <!-- Main Footer Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-12">
+      
+      <!-- Column 1: Brand Info -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+        <a routerLink="/" class="flex items-center gap-3 group w-fit">
+          <img src="/images/logo.png" alt="TurfXpert Logo" class="w-9 h-9 object-contain transition-transform duration-300 group-hover:scale-110">
+          <span class="font-bold text-2xl tracking-wide bg-gradient-to-r from-[var(--text-primary)] via-purple-400 to-[var(--text-primary)] bg-clip-text text-transparent">TurfXpert</span>
+        </a>
+        <p class="text-[var(--text-secondary)] text-[14px] leading-relaxed max-w-[320px]">
+          Discover handpicked grounds, courts, and arenas near you. Enjoy instant online booking, easy split-billing, and 24/7 coordinator support.
+        </p>
+        
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3 mt-2">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitter">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+            </svg>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Instagram">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2: Explore -->
+      <div class="flex flex-col gap-5">
+        <h4 class="font-bold text-sm uppercase tracking-wider text-[var(--text-primary)]">Explore</h4>
+        <ul class="flex flex-col gap-3 text-[14px]">
+          <li><a routerLink="/home" class="footer-link-item">Home</a></li>
+          <li><a routerLink="/dashboard" class="footer-link-item">Book Turf</a></li>
+          <li><a routerLink="/bookings" class="footer-link-item">My Bookings</a></li>
+          <li><a routerLink="/dashboard" class="footer-link-item">Featured Arenas</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Services & Features -->
+      <div class="flex flex-col gap-5">
+        <h4 class="font-bold text-sm uppercase tracking-wider text-[var(--text-primary)]">Services</h4>
+        <ul class="flex flex-col gap-3 text-[14px]">
+          <li><a href="#" class="footer-link-item">Split Cost</a></li>
+          <li><a href="#" class="footer-link-item">Tournament Host</a></li>
+          <li><a href="#" class="footer-link-item">Elite Coaching</a></li>
+          <li><a href="#" class="footer-link-item">Corporate Events</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Newsletter Sign-up -->
+      <div class="flex flex-col gap-5 min-w-[220px]">
+        <h4 class="font-bold text-sm uppercase tracking-wider text-[var(--text-primary)]">Stay Updated</h4>
+        <p class="text-[var(--text-secondary)] text-[13px] leading-relaxed">
+          Subscribe to get promo codes, tourney notices, and slot availability reports.
+        </p>
+        
+        <form (ngSubmit)="subscribeNewsletter()" class="flex flex-col gap-3 relative mt-1">
+          <!-- Standalone Magic Border Beam around the newsletter card -->
+          <div *ngIf="isSubscribed()" class="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-[13px] text-center font-medium animate-fade-in">
+            ✓ Awesome! You have subscribed.
+          </div>
+          
+          <ng-container *ngIf="!isSubscribed()">
+            <div class="relative w-full">
+              <input 
+                type="email" 
+                name="newsletter-email"
+                [(ngModel)]="email"
+                placeholder="Enter your email" 
+                class="w-full h-11 px-4 text-[14px] bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] rounded-xl outline-none focus:border-[var(--primary)] transition-all placeholder:text-[var(--text-secondary)]/50"
+                required
+              />
+            </div>
+            
+            <magic-shiny-button 
+              type="submit" 
+              [loading]="isSubmitting()"
+              [disabled]="!email() || !email().includes('@')"
+              class="w-full text-[14px] font-semibold h-11"
+            >
+              Subscribe
+            </magic-shiny-button>
+          </ng-container>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Divider Line -->
+    <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--border-color)] to-transparent opacity-50 my-6"></div>
+
+    <!-- Bottom Copybar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-[var(--text-secondary)]">
+      <div class="flex flex-wrap items-center justify-center gap-6">
+        <span>© 2026 TurfXpert. All rights reserved.</span>
+        <a href="#" class="hover:text-[var(--primary)] transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-[var(--primary)] transition-colors">Terms of Service</a>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span>Crafted with</span>
+        <svg class="w-3.5 h-3.5 text-red-500 fill-current animate-pulse" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span>for athletes</span>
+      </div>
+    </div>
+  </div>
+</footer>

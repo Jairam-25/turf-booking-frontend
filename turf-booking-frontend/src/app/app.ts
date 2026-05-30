@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ToastComponent } from './layout/toast/toast.component';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './layout/navbar/navbar.component';
+import { FooterComponent } from './layout/footer-component/footer-component';
 import { AuthStore } from './core/services/auth.store';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from './core/services/theme.service';
@@ -13,6 +14,7 @@ import { ThemeService } from './core/services/theme.service';
     RouterOutlet,
     NavbarComponent,
     ToastComponent,
+    FooterComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
