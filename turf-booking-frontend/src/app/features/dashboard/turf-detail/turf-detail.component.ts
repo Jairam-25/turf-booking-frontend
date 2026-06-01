@@ -288,23 +288,31 @@ interface CategorizedSlot extends Slot {
             <!-- Booking Summary -->
             <div class="checkout-summary glass" *ngIf="selectedSlots().length > 0">
               <h3>Reservation Summary</h3>
-              <div class="selected-slots-list">
-                <div class="summary-slot-item" *ngFor="let slot of selectedSlots()">
-                  <span>{{ formatTime(slot.startTime) }} ({{ slot.category }})</span>
-                  <span>₹{{ slot.calculatedPrice }}</span>
+              
+              <div class="selected-slots-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div class="summary-row">
+                  <span>Date</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">{{ getFormattedBookingDate() }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Time</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">{{ getFormattedTimeRange() }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Duration</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">{{ selectedSlots().length }} Hour{{ selectedSlots().length > 1 ? 's' : '' }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Price per hour</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">
+                    ₹{{ turf()?.pricePerHour }} &nbsp; 
+                    <span style="color: var(--primary); font-weight: 700;">({{ selectedSlots().length }} hrs: ₹{{ getTotalPrice() }})</span>
+                  </span>
                 </div>
               </div>
 
               <div class="divider"></div>
 
-              <div class="summary-row">
-                <span>Total Duration</span>
-                <span>{{ selectedSlots().length }} Hour(s)</span>
-              </div>
-              <div class="summary-row">
-                <span>Base Total</span>
-                <span>₹{{ getTotalPrice() }}</span>
-              </div>
               <div class="summary-row total">
                 <span>Amount to Pay Now</span>
                 <span>₹{{ paymentOption() === 'full' ? getTotalPrice() : getAdvancePrice() }}</span>
@@ -1700,5 +1708,28 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   formatTime(isoString: string): string {
     const date = new Date(isoString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  getFormattedBookingDate(): string {
+    const selected = this.selectedSlots();
+    if (selected.length === 0) return '';
+    const date = new Date(selected[0].startTime);
+    return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
+  }
+
+  getFormattedTimeRange(): string {
+    const selected = this.selectedSlots();
+    if (selected.length === 0) return '';
+    
+    // Sort slots by start time to get chronological min and max
+    const sorted = [...selected].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    const minStart = new Date(sorted[0].startTime);
+    const maxEnd = new Date(sorted[sorted.length - 1].endTime);
+    
+    const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
+    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
+    
+    return `${startStr} to ${endStr}`;
   }
 }

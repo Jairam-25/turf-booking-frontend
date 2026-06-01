@@ -652,3 +652,9 @@ input::placeholder {
 .toast-themed .toast-close {
   color: var(--toast-close) !important;
 }
+
+/* Logo color inversion for Dark Theme */
+body:not([data-theme="light"]) img[src*="logo.png"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+

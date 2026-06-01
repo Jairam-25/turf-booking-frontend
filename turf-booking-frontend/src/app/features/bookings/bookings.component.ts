@@ -2,9 +2,22 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { BookingRepository } from '../../domain/repositories/booking.repository';
 import { Booking } from '../../domain/models/booking.model';
 import { NotificationService } from '../../core/services/notification.service';
+
+export interface GroupedBooking {
+  bookingIds: number[];
+  turfName: string;
+  location: string;
+  bookedOn: string;
+  startTime: string;
+  endTime: string;
+  pricePerHour: number;
+  totalPrice: number;
+  durationHours: number;
+}
 
 @Component({
   selector: 'app-bookings',
@@ -55,21 +68,28 @@ import { NotificationService } from '../../core/services/notification.service';
           
           <div class="booking-body">
             <div class="info-row">
-              <span class="label">Date & Time</span>
-              <span class="value">{{ formatDateTime(booking.startTime) }}</span>
+              <span class="label">Date</span>
+              <span class="value">{{ formatBookingDate(booking.startTime) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Time</span>
+              <span class="value">{{ formatTimeRange(booking.startTime, booking.endTime) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Duration</span>
-              <span class="value">1 Hour</span>
+              <span class="value">{{ booking.durationHours }} Hour{{ booking.durationHours > 1 ? 's' : '' }}</span>
             </div>
             <div class="info-row">
-              <span class="label">Price</span>
-              <span class="value price">₹{{ booking.price }}</span>
+              <span class="label">Price per hour</span>
+              <span class="value">
+                ₹{{ booking.pricePerHour }} &nbsp;&nbsp;
+                <span style="color: var(--primary); font-weight: 700;">{{ booking.durationHours }} hrs ₹{{ booking.totalPrice }}</span>
+              </span>
             </div>
           </div>
           
           <div class="booking-actions">
-            <button class="btn-cancel" (click)="openCancelModal(booking.bookingId)">Cancel Booking</button>
+            <button class="btn-cancel" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
           </div>
         </div>
 
@@ -449,13 +469,13 @@ import { NotificationService } from '../../core/services/notification.service';
   `]
 })
 export class BookingsComponent implements OnInit {
-  bookings = signal<Booking[]>([]);
+  bookings = signal<GroupedBooking[]>([]);
   isLoading = signal(true);
   
   // Modal state
   isCancelModalOpen = signal(false);
   isCancelling = signal(false);
-  bookingToCancel: number | null = null;
+  bookingsToCancel: number[] = [];
   cancelReason: string = '';
 
   constructor(
@@ -471,7 +491,7 @@ export class BookingsComponent implements OnInit {
     this.isLoading.set(true);
     this.bookingRepository.getMyBookings().subscribe({
       next: (data) => {
-        this.bookings.set(data);
+        this.bookings.set(this.groupBookings(data));
         this.isLoading.set(false);
       },
       error: () => {
@@ -481,19 +501,75 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-  openCancelModal(bookingId: number) {
-    this.bookingToCancel = bookingId;
+  groupBookings(flatBookings: Booking[]): GroupedBooking[] {
+    const groups: GroupedBooking[] = [];
+
+    // Sort by bookedOn descending first, then by startTime ascending (so consecutive slots are sorted chronologically within the group)
+    const sorted = [...flatBookings].sort((a, b) => {
+      // Sort bookedOn descending (latest bookings first)
+      const bookedOnDiff = new Date(b.bookedOn).getTime() - new Date(a.bookedOn).getTime();
+      if (Math.abs(bookedOnDiff) > 60000) {
+        return bookedOnDiff;
+      }
+      // If bookedOn is very close (within 1 min), sort by startTime ascending
+      return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+    });
+
+    for (const booking of sorted) {
+      const bookingDateStr = new Date(booking.startTime).toDateString();
+      const bookingBookedTime = new Date(booking.bookedOn).getTime();
+
+      const existingGroup = groups.find(g => {
+        const groupDateStr = new Date(g.startTime).toDateString();
+        const groupBookedTime = new Date(g.bookedOn).getTime();
+
+        return g.turfName === booking.turfName &&
+               groupDateStr === bookingDateStr &&
+               Math.abs(groupBookedTime - bookingBookedTime) < 60000; // 60 seconds
+      });
+
+      if (existingGroup) {
+        existingGroup.bookingIds.push(booking.bookingId);
+        existingGroup.totalPrice += booking.price;
+        existingGroup.durationHours += 1;
+        // Update startTime and endTime to span the whole selection
+        if (new Date(booking.startTime).getTime() < new Date(existingGroup.startTime).getTime()) {
+          existingGroup.startTime = booking.startTime;
+        }
+        if (new Date(booking.endTime).getTime() > new Date(existingGroup.endTime).getTime()) {
+          existingGroup.endTime = booking.endTime;
+        }
+      } else {
+        groups.push({
+          bookingIds: [booking.bookingId],
+          turfName: booking.turfName,
+          location: booking.location,
+          bookedOn: booking.bookedOn,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          pricePerHour: booking.price, // Base hourly rate
+          totalPrice: booking.price,
+          durationHours: 1
+        });
+      }
+    }
+
+    return groups;
+  }
+
+  openCancelModal(bookingIds: number[]) {
+    this.bookingsToCancel = bookingIds;
     this.cancelReason = '';
     this.isCancelModalOpen.set(true);
   }
 
   closeCancelModal() {
     this.isCancelModalOpen.set(false);
-    this.bookingToCancel = null;
+    this.bookingsToCancel = [];
   }
 
   confirmCancel() {
-    if (!this.bookingToCancel) return;
+    if (this.bookingsToCancel.length === 0) return;
     
     if (!this.cancelReason.trim()) {
       this.notificationService.error('Please provide a reason for cancellation');
@@ -501,15 +577,20 @@ export class BookingsComponent implements OnInit {
     }
 
     this.isCancelling.set(true);
-    this.bookingRepository.cancelBooking(this.bookingToCancel, this.cancelReason).subscribe({
+
+    const cancelRequests = this.bookingsToCancel.map(id => 
+      this.bookingRepository.cancelBooking(id, this.cancelReason)
+    );
+
+    forkJoin(cancelRequests).subscribe({
       next: () => {
-        this.notificationService.success('Booking cancelled successfully');
+        this.notificationService.success('Booking(s) cancelled successfully');
         this.closeCancelModal();
         this.loadBookings(); // Reload to get updated list
         this.isCancelling.set(false);
       },
       error: (err) => {
-        this.notificationService.error(err.error?.message || 'Failed to cancel booking');
+        this.notificationService.error(err.error?.message || 'Failed to cancel booking(s)');
         this.isCancelling.set(false);
       }
     });
@@ -519,14 +600,19 @@ export class BookingsComponent implements OnInit {
     return encodeURIComponent(val);
   }
 
-  formatDateTime(isoString: string): string {
-    const date = new Date(isoString);
-    return date.toLocaleDateString(undefined, { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  formatBookingDate(startTime: string): string {
+    const date = new Date(startTime);
+    return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
+  }
+
+  formatTimeRange(startTime: string, endTime: string): string {
+    const minStart = new Date(startTime);
+    const maxEnd = new Date(endTime);
+    
+    const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
+    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
+    
+    return `${startStr} to ${endStr}`;
   }
 }
