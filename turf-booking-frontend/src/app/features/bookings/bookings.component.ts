@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BookingRepository } from '../../domain/repositories/booking.repository';
 import { Booking } from '../../domain/models/booking.model';
 import { NotificationService } from '../../core/services/notification.service';
@@ -8,12 +9,22 @@ import { NotificationService } from '../../core/services/notification.service';
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="bookings-container fade-in">
+      <!-- Back Button -->
+      <div class="navigation-bar">
+        <button class="btn-back" routerLink="/dashboard">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+
       <div class="glass header-card">
         <h1>My Bookings</h1>
-        <p>Manage and track all your turf reservations</p>
+        <p>Manage and track all your premium turf reservations</p>
       </div>
 
       <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
@@ -21,8 +32,8 @@ import { NotificationService } from '../../core/services/notification.service';
           *ngFor="let booking of bookings()" 
           class="glass booking-card"
         >
-          <div class="booking-main">
-            <div class="turf-details">
+          <div class="booking-header">
+            <div class="turf-info">
               <h3>{{ booking.turfName }}</h3>
               <a 
                 [href]="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.turfName + ' ' + booking.location)"
@@ -30,30 +41,35 @@ import { NotificationService } from '../../core/services/notification.service';
                 class="location-link"
                 title="Open in Google Maps"
               >
-                {{ booking.location }} ↗
+                <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
+                  <circle cx="12" cy="10.5" r="2.5" />
+                </svg>
+                <span>{{ booking.location }} ↗</span>
               </a>
             </div>
             <div class="booking-status">
-              <span class="status-badge">Booking Confirmed</span>
+              <span class="status-badge">Confirmed</span>
             </div>
           </div>
           
-          <div class="booking-footer">
-            <div class="info-item">
+          <div class="booking-body">
+            <div class="info-row">
               <span class="label">Date & Time</span>
               <span class="value">{{ formatDateTime(booking.startTime) }}</span>
             </div>
-            <div class="info-item">
+            <div class="info-row">
               <span class="label">Duration</span>
               <span class="value">1 Hour</span>
             </div>
-            <div class="info-item">
+            <div class="info-row">
               <span class="label">Price</span>
-              <span class="value">₹{{ booking.price }}</span>
+              <span class="value price">₹{{ booking.price }}</span>
             </div>
-            <div class="info-item cancel-action">
-              <button class="btn-cancel" (click)="openCancelModal(booking.bookingId)">Cancel Booking</button>
-            </div>
+          </div>
+          
+          <div class="booking-actions">
+            <button class="btn-cancel" (click)="openCancelModal(booking.bookingId)">Cancel Booking</button>
           </div>
         </div>
 
@@ -94,57 +110,103 @@ import { NotificationService } from '../../core/services/notification.service';
   styles: [`
     .bookings-container {
       padding: 2rem;
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 2rem;
     }
+    .navigation-bar {
+      display: flex;
+      align-items: center;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--primary);
+    }
+    .back-icon {
+      width: 16px;
+      height: 16px;
+    }
     .header-card {
-      padding: 2.5rem;
-      text-align: center;
+      padding: 2rem 2.5rem;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
     .header-card h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
+      font-size: 2.2rem;
+      margin: 0;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .header-card p {
+      margin: 0;
       color: var(--text-secondary);
+      font-size: 1rem;
     }
 
     .bookings-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
 
     .booking-card {
-      padding: 2rem;
+      padding: 1.75rem;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      justify-content: space-between;
+      gap: 1.5rem;
+      border-radius: 20px;
+      min-height: 280px;
       transition: var(--transition-smooth);
     }
     .booking-card:hover {
-      transform: translateX(8px);
+      transform: translateY(-6px);
       border-color: var(--primary);
+      box-shadow: var(--shadow-glow-primary);
     }
 
-    .booking-main {
+    .booking-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      gap: 1rem;
     }
-    .turf-details h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+    .turf-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .turf-info h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
     }
     .location-link {
       color: var(--text-secondary);
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       transition: var(--transition-smooth);
     }
     .location-link:hover {
@@ -154,25 +216,26 @@ import { NotificationService } from '../../core/services/notification.service';
     .status-badge {
       background: rgba(16, 185, 129, 0.1);
       color: var(--success-color);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8125rem;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
       font-weight: 700;
       border: 1px solid rgba(16, 185, 129, 0.2);
+      white-space: nowrap;
     }
 
-    .booking-footer {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--glass-border);
-      align-items: center;
-    }
-    .info-item {
+    .booking-body {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .label {
       font-size: 0.75rem;
@@ -181,27 +244,36 @@ import { NotificationService } from '../../core/services/notification.service';
       letter-spacing: 0.05em;
     }
     .value {
+      font-size: 0.9375rem;
       font-weight: 600;
       color: var(--text-primary);
     }
+    .value.price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
 
-    .cancel-action {
-      align-items: flex-end;
-      justify-content: center;
+    .booking-actions {
+      display: flex;
+      width: 100%;
     }
     .btn-cancel {
-      background: rgba(239, 68, 68, 0.1);
+      width: 100%;
+      background: rgba(239, 68, 68, 0.08);
       color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 8px 16px;
-      border-radius: 8px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 10px;
+      border-radius: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition-smooth);
     }
     .btn-cancel:hover {
       background: #ef4444;
       color: white;
+      border-color: #ef4444;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
     }
 
     /* Modal Styles */
@@ -308,7 +380,7 @@ import { NotificationService } from '../../core/services/notification.service';
     }
 
     .skeleton {
-      height: 200px;
+      height: 280px;
       animation: pulse 1.5s infinite;
     }
     @keyframes pulse {
@@ -324,6 +396,55 @@ import { NotificationService } from '../../core/services/notification.service';
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .btn-premium {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .btn-premium:hover {
+      box-shadow: var(--shadow-glow-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Tablet and Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .bookings-container {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      .header-card {
+        padding: 1.5rem;
+      }
+      .header-card h1 {
+        font-size: 1.8rem;
+      }
+      .booking-card {
+        padding: 1.25rem;
+        gap: 1.25rem;
+      }
+      .empty-state {
+        padding: 3rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 1.5rem;
+      }
+      .modal-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .modal-actions button {
+        width: 100%;
+      }
     }
   `]
 })

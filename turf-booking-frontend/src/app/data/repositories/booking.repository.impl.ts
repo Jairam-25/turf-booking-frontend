@@ -37,7 +37,9 @@ export class BookingRepositoryImpl implements BookingRepository {
   }
 
   getSlotsByTurf(turfId: number): Observable<Slot[]> {
-    const params = new HttpParams().set('turfId', turfId);
+    const params = new HttpParams()
+      .set('turfId', turfId)
+      .set('_t', new Date().getTime().toString());
     return this.http.get<any>(this.slotUrl, { params }).pipe(
       map(response => {
         const result = response.data || response.Data || response.value || response.Value || response;

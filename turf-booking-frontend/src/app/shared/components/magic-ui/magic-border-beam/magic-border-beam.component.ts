@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,16 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <svg 
-      class="absolute inset-0 w-full h-full pointer-events-none rounded-[inherit] overflow-visible" 
-      preserveAspectRatio="none"
-      [style.border-radius]="'inherit'"
-    >
+    <svg class="beam-svg" preserveAspectRatio="none">
       <rect
         class="border-beam-path"
         x="0" y="0"
         width="100%" height="100%"
-        rx="inherit" ry="inherit"
+        [attr.rx]="borderRadius"
+        [attr.ry]="borderRadius"
         fill="none"
         [attr.stroke]="'url(#' + beamGradientId + ')'"
         [attr.stroke-width]="borderWidth"
@@ -23,9 +20,9 @@ import { CommonModule } from '@angular/common';
       />
       <defs>
         <linearGradient [id]="beamGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" [attr.stop-color]="colorFrom" stop-opacity="0" />
-          <stop offset="50%" [attr.stop-color]="colorFrom" stop-opacity="1" />
-          <stop offset="100%" [attr.stop-color]="colorTo" stop-opacity="1" />
+          <stop offset="0%"   [attr.stop-color]="colorFrom" stop-opacity="0" />
+          <stop offset="50%"  [attr.stop-color]="colorFrom" stop-opacity="1" />
+          <stop offset="100%" [attr.stop-color]="colorTo"   stop-opacity="1" />
         </linearGradient>
       </defs>
     </svg>
@@ -38,12 +35,20 @@ import { CommonModule } from '@angular/common';
       display: block;
       border-radius: inherit;
     }
+    .beam-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
     .border-beam-path {
       stroke-dasharray: 180 500;
       animation: border-beam-svg-flow 8s linear infinite;
     }
     @keyframes border-beam-svg-flow {
-      0% { stroke-dashoffset: 680; }
+      0%   { stroke-dashoffset: 680; }
       100% { stroke-dashoffset: 0; }
     }
   `]
@@ -51,6 +56,8 @@ import { CommonModule } from '@angular/common';
 export class MagicBorderBeamComponent implements OnInit {
   @Input() duration = '8s';
   @Input() borderWidth = 2.5;
+  /** Numeric corner radius in pixels for the animated border rect */
+  @Input() borderRadius = 16;
   @Input() colorFrom = 'var(--primary)';
   @Input() colorTo = 'var(--accent)';
 

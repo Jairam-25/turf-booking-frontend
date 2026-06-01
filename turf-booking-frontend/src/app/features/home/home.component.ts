@@ -5,11 +5,12 @@ import { TurfBackgroundComponent } from '../../shared/components/turf-background
 import { MagicAnimatedBeamComponent } from '../../shared/components/magic-ui/magic-animated-beam/magic-animated-beam.component';
 import { MagicNumberTickerComponent } from '../../shared/components/magic-ui/magic-number-ticker/magic-number-ticker.component';
 import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-hero/lottie-hero.component';
+import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic-border-beam/magic-border-beam.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TurfBackgroundComponent, MagicAnimatedBeamComponent, MagicNumberTickerComponent, LottieHeroComponent],
+  imports: [CommonModule, RouterModule, TurfBackgroundComponent, MagicAnimatedBeamComponent, MagicNumberTickerComponent, LottieHeroComponent, MagicBorderBeamComponent],
   template: `
     <div class="hero-page font-inter overflow-x-hidden">
       <!-- Custom realistic animated turf background -->
@@ -17,7 +18,7 @@ import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-her
 
       <div class="hero-overlay"></div>
 
-      <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 min-h-[calc(100vh-80px)]">
+      <div class="hero-container relative z-10 flex flex-col items-center justify-center text-center px-6 min-h-[calc(100vh-80px)]">
         <div class="max-w-4xl flex flex-col items-center gap-6">
           <div class="flex items-center gap-6">
             <app-lottie-hero [width]="96" [height]="96" [src]="'https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json'" ></app-lottie-hero>
@@ -47,17 +48,19 @@ import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-her
       </div>
 
       <!-- How it Works section with Magic Animated Beam -->
-      <section class="relative z-10 w-full max-w-4xl mx-auto px-6 py-6 text-center animate-fade-in-up animation-delay-400">
+      <section class="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center animate-fade-in-up animation-delay-400">
         <h2 class="font-instrument-serif text-3xl md:text-5xl mb-8">Instant Booking Flow</h2>
-        <div class="glass p-6 rounded-3xl backdrop-blur-md">
+        <div class="glass p-4 sm:p-6 rounded-3xl backdrop-blur-md relative overflow-hidden">
+          <magic-border-beam [duration]="'6s'" [borderWidth]="3"></magic-border-beam>
           <magic-animated-beam></magic-animated-beam>
         </div>
       </section>
 
       <section class="relative z-10 w-full max-w-6xl mx-auto px-6 py-24">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="group animate-scroll-fade-in animation-delay-300 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300" [class.lifted]="turfSwiped()">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300" style="background: rgba(var(--primary-rgb), 0.1);">
+          <div class="group animate-scroll-fade-in animation-delay-300 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 relative overflow-hidden" [class.lifted]="turfSwiped()">
+            <magic-border-beam [duration]="'6s'" [borderWidth]="2"></magic-border-beam>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
@@ -67,8 +70,9 @@ import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-her
             <p class="font-inter text-sm">Top-tier football, cricket, and badminton arenas in your vicinity.</p>
           </div>
 
-          <div class="group animate-scroll-fade-in animation-delay-400 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300" [class.lifted]="playersSwiped()">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300" style="background: rgba(var(--primary-rgb), 0.1);">
+          <div class="group animate-scroll-fade-in animation-delay-400 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 relative overflow-hidden" [class.lifted]="playersSwiped()">
+            <magic-border-beam [duration]="'6s'" [borderWidth]="2"></magic-border-beam>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
@@ -78,8 +82,9 @@ import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-her
             <p class="font-inter text-sm">An active community of sports enthusiasts playing daily.</p>
           </div>
 
-          <div class="group animate-scroll-fade-in animation-delay-500 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300" [class.lifted]="slotsSwiped()">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300" style="background: rgba(var(--primary-rgb), 0.1);">
+          <div class="group animate-scroll-fade-in animation-delay-500 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 relative overflow-hidden" [class.lifted]="slotsSwiped()">
+            <magic-border-beam [duration]="'6s'" [borderWidth]="2"></magic-border-beam>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">

@@ -565,6 +565,45 @@ input::placeholder {
   color: var(--hero-card-text-muted);
 }
 
+/* Media Queries for Responsive Home Page */
+@media (max-width: 768px) {
+  .hero-container {
+    min-height: auto !important;
+    padding-top: 5rem !important;
+    padding-bottom: 3rem !important;
+  }
+  .hero-heading {
+    font-size: 2.75rem !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+  }
+  .hero-subtext {
+    font-size: 1rem !important;
+    padding: 0 0.5rem !important;
+  }
+  .hero-pill {
+    height: auto !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  .hero-stat-card {
+    padding: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-heading {
+    font-size: 2.25rem !important;
+  }
+  .hero-btn-primary, .hero-btn-secondary {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 15px !important;
+  }
+}
+
 .goal-overlay .transition-content,
 .goal-overlay .overlay-label,
 .goal-overlay .overlay-brand {
