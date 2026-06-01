@@ -446,13 +446,28 @@ export class BookingModalComponent implements OnInit {
     try {
       this.signalr.joinTurfGroup(String(this.turf.id));
     } catch {}
+
+    // Listen for real-time booking updates
+    this.signalr.on('SlotBooked', (data: any) => {
+      const slotId = data.slotId || data.SlotId;
+      const isBooked = data.isBooked !== undefined ? data.isBooked : data.IsBooked;
+      if (slotId !== undefined && isBooked !== undefined) {
+        if (isBooked) {
+          this.slots.update(currentSlots => currentSlots.filter(s => s.id !== slotId));
+          if (!this.isBookedSuccess() && this.selectedSlot()?.id === slotId) {
+            this.selectedSlot.set(null);
+          }
+        }
+      }
+    });
   }
 
   loadSlots() {
     this.isLoading.set(true);
     this.bookingRepository.getSlotsByTurf(this.turf.id).subscribe({
       next: (slots) => {
-        this.slots.set(slots);
+        const now = new Date().getTime();
+        this.slots.set(slots.filter(s => !s.isBooked && new Date(s.startTime).getTime() > now));
         this.isLoading.set(false);
       },
       error: () => {
@@ -491,12 +506,18 @@ export class BookingModalComponent implements OnInit {
 
   onClose() {
     if (this.isBookedSuccess()) return; // Prevent closing while success animation runs
-    try { this.signalr.leaveTurfGroup(String(this.turf.id)); } catch {}
+    try { 
+      this.signalr.off('SlotBooked');
+      this.signalr.leaveTurfGroup(String(this.turf.id)); 
+    } catch {}
     this.close.emit();
   }
 
   ngOnDestroy(): void {
-    try { this.signalr.leaveTurfGroup(String(this.turf.id)); } catch {}
+    try { 
+      this.signalr.off('SlotBooked');
+      this.signalr.leaveTurfGroup(String(this.turf.id)); 
+    } catch {}
   }
 
   formatTime(isoString: string): string {

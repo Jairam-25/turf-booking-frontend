@@ -339,32 +339,37 @@ interface CategorizedSlot extends Slot {
               <p>Your premium turf reservation is active.</p>
             </div>
 
-            <div class="success-details-list glass">
+            <div class="success-details-list glass" *ngIf="confirmedBookingDetails() as details">
               <div class="detail-row">
                 <span class="label">Turf Arena</span>
                 <span class="value">{{ turf()?.name }}</span>
               </div>
               <div class="detail-row">
                 <span class="label">Payment Plan</span>
-                <span class="value">{{ paymentOption() === 'full' ? 'Full Payment' : 'Advance Booking Plan' }}</span>
+                <span class="value">{{ details.paymentPlan }}</span>
               </div>
               <div class="detail-row">
                 <span class="label">Amount Paid Now</span>
-                <span class="value price">₹{{ paymentOption() === 'full' ? getTotalPrice() : getAdvancePrice() }}</span>
+                <span class="value price">₹{{ details.amountPaid }}</span>
               </div>
-              <div class="detail-row" *ngIf="paymentOption() === 'advance'">
+              <div class="detail-row" *ngIf="details.balanceDue > 0">
                 <span class="label">Balance Due at Venue</span>
-                <span class="value" style="color: var(--accent);">₹{{ getTotalPrice() - getAdvancePrice() }}</span>
+                <span class="value" style="color: var(--accent);">₹{{ details.balanceDue }}</span>
               </div>
               <div class="detail-row">
                 <span class="label">Selected Hours</span>
-                <span class="value">{{ selectedSlots().length }} hr(s)</span>
+                <span class="value">{{ details.hours }} hr(s)</span>
               </div>
             </div>
 
-            <button class="btn-premium" routerLink="/bookings" style="margin-top: 1rem; width: 100%;">
-              Go to My Bookings
-            </button>
+            <div class="success-actions" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-top: 1rem;">
+              <button class="btn-premium" routerLink="/bookings" style="width: 100%;">
+                Go to My Bookings
+              </button>
+              <button class="btn-premium secondary" (click)="resetSuccessState()" style="width: 100%;">
+                Return to Slots Selection
+              </button>
+            </div>
           </div>
 
         </div>
@@ -704,7 +709,7 @@ interface CategorizedSlot extends Slot {
       border-radius: 50%;
     }
     .legend-dot.available { background: #10b981; }
-    .legend-dot.selected { background: #6366f1; }
+    .legend-dot.selected { background: #2563eb; }
     .legend-dot.booked { background: #ef4444; }
     .legend-dot.unavailable { background: #64748b; }
 
@@ -741,16 +746,22 @@ interface CategorizedSlot extends Slot {
       transition: var(--transition-smooth);
       position: relative;
     }
-    .slot-card-v3:hover:not(.booked):not(.unavailable) {
+    .slot-card-v3:hover:not(.booked):not(.unavailable):not(.selected) {
       border-color: var(--primary);
       background: rgba(var(--primary-rgb), 0.04);
       transform: translateY(-2px);
     }
     .slot-card-v3.selected {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: var(--on-primary);
-      box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2);
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    }
+    .slot-card-v3.selected:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+      color: #ffffff;
+      transform: translateY(-2px);
     }
     .slot-card-v3.booked {
       border-color: rgba(239, 68, 68, 0.2);
@@ -1365,6 +1376,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   isLoadingSlots = signal(true);
   isBooking = signal(false);
   isBookedSuccess = signal(false);
+  confirmedBookingDetails = signal<{ paymentPlan: string; amountPaid: number; balanceDue: number; hours: number } | null>(null);
 
   // Reviews signals & properties
   reviews = signal<Review[]>([]);
@@ -1403,6 +1415,21 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         try {
           this.signalr.joinTurfGroup(String(this.turfId));
         } catch {}
+
+        // Listen for real-time booking updates
+        this.signalr.on('SlotBooked', (data: any) => {
+          const slotId = data.slotId || data.SlotId;
+          const isBooked = data.isBooked !== undefined ? data.isBooked : data.IsBooked;
+          if (slotId !== undefined && isBooked !== undefined) {
+            this.slots.update(currentSlots =>
+              currentSlots.map(s => s.id === slotId ? { ...s, isBooked: isBooked } : s)
+            );
+            // If the slot is currently selected by this user, deselect it (only if not successfully booked yet)
+            if (!this.isBookedSuccess() && isBooked && this.selectedSlots().some(s => s.id === slotId)) {
+              this.selectedSlots.update(selected => selected.filter(s => s.id !== slotId));
+            }
+          }
+        });
       } else {
         this.router.navigate(['/dashboard']);
       }
@@ -1568,12 +1595,31 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     const selected = this.selectedSlots();
     if (selected.length === 0) return;
 
+    // Capture booking details before starting the booking process
+    const option = this.paymentOption();
+    const totalPrice = this.getTotalPrice();
+    const advancePrice = this.getAdvancePrice();
+    const hours = selected.length;
+
+    this.confirmedBookingDetails.set({
+      paymentPlan: option === 'full' ? 'Full Payment' : 'Advance Booking Plan',
+      amountPaid: option === 'full' ? totalPrice : advancePrice,
+      balanceDue: option === 'full' ? 0 : (totalPrice - advancePrice),
+      hours: hours
+    });
+
     this.isBooking.set(true);
 
     const bookings = selected.map(slot => this.bookingRepository.bookSlot({ slotId: slot.id }));
 
     forkJoin(bookings).subscribe({
       next: () => {
+        // Mark the slots we just booked as booked in our local state immediately
+        const bookedIds = selected.map(s => s.id);
+        this.slots.update(currentSlots =>
+          currentSlots.map(s => bookedIds.includes(s.id) ? { ...s, isBooked: true } : s)
+        );
+
         this.isBooking.set(false);
         this.isBookedSuccess.set(true);
         this.notificationService.success('All slots booked successfully!');
@@ -1581,8 +1627,16 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.notificationService.error(err.error?.message || 'Booking failed.');
         this.isBooking.set(false);
+        this.confirmedBookingDetails.set(null); // Clear on failure
       }
     });
+  }
+
+  resetSuccessState() {
+    this.isBookedSuccess.set(false);
+    this.selectedSlots.set([]);
+    this.confirmedBookingDetails.set(null);
+    this.loadSlots(); // Refresh slot availability
   }
 
   loadReviews() {
@@ -1634,6 +1688,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     try {
+      this.signalr.off('SlotBooked');
       this.signalr.leaveTurfGroup(String(this.turfId));
     } catch {}
   }

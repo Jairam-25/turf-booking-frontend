@@ -11,35 +11,72 @@ export class SignalrService {
     this.init();
   }
 
-  private init() {
-    const token = this.auth.token();
+  private startPromise: Promise<void> | null = null;
 
+  private init() {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(this.hubUrl, { accessTokenFactory: () => token || '' })
+      .withUrl(this.hubUrl, { accessTokenFactory: () => this.auth.token() || '' })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 
-    this.connection.start().catch(() => {
-      // swallow startup errors; reconnection will be attempted automatically
+    this.startPromise = this.connection.start();
+    this.startPromise.catch(() => {
+      // swallow startup errors; will try connecting on demand
     });
   }
 
-  async joinTurfGroup(turfId: string) {
+  private async ensureConnected() {
+    if (!this.connection) {
+      this.init();
+    }
     if (!this.connection) return;
+
+    if (this.connection.state === signalR.HubConnectionState.Disconnected) {
+      this.startPromise = this.connection.start();
+      try {
+        await this.startPromise;
+      } catch (err) {
+        console.warn('SignalR start failed:', err);
+        this.startPromise = null;
+      }
+    } else if (this.connection.state === signalR.HubConnectionState.Connecting) {
+      if (this.startPromise) {
+        try {
+          await this.startPromise;
+        } catch {}
+      } else {
+        // Fallback waiting for connection status
+        let retries = 20;
+        while (this.connection.state === signalR.HubConnectionState.Connecting && retries > 0) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries--;
+        }
+      }
+    }
+  }
+
+  async joinTurfGroup(turfId: string) {
     try {
-      await this.connection.invoke('JoinTurfGroup', turfId);
-    } catch {
-      // ignore
+      await this.ensureConnected();
+      if (this.connection && this.connection.state === signalR.HubConnectionState.Connected) {
+        await this.connection.invoke('JoinTurfGroup', turfId);
+      } else {
+        console.warn('SignalR connection is not connected, state:', this.connection?.state);
+      }
+    } catch (err) {
+      console.warn('SignalR JoinTurfGroup failed:', err);
     }
   }
 
   async leaveTurfGroup(turfId: string) {
-    if (!this.connection) return;
     try {
-      await this.connection.invoke('LeaveTurfGroup', turfId);
-    } catch {
-      // ignore
+      await this.ensureConnected();
+      if (this.connection && this.connection.state === signalR.HubConnectionState.Connected) {
+        await this.connection.invoke('LeaveTurfGroup', turfId);
+      }
+    } catch (err) {
+      console.warn('SignalR LeaveTurfGroup failed:', err);
     }
   }
 

@@ -3,7 +3,6 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
-import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
@@ -32,7 +31,7 @@ import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/ma
         <div class="info-pane">
           <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
-              <img src="/images/logo.png" alt="TurfXpert Logo" class="w-12 h-12 object-contain animate-float-logo">
+              <img src="/images/logo.png" alt="TurfXpert Logo" class="h-full w-auto object-contain">
             </div>
             <h1 class="glow-brand-title">TurfXpert</h1>
             <p class="brand-tagline">Elite Arena Booking</p>
@@ -131,7 +130,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authRepository: AuthRepository,
-    private authStore: AuthStore,
     private notificationService: NotificationService,
     private router: Router
   ) {}

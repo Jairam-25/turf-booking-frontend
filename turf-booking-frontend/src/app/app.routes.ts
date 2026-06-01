@@ -37,6 +37,21 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'offers',
+    loadComponent: () => import('./features/offers/offers.component').then(m => m.OffersComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'reviews',
+    loadComponent: () => import('./features/reviews/reviews.component').then(m => m.ReviewsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'support',
+    loadComponent: () => import('./features/support/support.component').then(m => m.SupportComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'dashboard/turf/:id',
     loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
     canActivate: [authGuard]

@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic-border-beam/magic-border-beam.component';
 import { MagicShinyButtonComponent } from '../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
 
 @Component({
@@ -12,7 +11,6 @@ import { MagicShinyButtonComponent } from '../../shared/components/magic-ui/magi
     CommonModule,
     RouterModule,
     FormsModule,
-    MagicBorderBeamComponent,
     MagicShinyButtonComponent,
   ],
   templateUrl: './footer-component.html',

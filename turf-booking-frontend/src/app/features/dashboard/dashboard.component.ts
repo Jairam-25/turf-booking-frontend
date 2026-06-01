@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
@@ -13,7 +13,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     <div class="dashboard-page fade-in">
       <header class="dashboard-header glass">
         <div class="header-content">
-          <h1>Find Your Perfect Game</h1>
+          <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>
           <div class="search-bar glass">
             <select 
               class="location-select"
@@ -87,6 +87,20 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       margin-bottom: 2.5rem;
       color: var(--on-primary);
       text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+    }
+    .typing-text {
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .typing-cursor {
+      color: var(--primary);
+      animation: blink-caret 0.75s step-end infinite;
+      margin-left: 2px;
+      font-weight: 300;
+    }
+    @keyframes blink-caret {
+      from, to { opacity: 0 }
+      50% { opacity: 1 }
     }
     .search-bar {
       max-width: 600px;
@@ -208,12 +222,19 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     }
   `]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   turfs = signal<Turf[]>([]);
   isLoading = signal(true);
   searchTerm = signal<string>('');
   selectedLocation = signal<string>('');
   allLocations = signal<string[]>([]);
+
+  // Typing animation properties
+  words = ['Turf', 'Court', 'Pitch', 'Match', 'Arena', 'Game'];
+  currentWordIndex = 0;
+  displayedWord = signal('');
+  isDeleting = false;
+  typingTimeout: any;
 
   constructor(
     private turfRepository: TurfRepository,
@@ -222,6 +243,41 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadInitialLocationsAndTurfs();
+    this.startTypingAnimation();
+  }
+
+  ngOnDestroy() {
+    if (this.typingTimeout) {
+      clearTimeout(this.typingTimeout);
+    }
+  }
+
+  startTypingAnimation() {
+    const tick = () => {
+      const currentWord = this.words[this.currentWordIndex];
+      const currentText = this.displayedWord();
+
+      if (this.isDeleting) {
+        this.displayedWord.set(currentWord.substring(0, currentText.length - 1));
+      } else {
+        this.displayedWord.set(currentWord.substring(0, currentText.length + 1));
+      }
+
+      let speed = this.isDeleting ? 75 : 150;
+
+      if (!this.isDeleting && this.displayedWord() === currentWord) {
+        speed = 2000;
+        this.isDeleting = true;
+      } else if (this.isDeleting && this.displayedWord() === '') {
+        this.isDeleting = false;
+        this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
+        speed = 500;
+      }
+
+      this.typingTimeout = setTimeout(tick, speed);
+    };
+
+    tick();
   }
 
   loadInitialLocationsAndTurfs() {

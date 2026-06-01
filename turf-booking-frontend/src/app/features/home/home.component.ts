@@ -18,7 +18,7 @@ import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic
 
       <div class="hero-overlay"></div>
 
-      <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 min-h-[calc(100vh-80px)]">
+      <div class="hero-container relative z-10 flex flex-col items-center justify-center text-center px-6 min-h-[calc(100vh-80px)]">
         <div class="max-w-4xl flex flex-col items-center gap-6">
           <div class="flex items-center gap-6">
             <app-lottie-hero [width]="96" [height]="96" [src]="'https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json'" ></app-lottie-hero>
