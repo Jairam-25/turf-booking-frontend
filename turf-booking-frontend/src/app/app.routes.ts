@@ -47,6 +47,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'support',
+    loadComponent: () => import('./features/support/support.component').then(m => m.SupportComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'dashboard/turf/:id',
     loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
     canActivate: [authGuard]
