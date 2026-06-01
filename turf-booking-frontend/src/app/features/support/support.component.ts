@@ -214,9 +214,10 @@ interface ChatMessage {
             <div class="chat-header">
               <div class="agent-avatar">
                 <div class="avatar-inner">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
+                  </svg> -->
+                  <i class="bi bi-robot"></i>
                 </div>
                 <span class="pulse-indicator"></span>
               </div>
