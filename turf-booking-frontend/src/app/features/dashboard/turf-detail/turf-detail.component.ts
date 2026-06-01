@@ -362,9 +362,14 @@ interface CategorizedSlot extends Slot {
               </div>
             </div>
 
-            <button class="btn-premium" routerLink="/bookings" style="margin-top: 1rem; width: 100%;">
-              Go to My Bookings
-            </button>
+            <div class="success-actions" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-top: 1rem;">
+              <button class="btn-premium" routerLink="/bookings" style="width: 100%;">
+                Go to My Bookings
+              </button>
+              <button class="btn-premium secondary" (click)="resetSuccessState()" style="width: 100%;">
+                Return to Slots Selection
+              </button>
+            </div>
           </div>
 
         </div>
@@ -704,7 +709,7 @@ interface CategorizedSlot extends Slot {
       border-radius: 50%;
     }
     .legend-dot.available { background: #10b981; }
-    .legend-dot.selected { background: #6366f1; }
+    .legend-dot.selected { background: #2563eb; }
     .legend-dot.booked { background: #ef4444; }
     .legend-dot.unavailable { background: #64748b; }
 
@@ -741,16 +746,22 @@ interface CategorizedSlot extends Slot {
       transition: var(--transition-smooth);
       position: relative;
     }
-    .slot-card-v3:hover:not(.booked):not(.unavailable) {
+    .slot-card-v3:hover:not(.booked):not(.unavailable):not(.selected) {
       border-color: var(--primary);
       background: rgba(var(--primary-rgb), 0.04);
       transform: translateY(-2px);
     }
     .slot-card-v3.selected {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: var(--on-primary);
-      box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2);
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    }
+    .slot-card-v3.selected:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+      color: #ffffff;
+      transform: translateY(-2px);
     }
     .slot-card-v3.booked {
       border-color: rgba(239, 68, 68, 0.2);
@@ -1583,6 +1594,12 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.isBooking.set(false);
       }
     });
+  }
+
+  resetSuccessState() {
+    this.isBookedSuccess.set(false);
+    this.selectedSlots.set([]);
+    this.loadSlots(); // Refresh slot availability
   }
 
   loadReviews() {

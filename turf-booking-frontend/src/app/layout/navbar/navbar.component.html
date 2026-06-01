@@ -1,8 +1,8 @@
 <nav class="navbar-shell relative z-30 flex items-center justify-between w-full py-4 px-6 md:px-[120px] bg-transparent border-b font-manrope">
   <!-- Logo (Left) -->
   <a routerLink="/" class="flex items-center gap-3 group">
-    <img src="/images/logo.png" alt="TurfXpert Logo" class="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110">
-    <span class="navbar-brand-text font-bold text-xl tracking-wide">TurfXpert</span>
+    <img src="/images/logo.png" alt="TurfXpert Logo" class="w-14 h-14 object-contain transition-transform duration-300 group-hover:scale-110">
+    <span class="navbar-brand-text font-bold text-2xl tracking-wide">TurfXpert</span>
   </a>
 
   <!-- Navigation Links (Center-Left, Desktop Only) -->
@@ -25,6 +25,8 @@
       <a routerLink="/home" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Home</a>
       <a routerLink="/bookings" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Bookings</a>
       <a routerLink="/dashboard" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Dashboard</a>
+      <a routerLink="/offers" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Offers</a>
+      <a routerLink="/reviews" routerLinkActive="text-primary" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Reviews</a>
     </ng-container>
   </div>
 
@@ -105,6 +107,8 @@
         <a routerLink="/home" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Home</a>
         <a routerLink="/bookings" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Bookings</a>
         <a routerLink="/dashboard" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Dashboard</a>
+        <a routerLink="/offers" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Offers</a>
+        <a routerLink="/reviews" (click)="toggleMobileMenu()" class="navbar-link font-bold text-2xl hover:text-primary">Reviews</a>
       </ng-container>
     </div>
 
