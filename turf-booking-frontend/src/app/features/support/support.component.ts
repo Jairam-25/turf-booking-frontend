@@ -1,6 +1,7 @@
 import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 interface FAQ {
   question: string;
@@ -28,10 +29,20 @@ interface ChatMessage {
 @Component({
   selector: 'app-support',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="support-page-container fade-in">
       
+      <!-- Back Button -->
+      <div class="navigation-bar">
+        <button class="btn-back" routerLink="/dashboard">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+
       <!-- Hero Banner -->
       <header class="support-hero glass">
         <div class="glow-blob"></div>
@@ -266,6 +277,32 @@ interface ChatMessage {
     </div>
   `,
   styles: [`
+    .navigation-bar {
+      display: flex;
+      align-items: center;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--primary);
+    }
+    .back-icon {
+      width: 16px;
+      height: 16px;
+    }
+
     .support-page-container {
       max-width: 1300px;
       margin: 0 auto;
