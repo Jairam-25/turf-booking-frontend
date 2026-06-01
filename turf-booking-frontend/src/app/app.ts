@@ -3,7 +3,6 @@ import { ToastComponent } from './layout/toast/toast.component';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer-component/footer-component';
-import { AuthStore } from './core/services/auth.store';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from './core/services/theme.service';
 import { ChatbotComponent } from './layout/chatbot/chatbot.component';
@@ -25,7 +24,6 @@ export class App implements OnInit {
   hideNavbar = signal(false);
 
   constructor(
-    public authStore: AuthStore,
     private router: Router,
     private themeService: ThemeService
   ) {}

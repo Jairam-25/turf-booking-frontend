@@ -3,7 +3,6 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
-import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
@@ -131,7 +130,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authRepository: AuthRepository,
-    private authStore: AuthStore,
     private notificationService: NotificationService,
     private router: Router
   ) {}
