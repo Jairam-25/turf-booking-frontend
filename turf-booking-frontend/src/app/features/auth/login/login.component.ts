@@ -31,7 +31,7 @@ import { LottieHeroComponent } from '../../../shared/components/magic-ui/lottie-
         <div class="info-pane">
           <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
-              <img src="/images/logo.png" alt="TurfXpert Logo" class="w-12 h-12 object-contain animate-float-logo">
+              <img src="/images/logo.png" alt="TurfXpert Logo" class="h-full w-auto object-contain">
             </div>
             <h1 class="glow-brand-title">TurfXpert</h1>
             <p class="brand-tagline">Elite Arena Booking</p>
