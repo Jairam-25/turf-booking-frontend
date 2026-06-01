@@ -1,5 +1,14 @@
 declare namespace signalR {
+  export enum HubConnectionState {
+    Disconnected = "Disconnected",
+    Connecting = "Connecting",
+    Connected = "Connected",
+    Disconnecting = "Disconnecting",
+    Reconnecting = "Reconnecting"
+  }
+
   export class HubConnection {
+    readonly state: HubConnectionState;
     start(): Promise<void>;
     stop(): Promise<void>;
     on(event: string, callback: (...args: any[]) => void): void;
