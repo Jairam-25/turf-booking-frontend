@@ -6,6 +6,8 @@ export interface Turf {
   imageUrl?: string;
   rating?: number;
   description?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface TurfResponse {
