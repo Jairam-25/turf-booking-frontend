@@ -4,6 +4,7 @@ import * as L from 'leaflet';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
 import { NotificationService } from '../../core/services/notification.service';
+import { FcmNotificationService } from '../../core/services/fcm-notification.service';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
 
 @Component({
@@ -653,12 +654,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private turfRepository: TurfRepository,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private fcmService: FcmNotificationService
   ) {}
 
   ngOnInit() {
     this.loadInitialLocationsAndTurfs();
     this.startTypingAnimation();
+    
+    // Ask for Push Notification permission and save token to DB
+    this.fcmService.requestNotificationPermission();
+    this.fcmService.listenForMessages();
   }
 
   ngOnDestroy() {

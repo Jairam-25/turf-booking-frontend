@@ -418,20 +418,6 @@ export interface GroupedBooking {
       gap: 1.5rem;
       grid-column: 1 / -1;
     }
-    .btn-premium {
-      background: var(--gradient-primary);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-    }
-    .btn-premium:hover {
-      box-shadow: var(--shadow-glow-primary);
-      transform: translateY(-2px);
-    }
 
     /* Tablet and Mobile Responsiveness */
     @media (max-width: 768px) {
