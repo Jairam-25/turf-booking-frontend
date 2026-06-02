@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import * as L from 'leaflet';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
 import { NotificationService } from '../../core/services/notification.service';
@@ -112,30 +113,43 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         </div>
       </header>
 
-      <!-- Turf Grid -->
+      <!-- Turf Grid / Map Area -->
       <main class="turf-grid-container">
         <div class="grid-header">
           <h2>Available Turfs <span class="badge">{{ turfs().length }}</span></h2>
+          <div class="view-toggles">
+            <button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              Grid
+            </button>
+            <button class="view-btn" [class.active]="viewMode() === 'map'" (click)="setViewMode('map')">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+              Map
+            </button>
+          </div>
         </div>
 
-        <div class="turf-grid" *ngIf="!isLoading(); else loadingTemplate">
+        <div class="turf-grid" *ngIf="viewMode() === 'grid' && !isLoading(); else mapOrLoading">
           <app-turf-card 
             *ngFor="let turf of turfs()" 
             [turf]="turf"
           ></app-turf-card>
         </div>
+        
+        <ng-template #mapOrLoading>
+          <div *ngIf="isLoading()" class="turf-grid">
+            <div class="glass card skeleton" *ngFor="let i of [1,2,3,4]"></div>
+          </div>
+          <div *ngIf="!isLoading() && viewMode() === 'map'" class="map-wrapper glass fade-in">
+            <div id="turf-map" class="turf-map-container"></div>
+          </div>
+        </ng-template>
 
         <!-- Empty State -->
-        <div class="empty-state glass" *ngIf="!isLoading() && turfs().length === 0">
+        <div class="empty-state glass" *ngIf="!isLoading() && turfs().length === 0 && viewMode() === 'grid'">
           <h3>No turfs found</h3>
           <p>Try adjusting your search or filters</p>
         </div>
-
-        <ng-template #loadingTemplate>
-          <div class="turf-grid">
-            <div class="glass card skeleton" *ngFor="let i of [1,2,3,4]"></div>
-          </div>
-        </ng-template>
       </main>
     </div>
   `,
@@ -477,6 +491,69 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       text-align: center;
       color: var(--text-secondary);
     }
+    
+    /* View Toggles & Map */
+    .view-toggles {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 4px;
+    }
+    .view-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .view-btn:hover {
+      color: var(--primary);
+    }
+    .view-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .map-wrapper {
+      width: 100%;
+      height: 650px;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .turf-map-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      z-index: 1; /* prevent overlapping navbar */
+    }
+    ::ng-deep .leaflet-popup-content-wrapper {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
+    ::ng-deep .leaflet-popup-tip {
+      background: var(--glass-bg);
+    }
+    ::ng-deep .leaflet-popup-content h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    ::ng-deep .leaflet-popup-content p {
+      margin: 0 0 8px 0;
+      font-size: 0.95rem;
+    }
 
     @keyframes pulse {
       0% { opacity: 0.6; }
@@ -485,11 +562,57 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     }
 
     @media (max-width: 768px) {
-      .dashboard-header { padding: 3rem 1rem; }
-      .header-content h1 { font-size: 2rem; }
-      .search-bar { flex-direction: column; align-items: stretch; gap: 1rem; }
+      .dashboard-page { padding: 1rem; gap: 2rem; }
+      .dashboard-header { padding: 2.5rem 1rem; border-radius: 16px; }
+      .header-content h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+      
+      /* Mobile Search Bar Stacking */
+      .search-bar { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 0.75rem; 
+        padding: 1rem; 
+        border-radius: 20px; 
+      }
       .divider { display: none; }
-      .location-select { width: 100%; min-width: unset; }
+      .custom-select-container { width: 100%; }
+      .custom-select-value { justify-content: space-between; }
+      .search-input { padding: 0.5rem; text-align: center; }
+      .btn-search { width: 100%; padding: 14px; }
+      
+      /* Mobile Filter Button */
+      .btn-filter { 
+        width: 100%; 
+        border-radius: 12px; 
+        padding: 12px; 
+        background: rgba(123, 57, 252, 0.1); 
+      }
+      .btn-filter::after {
+        content: 'Filters';
+        margin-left: 8px;
+        font-weight: 600;
+      }
+      
+      /* Mobile Grid Header & Toggles */
+      .grid-header { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 1rem; 
+        text-align: center;
+      }
+      .grid-header h2 { justify-content: center; }
+      .view-toggles { justify-content: center; }
+      .view-btn { flex: 1; justify-content: center; }
+      
+      /* Mobile Map */
+      .map-wrapper { height: 400px; padding: 0.5rem; border-radius: 16px; }
+      
+      /* Mobile Filters */
+      .filter-section-wrapper.open { max-height: 1200px; }
+      .filter-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .filter-section { padding: 1.25rem; }
+      .filter-chips { justify-content: center; }
+      .filter-group { align-items: center; text-align: center; }
     }
   `]
 })
@@ -516,6 +639,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { label: 'Price: High to Low', value: 'price_desc' },
     { label: 'Highest Rated', value: 'rating_desc' }
   ];
+
+  viewMode = signal<'grid' | 'map'>('grid');
+  private map: L.Map | null = null;
+  private markersLayer: L.LayerGroup | null = null;
 
   // Typing animation properties
   words = ['Turf', 'Court', 'Pitch', 'Match', 'Arena', 'Game'];
@@ -651,12 +778,119 @@ export class DashboardComponent implements OnInit, OnDestroy {
         
         this.turfs.set(items);
         this.isLoading.set(false);
+        if (this.viewMode() === 'map') {
+          setTimeout(() => {
+            this.updateMapMarkers();
+            if (this.map) this.map.invalidateSize();
+          }, 150);
+        }
       },
       error: () => {
         this.notificationService.error('Failed to load turfs. Please try again later.');
         this.isLoading.set(false);
       }
     });
+  }
+
+  setViewMode(mode: 'grid' | 'map') {
+    this.viewMode.set(mode);
+    if (mode === 'map') {
+      setTimeout(() => {
+        this.initMap();
+        if (this.map) this.map.invalidateSize();
+      }, 150);
+    }
+  }
+
+  initMap() {
+    if (this.map) {
+      this.updateMapMarkers();
+      setTimeout(() => this.map!.invalidateSize(), 150);
+      return;
+    }
+    
+    // Fix leaflet icon issue natively
+    const iconDefault = L.icon({
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
+    L.Marker.prototype.options.icon = iconDefault;
+
+    const mapEl = document.getElementById('turf-map');
+    if (!mapEl) return;
+
+    this.map = L.map('turf-map', { attributionControl: false }).setView([13.0827, 80.2707], 10);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Attribution removed as requested
+    }).addTo(this.map);
+
+    this.markersLayer = L.layerGroup().addTo(this.map);
+    
+    this.updateMapMarkers();
+    this.locateUser();
+    
+    // Force Leaflet to recalculate container dimensions after DOM paint
+    setTimeout(() => this.map!.invalidateSize(), 200);
+  }
+
+  updateMapMarkers() {
+    if (!this.map || !this.markersLayer) return;
+    
+    this.markersLayer.clearLayers();
+    const currentTurfs = this.turfs();
+    const bounds = L.latLngBounds([]);
+
+    currentTurfs.forEach(turf => {
+      if (turf.latitude && turf.longitude) {
+        const marker = L.marker([turf.latitude, turf.longitude]);
+        const popupContent = `
+          <div style="min-width: 200px">
+            <h3>${turf.name}</h3>
+            <p>${turf.location}</p>
+            <p style="font-weight: bold">₹${turf.pricePerHour}/hr</p>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${turf.latitude},${turf.longitude}" 
+               target="_blank" 
+               style="display: block; padding: 10px 12px; background: #7b39fc; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; text-align: center; margin-top: 12px;">
+              Get Directions 🚀
+            </a>
+          </div>
+        `;
+        marker.bindPopup(popupContent);
+        this.markersLayer!.addLayer(marker);
+        bounds.extend([turf.latitude, turf.longitude]);
+      }
+    });
+
+    if (currentTurfs.length > 0 && bounds.isValid()) {
+      this.map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }
+
+  locateUser() {
+    if (navigator.geolocation && this.map) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        const userIcon = L.icon({
+          iconUrl: 'https://cdn-icons-png.flaticon.com/512/1004/1004313.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          popupAnchor: [0, -16]
+        });
+        
+        L.marker([latitude, longitude], { icon: userIcon })
+          .bindPopup('<b style="font-size: 1.1rem; color: #7b39fc">You are here!</b>')
+          .addTo(this.map!);
+      }, () => {
+        console.warn('Geolocation denied or failed.');
+      });
+    }
   }
 
   onSearch(term: string) {
