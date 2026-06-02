@@ -13,6 +13,8 @@ import { Slot } from '../../../domain/models/booking.model';
 import { Review } from '../../../domain/models/review.model';
 import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
 
+declare var Razorpay: any;
+
 interface CategorizedSlot extends Slot {
   category: 'Day' | 'Afternoon' | 'Night';
   calculatedPrice: number;
@@ -173,9 +175,7 @@ interface CategorizedSlot extends Slot {
 
         <!-- Right Side: Slots Booking & Checkout Panel -->
         <div class="booking-panel-container">
-          
-          <!-- Standard Booking State -->
-          <div class="booking-panel glass" *ngIf="!isBookedSuccess()">
+          <div class="booking-panel glass">
             <h2>Reserve Your Time Slots</h2>
             <p class="panel-subtitle">Select multiple slots below to play for longer duration.</p>
 
@@ -322,64 +322,16 @@ interface CategorizedSlot extends Slot {
               </p>
             </div>
 
-            <div class="booking-actions">
+            <div class="actions">
               <button 
                 class="btn-premium book-btn"
-                [disabled]="selectedSlots().length === 0 || isBooking()"
+                [disabled]="selectedSlots().length === 0"
                 (click)="confirmBooking()"
               >
-                <span *ngIf="!isBooking()">Confirm Booking ({{ selectedSlots().length }} Slots)</span>
-                <span *ngIf="isBooking()" class="spinner"></span>
+                <span>Confirm Booking ({{ selectedSlots().length }} Slots)</span>
               </button>
             </div>
           </div>
-
-          <!-- Apple/Stripe Success Screen -->
-          <div class="success-card glass scale-in" *ngIf="isBookedSuccess()">
-            <div class="success-header">
-              <div class="success-icon-wrapper">
-                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                  <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                  <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                </svg>
-              </div>
-              <h2>Booking Confirmed!</h2>
-              <p>Your premium turf reservation is active.</p>
-            </div>
-
-            <div class="success-details-list glass" *ngIf="confirmedBookingDetails() as details">
-              <div class="detail-row">
-                <span class="label">Turf Arena</span>
-                <span class="value">{{ turf()?.name }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Payment Plan</span>
-                <span class="value">{{ details.paymentPlan }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Amount Paid Now</span>
-                <span class="value price">₹{{ details.amountPaid }}</span>
-              </div>
-              <div class="detail-row" *ngIf="details.balanceDue > 0">
-                <span class="label">Balance Due at Venue</span>
-                <span class="value" style="color: var(--accent);">₹{{ details.balanceDue }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Selected Hours</span>
-                <span class="value">{{ details.hours }} hr(s)</span>
-              </div>
-            </div>
-
-            <div class="success-actions" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-top: 1rem;">
-              <button class="btn-premium" routerLink="/bookings" style="width: 100%;">
-                Go to My Bookings
-              </button>
-              <button class="btn-premium secondary" (click)="resetSuccessState()" style="width: 100%;">
-                Return to Slots Selection
-              </button>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -391,7 +343,14 @@ interface CategorizedSlot extends Slot {
           <p>Loading Turf Details...</p>
         </div>
       </ng-template>
+    </div>
 
+    <!-- Goal Overlay for Payment Transition (Moved outside to prevent transform context issues) -->
+    <div class="goal-overlay" [class.active]="isOverlayActive()">
+      <div class="transition-content">
+        <span class="overlay-label">Preparing Secure</span>
+        <span class="overlay-brand">Checkout...</span>
+      </div>
     </div>
   `,
   styles: [`
@@ -1275,6 +1234,13 @@ interface CategorizedSlot extends Slot {
       .detail-page-container {
         padding: 1rem;
       }
+      .reviews-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .score-num {
+        font-size: 2.8rem;
+      }
     }
 
     @media (max-width: 768px) {
@@ -1311,8 +1277,19 @@ interface CategorizedSlot extends Slot {
       .success-header h2 {
         font-size: 1.5rem;
       }
+      .reviews-section-card {
+        padding: 1.25rem !important;
+      }
+      .reviews-summary, .write-review-form {
+        padding: 1.25rem;
+      }
+      .score-num {
+        font-size: 2.5rem;
+      }
+      .review-item-card {
+        padding: 1.25rem;
+      }
     }
-
     @media (max-width: 480px) {
       .turf-hero-image {
         height: 200px;
@@ -1382,9 +1359,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   
   isLoading = signal(true);
   isLoadingSlots = signal(true);
-  isBooking = signal(false);
-  isBookedSuccess = signal(false);
-  confirmedBookingDetails = signal<{ paymentPlan: string; amountPaid: number; balanceDue: number; hours: number } | null>(null);
+  isOverlayActive = signal(false);
 
   // Reviews signals & properties
   reviews = signal<Review[]>([]);
@@ -1433,7 +1408,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
               currentSlots.map(s => s.id === slotId ? { ...s, isBooked: isBooked } : s)
             );
             // If the slot is currently selected by this user, deselect it (only if not successfully booked yet)
-            if (!this.isBookedSuccess() && isBooked && this.selectedSlots().some(s => s.id === slotId)) {
+            if (isBooked && this.selectedSlots().some(s => s.id === slotId)) {
               this.selectedSlots.update(selected => selected.filter(s => s.id !== slotId));
             }
           }
@@ -1602,49 +1577,30 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   confirmBooking() {
     const selected = this.selectedSlots();
     if (selected.length === 0) return;
+    
+    this.isOverlayActive.set(true);
 
-    // Capture booking details before starting the booking process
-    const option = this.paymentOption();
-    const totalPrice = this.getTotalPrice();
-    const advancePrice = this.getAdvancePrice();
-    const hours = selected.length;
-
-    this.confirmedBookingDetails.set({
-      paymentPlan: option === 'full' ? 'Full Payment' : 'Advance Booking Plan',
-      amountPaid: option === 'full' ? totalPrice : advancePrice,
-      balanceDue: option === 'full' ? 0 : (totalPrice - advancePrice),
-      hours: hours
-    });
-
-    this.isBooking.set(true);
-
-    const bookings = selected.map(slot => this.bookingRepository.bookSlot({ slotId: slot.id }));
-
-    forkJoin(bookings).subscribe({
-      next: () => {
-        // Mark the slots we just booked as booked in our local state immediately
-        const bookedIds = selected.map(s => s.id);
-        this.slots.update(currentSlots =>
-          currentSlots.map(s => bookedIds.includes(s.id) ? { ...s, isBooked: true } : s)
-        );
-
-        this.isBooking.set(false);
-        this.isBookedSuccess.set(true);
-        this.notificationService.success('All slots booked successfully!');
-      },
-      error: (err) => {
-        this.notificationService.error(err.error?.message || 'Booking failed.');
-        this.isBooking.set(false);
-        this.confirmedBookingDetails.set(null); // Clear on failure
-      }
-    });
-  }
-
-  resetSuccessState() {
-    this.isBookedSuccess.set(false);
-    this.selectedSlots.set([]);
-    this.confirmedBookingDetails.set(null);
-    this.loadSlots(); // Refresh slot availability
+    setTimeout(() => {
+      const option = this.paymentOption();
+      const totalPrice = this.getTotalPrice();
+      const advancePrice = this.getAdvancePrice();
+      const amountToPay = option === 'full' ? totalPrice : advancePrice;
+      
+      // Navigate to payment page passing booking details in state
+      this.router.navigate(['/payment'], {
+        state: {
+          bookingData: {
+            turfId: this.turfId,
+            turfName: this.turf()?.name,
+            slots: selected,
+            paymentPlan: option,
+            totalPrice: totalPrice,
+            amountToPay: amountToPay,
+            balanceDue: option === 'full' ? 0 : (totalPrice - advancePrice)
+          }
+        }
+      });
+    }, 1200); // 1.2s delay to allow the animation to play
   }
 
   loadReviews() {

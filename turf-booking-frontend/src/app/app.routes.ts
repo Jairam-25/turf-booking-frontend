@@ -55,5 +55,10 @@ export const routes: Routes = [
     path: 'dashboard/turf/:id',
     loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'payment',
+    loadComponent: () => import('./features/dashboard/payment/payment.component').then(m => m.PaymentComponent),
+    canActivate: [authGuard]
   }
 ];

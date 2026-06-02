@@ -19,6 +19,12 @@ export class BookingRepositoryImpl implements BookingRepository {
     );
   }
 
+  createOrder(amount: number): Observable<any> {
+    return this.http.post<any>('https://localhost:7273/api/v1/Payment/create-order', { amount }).pipe(
+      map(response => response.data || response.Data || response.value || response.Value || response)
+    );
+  }
+
   getMyBookings(): Observable<Booking[]> {
     return this.http.get<any>(`${this.bookingUrl}/my`).pipe(
       map(response => {

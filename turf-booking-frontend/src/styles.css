@@ -288,6 +288,7 @@ body {
 .goal-overlay.active {
   transform: scale(3.5);
   opacity: 1;
+  pointer-events: all;
 }
 
 .goal-overlay .transition-content {
