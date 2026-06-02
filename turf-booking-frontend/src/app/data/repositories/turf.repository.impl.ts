@@ -38,15 +38,23 @@ export class TurfRepositoryImpl implements TurfRepository {
         // Handle Result wrapper if present
         const result = response.data || response.Data || response.value || response.Value || response;
         
-        const items = (result.items || result.Items || []).map((item: any, index: number) => ({
-          id: item.id || item.Id,
-          name: item.name || item.Name,
-          location: item.location || item.Location,
-          pricePerHour: item.pricePerHour || item.PricePerHour,
-          imageUrl: this.mockImages[index % this.mockImages.length],
-          rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
-          description: 'Experience professional-grade turf with premium facilities and easy booking.'
-        }));
+        const items = (result.items || result.Items || []).map((item: any, index: number) => {
+          // Deterministic pseudo-random generation based on ID so markers stay in place
+          const latOffset = ((item.id || item.Id || index) % 10) * 0.01;
+          const lngOffset = (((item.id || item.Id || index) * 3) % 10) * 0.01;
+          
+          return {
+            id: item.id || item.Id,
+            name: item.name || item.Name,
+            location: item.location || item.Location,
+            pricePerHour: item.pricePerHour || item.PricePerHour,
+            imageUrl: this.mockImages[index % this.mockImages.length],
+            rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
+            description: 'Experience professional-grade turf with premium facilities and easy booking.',
+            latitude: item.latitude || item.Latitude || (item.location === 'Thanjavur' ? 10.7870 + latOffset : (item.location === 'Bangalore' ? 12.9716 + latOffset : 13.0827 + latOffset)),
+            longitude: item.longitude || item.Longitude || (item.location === 'Thanjavur' ? 79.1378 + lngOffset : (item.location === 'Bangalore' ? 77.5946 + lngOffset : 80.2707 + lngOffset))
+          };
+        });
 
         return {
           items,
