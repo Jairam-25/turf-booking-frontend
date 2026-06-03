@@ -142,23 +142,31 @@ export class PaymentComponent implements OnInit {
   }
 
   private triggerConfetti() {
-    const duration = 3000;
+    const duration = 2500;
     const end = Date.now() + duration;
 
     const frame = () => {
       confetti({
-        particleCount: 5,
+        particleCount: 2,
         angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#7b39fc', '#ffffff', '#10b981']
+        spread: 65,
+        origin: { x: 0, y: 0.6 },
+        colors: ['#7b39fc', '#ffffff', '#10b981'],
+        ticks: 400,
+        gravity: 0.5,
+        scalar: 0.9,
+        drift: 0.5
       });
       confetti({
-        particleCount: 5,
+        particleCount: 2,
         angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#7b39fc', '#ffffff', '#10b981']
+        spread: 65,
+        origin: { x: 1, y: 0.6 },
+        colors: ['#7b39fc', '#ffffff', '#10b981'],
+        ticks: 400,
+        gravity: 0.5,
+        scalar: 0.9,
+        drift: -0.5
       });
 
       if (Date.now() < end) {

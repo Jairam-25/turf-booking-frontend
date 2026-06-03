@@ -1223,7 +1223,7 @@ interface CategorizedSlot extends Slot {
       background: rgba(255,255,255,0.01);
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1023px) {
       .detail-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1243,66 +1243,85 @@ interface CategorizedSlot extends Slot {
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
       .turf-details-content,
       .booking-panel {
-        padding: 1.5rem;
+        padding: 1rem;
       }
       .turf-name {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
       .rules-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
+        gap: 0.5rem;
       }
       .rule-item {
-        padding: 1rem 0.5rem;
+        padding: 0.75rem 0.5rem;
       }
       .rule-label {
-        font-size: 0.75rem;
-      }
-      .rule-hours {
         font-size: 0.7rem;
       }
+      .rule-hours {
+        font-size: 0.65rem;
+      }
       .rule-price {
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin-top: 0;
       }
       .payment-options-grid {
         grid-template-columns: 1fr;
       }
+      .payment-option-card {
+        padding: 1rem;
+      }
       .success-card {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1rem;
       }
       .success-header h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
       .reviews-section-card {
-        padding: 1.25rem !important;
+        padding: 1rem !important;
       }
       .reviews-summary, .write-review-form {
-        padding: 1.25rem;
+        padding: 1rem;
       }
       .score-num {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
       }
       .review-item-card {
-        padding: 1.25rem;
+        padding: 1rem;
+      }
+      .date-item {
+        min-width: 65px;
+        padding: 0.5rem;
+      }
+      .slot-card-v3 {
+        padding: 0.75rem;
+        gap: 0.5rem;
+      }
+      .slot-card-v3 .time {
+        font-size: 0.95rem;
       }
     }
     @media (max-width: 480px) {
       .turf-hero-image {
-        height: 200px;
+        height: 180px;
+      }
+      .detail-page-container {
+        padding: 0.5rem;
       }
       .turf-details-content,
       .booking-panel {
-        padding: 1.25rem;
+        padding: 0.875rem;
+        border-radius: 12px;
       }
       .turf-name {
-        font-size: 1.6rem;
+        font-size: 1.35rem;
       }
       .location-bar {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
       }
       .rules-grid {
         grid-template-columns: 1fr;
@@ -1311,13 +1330,23 @@ interface CategorizedSlot extends Slot {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem 1rem;
+        padding: 0.6rem 0.875rem;
         text-align: left;
       }
       .rule-item > span {
         margin: 0;
       }
       .rule-price {
+        font-size: 0.95rem;
+      }
+      .slots-grid-view {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      .summary-row {
+        font-size: 0.85rem;
+      }
+      .turf-name {
         font-size: 1.2rem;
       }
       .day-chip {

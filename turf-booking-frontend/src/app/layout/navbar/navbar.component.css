@@ -70,5 +70,6 @@
 }
 
 .navbar-mobile-overlay {
-  background: var(--nav-bg);
+  background-color: var(--bg-default);
+  z-index: 1000;
 }

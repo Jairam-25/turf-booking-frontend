@@ -231,9 +231,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border-radius: 20px;
   text-align: center;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+.loading-overlay {
+  justify-content: center;
 }
 
 .success-card {
@@ -254,13 +259,13 @@
 
 .success-card h2 {
   color: var(--text-primary);
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 1rem 0 0.25rem 0;
   font-size: 1.8rem;
 }
 
 .success-card p {
   color: var(--text-secondary);
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.5rem 0;
   font-size: 1.1rem;
 }
 
@@ -301,7 +306,7 @@
   padding: 0.875rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .payment-container {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -336,21 +341,36 @@
   }
   .pay-btn {
     font-size: 1rem;
-    padding: 0.875rem;
+    padding: 0.75rem;
+  }
+  .success-card {
+    margin: auto 0;
   }
   .success-card-inner {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
   }
   .success-card h2 {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
+    margin: 0.75rem 0 0.25rem 0;
   }
   .success-card p {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
   }
   .success-details {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .success-details .detail-row {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+  .action-buttons {
+    gap: 0.5rem;
+  }
+  .action-buttons button {
+    padding: 0.65rem;
+    font-size: 0.9rem;
   }
 }
 
