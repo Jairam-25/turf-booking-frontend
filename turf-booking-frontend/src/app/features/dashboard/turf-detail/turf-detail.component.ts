@@ -342,7 +342,7 @@ interface CategorizedSlot extends Slot {
         <!-- Reviews List -->
         <div class="reviews-list">
           <h3>Player Feedback</h3>
-          <div class="review-item-card glass" *ngFor="let review of reviews()">
+          <div class="review-item-card glass" *ngFor="let review of reviews().slice(0, displayedReviewsCount())">
             <div class="review-header">
               <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
               <div class="review-meta">
@@ -357,6 +357,10 @@ interface CategorizedSlot extends Slot {
             </div>
             <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
           </div>
+          
+          <button class="btn-load-more" *ngIf="reviews().length > displayedReviewsCount()" (click)="loadMoreReviews()">
+            Load More Reviews
+          </button>
 
           <div class="empty-reviews" *ngIf="reviews().length === 0">
             <p>No reviews yet. Be the first player to review this turf!</p>
@@ -1331,6 +1335,25 @@ interface CategorizedSlot extends Slot {
       color: var(--text-secondary);
       margin: 0;
     }
+    .btn-load-more {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-load-more:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255,255,255,0.3);
+    }
+
     .empty-reviews {
       padding: 3rem;
       text-align: center;
@@ -1511,6 +1534,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
 
   // Reviews signals & properties
   reviews = signal<Review[]>([]);
+  displayedReviewsCount = signal<number>(3);
   newReviewRating = signal<number>(0);
   newReviewComment = '';
   isSubmittingReview = signal(false);
@@ -1761,6 +1785,10 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.notificationService.error('Failed to load reviews.');
       }
     });
+  }
+
+  loadMoreReviews() {
+    this.displayedReviewsCount.update(c => c + 3);
   }
 
   setNewReviewRating(rating: number) {

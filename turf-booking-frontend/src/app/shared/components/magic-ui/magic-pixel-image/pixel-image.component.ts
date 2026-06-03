@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="pixel-wrap">
       <canvas></canvas>
-      <img class="visually-hidden" [src]="src" (error)="onError()" />
+      <img class="visually-hidden" loading="lazy" [src]="src" (error)="onError()" />
     </div>
   `,
   styles: [`
