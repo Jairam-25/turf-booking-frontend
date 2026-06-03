@@ -73,3 +73,42 @@
   background-color: var(--bg-default);
   z-index: 1000;
 }
+
+/* Theme-aware Mobile Drawer Styles */
+.hamburger-btn {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.hamburger-btn:hover {
+  background-color: var(--secondary);
+}
+
+.mobile-drawer-container {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-left: 1px solid var(--border-color);
+}
+
+.mobile-drawer-header {
+  background-color: var(--glass-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-drawer-footer {
+  background-color: var(--glass-bg);
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-drawer-link {
+  color: var(--text-primary);
+}
+
+.mobile-drawer-link:hover {
+  background-color: var(--secondary);
+}
+
+.mobile-drawer-icon {
+  color: var(--text-secondary);
+}

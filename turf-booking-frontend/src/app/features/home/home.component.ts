@@ -96,6 +96,9 @@ import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic
         </div>
       </section>
 
+
+
+
       <div class="goal-overlay" [class.active]="isOverlayActive()">
         <div class="transition-content">
           <span class="overlay-label">Welcome To</span>

@@ -14,6 +14,7 @@ export interface GroupedBooking {
   bookedOn: string;
   startTime: string;
   endTime: string;
+  rawSlots: { startTime: string; endTime: string }[];
   pricePerHour: number;
   totalPrice: number;
   durationHours: number;
@@ -73,7 +74,7 @@ export interface GroupedBooking {
             </div>
             <div class="info-row">
               <span class="label">Time</span>
-              <span class="value">{{ formatTimeRange(booking.startTime, booking.endTime) }}</span>
+              <span class="value">{{ formatTimeBlocks(booking.rawSlots) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Duration</span>
@@ -518,7 +519,8 @@ export class BookingsComponent implements OnInit {
         existingGroup.bookingIds.push(booking.bookingId);
         existingGroup.totalPrice += booking.price;
         existingGroup.durationHours += 1;
-        // Update startTime and endTime to span the whole selection
+        existingGroup.rawSlots.push({ startTime: booking.startTime, endTime: booking.endTime });
+        // Update startTime and endTime to span the whole selection (still kept for backward compatibility)
         if (new Date(booking.startTime).getTime() < new Date(existingGroup.startTime).getTime()) {
           existingGroup.startTime = booking.startTime;
         }
@@ -533,6 +535,7 @@ export class BookingsComponent implements OnInit {
           bookedOn: booking.bookedOn,
           startTime: booking.startTime,
           endTime: booking.endTime,
+          rawSlots: [{ startTime: booking.startTime, endTime: booking.endTime }],
           pricePerHour: booking.price, // Base hourly rate
           totalPrice: booking.price,
           durationHours: 1
@@ -591,14 +594,47 @@ export class BookingsComponent implements OnInit {
     return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
   }
 
-  formatTimeRange(startTime: string, endTime: string): string {
-    const minStart = new Date(startTime);
-    const maxEnd = new Date(endTime);
+  formatTimeBlocks(slots: { startTime: string; endTime: string }[]): string {
+    if (!slots || slots.length === 0) return '';
+
+    // Sort slots by start time
+    const sortedSlots = [...slots].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
     
+    const mergedBlocks: { start: Date, end: Date, hours: number }[] = [];
+    
+    for (const slot of sortedSlots) {
+      const slotStart = new Date(slot.startTime);
+      const slotEnd = new Date(slot.endTime);
+      
+      const lastBlock = mergedBlocks.length > 0 ? mergedBlocks[mergedBlocks.length - 1] : null;
+      
+      if (lastBlock && lastBlock.end.getTime() === slotStart.getTime()) {
+        // Contiguous slot, extend the last block
+        lastBlock.end = slotEnd;
+        lastBlock.hours += 1;
+      } else {
+        // New block
+        mergedBlocks.push({ start: slotStart, end: slotEnd, hours: 1 });
+      }
+    }
+
+    // Format blocks
     const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
-    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
-    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
-    
-    return `${startStr} to ${endStr}`;
+    const parts = mergedBlocks.map(block => {
+      let startStr = block.start.toLocaleTimeString([], formatOptions).toUpperCase();
+      let endStr = block.end.toLocaleTimeString([], formatOptions).toUpperCase();
+      
+      // Clean up ":00" for a cleaner look if desired
+      startStr = startStr.replace(':00', '');
+      endStr = endStr.replace(':00', '');
+
+      if (block.hours === 1) {
+        return `${startStr} (1 hr)`;
+      } else {
+        return `${startStr} to ${endStr} (${block.hours} hrs)`;
+      }
+    });
+
+    return parts.join(', ');
   }
 }

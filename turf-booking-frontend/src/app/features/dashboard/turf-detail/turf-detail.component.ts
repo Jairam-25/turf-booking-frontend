@@ -37,10 +37,11 @@ interface CategorizedSlot extends Slot {
         </button>
       </div>
 
-      <div class="detail-grid" *ngIf="!isLoading(); else loadingTemplate">
-        
-        <!-- Left Side: Turf Media & Info -->
-        <div class="turf-main-info glass">
+      <ng-container *ngIf="!isLoading(); else loadingTemplate">
+        <div class="detail-grid">
+          
+          <!-- Left Side: Turf Media & Info -->
+          <div class="turf-main-info glass">
           <div class="turf-hero-image">
             <magic-pixel-image [src]="turf()?.imageUrl ?? '/images/turf_sports_ground.png'"></magic-pixel-image>
             <div class="rating-badge">★ {{ turf()?.rating?.toFixed(1) }}</div>
@@ -91,86 +92,6 @@ interface CategorizedSlot extends Slot {
             </div>
           </div>
 
-          <!-- Reviews Section -->
-          <div class="reviews-section-card glass" style="border-top: 1px solid var(--border-color); border-radius: 0 0 24px 24px;">
-            <h2 class="section-title">Player Reviews & Ratings</h2>
-            
-            <!-- Review Summary & Form Row -->
-            <div class="reviews-layout">
-              <!-- Summary Column -->
-              <div class="reviews-summary glass">
-                <div class="avg-score">
-                  <span class="score-num">{{ turf()?.rating?.toFixed(1) || '0.0' }}</span>
-                  <span class="stars">
-                    <span class="star-filled" *ngFor="let s of [1,2,3,4,5]">
-                      {{ s <= (turf()?.rating || 0) ? '★' : '☆' }}
-                    </span>
-                  </span>
-                  <span class="total-reviews">{{ reviews().length }} reviews</span>
-                </div>
-              </div>
-
-              <!-- Review Form -->
-              <div class="write-review-form glass">
-                <h3>Share your experience</h3>
-                <p class="form-desc">Help other athletes find the best fields. Only players who have booked this turf can leave a review.</p>
-                
-                <div class="rating-input">
-                  <span class="label">Your Rating:</span>
-                  <div class="star-rating-selector">
-                    <span 
-                      *ngFor="let star of [1,2,3,4,5]" 
-                      class="selector-star" 
-                      [class.active]="newReviewRating() >= star"
-                      (click)="setNewReviewRating(star)"
-                    >★</span>
-                  </div>
-                </div>
-
-                <div class="comment-input">
-                  <textarea 
-                    [(ngModel)]="newReviewComment" 
-                    placeholder="Tell us about the turf quality, lighting, facilities..." 
-                    rows="3"
-                    class="review-textarea glass"
-                  ></textarea>
-                </div>
-
-                <button 
-                  class="btn-premium btn-submit-review" 
-                  [disabled]="newReviewRating() === 0 || isSubmittingReview()"
-                  (click)="submitReview()"
-                >
-                  <span *ngIf="!isSubmittingReview()">Submit Review</span>
-                  <span *ngIf="isSubmittingReview()" class="spinner"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Reviews List -->
-            <div class="reviews-list">
-              <h3>Player Feedback</h3>
-              <div class="review-item-card glass" *ngFor="let review of reviews()">
-                <div class="review-header">
-                  <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
-                  <div class="review-meta">
-                    <span class="username">{{ review.userName }}</span>
-                    <span class="review-date">{{ formatDate(review.createdAt) }}</span>
-                  </div>
-                  <div class="review-stars">
-                    <span class="star" *ngFor="let s of [1,2,3,4,5]">
-                      {{ s <= review.rating ? '★' : '☆' }}
-                    </span>
-                  </div>
-                </div>
-                <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
-              </div>
-
-              <div class="empty-reviews" *ngIf="reviews().length === 0">
-                <p>No reviews yet. Be the first player to review this turf!</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Right Side: Slots Booking & Checkout Panel -->
@@ -336,6 +257,88 @@ interface CategorizedSlot extends Slot {
 
       </div>
 
+      <!-- Full Width Reviews Section (Moved outside the grid) -->
+      <div class="reviews-section-card glass max-width-professional">
+        <h2 class="section-title">Player Reviews & Ratings</h2>
+        
+        <!-- Review Summary & Form Row -->
+        <div class="reviews-layout">
+          <!-- Summary Column -->
+          <div class="reviews-summary glass">
+            <div class="avg-score">
+              <span class="score-num">{{ turf()?.rating?.toFixed(1) || '0.0' }}</span>
+              <span class="stars">
+                <span class="star-filled" *ngFor="let s of [1,2,3,4,5]">
+                  {{ s <= (turf()?.rating || 0) ? '★' : '☆' }}
+                </span>
+              </span>
+              <span class="total-reviews">{{ reviews().length }} reviews</span>
+            </div>
+          </div>
+
+          <!-- Review Form -->
+          <div class="write-review-form glass">
+            <h3>Share your experience</h3>
+            <p class="form-desc">Help other athletes find the best fields. Only players who have booked this turf can leave a review.</p>
+            
+            <div class="rating-input">
+              <span class="label">Your Rating:</span>
+              <div class="star-rating-selector">
+                <span 
+                  *ngFor="let star of [1,2,3,4,5]" 
+                  class="selector-star" 
+                  [class.active]="newReviewRating() >= star"
+                  (click)="setNewReviewRating(star)"
+                >★</span>
+              </div>
+            </div>
+
+            <div class="comment-input">
+              <textarea 
+                [(ngModel)]="newReviewComment" 
+                placeholder="Tell us about the turf quality, lighting, facilities..." 
+                rows="3"
+                class="review-textarea glass"
+              ></textarea>
+            </div>
+
+            <button 
+              class="btn-premium btn-submit-review" 
+              [disabled]="newReviewRating() === 0 || isSubmittingReview()"
+              (click)="submitReview()"
+            >
+              <span *ngIf="!isSubmittingReview()">Submit Review</span>
+              <span *ngIf="isSubmittingReview()" class="spinner"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="reviews-list">
+          <h3>Player Feedback</h3>
+          <div class="review-item-card glass" *ngFor="let review of reviews()">
+            <div class="review-header">
+              <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
+              <div class="review-meta">
+                <span class="username">{{ review.userName }}</span>
+                <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+              </div>
+              <div class="review-stars">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]">
+                  {{ s <= review.rating ? '★' : '☆' }}
+                </span>
+              </div>
+            </div>
+            <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
+          </div>
+
+          <div class="empty-reviews" *ngIf="reviews().length === 0">
+            <p>No reviews yet. Be the first player to review this turf!</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
       <!-- Main Loader -->
       <ng-template #loadingTemplate>
         <div class="main-loader-container">
@@ -392,7 +395,7 @@ interface CategorizedSlot extends Slot {
       display: grid;
       grid-template-columns: 1.4fr 1.2fr;
       gap: 2.5rem;
-      align-items: start;
+      align-items: stretch; /* Makes both columns equal height */
       width: 100%;
       min-width: 0;
     }
@@ -402,6 +405,7 @@ interface CategorizedSlot extends Slot {
       display: flex;
       flex-direction: column;
       border-radius: 24px;
+      height: 100%; /* Fill grid cell */
     }
     .turf-hero-image {
       position: relative;
@@ -529,6 +533,7 @@ interface CategorizedSlot extends Slot {
       gap: 2rem;
       min-width: 0;
       width: 100%;
+      height: 100%;
     }
     .booking-panel {
       padding: 2.5rem;
@@ -536,6 +541,8 @@ interface CategorizedSlot extends Slot {
       display: flex;
       flex-direction: column;
       gap: 1.75rem;
+      height: 100%;
+      flex-grow: 1;
     }
     .booking-panel h2 {
       font-size: 1.6rem;
@@ -574,74 +581,87 @@ interface CategorizedSlot extends Slot {
 
     /* Calendar styles */
     .calendar-section {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-flat);
     }
     .quick-days-strip {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       overflow-x: auto;
-      padding: 4px 2px;
+      padding: 8px 4px;
       align-items: center;
+      scroll-behavior: smooth;
     }
     .quick-days-strip::-webkit-scrollbar {
-      height: 4px;
-    }
-    .quick-days-strip::-webkit-scrollbar-thumb {
-      background: rgba(var(--primary-rgb), 0.2);
-      border-radius: 4px;
+      height: 0px;
     }
     .day-chip {
-      flex: 0 0 56px;
-      padding: 10px 4px;
+      flex: 0 0 68px;
+      padding: 14px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
+      border-radius: 16px;
       cursor: pointer;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.02);
-      transition: var(--transition-smooth);
+      border: 1px solid rgba(123, 57, 252, 0.15);
+      background: rgba(123, 57, 252, 0.04);
+      color: var(--text-primary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .day-chip:hover {
-      border-color: var(--primary);
-      background: rgba(var(--primary-rgb), 0.03);
+      border-color: rgba(123, 57, 252, 0.4);
+      background: rgba(123, 57, 252, 0.08);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(123, 57, 252, 0.1);
     }
     .day-chip.active {
       border-color: var(--primary);
-      background: var(--primary);
-      color: var(--on-primary);
-      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25);
+      background: linear-gradient(135deg, #7b39fc 0%, #5c1cdd 100%);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(123, 57, 252, 0.35);
     }
     .day-chip .day-num {
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
     }
     .day-chip .day-name {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       opacity: 0.8;
     }
     .day-chip.active .day-name {
       opacity: 1;
+      color: rgba(255, 255, 255, 0.95);
     }
 
     .custom-date-picker {
-      flex: 0 0 48px;
-      height: 52px;
+      flex: 0 0 58px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.02);
+      border-radius: 14px;
+      border: 1px solid rgba(123, 57, 252, 0.15);
+      background: rgba(123, 57, 252, 0.04);
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      background: rgba(var(--primary-rgb), 0.05);
       position: relative;
       cursor: pointer;
       overflow: hidden;
     }
     .custom-date-picker:hover {
-      border-color: var(--primary);
+      border-color: rgba(var(--primary-rgb), 0.4);
+      background: rgba(var(--primary-rgb), 0.1);
     }
     .custom-date-picker input[type="date"] {
       position: absolute;
@@ -653,8 +673,9 @@ interface CategorizedSlot extends Slot {
       cursor: pointer;
     }
     .custom-date-picker::after {
-      content: "📅";
-      font-size: 1.25rem;
+      content: '📅';
+      font-size: 1.5rem;
+      pointer-events: none;
     }
 
     .legend-bar {
@@ -913,6 +934,10 @@ interface CategorizedSlot extends Slot {
       color: var(--text-primary);
     }
 
+    .actions {
+      margin-top: auto;
+    }
+
     .book-btn {
       width: 100%;
       height: 52px;
@@ -1034,14 +1059,16 @@ interface CategorizedSlot extends Slot {
       width: 100%;
     }
 
-    /* Reviews Section Styling */
+    /* Reviews Section Styling (Full Width Professional Style) */
     .reviews-section-card {
-      margin-top: 2rem;
-      padding: 2.5rem;
+      margin-top: 1rem;
+      padding: 3rem;
       border-radius: 24px;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 2.5rem;
+      width: 100%;
+      border: 1px solid var(--border-color);
     }
     .section-title {
       font-size: 1.8rem;
@@ -1412,7 +1439,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     this.minDate = this.getLocalDateString(today);
     
     const futureLimit = new Date();
-    futureLimit.setDate(today.getDate() + 2); // Max 3 days
+    futureLimit.setDate(today.getDate() + 6); // Max 7 days
     this.maxDate = this.getLocalDateString(futureLimit);
     this.upcomingDays = this.getUpcomingDays();
 
@@ -1500,6 +1527,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   getUpcomingDays(): { dateStr: string; label: string; dayNum: string }[] {
     const days = [];
     const today = new Date();
+    // Show 3 days (including today) in the quick selection strip
     for (let i = 0; i < 3; i++) {
       const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
       const dateStr = this.getLocalDateString(d);
