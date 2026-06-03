@@ -565,7 +565,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     @media (max-width: 768px) {
       .dashboard-page { padding: 1rem; gap: 2rem; }
       .dashboard-header { padding: 2.5rem 1rem; border-radius: 16px; }
-      .header-content h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+      .header-content h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
       
       /* Mobile Search Bar Stacking */
       .search-bar { 

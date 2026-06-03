@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 interface FAQ {
   question: string;
   answer: string;
-  category: 'general' | 'bookings' | 'payments' | 'cancellation';
+  category: 'general' | 'bookings' | 'payments' | 'cancellation' | 'troubleshooting';
   isOpen: boolean;
 }
 
@@ -987,7 +987,8 @@ export class SupportComponent {
     { id: 'general', name: 'General' },
     { id: 'bookings', name: 'Bookings' },
     { id: 'payments', name: 'Payments' },
-    { id: 'cancellation', name: 'Cancellations' }
+    { id: 'cancellation', name: 'Cancellations' },
+    { id: 'troubleshooting', name: 'Troubleshooting' }
   ];
 
   faqs = signal<FAQ[]>([
@@ -998,8 +999,8 @@ export class SupportComponent {
       isOpen: false
     },
     {
-      question: 'Can I cancel my booking and get a refund?',
-      answer: 'Yes! You can cancel any slot up to 6 hours before the start time. Navigate to "Bookings" page, find your active booking, and click "Cancel". The refund is processed instantly to your TurfXpert wallet or source account.',
+      question: 'What is the refund policy?',
+      answer: 'If you cancel your booking at least 6 hours before the reserved time, you will receive a full 100% refund. Cancellations made within 6 hours of the booking will not be eligible for a refund.',
       category: 'cancellation',
       isOpen: false
     },
@@ -1025,6 +1026,18 @@ export class SupportComponent {
       question: 'How do I report a listing conflict or double booking?',
       answer: 'Our real-time engine prevents double booking. However, if there is a conflict, please open a support ticket immediately on this page with the booking ID or start a chat with XpertBot.',
       category: 'payments',
+      isOpen: false
+    },
+    {
+      question: 'The application is stuck on "Processing Payment".',
+      answer: 'Do not refresh the page. This occasionally happens due to bank server delays. If money was deducted but the booking failed, it will be automatically refunded to your original payment method within 2-3 business days. Please open a ticket if it exceeds this timeframe.',
+      category: 'troubleshooting',
+      isOpen: false
+    },
+    {
+      question: 'My location is not updating / GPS error.',
+      answer: 'Please ensure you have granted location permissions to the TurfXpert app in your browser or device settings. Try refreshing the page after enabling location services.',
+      category: 'troubleshooting',
       isOpen: false
     }
   ]);
@@ -1125,19 +1138,23 @@ export class SupportComponent {
 
     // Bot response delay simulator
     setTimeout(() => {
-      let replyText = "I'm sorry, I didn't quite capture that. Could you try asking about 'refund', 'cancellation' or 'booking' slots?";
+      let replyText = "I'm analyzing your request using our new AI-powered resolution engine... It looks like I need a bit more detail. Could you try asking about 'refund', 'cancellation', 'booking slots', 'wallet', or 'troubleshooting'?";
       
       const normalizedQuery = query.toLowerCase();
       if (normalizedQuery.includes('refund') || normalizedQuery.includes('money') || normalizedQuery.includes('cashback')) {
-        replyText = "Refunds are processed automatically when you cancel a booking at least 6 hours before kickoff. It usually takes 2-3 business days to hit your source account, or instant if credited to your TurfXpert wallet.";
+        replyText = "AI Instant Resolution: Refunds are processed automatically when you cancel a booking at least 6 hours before kickoff. It usually takes 2-3 business days to hit your source account, or it is instant if credited to your TurfXpert wallet.";
       } else if (normalizedQuery.includes('cancel') || normalizedQuery.includes('delete booking')) {
-        replyText = "To cancel your booking, head to the 'Bookings' section from the top navbar, select the booking card you want to cancel, and click the 'Cancel' button. Remember to cancel at least 6 hours in advance for a full refund!";
+        replyText = "AI Instant Resolution: To cancel your booking, head to the 'Bookings' section from the top navbar, select the booking card you want to cancel, and click the 'Cancel' button. Remember to cancel at least 6 hours in advance for a full refund!";
       } else if (normalizedQuery.includes('slot') || normalizedQuery.includes('book') || normalizedQuery.includes('date')) {
-        replyText = "You can browse premium open slots by heading over to the 'Dashboard'. Select your favorite turf arena, and pick any highlighted green slot from our rolling 7-day calendar strip.";
+        replyText = "AI Instant Resolution: You can browse premium open slots by heading over to the 'Dashboard'. Select your favorite turf arena, and pick any highlighted green slot from our rolling 7-day calendar strip.";
       } else if (normalizedQuery.includes('offer') || normalizedQuery.includes('promo') || normalizedQuery.includes('discount')) {
-        replyText = "We have a dedicated 'Offers' tab in the navbar filled with active promo codes! Copy any active coupon and paste it in the Coupon section during checkout for direct discounts.";
+        replyText = "AI Instant Resolution: We have a dedicated 'Offers' tab in the navbar filled with active promo codes! Copy any active coupon and paste it in the Coupon section during checkout for direct discounts.";
+      } else if (normalizedQuery.includes('wallet') || normalizedQuery.includes('balance') || normalizedQuery.includes('split')) {
+        replyText = "AI Instant Resolution: You can check your wallet balance during checkout. The 'Split with Team' feature allows you to instantly generate a payment link to share with your friends, dividing the cost equally!";
+      } else if (normalizedQuery.includes('stuck') || normalizedQuery.includes('gps') || normalizedQuery.includes('error')) {
+        replyText = "AI Troubleshooting: It seems you're facing a technical issue. Please check the Troubleshooting guides on the left panel, or submit a High Priority ticket so our tech team can assist you within minutes.";
       } else if (normalizedQuery.includes('hello') || normalizedQuery.includes('hi ') || normalizedQuery.includes('hey')) {
-        replyText = "Hello! I am XpertBot. How can I assist you with your Turf bookings or slot selections today?";
+        replyText = "Hello! I am XpertBot, powered by AI to instantly resolve your queries. How can I assist you with your Turf bookings today?";
       } else if (normalizedQuery.includes('thank') || normalizedQuery.includes('thanks')) {
         replyText = "You're very welcome! Let me know if there's anything else I can do to get you back on the pitch.";
       }

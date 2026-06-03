@@ -690,3 +690,29 @@ body:not([data-theme="light"]) img[src*="logo.png"] {
   filter: invert(1) hue-rotate(180deg);
 }
 
+/* Accessibility standards for mobile touch targets (min 44x44px) */
+@media (max-width: 768px) {
+  button, 
+  a.nav-item,
+  .btn-premium, 
+  .btn-secondary, 
+  .btn-outline,
+  .btn-back,
+  .slot-card-v3,
+  .day-chip,
+  .payment-option-card,
+  input[type="radio"],
+  input[type="checkbox"],
+  .dropdown-toggle,
+  .location-link {
+    min-height: 44px;
+  }
+  
+  .back-icon,
+  .close-btn,
+  .icon-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+

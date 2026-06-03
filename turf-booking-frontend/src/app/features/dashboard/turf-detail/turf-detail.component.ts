@@ -98,7 +98,33 @@ interface CategorizedSlot extends Slot {
         <div class="booking-panel-container">
           <div class="booking-panel glass">
             <h2>Reserve Your Time Slots</h2>
-            <p class="panel-subtitle">Select multiple slots below to play for longer duration.</p>
+            <p class="panel-subtitle">Follow these simple steps to secure your turf.</p>
+
+            <!-- Booking Progress Steps -->
+            <div class="booking-steps-indicator">
+              <div class="step" [class.active]="true" [class.completed]="selectedSlots().length > 0">
+                <div class="step-icon">
+                  <svg *ngIf="selectedSlots().length > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span *ngIf="selectedSlots().length === 0">1</span>
+                </div>
+                <span class="step-label">Select Time</span>
+              </div>
+              <div class="step-line" [class.active]="selectedSlots().length > 0"></div>
+              
+              <div class="step" [class.active]="selectedSlots().length > 0" [class.completed]="selectedSlots().length > 0 && paymentOption()">
+                <div class="step-icon">
+                  <svg *ngIf="selectedSlots().length > 0 && paymentOption()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span *ngIf="selectedSlots().length === 0 || !paymentOption()">2</span>
+                </div>
+                <span class="step-label">Payment</span>
+              </div>
+              <div class="step-line" [class.active]="selectedSlots().length > 0 && paymentOption()"></div>
+              
+              <div class="step" [class.active]="selectedSlots().length > 0 && paymentOption()">
+                <div class="step-icon">3</div>
+                <span class="step-label">Confirm</span>
+              </div>
+            </div>
 
             <!-- Slots Grid -->
             <div class="slots-section">
@@ -555,6 +581,67 @@ interface CategorizedSlot extends Slot {
       margin: -1rem 0 0 0;
     }
 
+    /* Booking Steps Indicator */
+    .booking-steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      padding: 0 0.5rem;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .step.active {
+      opacity: 1;
+    }
+    .step.completed .step-icon {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: rgba(var(--background-rgb), 1);
+      transition: all 0.3s ease;
+    }
+    .step-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    .step-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-line {
+      flex-grow: 1;
+      height: 2px;
+      background: var(--border-color);
+      margin: 0 16px;
+      position: relative;
+      top: -10px;
+      transition: all 0.3s ease;
+    }
+    .step-line.active {
+      background: var(--primary);
+    }
+
     .slots-section {
       display: flex;
       flex-direction: column;
@@ -703,9 +790,9 @@ interface CategorizedSlot extends Slot {
 
     .slots-grid-view {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 12px;
-      max-height: 400px;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+      max-height: 450px;
       overflow-y: auto;
       padding: 0.5rem 0.25rem;
     }
@@ -722,17 +809,20 @@ interface CategorizedSlot extends Slot {
     }
 
     .slot-card-v3 {
-      padding: 1rem;
+      padding: 1.25rem 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 10px;
       cursor: pointer;
       border: 1px solid var(--border-color);
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.02);
       transition: var(--transition-smooth);
       position: relative;
+      height: auto !important;
+      min-height: 110px;
     }
     .slot-card-v3:hover:not(.booked):not(.unavailable):not(.selected) {
       border-color: var(--primary);
@@ -1368,7 +1458,7 @@ interface CategorizedSlot extends Slot {
       }
       .slots-grid-view {
         grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
       .summary-row {
         font-size: 0.85rem;
@@ -1381,7 +1471,9 @@ interface CategorizedSlot extends Slot {
         padding: 8px 2px;
       }
       .slot-card-v3 {
-        padding: 0.75rem;
+        padding: 1rem 0.5rem;
+        gap: 8px;
+        min-height: 100px;
       }
       .time {
         font-size: 0.85rem;

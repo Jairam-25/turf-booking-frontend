@@ -60,5 +60,10 @@ export const routes: Routes = [
     path: 'payment',
     loadComponent: () => import('./features/dashboard/payment/payment.component').then(m => m.PaymentComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () => import('./features/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent),
+    canActivate: [authGuard]
   }
 ];

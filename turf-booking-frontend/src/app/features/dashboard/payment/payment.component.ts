@@ -24,18 +24,36 @@ export class PaymentComponent implements OnInit {
   selectedMethod = signal<string>('razorpay');
   isProcessing = signal(false);
   isSuccess = signal(false);
+  showSplitModal = signal(false);
+  walletBalance = 1500;
+  
+  platformFee = 20;
+  taxAmount = 0;
+  grandTotal = 0;
   
   methods = [
+    { id: 'wallet', name: 'TurfXpert Wallet', icon: 'wallet', description: 'Available Balance: ₹1,500' },
+    { id: 'split', name: 'Split with Team', icon: 'users', description: 'Split bill equally via UPI/Link' },
     { id: 'razorpay', name: 'Razorpay', icon: 'credit-card', description: 'Credit Card, UPI, Net Banking' },
     { id: 'upi', name: 'UPI Quick Pay', icon: 'smartphone', description: 'Google Pay, PhonePe, Paytm' },
-    { id: 'card', name: 'Credit/Debit Card', icon: 'credit-card', description: 'Visa, Mastercard, RuPay' },
-    { id: 'wallet', name: 'Wallets', icon: 'wallet', description: 'Paytm, Amazon Pay' }
   ];
 
   ngOnInit() {
     this.bookingData = history.state.bookingData;
     if (!this.bookingData || !this.bookingData.slots || this.bookingData.slots.length === 0) {
       this.router.navigate(['/dashboard']);
+      return;
+    }
+    
+    // Calculate transparent fees
+    this.taxAmount = Math.round(this.bookingData.totalPrice * 0.18);
+    this.grandTotal = this.bookingData.totalPrice + this.platformFee + this.taxAmount;
+    
+    // Update amountToPay with taxes
+    if (this.bookingData.paymentPlan === 'advance') {
+       this.bookingData.amountToPay += (this.platformFee + this.taxAmount);
+    } else {
+       this.bookingData.amountToPay = this.grandTotal;
     }
   }
 
@@ -47,8 +65,19 @@ export class PaymentComponent implements OnInit {
     this.isProcessing.set(true);
     const amountToPay = this.bookingData.amountToPay;
 
-    // Simulate Payment based on method
-    if (this.selectedMethod() === 'razorpay') {
+    if (this.selectedMethod() === 'wallet') {
+      if (this.walletBalance < amountToPay) {
+        this.notificationService.error('Insufficient wallet balance!');
+        this.isProcessing.set(false);
+        return;
+      }
+      setTimeout(() => {
+        this.processBooking('wallet_txn', 'pay_wallet_123', 'wallet_signature');
+      }, 1500);
+    } else if (this.selectedMethod() === 'split') {
+      this.isProcessing.set(false);
+      this.showSplitModal.set(true);
+    } else if (this.selectedMethod() === 'razorpay') {
       this.initiateRazorpay(amountToPay);
     } else {
       // Dummy success for other methods
@@ -56,6 +85,25 @@ export class PaymentComponent implements OnInit {
         this.processBooking('dummy_order_xyz', `pay_${this.selectedMethod()}_123`, 'dummy_signature');
       }, 2000);
     }
+  }
+
+  shareSplitLink() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Split Turf Bill',
+        text: `Join my TurfXpert booking! Please pay your share of ₹${Math.round(this.bookingData.amountToPay / 4)} using this link:`,
+        url: window.location.origin + '/pay/split-1234'
+      }).catch(err => console.error('Share failed:', err));
+    } else {
+      alert('Split link copied to clipboard!');
+    }
+    this.showSplitModal.set(false);
+    
+    // Auto complete booking after split is configured
+    this.isProcessing.set(true);
+    setTimeout(() => {
+      this.processBooking('split_order', 'pay_split_123', 'split_sig');
+    }, 1500);
   }
 
   private initiateRazorpay(amountToPay: number) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, of, throwError } from 'rxjs';
 import { BookingRepository } from '../../domain/repositories/booking.repository';
 import { Booking, CreateBookingDto, Slot } from '../../domain/models/booking.model';
 
@@ -29,7 +29,7 @@ export class BookingRepositoryImpl implements BookingRepository {
     return this.http.get<any>(`${this.bookingUrl}/my`).pipe(
       map(response => {
         const result = response.data || response.Data || response.value || response.Value || response;
-        return (Array.isArray(result) ? result : []).map((b: any) => ({
+        const mapped = (Array.isArray(result) ? result : []).map((b: any) => ({
           bookingId: b.bookingId || b.BookingId,
           bookedOn: b.bookedOn || b.BookedOn,
           turfName: b.turfName || b.TurfName,
@@ -38,6 +38,22 @@ export class BookingRepositoryImpl implements BookingRepository {
           startTime: b.startTime || b.StartTime,
           endTime: b.endTime || b.EndTime
         }));
+        // Cache for offline mode
+        try {
+          localStorage.setItem('turf_cached_bookings', JSON.stringify(mapped));
+        } catch (e) { }
+        return mapped;
+      }),
+      catchError(error => {
+        // Fallback to offline cache
+        try {
+          const cached = localStorage.getItem('turf_cached_bookings');
+          if (cached) {
+            console.warn('Network error, loading bookings from offline cache.');
+            return of(JSON.parse(cached) as Booking[]);
+          }
+        } catch (e) { }
+        return throwError(() => error);
       })
     );
   }
