@@ -22,7 +22,7 @@ interface FeaturedTestimonial {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div class="reviews-page-container fade-in">
+    <div class="reviews-page-container container-fluid spacing-vertical-24 fade-in">
       
       <!-- Back Button -->
       <div class="navigation-bar">
@@ -160,7 +160,7 @@ interface FeaturedTestimonial {
 
               <button 
                 type="submit" 
-                class="btn-premium submit-btn" 
+                class="btn-premium btn-uniform submit-btn" 
                 [disabled]="isSubmitting() || newRating() === 0 || !newComment.trim()"
               >
                 <span *ngIf="!isSubmitting()">Submit Verified Review</span>

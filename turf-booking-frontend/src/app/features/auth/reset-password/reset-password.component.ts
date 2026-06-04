@@ -49,7 +49,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
             >
           </div>
 
-          <button type="submit" class="btn-premium" [disabled]="isLoading()">
+          <button type="submit" class="btn-premium btn-uniform" [disabled]="isLoading()">
             <span *ngIf="!isLoading()">Reset Password</span>
             <span *ngIf="isLoading()" class="spinner"></span>
           </button>
@@ -59,7 +59,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
           <div class="icon">✓</div>
           <h2>Password Reset!</h2>
           <p>Your password has been successfully updated. You can now login with your new password.</p>
-          <button class="btn-premium" routerLink="/auth/login" style="margin-top: 1.5rem;">Go to Login</button>
+          <button class="btn-premium btn-uniform" routerLink="/auth/login" style="margin-top: 1.5rem;">Go to Login</button>
         </div>
 
         <div class="error-banner" *ngIf="errorMessage()">

@@ -12,7 +12,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
   standalone: true,
   imports: [CommonModule, TurfCardComponent],
   template: `
-    <div class="dashboard-page fade-in">
+    <div class="dashboard-page container-fluid spacing-vertical-48 fade-in">
       <header class="dashboard-header glass">
         <div class="header-content">
           <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>

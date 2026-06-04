@@ -17,7 +17,7 @@ interface Player {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="leaderboard-container fade-in">
+    <div class="leaderboard-container container-fluid spacing-vertical-24 fade-in">
       
       <!-- Header -->
       <div class="navigation-bar">
@@ -128,9 +128,7 @@ interface Player {
   `,
   styles: [`
     .leaderboard-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 2rem;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 2.5rem;

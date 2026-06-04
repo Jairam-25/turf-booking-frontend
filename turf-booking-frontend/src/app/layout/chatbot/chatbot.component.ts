@@ -195,7 +195,7 @@ interface ChatMessage {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      z-index: 999;
+      z-index: 1001;
       font-family: 'Manrope', sans-serif;
     }
 
@@ -759,14 +759,14 @@ interface ChatMessage {
     }
 
     /* Mobile Responsive Customization */
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       .chatbot-wrapper {
-        bottom: 1rem;
+        bottom: calc(64px + env(safe-area-inset-bottom) + 1rem); /* Above bottom nav */
         right: 1rem;
       }
       .chat-window {
         width: calc(100vw - 2rem);
-        height: calc(100vh - 8rem);
+        height: calc(100vh - 64px - env(safe-area-inset-bottom) - 6rem);
         max-height: 520px;
         right: 0;
         bottom: 4.8rem;

@@ -1,4 +1,4 @@
-<div class="payment-page fade-in">
+<div class="payment-page container-fluid spacing-vertical-24 fade-in">
   <!-- Loading overlay with Particles -->
   <div class="loading-overlay glass" *ngIf="isProcessing()">
     <div class="magic-particles">
@@ -36,9 +36,9 @@
       </div>
 
       <div class="action-buttons">
-        <button class="btn-premium" (click)="goBookings()">View My Bookings</button>
-        <button class="btn-premium secondary" (click)="goBackToTurf()">Back to Turf Details</button>
-        <button class="btn-premium secondary" (click)="goHome()">Back to Dashboard</button>
+        <button class="btn-premium btn-uniform" (click)="goBookings()">View My Bookings</button>
+        <button class="btn-premium btn-uniform secondary" (click)="goBackToTurf()">Back to Turf Details</button>
+        <button class="btn-premium btn-uniform secondary" (click)="goHome()">Back to Dashboard</button>
       </div>
       </div>
     </div>
@@ -132,7 +132,7 @@
         </p>
       </div>
 
-      <button class="btn-premium pay-btn" (click)="confirmPayment()" [disabled]="isProcessing()">
+      <button class="btn-premium btn-uniform pay-btn" (click)="confirmPayment()" [disabled]="isProcessing()">
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" style="margin-right: 8px;">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -162,8 +162,8 @@
       </div>
       
       <div class="action-buttons flex gap-3" style="margin-top: 2rem;">
-        <button class="btn-premium w-full" (click)="shareSplitLink()">Share Link via UPI/SMS</button>
-        <button class="btn-premium secondary w-full" (click)="showSplitModal.set(false)">Cancel</button>
+        <button class="btn-premium btn-uniform w-full" (click)="shareSplitLink()">Share Link via UPI/SMS</button>
+        <button class="btn-premium btn-uniform secondary w-full" (click)="showSplitModal.set(false)">Cancel</button>
       </div>
     </div>
   </div>

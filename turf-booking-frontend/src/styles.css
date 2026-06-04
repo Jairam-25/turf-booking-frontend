@@ -193,6 +193,11 @@ body[data-theme="light"] input[type="datetime-local"] {
   color-scheme: light;
 }
 
+html {
+  font-size: clamp(14px, 1.2vw + 10px, 16px);
+}
+
+
 body {
   font-family: var(--font-family);
   background: var(--bg-gradient);
@@ -200,6 +205,49 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+p {
+  line-height: 1.6;
+}
+
+/* Global max-width container and layout utilities */
+.container-fluid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (min-width: 768px) {
+  .container-fluid {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.flex-card-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures equal height for grids */
+}
+.flex-card-body {
+  flex-grow: 1; /* Pushes footer/buttons to bottom */
+}
+
+.btn-uniform {
+  min-width: 120px;
+  justify-content: center;
+}
+
+.spacing-vertical-24 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+.spacing-vertical-48 {
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 
 /* Premium Card Container */

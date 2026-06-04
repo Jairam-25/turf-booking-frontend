@@ -25,7 +25,7 @@ interface CategorizedSlot extends Slot {
   standalone: true,
   imports: [CommonModule, RouterModule, PixelImageComponent, FormsModule],
   template: `
-    <div class="detail-page-container fade-in">
+    <div class="detail-page-container container-fluid spacing-vertical-24 fade-in">
       
       <!-- Header Bar / Back Navigation -->
       <div class="navigation-bar">
@@ -271,7 +271,7 @@ interface CategorizedSlot extends Slot {
 
             <div class="actions">
               <button 
-                class="btn-premium book-btn"
+                class="btn-premium btn-uniform book-btn"
                 [disabled]="selectedSlots().length === 0"
                 (click)="confirmBooking()"
               >
@@ -329,7 +329,7 @@ interface CategorizedSlot extends Slot {
             </div>
 
             <button 
-              class="btn-premium btn-submit-review" 
+              class="btn-premium btn-uniform btn-submit-review" 
               [disabled]="newReviewRating() === 0 || isSubmittingReview()"
               (click)="submitReview()"
             >
@@ -958,9 +958,15 @@ interface CategorizedSlot extends Slot {
     .option-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      margin-bottom: 4px;
     }
-    .option-header input {
+    .option-header input[type="radio"] {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      padding: 0;
+      flex-shrink: 0;
       accent-color: var(--primary);
       cursor: pointer;
     }
@@ -1854,15 +1860,29 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     const selected = this.selectedSlots();
     if (selected.length === 0) return '';
     
-    // Sort slots by start time to get chronological min and max
+    // Sort slots by start time
     const sorted = [...selected].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-    const minStart = new Date(sorted[0].startTime);
-    const maxEnd = new Date(sorted[sorted.length - 1].endTime);
-    
     const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
-    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
-    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
+    const ranges: string[] = [];
     
-    return `${startStr} to ${endStr}`;
+    let currentStart = new Date(sorted[0].startTime);
+    let currentEnd = new Date(sorted[0].endTime);
+    
+    for (let i = 1; i < sorted.length; i++) {
+      const slotStart = new Date(sorted[i].startTime);
+      const slotEnd = new Date(sorted[i].endTime);
+      
+      if (slotStart.getTime() === currentEnd.getTime()) {
+        currentEnd = slotEnd;
+      } else {
+        ranges.push(`${currentStart.toLocaleTimeString([], formatOptions).toLowerCase()} to ${currentEnd.toLocaleTimeString([], formatOptions).toLowerCase()}`);
+        currentStart = slotStart;
+        currentEnd = slotEnd;
+      }
+    }
+    
+    ranges.push(`${currentStart.toLocaleTimeString([], formatOptions).toLowerCase()} to ${currentEnd.toLocaleTimeString([], formatOptions).toLowerCase()}`);
+    
+    return ranges.join(', ');
   }
 }

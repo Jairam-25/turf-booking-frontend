@@ -9,14 +9,14 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
   standalone: true,
   imports: [CommonModule, PixelImageComponent],
   template: `
-    <div class="turf-card glass scale-in">
+    <div class="turf-card flex-card-layout glass scale-in">
       <div class="card-image">
         <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
         <img class="fallback" [src]="getImageSrc()" [alt]="turf.name" (error)="onImageError($event)" style="display:none;">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
       </div>
       
-      <div class="card-content">
+      <div class="card-content flex-card-body">
         <div class="card-header">
           <h3>{{ turf.name }}</h3>
           <span class="price">₹{{ turf.pricePerHour }}<small>/hr</small></span>
@@ -30,7 +30,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
 
         <p class="description">{{ turf.description }}</p>
 
-        <button class="btn-premium" (click)="onBook()">
+        <button class="btn-premium btn-uniform" (click)="onBook()">
           Book Now
         </button>
       </div>

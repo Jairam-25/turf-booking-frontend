@@ -22,7 +22,7 @@
   </button>
 </div>
 
-<nav class="navbar-shell sticky top-0 z-50 flex items-center justify-between w-full py-4 px-6 lg:px-8 xl:px-[120px] backdrop-blur-xl border-b font-manrope transition-all duration-300">
+<nav class="navbar-shell sticky top-0 z-50 flex items-center justify-between w-full py-3 lg:py-6 px-4 lg:px-8 xl:px-[120px] backdrop-blur-xl border-b font-manrope transition-all duration-300">
   <!-- Logo (Left) -->
   <a routerLink="/" class="flex items-center gap-3 group">
     <img src="/images/logo.png" alt="TurfXpert Logo" class="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-110">
@@ -124,13 +124,13 @@
 <!-- Mobile Menu Backdrop -->
 <div 
   *ngIf="isMobileMenuOpen" 
-  class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm transition-opacity" 
+  class="fixed inset-0 z-[1010] bg-black/50 backdrop-blur-sm transition-opacity" 
   (click)="toggleMobileMenu()">
 </div>
 
 <!-- Slide-in Drawer -->
 <div
-  class="fixed top-0 right-0 h-full w-72 sm:w-80 mobile-drawer-container z-[100] shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col"
+  class="fixed top-0 right-0 h-full w-72 sm:w-80 mobile-drawer-container z-[1020] shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col"
   [ngClass]="isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'"
 >
   <div class="p-5 mobile-drawer-header flex justify-between items-center">

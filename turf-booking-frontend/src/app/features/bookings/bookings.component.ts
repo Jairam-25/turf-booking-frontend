@@ -25,7 +25,7 @@ export interface GroupedBooking {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div class="bookings-container fade-in">
+    <div class="bookings-container container-fluid spacing-vertical-24 fade-in">
       <!-- Back Button -->
       <div class="navigation-bar">
         <button class="btn-back" routerLink="/dashboard">
@@ -76,7 +76,7 @@ export interface GroupedBooking {
               <div class="insight-info">
                 <h4>Recommended for You</h4>
                 <h2>{{ recommendedTurf }}</h2>
-                <button class="btn-book-now" routerLink="/dashboard">Book Now</button>
+                <button class="btn-book-now btn-uniform" routerLink="/dashboard">Book Now</button>
               </div>
            </div>
         </div>
@@ -90,7 +90,7 @@ export interface GroupedBooking {
       <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
         <div 
           *ngFor="let booking of bookings()" 
-          class="glass booking-card"
+          class="glass booking-card flex-card-layout"
         >
           <div class="booking-header">
             <div class="turf-info">
@@ -113,7 +113,7 @@ export interface GroupedBooking {
             </div>
           </div>
           
-          <div class="booking-body">
+          <div class="booking-body flex-card-body">
             <div class="info-row">
               <span class="label">Date</span>
               <span class="value">{{ formatBookingDate(booking.startTime) }}</span>
@@ -136,21 +136,21 @@ export interface GroupedBooking {
           </div>
           
           <div class="booking-actions">
-            <button class="btn-share" (click)="shareBooking(booking)">
+            <button class="btn-share btn-uniform" (click)="shareBooking(booking)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
               </svg>
               Share
             </button>
-            <button class="btn-cancel" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
-            <button class="btn-share" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: 1px solid var(--primary);" (click)="openFeedbackModal(booking)">Rate Turf</button>
+            <button class="btn-cancel btn-uniform" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
+            <button class="btn-share btn-uniform" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: 1px solid var(--primary);" (click)="openFeedbackModal(booking)">Rate Turf</button>
           </div>
         </div>
 
         <div class="empty-state glass" *ngIf="bookings().length === 0">
           <h3>No bookings found</h3>
           <p>You haven't booked any turfs yet. Start playing today!</p>
-          <button class="btn-premium" routerLink="/dashboard">Book a Turf</button>
+          <button class="btn-premium btn-uniform" routerLink="/dashboard">Book a Turf</button>
         </div>
       </div>
 
@@ -172,8 +172,8 @@ export interface GroupedBooking {
           rows="4">
         </textarea>
         <div class="modal-actions">
-          <button class="btn-secondary" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
-          <button class="btn-cancel-confirm" (click)="confirmCancel()" [disabled]="isCancelling()">
+          <button class="btn-secondary btn-uniform" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
+          <button class="btn-cancel-confirm btn-uniform" (click)="confirmCancel()" [disabled]="isCancelling()">
             <span *ngIf="!isCancelling()">Confirm Cancel</span>
             <span *ngIf="isCancelling()" class="spinner-small"></span>
           </button>
@@ -205,8 +205,8 @@ export interface GroupedBooking {
         </textarea>
         
         <div class="modal-actions">
-          <button class="btn-secondary" (click)="closeFeedbackModal()">Skip</button>
-          <button class="btn-premium" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
+          <button class="btn-secondary btn-uniform" (click)="closeFeedbackModal()">Skip</button>
+          <button class="btn-premium btn-uniform" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
         </div>
       </div>
     </div>
@@ -455,6 +455,8 @@ export interface GroupedBooking {
 
     .booking-actions {
       display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
       width: 100%;
     }
     .btn-cancel {

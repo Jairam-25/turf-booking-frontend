@@ -35,7 +35,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
             >
           </div>
 
-          <button type="submit" class="btn-premium" [disabled]="isLoading()">
+          <button type="submit" class="btn-premium btn-uniform" [disabled]="isLoading()">
             <span *ngIf="!isLoading()">Send Reset Link</span>
             <span *ngIf="isLoading()" class="spinner"></span>
           </button>
@@ -45,7 +45,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
           <div class="icon">✓</div>
           <h2>Check your email</h2>
           <p>We've sent a password reset link to <strong>{{ forgetForm.value.email }}</strong></p>
-          <button class="btn-premium" routerLink="/auth/login" style="margin-top: 1.5rem;">Back to Login</button>
+          <button class="btn-premium btn-uniform" routerLink="/auth/login" style="margin-top: 1.5rem;">Back to Login</button>
         </div>
 
         <div class="error-banner" *ngIf="errorMessage()">

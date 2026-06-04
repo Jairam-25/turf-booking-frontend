@@ -19,7 +19,7 @@ interface PromoOffer {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="offers-page-container fade-in">
+    <div class="offers-page-container container-fluid spacing-vertical-24 fade-in">
       
       <!-- Back Button -->
       <div class="navigation-bar">
@@ -66,7 +66,7 @@ interface PromoOffer {
       <div class="offers-grid">
         <div 
           *ngFor="let offer of filteredOffers()" 
-          class="offer-card glass"
+          class="offer-card flex-card-layout glass"
           [style.border-top-color]="getAccentColor(offer.category)"
         >
           <!-- Decorative Top Light Bar -->
@@ -81,7 +81,7 @@ interface PromoOffer {
           </div>
 
           <!-- Card Title & Discount -->
-          <div class="card-main">
+          <div class="card-main flex-card-body">
             <div class="discount-display" [style.background-image]="offer.gradient">
               {{ offer.discount }}
             </div>
@@ -105,7 +105,7 @@ interface PromoOffer {
           </div>
 
           <!-- Card Action Button -->
-          <button class="btn-premium card-book-btn" routerLink="/dashboard">
+          <button class="btn-premium btn-uniform card-book-btn" routerLink="/dashboard">
             Book Turf Now
           </button>
         </div>
