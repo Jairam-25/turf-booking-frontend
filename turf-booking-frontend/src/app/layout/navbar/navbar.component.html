@@ -46,13 +46,21 @@
 
     <!-- Logged In Links -->
     <ng-container *ngIf="isLoggedIn()">
-      <a routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Home</a>
-      <a routerLink="/bookings" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Bookings</a>
-      <a routerLink="/dashboard" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Dashboard</a>
-      <a routerLink="/offers" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Offers</a>
-      <a routerLink="/leaderboard" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Community</a>
-      <a routerLink="/reviews" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Reviews</a>
-      <a routerLink="/support" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Support</a>
+      <a routerLink="/dashboard" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Book Turf</a>
+      <a routerLink="/bookings" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">My Bookings</a>
+      <a routerLink="/offers" routerLinkActive="active-link" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Promo Offers</a>
+      
+      <div class="relative group cursor-pointer font-medium text-[14px]">
+        <div class="navbar-link flex items-center gap-1 transition-opacity duration-200 hover:opacity-80 pb-1">
+          <span>More</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="absolute left-0 top-full mt-2 w-48 rounded-xl shadow-lg glass border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col overflow-hidden z-50">
+          <a routerLink="/leaderboard" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Community</a>
+          <a routerLink="/reviews" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Reviews</a>
+          <a routerLink="/support" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Support & FAQs</a>
+        </div>
+      </div>
     </ng-container>
   </div>
 
