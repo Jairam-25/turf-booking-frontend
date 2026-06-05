@@ -46,12 +46,12 @@ export class OwnerDashboardComponent implements OnInit {
 
   // New mock data properties for analytics
   analyticsStats = {
-    totalCustomers: 1827,
-    monthlyRevenue: 24450,
-    monthlyCosts: 8630,
-    pendingBookings: 9,
+    totalCustomers: 0,
+    monthlyRevenue: 0,
+    monthlyCosts: 0,
+    pendingBookings: 0,
     dueToday: 0,
-    unassigned: 2
+    unassigned: 0
   };
   
   chartInstances: any[] = [];
@@ -74,6 +74,18 @@ export class OwnerDashboardComponent implements OnInit {
         this.stats = data.Stats || data.stats;
         this.recentBookings = data.RecentBookings || data.recentBookings;
         
+        const analytics = data.Analytics || data.analytics;
+        if (analytics) {
+          this.analyticsStats = {
+            totalCustomers: analytics.TotalCustomers || analytics.totalCustomers || 0,
+            monthlyRevenue: analytics.MonthlyRevenue || analytics.monthlyRevenue || 0,
+            monthlyCosts: analytics.MonthlyCosts || analytics.monthlyCosts || 0,
+            pendingBookings: analytics.PendingBookings || analytics.pendingBookings || 0,
+            dueToday: analytics.DueToday || analytics.dueToday || 0,
+            unassigned: analytics.Unassigned || analytics.unassigned || 0
+          };
+        }
+        
         this.settingsForm.patchValue({
           turfName: this.turfName(),
           pricePerHour: data.PricePerHour || data.pricePerHour || 100,
@@ -95,7 +107,10 @@ export class OwnerDashboardComponent implements OnInit {
           setTimeout(() => this.initCharts(), 300);
         }
       },
-      error: (err: any) => this.notificationService.error('Failed to load dashboard data')
+      error: (err: any) => {
+        this.notificationService.error('Failed to load dashboard data');
+        this.isOverlayActive.set(false);
+      }
     });
   }
 

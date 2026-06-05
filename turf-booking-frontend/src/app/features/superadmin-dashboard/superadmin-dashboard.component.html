@@ -1,4 +1,12 @@
-<div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in">
+<!-- Global Animated Circular Transition Overlay (Super Admin Red) -->
+<div class="goal-overlay" [class.active]="isOverlayActive()" style="background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%); z-index: 10000;">
+  <div class="transition-content text-center">
+    <span class="overlay-label block" style="color: rgba(255,255,255,0.9)">Welcome Back</span>
+    <span class="overlay-brand block truncate max-w-[90vw]" style="color: white;">Super Admin</span>
+  </div>
+</div>
+
+<div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
   <div class="dashboard-header glass">
     <div class="header-left">
       <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">SuperAdmin Portal</h1>
@@ -17,18 +25,78 @@
     <main class="dashboard-content">
       <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
         <h2 class="section-title">System Metrics</h2>
-        <div class="stats-grid">
-          <div class="stat-card glass flex-card-layout">
-            <span class="stat-label">Total Users</span>
-            <h3 class="stat-value text-blue-400">{{ stats.users }}</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #3b82f6;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Users</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</h3>
           </div>
-          <div class="stat-card glass flex-card-layout">
-            <span class="stat-label">Total Owners</span>
-            <h3 class="stat-value text-purple-400">{{ stats.owners }}</h3>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #a855f7;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Owners</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</h3>
           </div>
-          <div class="stat-card glass flex-card-layout">
-            <span class="stat-label">Total Revenue</span>
-            <h3 class="stat-value text-green-400">₹{{ stats.revenue | number }}</h3>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Revenue</span>
+            <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ stats.revenue | number }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Turfs</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Bookings</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.bookings }}</h3>
+          </div>
+        </div>
+
+        <!-- System Capacity Radial Chart Card -->
+        <div class="glass p-8 rounded-[1.5rem] mt-8 flex flex-col md:flex-row items-center gap-8 shadow-md border border-[rgba(150,150,150,0.1)] animate-fade-in-up">
+          <!-- Left side: Legends and text -->
+          <div class="flex-1 flex flex-col justify-center px-4">
+            <h3 class="font-bold text-xl mb-1 fade-in animation-delay-100" style="color: var(--text-primary)">System Capacity Overview</h3>
+            <p class="text-sm mb-8 fade-in animation-delay-200" style="color: var(--text-secondary)">Current vs Maximum Target Capacity</p>
+            
+            <div class="flex flex-col gap-6">
+              <!-- Users Dataset -->
+              <div class="fade-in animation-delay-300">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</span>
+                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/2000</span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <div class="w-3 h-3 rounded-[3px]" style="background: #a855f7;"></div>
+                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Users</span>
+                </div>
+              </div>
+
+              <!-- Turfs Dataset -->
+              <div class="fade-in animation-delay-400">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</span>
+                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/100</span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <div class="w-3 h-3 rounded-[3px]" style="background: #ec4899;"></div>
+                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Turfs</span>
+                </div>
+              </div>
+
+              <!-- Owners Dataset -->
+              <div class="fade-in animation-delay-500">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</span>
+                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/50</span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <div class="w-3 h-3 rounded-[3px]" style="background: #eab308;"></div>
+                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Registered Owners</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right side: Chart Canvas -->
+          <div class="w-full md:w-[350px] h-[350px] relative flex justify-center items-center scale-in animation-delay-500">
+            <canvas id="radialChart"></canvas>
           </div>
         </div>
       </div>

@@ -764,12 +764,26 @@ interface ChatMessage {
         bottom: calc(64px + env(safe-area-inset-bottom) + 1rem); /* Above bottom nav */
         right: 1rem;
       }
+      .chat-trigger-btn {
+        width: 48px;
+        height: 48px;
+      }
+      .trigger-icon {
+        width: 22px;
+        height: 22px;
+      }
+      .unread-dot {
+        width: 12px;
+        height: 12px;
+        top: 0;
+        right: 0;
+      }
       .chat-window {
         width: calc(100vw - 2rem);
-        height: calc(100vh - 64px - env(safe-area-inset-bottom) - 6rem);
+        height: calc(100vh - 64px - env(safe-area-inset-bottom) - 5rem);
         max-height: 520px;
         right: 0;
-        bottom: 4.8rem;
+        bottom: 3.8rem;
       }
     }
   `]
