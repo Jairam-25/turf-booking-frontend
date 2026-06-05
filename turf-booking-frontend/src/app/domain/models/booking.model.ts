@@ -18,4 +18,7 @@ export interface Booking {
 
 export interface CreateBookingDto {
   slotId: number;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
 }

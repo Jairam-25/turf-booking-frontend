@@ -6,6 +6,7 @@ import { FooterComponent } from './layout/footer-component/footer-component';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from './core/services/theme.service';
 import { ChatbotComponent } from './layout/chatbot/chatbot.component';
+import { BottomNavComponent } from './layout/bottom-nav/bottom-nav.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { ChatbotComponent } from './layout/chatbot/chatbot.component';
     ToastComponent,
     FooterComponent,
     ChatbotComponent,
+    BottomNavComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

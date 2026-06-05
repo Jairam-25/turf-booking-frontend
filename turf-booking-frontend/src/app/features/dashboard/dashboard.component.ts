@@ -12,7 +12,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
   standalone: true,
   imports: [CommonModule, TurfCardComponent],
   template: `
-    <div class="dashboard-page fade-in">
+    <div class="dashboard-page container-fluid spacing-vertical-48 fade-in">
       <header class="dashboard-header glass">
         <div class="header-content">
           <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>
@@ -114,6 +114,45 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         </div>
       </header>
 
+      <!-- Personalized Insights Section -->
+      <section class="dashboard-insights fade-in">
+        <h2 class="font-instrument-serif text-2xl mb-4 text-[var(--text-primary)]">Your Insights</h2>
+        <div class="insights-grid">
+          <div class="insight-card glass">
+            <div class="insight-icon bg-blue-500/20 text-blue-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <div class="insight-info">
+              <span class="insight-label text-xs uppercase tracking-wider text-[var(--text-secondary)] font-bold">Most Played Turf</span>
+              <h4 class="text-lg font-bold mt-1">Kickoff Arena</h4>
+              <p class="text-xs text-[var(--text-secondary)] mt-1">12 Bookings this month</p>
+            </div>
+          </div>
+
+          <div class="insight-card glass">
+            <div class="insight-icon bg-amber-500/20 text-amber-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="insight-info">
+              <span class="insight-label text-xs uppercase tracking-wider text-[var(--text-secondary)] font-bold">Preferred Time</span>
+              <h4 class="text-lg font-bold mt-1">Night (8 PM - 11 PM)</h4>
+              <p class="text-xs text-[var(--text-secondary)] mt-1">Night Owl Badge Earned</p>
+            </div>
+          </div>
+
+          <div class="insight-card glass border border-purple-500/30" style="background: linear-gradient(145deg, rgba(var(--primary-rgb), 0.1), rgba(var(--bg-card-rgb), 1));">
+            <div class="insight-icon bg-purple-500/20 text-purple-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            </div>
+            <div class="insight-info">
+              <span class="insight-label text-xs uppercase tracking-wider text-purple-400 font-bold">Upcoming Event</span>
+              <h4 class="text-lg font-bold mt-1">Summer Cup 2026</h4>
+              <p class="text-xs text-[var(--text-secondary)] mt-1">Starts in 3 Days • <a href="#" class="text-[var(--primary)] hover:underline">Register</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Turf Grid / Map Area -->
       <main class="turf-grid-container">
         <div class="grid-header">
@@ -163,6 +202,48 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       flex-direction: column;
       gap: 3rem;
     }
+    
+    /* Insights Section Styles */
+    .dashboard-insights {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .insight-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .insight-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-float);
+    }
+    .insight-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .insight-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    .insight-info {
+      display: flex;
+      flex-direction: column;
+    }
+
     .dashboard-header {
       padding: 4rem 2rem;
       border-radius: 24px;
@@ -565,9 +646,25 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     @media (max-width: 768px) {
       .dashboard-page { padding: 1rem; gap: 2rem; }
       .dashboard-header { padding: 2.5rem 1rem; border-radius: 16px; }
-      .header-content h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+      .header-content h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
       
       /* Mobile Search Bar Stacking */
+      
+      /* Horizontal Scroll for Insights */
+      .insights-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1rem;
+        gap: 1rem;
+      }
+      .insight-card {
+        min-width: 85vw;
+        scroll-snap-align: center;
+        flex-shrink: 0;
+        padding: 1rem;
+      }
+      
       .search-bar { 
         flex-direction: column; 
         align-items: stretch; 
@@ -604,6 +701,11 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       .grid-header h2 { justify-content: center; }
       .view-toggles { justify-content: center; }
       .view-btn { flex: 1; justify-content: center; }
+      
+      .turf-grid {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 0.5rem;
+      }
       
       /* Mobile Map */
       .map-wrapper { height: 400px; padding: 0.5rem; border-radius: 16px; }

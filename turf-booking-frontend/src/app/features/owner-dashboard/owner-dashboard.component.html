@@ -1,0 +1,218 @@
+<!-- Global Animated Circular Transition Overlay (Registered Owners Only) -->
+<div class="goal-overlay" [class.active]="isOverlayActive()">
+  <div class="transition-content text-center">
+    <span class="overlay-label block">Owner Workspace</span>
+    <span class="overlay-brand block truncate max-w-[90vw]">{{ turfName() !== 'Loading...' && turfName() !== 'Unassigned Turf' ? turfName() : 'TurfXpert' }}</span>
+  </div>
+</div>
+
+<div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
+  <div class="dashboard-header glass">
+    <div class="header-left">
+      <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">Owner Dashboard</h1>
+      <p class="text-[var(--text-secondary)] mt-1">Managing: <strong>{{ turfName() }}</strong></p>
+    </div>
+    <div class="header-right">
+      <button class="btn-premium btn-uniform" (click)="exportReport()">Export Report</button>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar glass">
+      <nav class="sidebar-nav">
+        <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'bookings'" (click)="setTab('bookings')">Recent Bookings</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'offline'" (click)="setTab('offline')">Offline Booking</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'settings'" (click)="setTab('settings')">Settings</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-content">
+      <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in w-full h-full">
+        <!-- Top Stats Row -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Customers</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.totalCustomers }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Benefit</span>
+            <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ analyticsStats.monthlyRevenue | number }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Costs</span>
+            <h3 class="text-2xl font-bold" style="color: #ef4444">₹{{ analyticsStats.monthlyCosts | number }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Pending Bookings</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.pendingBookings }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Due Today</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.dueToday }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Unassigned</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.unassigned }}</h3>
+          </div>
+        </div>
+
+        <!-- Main Chart Row -->
+        <div class="glass p-4 rounded-lg mb-6 w-full shadow-sm">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold" style="color: var(--text-primary)">Booking Stats (Online vs Offline)</h3>
+            <div class="flex gap-4">
+              <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
+                <span class="w-3 h-3 rounded-full" style="background: #7b39fc"></span> Online (Total)
+              </div>
+              <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
+                <span class="w-3 h-3 rounded-full" style="background: #22c55e"></span> Offline (Total)
+              </div>
+            </div>
+          </div>
+          <div class="h-[300px] w-full relative">
+            <canvas id="mainChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Bottom 3 Charts Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+          <!-- Traffic Analysis -->
+          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Traffic Analysis</h3>
+            <div class="h-[200px] w-full relative flex-grow">
+              <canvas id="trafficChart"></canvas>
+            </div>
+          </div>
+          
+          <!-- Utilization / Handling Time -->
+          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Average Utilization Hours</h3>
+            <div class="h-[200px] w-full relative flex-grow">
+              <canvas id="utilizationChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Happiness Ratings -->
+          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Customer Happiness</h3>
+            <div class="h-[200px] w-full relative flex-grow">
+              <canvas id="ratingChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'bookings'" class="tab-content fade-in">
+        <h2 class="section-title">Recent Bookings</h2>
+        <div class="table-container glass overflow-x-auto">
+          <table class="data-table w-full text-left">
+            <thead>
+              <tr>
+                <th>ID</th><th>User</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of recentBookings">
+                <td class="font-bold text-[var(--primary)]">#{{ b.Id || b.id }}</td>
+                <td>{{ b.User || b.user }}</td>
+                <td>{{ b.Date || b.date }}</td>
+                <td>{{ b.Time || b.time }}</td>
+                <td>₹{{ b.Amount || b.amount }}</td>
+                <td><span class="status-badge" [class.status-confirmed]="(b.Status || b.status) === 'Confirmed'" [class.status-pending]="(b.Status || b.status) === 'Pending'" [class.status-cancelled]="(b.Status || b.status) === 'Cancelled'">{{ b.Status || b.status }}</span></td>
+                <td>
+                  <div class="flex gap-2">
+                    <button *ngIf="(b.Status || b.status) === 'Pending'" class="action-btn approve-btn" (click)="approveBooking(b.Id || b.id)">Approve</button>
+                    <button *ngIf="(b.Status || b.status) === 'Pending' || (b.Status || b.status) === 'Confirmed'" class="action-btn cancel-btn" (click)="cancelBooking(b.Id || b.id)">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="recentBookings.length === 0">
+                <td colspan="7" class="text-center py-4 text-[var(--text-secondary)]">No recent bookings found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'offline'" class="tab-content fade-in w-full">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div class="flex items-center gap-4 flex-wrap">
+            <h2 class="section-title mb-0 border-none pb-0">Offline Booking</h2>
+            <div class="flex items-center gap-2 bg-[var(--surface-color)] p-2 rounded-lg border border-[rgba(150,150,150,0.2)]">
+              <span class="text-sm font-medium ml-2" style="color: var(--text-secondary)">Date:</span>
+              <input type="date" [(ngModel)]="selectedDate" [min]="todayDate" class="form-control m-0 border-none shadow-none py-1 px-2" style="background: transparent;" />
+            </div>
+          </div>
+          <button class="btn-premium px-4 py-2 text-sm" (click)="loadAvailableSlots()">Refresh Slots</button>
+        </div>
+        
+        <div class="glass p-6 rounded-lg w-full shadow-sm mb-6">
+          <p class="text-[var(--text-secondary)] mb-4 font-medium">Select an available slot below to manually register an offline booking. This will immediately mark the slot as booked for app users.</p>
+          
+          <div *ngIf="filteredSlots.length === 0" class="text-center py-8">
+            <p class="text-[var(--text-secondary)] text-lg">No available slots found for {{ selectedDate | date:'mediumDate' }}.</p>
+          </div>
+
+          <div *ngIf="filteredSlots.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div *ngFor="let slot of filteredSlots" class="p-4 rounded-lg border border-[rgba(150,150,150,0.2)] bg-[var(--surface-color)] hover:shadow-md transition-shadow flex flex-col gap-3">
+              <div class="flex justify-between items-start">
+                <div class="flex flex-col">
+                  <span class="font-bold text-lg" style="color: var(--text-primary)">
+                    {{ (slot.StartTime || slot.startTime) | date:'shortTime' }} - {{ (slot.EndTime || slot.endTime) | date:'shortTime' }}
+                  </span>
+                  <span *ngIf="(slot.IsBooked || slot.isBooked)" class="text-sm font-medium text-red-500 mt-1">Booked</span>
+                  <span *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" class="text-sm font-medium text-gray-500 mt-1">Unavailable</span>
+                  <span *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" class="text-sm font-medium text-green-500 mt-1">Available</span>
+                </div>
+              </div>
+              <button *ngIf="(slot.IsBooked || slot.isBooked)" class="w-full mt-2 py-2 rounded-lg font-bold text-sm bg-gray-200 text-gray-500 cursor-not-allowed" disabled>Already Booked</button>
+              <button *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" class="w-full mt-2 py-2 rounded-lg font-bold text-sm bg-gray-200 text-gray-400 cursor-not-allowed" disabled>Unavailable</button>
+              <button *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" class="btn-premium w-full mt-2 py-2" (click)="bookOffline(slot.SlotId || slot.slotId)">Book Offline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'settings'" class="tab-content fade-in">
+        <h2 class="section-title">Turf Settings</h2>
+        <div class="glass p-6 rounded-lg">
+          <form [formGroup]="settingsForm" class="flex flex-col gap-4" (ngSubmit)="saveSettings()">
+            <div class="form-group">
+              <label>Turf Name</label>
+              <input type="text" formControlName="turfName" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Base Price Per Hour (₹)</label>
+              <input type="number" formControlName="pricePerHour" class="form-control" />
+            </div>
+            
+            <h3 class="mt-4 mb-2 font-bold text-lg" style="color: var(--text-primary)">Custom Pricing (Optional)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="form-group mb-0">
+                <label>Day Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">6 AM - 12 PM</span></label>
+                <input type="number" formControlName="dayTimePrice" class="form-control" placeholder="Default: Base * 0.75" />
+              </div>
+              <div class="form-group mb-0">
+                <label>Afternoon Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">12 PM - 5 PM</span></label>
+                <input type="number" formControlName="afternoonPrice" class="form-control" placeholder="Default: Base * 1.0" />
+              </div>
+              <div class="form-group mb-0">
+                <label>Night Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">5 PM - Midnight</span></label>
+                <input type="number" formControlName="nightTimePrice" class="form-control" placeholder="Default: Base * 1.125" />
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 mt-6 mb-4 p-4 rounded-lg border border-[rgba(150,150,150,0.2)] bg-[var(--surface-color)]">
+              <input type="checkbox" formControlName="isActive" id="isActive" class="w-5 h-5 rounded cursor-pointer accent-[#7b39fc]" />
+              <label for="isActive" class="cursor-pointer font-medium m-0" style="color: var(--text-primary)">Currently Active / Available to Book</label>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button type="submit" class="btn-premium px-8 py-3 font-bold text-base shadow-md">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

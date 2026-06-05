@@ -170,6 +170,7 @@ body[data-theme="light"] {
   --turf-filter: brightness(1.05) contrast(1.05) saturate(1.1);
   --turf-vignette: radial-gradient(circle at center, rgba(248, 250, 252, 0.1) 20%, rgba(248, 250, 252, 0.7) 100%),
                    linear-gradient(to bottom, rgba(248, 250, 252, 0.2) 0%, rgba(241, 245, 249, 0.8) 100%);
+  color-scheme: light;
 }
 
 * {
@@ -178,6 +179,25 @@ body[data-theme="light"] {
   box-sizing: border-box;
 }
 
+:root {
+  color-scheme: dark;
+}
+
+input[type="date"], input[type="time"], input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+body[data-theme="light"] input[type="date"], 
+body[data-theme="light"] input[type="time"], 
+body[data-theme="light"] input[type="datetime-local"] {
+  color-scheme: light;
+}
+
+html {
+  font-size: clamp(14px, 1.2vw + 10px, 16px);
+}
+
+
 body {
   font-family: var(--font-family);
   background: var(--bg-gradient);
@@ -185,6 +205,49 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+p {
+  line-height: 1.6;
+}
+
+/* Global max-width container and layout utilities */
+.container-fluid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (min-width: 768px) {
+  .container-fluid {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.flex-card-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures equal height for grids */
+}
+.flex-card-body {
+  flex-grow: 1; /* Pushes footer/buttons to bottom */
+}
+
+.btn-uniform {
+  min-width: 120px;
+  justify-content: center;
+}
+
+.spacing-vertical-24 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+.spacing-vertical-48 {
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 
 /* Premium Card Container */
@@ -288,6 +351,7 @@ body {
 .goal-overlay.active {
   transform: scale(3.5);
   opacity: 1;
+  pointer-events: all;
 }
 
 .goal-overlay .transition-content {
@@ -392,6 +456,21 @@ input::placeholder {
   background: var(--border-color);
   border-radius: 8px;
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Global Button Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Theme toggle (auth + shared) */
@@ -567,7 +646,7 @@ input::placeholder {
 }
 
 /* Media Queries for Responsive Home Page */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .hero-container {
     min-height: auto !important;
     padding-top: 5rem !important;
@@ -657,5 +736,63 @@ input::placeholder {
 /* Logo color inversion for Dark Theme */
 body:not([data-theme="light"]) img[src*="logo.png"] {
   filter: invert(1) hue-rotate(180deg);
+}
+
+/* Accessibility standards for mobile touch targets (min 44x44px) */
+@media (max-width: 768px) {
+  button, 
+  a.nav-item,
+  .btn-premium, 
+  .btn-secondary, 
+  .btn-outline,
+  .btn-back,
+  .slot-card-v3,
+  .day-chip,
+  .payment-option-card,
+  input[type="radio"],
+  input[type="checkbox"],
+  .dropdown-toggle,
+  .location-link {
+    min-height: 44px;
+  }
+  
+  .close-btn,
+  .icon-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* CRITICAL PERFORMANCE FIX FOR MOBILE DEVICES */
+@media (max-width: 768px) {
+  /* Disable hardware-intensive backdrop filters on small devices */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Solidify backgrounds for navigation bars since blur is disabled */
+  body[data-theme="light"] .bottom-nav, 
+  body[data-theme="light"] .navbar-shell,
+  body[data-theme="light"] .glass {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+  }
+
+  body:not([data-theme="light"]) .bottom-nav, 
+  body:not([data-theme="light"]) .navbar-shell,
+  body:not([data-theme="light"]) .glass {
+    background-color: rgba(31, 41, 55, 0.98) !important;
+  }
+
+  /* Disable heavy radial-gradients that paint on scroll */
+  .glow-blob {
+    display: none !important;
+  }
+  
+  /* Simplify box shadows to flat shadows to save GPU cycles */
+  .hero-stat-card:hover, .offer-card:hover {
+    box-shadow: none !important;
+    transform: none !important;
+  }
 }
 

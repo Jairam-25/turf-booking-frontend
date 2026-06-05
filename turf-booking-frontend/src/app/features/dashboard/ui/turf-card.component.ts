@@ -9,14 +9,14 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
   standalone: true,
   imports: [CommonModule, PixelImageComponent],
   template: `
-    <div class="turf-card glass scale-in">
+    <div class="turf-card flex-card-layout glass scale-in">
       <div class="card-image">
         <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
         <img class="fallback" [src]="getImageSrc()" [alt]="turf.name" (error)="onImageError($event)" style="display:none;">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
       </div>
       
-      <div class="card-content">
+      <div class="card-content flex-card-body">
         <div class="card-header">
           <h3>{{ turf.name }}</h3>
           <span class="price">₹{{ turf.pricePerHour }}<small>/hr</small></span>
@@ -30,7 +30,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
 
         <p class="description">{{ turf.description }}</p>
 
-        <button class="btn-premium" (click)="onBook()">
+        <button class="btn-premium btn-uniform" (click)="onBook()">
           Book Now
         </button>
       </div>
@@ -115,6 +115,57 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       margin-top: auto;
       width: 100%;
       height: 44px;
+    }
+    @media (max-width: 768px) {
+      .card-image {
+        height: 200px;
+      }
+      .card-content {
+        padding: 0.75rem;
+        gap: 0.5rem;
+      }
+      .card-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 4px;
+      }
+      .card-header h3 {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+      .price {
+        font-size: 0.9rem;
+      }
+      .price small {
+        display: inline;
+        font-size: 0.65rem;
+      }
+      .location {
+        display: flex;
+        font-size: 0.75rem;
+        justify-content: center;
+        margin-top: -4px;
+      }
+      .description {
+        display: none;
+      }
+      .rating-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        top: 6px;
+        right: 6px;
+      }
+      .btn-premium {
+        height: 32px;
+        min-height: 32px !important;
+        font-size: 0.8rem;
+        padding: 0 8px;
+        margin-top: auto;
+      }
     }
   `]
 })

@@ -13,6 +13,8 @@ import { Slot } from '../../../domain/models/booking.model';
 import { Review } from '../../../domain/models/review.model';
 import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
 
+declare var Razorpay: any;
+
 interface CategorizedSlot extends Slot {
   category: 'Day' | 'Afternoon' | 'Night';
   calculatedPrice: number;
@@ -23,7 +25,7 @@ interface CategorizedSlot extends Slot {
   standalone: true,
   imports: [CommonModule, RouterModule, PixelImageComponent, FormsModule],
   template: `
-    <div class="detail-page-container fade-in">
+    <div class="detail-page-container container-fluid spacing-vertical-24 fade-in">
       
       <!-- Header Bar / Back Navigation -->
       <div class="navigation-bar">
@@ -31,14 +33,15 @@ interface CategorizedSlot extends Slot {
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Dashboard
+          Back to Book Turf
         </button>
       </div>
 
-      <div class="detail-grid" *ngIf="!isLoading(); else loadingTemplate">
-        
-        <!-- Left Side: Turf Media & Info -->
-        <div class="turf-main-info glass">
+      <ng-container *ngIf="!isLoading(); else loadingTemplate">
+        <div class="detail-grid">
+          
+          <!-- Left Side: Turf Media & Info -->
+          <div class="turf-main-info glass">
           <div class="turf-hero-image">
             <magic-pixel-image [src]="turf()?.imageUrl ?? '/images/turf_sports_ground.png'"></magic-pixel-image>
             <div class="rating-badge">★ {{ turf()?.rating?.toFixed(1) }}</div>
@@ -89,95 +92,39 @@ interface CategorizedSlot extends Slot {
             </div>
           </div>
 
-          <!-- Reviews Section -->
-          <div class="reviews-section-card glass" style="border-top: 1px solid var(--border-color); border-radius: 0 0 24px 24px;">
-            <h2 class="section-title">Player Reviews & Ratings</h2>
-            
-            <!-- Review Summary & Form Row -->
-            <div class="reviews-layout">
-              <!-- Summary Column -->
-              <div class="reviews-summary glass">
-                <div class="avg-score">
-                  <span class="score-num">{{ turf()?.rating?.toFixed(1) || '0.0' }}</span>
-                  <span class="stars">
-                    <span class="star-filled" *ngFor="let s of [1,2,3,4,5]">
-                      {{ s <= (turf()?.rating || 0) ? '★' : '☆' }}
-                    </span>
-                  </span>
-                  <span class="total-reviews">{{ reviews().length }} reviews</span>
-                </div>
-              </div>
-
-              <!-- Review Form -->
-              <div class="write-review-form glass">
-                <h3>Share your experience</h3>
-                <p class="form-desc">Help other athletes find the best fields. Only players who have booked this turf can leave a review.</p>
-                
-                <div class="rating-input">
-                  <span class="label">Your Rating:</span>
-                  <div class="star-rating-selector">
-                    <span 
-                      *ngFor="let star of [1,2,3,4,5]" 
-                      class="selector-star" 
-                      [class.active]="newReviewRating() >= star"
-                      (click)="setNewReviewRating(star)"
-                    >★</span>
-                  </div>
-                </div>
-
-                <div class="comment-input">
-                  <textarea 
-                    [(ngModel)]="newReviewComment" 
-                    placeholder="Tell us about the turf quality, lighting, facilities..." 
-                    rows="3"
-                    class="review-textarea glass"
-                  ></textarea>
-                </div>
-
-                <button 
-                  class="btn-premium btn-submit-review" 
-                  [disabled]="newReviewRating() === 0 || isSubmittingReview()"
-                  (click)="submitReview()"
-                >
-                  <span *ngIf="!isSubmittingReview()">Submit Review</span>
-                  <span *ngIf="isSubmittingReview()" class="spinner"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Reviews List -->
-            <div class="reviews-list">
-              <h3>Player Feedback</h3>
-              <div class="review-item-card glass" *ngFor="let review of reviews()">
-                <div class="review-header">
-                  <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
-                  <div class="review-meta">
-                    <span class="username">{{ review.userName }}</span>
-                    <span class="review-date">{{ formatDate(review.createdAt) }}</span>
-                  </div>
-                  <div class="review-stars">
-                    <span class="star" *ngFor="let s of [1,2,3,4,5]">
-                      {{ s <= review.rating ? '★' : '☆' }}
-                    </span>
-                  </div>
-                </div>
-                <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
-              </div>
-
-              <div class="empty-reviews" *ngIf="reviews().length === 0">
-                <p>No reviews yet. Be the first player to review this turf!</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Right Side: Slots Booking & Checkout Panel -->
         <div class="booking-panel-container">
-          
-          <!-- Standard Booking State -->
-          <div class="booking-panel glass" *ngIf="!isBookedSuccess()">
+          <div class="booking-panel glass">
             <h2>Reserve Your Time Slots</h2>
-            <p class="panel-subtitle">Select multiple slots below to play for longer duration.</p>
+            <p class="panel-subtitle">Follow these simple steps to secure your turf.</p>
+
+            <!-- Booking Progress Steps -->
+            <div class="booking-steps-indicator">
+              <div class="step" [class.active]="true" [class.completed]="selectedSlots().length > 0">
+                <div class="step-icon">
+                  <svg *ngIf="selectedSlots().length > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span *ngIf="selectedSlots().length === 0">1</span>
+                </div>
+                <span class="step-label">Select Time</span>
+              </div>
+              <div class="step-line" [class.active]="selectedSlots().length > 0"></div>
+              
+              <div class="step" [class.active]="selectedSlots().length > 0" [class.completed]="selectedSlots().length > 0 && paymentOption()">
+                <div class="step-icon">
+                  <svg *ngIf="selectedSlots().length > 0 && paymentOption()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span *ngIf="selectedSlots().length === 0 || !paymentOption()">2</span>
+                </div>
+                <span class="step-label">Payment</span>
+              </div>
+              <div class="step-line" [class.active]="selectedSlots().length > 0 && paymentOption()"></div>
+              
+              <div class="step" [class.active]="selectedSlots().length > 0 && paymentOption()">
+                <div class="step-icon">3</div>
+                <span class="step-label">Confirm</span>
+              </div>
+            </div>
 
             <!-- Slots Grid -->
             <div class="slots-section">
@@ -322,67 +269,105 @@ interface CategorizedSlot extends Slot {
               </p>
             </div>
 
-            <div class="booking-actions">
+            <div class="actions">
               <button 
-                class="btn-premium book-btn"
-                [disabled]="selectedSlots().length === 0 || isBooking()"
+                class="btn-premium btn-uniform book-btn"
+                [disabled]="selectedSlots().length === 0"
                 (click)="confirmBooking()"
               >
-                <span *ngIf="!isBooking()">Confirm Booking ({{ selectedSlots().length }} Slots)</span>
-                <span *ngIf="isBooking()" class="spinner"></span>
+                <span>Confirm Booking ({{ selectedSlots().length }} Slots)</span>
               </button>
             </div>
           </div>
-
-          <!-- Apple/Stripe Success Screen -->
-          <div class="success-card glass scale-in" *ngIf="isBookedSuccess()">
-            <div class="success-header">
-              <div class="success-icon-wrapper">
-                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                  <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                  <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                </svg>
-              </div>
-              <h2>Booking Confirmed!</h2>
-              <p>Your premium turf reservation is active.</p>
-            </div>
-
-            <div class="success-details-list glass" *ngIf="confirmedBookingDetails() as details">
-              <div class="detail-row">
-                <span class="label">Turf Arena</span>
-                <span class="value">{{ turf()?.name }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Payment Plan</span>
-                <span class="value">{{ details.paymentPlan }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Amount Paid Now</span>
-                <span class="value price">₹{{ details.amountPaid }}</span>
-              </div>
-              <div class="detail-row" *ngIf="details.balanceDue > 0">
-                <span class="label">Balance Due at Venue</span>
-                <span class="value" style="color: var(--accent);">₹{{ details.balanceDue }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Selected Hours</span>
-                <span class="value">{{ details.hours }} hr(s)</span>
-              </div>
-            </div>
-
-            <div class="success-actions" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-top: 1rem;">
-              <button class="btn-premium" routerLink="/bookings" style="width: 100%;">
-                Go to My Bookings
-              </button>
-              <button class="btn-premium secondary" (click)="resetSuccessState()" style="width: 100%;">
-                Return to Slots Selection
-              </button>
-            </div>
-          </div>
-
         </div>
 
       </div>
+
+      <!-- Full Width Reviews Section (Moved outside the grid) -->
+      <div class="reviews-section-card glass max-width-professional">
+        <h2 class="section-title">Player Reviews & Ratings</h2>
+        
+        <!-- Review Summary & Form Row -->
+        <div class="reviews-layout">
+          <!-- Summary Column -->
+          <div class="reviews-summary glass">
+            <div class="avg-score">
+              <span class="score-num">{{ turf()?.rating?.toFixed(1) || '0.0' }}</span>
+              <span class="stars">
+                <span class="star-filled" *ngFor="let s of [1,2,3,4,5]">
+                  {{ s <= (turf()?.rating || 0) ? '★' : '☆' }}
+                </span>
+              </span>
+              <span class="total-reviews">{{ reviews().length }} reviews</span>
+            </div>
+          </div>
+
+          <!-- Review Form -->
+          <div class="write-review-form glass">
+            <h3>Share your experience</h3>
+            <p class="form-desc">Help other athletes find the best fields. Only players who have booked this turf can leave a review.</p>
+            
+            <div class="rating-input">
+              <span class="label">Your Rating:</span>
+              <div class="star-rating-selector">
+                <span 
+                  *ngFor="let star of [1,2,3,4,5]" 
+                  class="selector-star" 
+                  [class.active]="newReviewRating() >= star"
+                  (click)="setNewReviewRating(star)"
+                >★</span>
+              </div>
+            </div>
+
+            <div class="comment-input">
+              <textarea 
+                [(ngModel)]="newReviewComment" 
+                placeholder="Tell us about the turf quality, lighting, facilities..." 
+                rows="3"
+                class="review-textarea glass"
+              ></textarea>
+            </div>
+
+            <button 
+              class="btn-premium btn-uniform btn-submit-review" 
+              [disabled]="newReviewRating() === 0 || isSubmittingReview()"
+              (click)="submitReview()"
+            >
+              <span *ngIf="!isSubmittingReview()">Submit Review</span>
+              <span *ngIf="isSubmittingReview()" class="spinner"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="reviews-list">
+          <h3>Player Feedback</h3>
+          <div class="review-item-card glass" *ngFor="let review of reviews().slice(0, displayedReviewsCount())">
+            <div class="review-header">
+              <div class="user-avatar">{{ review.userName.charAt(0).toUpperCase() }}</div>
+              <div class="review-meta">
+                <span class="username">{{ review.userName }}</span>
+                <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+              </div>
+              <div class="review-stars">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]">
+                  {{ s <= review.rating ? '★' : '☆' }}
+                </span>
+              </div>
+            </div>
+            <p class="review-comment">{{ review.comment || 'No written comment left.' }}</p>
+          </div>
+          
+          <button class="btn-load-more" *ngIf="reviews().length > displayedReviewsCount()" (click)="loadMoreReviews()">
+            Load More Reviews
+          </button>
+
+          <div class="empty-reviews" *ngIf="reviews().length === 0">
+            <p>No reviews yet. Be the first player to review this turf!</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
       <!-- Main Loader -->
       <ng-template #loadingTemplate>
@@ -391,7 +376,14 @@ interface CategorizedSlot extends Slot {
           <p>Loading Turf Details...</p>
         </div>
       </ng-template>
+    </div>
 
+    <!-- Goal Overlay for Payment Transition (Moved outside to prevent transform context issues) -->
+    <div class="goal-overlay" [class.active]="isOverlayActive()">
+      <div class="transition-content">
+        <span class="overlay-label">Preparing Secure</span>
+        <span class="overlay-brand">Checkout...</span>
+      </div>
     </div>
   `,
   styles: [`
@@ -420,6 +412,19 @@ interface CategorizedSlot extends Slot {
       font-weight: 600;
       transition: var(--transition-smooth);
     }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
     .btn-back:hover {
       background: rgba(255,255,255,0.05);
       border-color: var(--primary);
@@ -433,7 +438,7 @@ interface CategorizedSlot extends Slot {
       display: grid;
       grid-template-columns: 1.4fr 1.2fr;
       gap: 2.5rem;
-      align-items: start;
+      align-items: stretch; /* Makes both columns equal height */
       width: 100%;
       min-width: 0;
     }
@@ -443,6 +448,7 @@ interface CategorizedSlot extends Slot {
       display: flex;
       flex-direction: column;
       border-radius: 24px;
+      height: 100%; /* Fill grid cell */
     }
     .turf-hero-image {
       position: relative;
@@ -570,6 +576,7 @@ interface CategorizedSlot extends Slot {
       gap: 2rem;
       min-width: 0;
       width: 100%;
+      height: 100%;
     }
     .booking-panel {
       padding: 2.5rem;
@@ -577,6 +584,8 @@ interface CategorizedSlot extends Slot {
       display: flex;
       flex-direction: column;
       gap: 1.75rem;
+      height: 100%;
+      flex-grow: 1;
     }
     .booking-panel h2 {
       font-size: 1.6rem;
@@ -587,6 +596,67 @@ interface CategorizedSlot extends Slot {
       color: var(--text-secondary);
       font-size: 0.95rem;
       margin: -1rem 0 0 0;
+    }
+
+    /* Booking Steps Indicator */
+    .booking-steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      padding: 0 0.5rem;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .step.active {
+      opacity: 1;
+    }
+    .step.completed .step-icon {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: rgba(var(--background-rgb), 1);
+      transition: all 0.3s ease;
+    }
+    .step-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    .step-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-line {
+      flex-grow: 1;
+      height: 2px;
+      background: var(--border-color);
+      margin: 0 16px;
+      position: relative;
+      top: -10px;
+      transition: all 0.3s ease;
+    }
+    .step-line.active {
+      background: var(--primary);
     }
 
     .slots-section {
@@ -615,74 +685,87 @@ interface CategorizedSlot extends Slot {
 
     /* Calendar styles */
     .calendar-section {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-flat);
     }
     .quick-days-strip {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       overflow-x: auto;
-      padding: 4px 2px;
+      padding: 8px 4px;
       align-items: center;
+      scroll-behavior: smooth;
     }
     .quick-days-strip::-webkit-scrollbar {
-      height: 4px;
-    }
-    .quick-days-strip::-webkit-scrollbar-thumb {
-      background: rgba(var(--primary-rgb), 0.2);
-      border-radius: 4px;
+      height: 0px;
     }
     .day-chip {
-      flex: 0 0 56px;
-      padding: 10px 4px;
+      flex: 0 0 68px;
+      padding: 14px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
+      border-radius: 16px;
       cursor: pointer;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.02);
-      transition: var(--transition-smooth);
+      border: 1px solid rgba(123, 57, 252, 0.15);
+      background: rgba(123, 57, 252, 0.04);
+      color: var(--text-primary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .day-chip:hover {
-      border-color: var(--primary);
-      background: rgba(var(--primary-rgb), 0.03);
+      border-color: rgba(123, 57, 252, 0.4);
+      background: rgba(123, 57, 252, 0.08);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(123, 57, 252, 0.1);
     }
     .day-chip.active {
       border-color: var(--primary);
-      background: var(--primary);
-      color: var(--on-primary);
-      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25);
+      background: linear-gradient(135deg, #7b39fc 0%, #5c1cdd 100%);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(123, 57, 252, 0.35);
     }
     .day-chip .day-num {
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
     }
     .day-chip .day-name {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       opacity: 0.8;
     }
     .day-chip.active .day-name {
       opacity: 1;
+      color: rgba(255, 255, 255, 0.95);
     }
 
     .custom-date-picker {
-      flex: 0 0 48px;
-      height: 52px;
+      flex: 0 0 58px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.02);
+      border-radius: 14px;
+      border: 1px solid rgba(123, 57, 252, 0.15);
+      background: rgba(123, 57, 252, 0.04);
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      background: rgba(var(--primary-rgb), 0.05);
       position: relative;
       cursor: pointer;
       overflow: hidden;
     }
     .custom-date-picker:hover {
-      border-color: var(--primary);
+      border-color: rgba(var(--primary-rgb), 0.4);
+      background: rgba(var(--primary-rgb), 0.1);
     }
     .custom-date-picker input[type="date"] {
       position: absolute;
@@ -694,8 +777,9 @@ interface CategorizedSlot extends Slot {
       cursor: pointer;
     }
     .custom-date-picker::after {
-      content: "📅";
-      font-size: 1.25rem;
+      content: '📅';
+      font-size: 1.5rem;
+      pointer-events: none;
     }
 
     .legend-bar {
@@ -723,9 +807,9 @@ interface CategorizedSlot extends Slot {
 
     .slots-grid-view {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 12px;
-      max-height: 400px;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+      max-height: 450px;
       overflow-y: auto;
       padding: 0.5rem 0.25rem;
     }
@@ -742,17 +826,20 @@ interface CategorizedSlot extends Slot {
     }
 
     .slot-card-v3 {
-      padding: 1rem;
+      padding: 1.25rem 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 10px;
       cursor: pointer;
       border: 1px solid var(--border-color);
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.02);
       transition: var(--transition-smooth);
       position: relative;
+      height: auto !important;
+      min-height: 110px;
     }
     .slot-card-v3:hover:not(.booked):not(.unavailable):not(.selected) {
       border-color: var(--primary);
@@ -884,9 +971,15 @@ interface CategorizedSlot extends Slot {
     .option-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      margin-bottom: 4px;
     }
-    .option-header input {
+    .option-header input[type="radio"] {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      padding: 0;
+      flex-shrink: 0;
       accent-color: var(--primary);
       cursor: pointer;
     }
@@ -952,6 +1045,10 @@ interface CategorizedSlot extends Slot {
       font-size: 1.2rem;
       font-weight: 800;
       color: var(--text-primary);
+    }
+
+    .actions {
+      margin-top: auto;
     }
 
     .book-btn {
@@ -1075,14 +1172,16 @@ interface CategorizedSlot extends Slot {
       width: 100%;
     }
 
-    /* Reviews Section Styling */
+    /* Reviews Section Styling (Full Width Professional Style) */
     .reviews-section-card {
-      margin-top: 2rem;
-      padding: 2.5rem;
+      margin-top: 1rem;
+      padding: 3rem;
       border-radius: 24px;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 2.5rem;
+      width: 100%;
+      border: 1px solid var(--border-color);
     }
     .section-title {
       font-size: 1.8rem;
@@ -1255,6 +1354,25 @@ interface CategorizedSlot extends Slot {
       color: var(--text-secondary);
       margin: 0;
     }
+    .btn-load-more {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-load-more:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255,255,255,0.3);
+    }
+
     .empty-reviews {
       padding: 3rem;
       text-align: center;
@@ -1264,7 +1382,7 @@ interface CategorizedSlot extends Slot {
       background: rgba(255,255,255,0.01);
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1023px) {
       .detail-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1275,57 +1393,94 @@ interface CategorizedSlot extends Slot {
       .detail-page-container {
         padding: 1rem;
       }
+      .reviews-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .score-num {
+        font-size: 2.8rem;
+      }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
       .turf-details-content,
       .booking-panel {
-        padding: 1.5rem;
+        padding: 1rem;
       }
       .turf-name {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
       .rules-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
+        gap: 0.5rem;
       }
       .rule-item {
-        padding: 1rem 0.5rem;
+        padding: 0.75rem 0.5rem;
       }
       .rule-label {
-        font-size: 0.75rem;
-      }
-      .rule-hours {
         font-size: 0.7rem;
       }
+      .rule-hours {
+        font-size: 0.65rem;
+      }
       .rule-price {
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin-top: 0;
       }
       .payment-options-grid {
         grid-template-columns: 1fr;
       }
+      .payment-option-card {
+        padding: 1rem;
+      }
       .success-card {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1rem;
       }
       .success-header h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+      }
+      .reviews-section-card {
+        padding: 1rem !important;
+      }
+      .reviews-summary, .write-review-form {
+        padding: 1rem;
+      }
+      .score-num {
+        font-size: 2.2rem;
+      }
+      .review-item-card {
+        padding: 1rem;
+      }
+      .date-item {
+        min-width: 65px;
+        padding: 0.5rem;
+      }
+      .slot-card-v3 {
+        padding: 0.75rem;
+        gap: 0.5rem;
+      }
+      .slot-card-v3 .time {
+        font-size: 0.95rem;
       }
     }
-
     @media (max-width: 480px) {
       .turf-hero-image {
-        height: 200px;
+        height: 180px;
+      }
+      .detail-page-container {
+        padding: 0.5rem;
       }
       .turf-details-content,
       .booking-panel {
-        padding: 1.25rem;
+        padding: 0.875rem;
+        border-radius: 12px;
       }
       .turf-name {
-        font-size: 1.6rem;
+        font-size: 1.35rem;
       }
       .location-bar {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
       }
       .rules-grid {
         grid-template-columns: 1fr;
@@ -1334,13 +1489,23 @@ interface CategorizedSlot extends Slot {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem 1rem;
+        padding: 0.6rem 0.875rem;
         text-align: left;
       }
       .rule-item > span {
         margin: 0;
       }
       .rule-price {
+        font-size: 0.95rem;
+      }
+      .slots-grid-view {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+      }
+      .summary-row {
+        font-size: 0.85rem;
+      }
+      .turf-name {
         font-size: 1.2rem;
       }
       .day-chip {
@@ -1348,7 +1513,9 @@ interface CategorizedSlot extends Slot {
         padding: 8px 2px;
       }
       .slot-card-v3 {
-        padding: 0.75rem;
+        padding: 1rem 0.5rem;
+        gap: 8px;
+        min-height: 100px;
       }
       .time {
         font-size: 0.85rem;
@@ -1382,12 +1549,11 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   
   isLoading = signal(true);
   isLoadingSlots = signal(true);
-  isBooking = signal(false);
-  isBookedSuccess = signal(false);
-  confirmedBookingDetails = signal<{ paymentPlan: string; amountPaid: number; balanceDue: number; hours: number } | null>(null);
+  isOverlayActive = signal(false);
 
   // Reviews signals & properties
   reviews = signal<Review[]>([]);
+  displayedReviewsCount = signal<number>(3);
   newReviewRating = signal<number>(0);
   newReviewComment = '';
   isSubmittingReview = signal(false);
@@ -1408,7 +1574,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     this.minDate = this.getLocalDateString(today);
     
     const futureLimit = new Date();
-    futureLimit.setDate(today.getDate() + 2); // Max 3 days
+    futureLimit.setDate(today.getDate() + 6); // Max 7 days
     this.maxDate = this.getLocalDateString(futureLimit);
     this.upcomingDays = this.getUpcomingDays();
 
@@ -1416,8 +1582,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
       const idStr = params.get('id');
       if (idStr) {
         this.turfId = parseInt(idStr, 10);
-        this.loadTurfDetails();
-        this.loadSlots();
+        this.loadData();
         this.loadReviews();
         
         try {
@@ -1433,7 +1598,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
               currentSlots.map(s => s.id === slotId ? { ...s, isBooked: isBooked } : s)
             );
             // If the slot is currently selected by this user, deselect it (only if not successfully booked yet)
-            if (!this.isBookedSuccess() && isBooked && this.selectedSlots().some(s => s.id === slotId)) {
+            if (isBooked && this.selectedSlots().some(s => s.id === slotId)) {
               this.selectedSlots.update(selected => selected.filter(s => s.id !== slotId));
             }
           }
@@ -1444,45 +1609,38 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadTurfDetails() {
+  loadData() {
     this.isLoading.set(true);
-    this.turfRepository.getById(this.turfId).subscribe({
-      next: (data) => {
-        this.turf.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.notificationService.error('Failed to load turf details.');
-        this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
-      }
-    });
-  }
-
-  loadSlots() {
     this.isLoadingSlots.set(true);
-    this.bookingRepository.getSlotsByTurf(this.turfId).subscribe({
-      next: (slotsList) => {
-        // Map raw slots to categorized pricing
-        const mapped = slotsList.map(s => {
+    
+    forkJoin({
+      turf: this.turfRepository.getById(this.turfId),
+      slotsList: this.bookingRepository.getSlotsByTurf(this.turfId)
+    }).subscribe({
+      next: (result) => {
+        this.turf.set(result.turf);
+        this.isLoading.set(false);
+        
+        // Now that turf is set, we can map slots with accurate pricing
+        const mapped = result.slotsList.map(s => {
           const catInfo = this.getSlotCategory(s.startTime);
           const basePrice = this.turf()?.pricePerHour ?? 40;
           return {
             ...s,
             category: catInfo.category,
-            calculatedPrice: Math.round(basePrice * catInfo.multiplier)
+            calculatedPrice: catInfo.exactPrice ?? Math.round(basePrice * catInfo.multiplier)
           } as CategorizedSlot;
         });
 
-        // Sort slots chronologically by start time
         mapped.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-
         this.slots.set(mapped);
         this.isLoadingSlots.set(false);
       },
       error: () => {
-        this.notificationService.error('Failed to load slots.');
+        this.notificationService.error('Failed to load turf details or slots.');
+        this.isLoading.set(false);
         this.isLoadingSlots.set(false);
+        this.router.navigate(['/dashboard']);
       }
     });
   }
@@ -1496,6 +1654,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   getUpcomingDays(): { dateStr: string; label: string; dayNum: string }[] {
     const days = [];
     const today = new Date();
+    // Show 3 days (including today) in the quick selection strip
     for (let i = 0; i < 3; i++) {
       const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
       const dateStr = this.getLocalDateString(d);
@@ -1533,29 +1692,31 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSlotCategory(startTimeStr: string): { category: 'Day' | 'Afternoon' | 'Night', multiplier: number } {
+  getSlotCategory(startTimeStr: string): { category: 'Day' | 'Afternoon' | 'Night', multiplier: number, exactPrice?: number } {
     const date = new Date(startTimeStr);
     const hour = date.getHours();
     
     // Day time: 6 AM to 12 PM (noon)
     if (hour >= 6 && hour < 12) {
-      return { category: 'Day', multiplier: 0.75 };
+      return { category: 'Day', multiplier: 0.75, exactPrice: this.turf()?.dayTimePrice };
     } 
     // Afternoon: 12 PM to 5 PM
     else if (hour >= 12 && hour < 17) {
-      return { category: 'Afternoon', multiplier: 1.0 };
+      return { category: 'Afternoon', multiplier: 1.0, exactPrice: this.turf()?.afternoonPrice };
     } 
     // Night: 5 PM to Midnight
     else {
-      return { category: 'Night', multiplier: 1.125 };
+      return { category: 'Night', multiplier: 1.125, exactPrice: this.turf()?.nightTimePrice };
     }
   }
 
   getTierPrice(tier: 'Day' | 'Afternoon' | 'Night'): number {
-    const basePrice = this.turf()?.pricePerHour ?? 40;
-    if (tier === 'Day') return Math.round(basePrice * 0.75);
-    if (tier === 'Afternoon') return basePrice;
-    return Math.round(basePrice * 1.125);
+    const t = this.turf();
+    const basePrice = t?.pricePerHour ?? 40;
+    
+    if (tier === 'Day') return t?.dayTimePrice ?? Math.round(basePrice * 0.75);
+    if (tier === 'Afternoon') return t?.afternoonPrice ?? basePrice;
+    return t?.nightTimePrice ?? Math.round(basePrice * 1.125);
   }
 
   getSlotStatus(slot: CategorizedSlot): 'Available' | 'Selected' | 'Booked' | 'Unavailable' {
@@ -1602,49 +1763,30 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   confirmBooking() {
     const selected = this.selectedSlots();
     if (selected.length === 0) return;
+    
+    this.isOverlayActive.set(true);
 
-    // Capture booking details before starting the booking process
-    const option = this.paymentOption();
-    const totalPrice = this.getTotalPrice();
-    const advancePrice = this.getAdvancePrice();
-    const hours = selected.length;
-
-    this.confirmedBookingDetails.set({
-      paymentPlan: option === 'full' ? 'Full Payment' : 'Advance Booking Plan',
-      amountPaid: option === 'full' ? totalPrice : advancePrice,
-      balanceDue: option === 'full' ? 0 : (totalPrice - advancePrice),
-      hours: hours
-    });
-
-    this.isBooking.set(true);
-
-    const bookings = selected.map(slot => this.bookingRepository.bookSlot({ slotId: slot.id }));
-
-    forkJoin(bookings).subscribe({
-      next: () => {
-        // Mark the slots we just booked as booked in our local state immediately
-        const bookedIds = selected.map(s => s.id);
-        this.slots.update(currentSlots =>
-          currentSlots.map(s => bookedIds.includes(s.id) ? { ...s, isBooked: true } : s)
-        );
-
-        this.isBooking.set(false);
-        this.isBookedSuccess.set(true);
-        this.notificationService.success('All slots booked successfully!');
-      },
-      error: (err) => {
-        this.notificationService.error(err.error?.message || 'Booking failed.');
-        this.isBooking.set(false);
-        this.confirmedBookingDetails.set(null); // Clear on failure
-      }
-    });
-  }
-
-  resetSuccessState() {
-    this.isBookedSuccess.set(false);
-    this.selectedSlots.set([]);
-    this.confirmedBookingDetails.set(null);
-    this.loadSlots(); // Refresh slot availability
+    setTimeout(() => {
+      const option = this.paymentOption();
+      const totalPrice = this.getTotalPrice();
+      const advancePrice = this.getAdvancePrice();
+      const amountToPay = option === 'full' ? totalPrice : advancePrice;
+      
+      // Navigate to payment page passing booking details in state
+      this.router.navigate(['/payment'], {
+        state: {
+          bookingData: {
+            turfId: this.turfId,
+            turfName: this.turf()?.name,
+            slots: selected,
+            paymentPlan: option,
+            totalPrice: totalPrice,
+            amountToPay: amountToPay,
+            balanceDue: option === 'full' ? 0 : (totalPrice - advancePrice)
+          }
+        }
+      });
+    }, 1200); // 1.2s delay to allow the animation to play
   }
 
   loadReviews() {
@@ -1656,6 +1798,10 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.notificationService.error('Failed to load reviews.');
       }
     });
+  }
+
+  loadMoreReviews() {
+    this.displayedReviewsCount.update(c => c + 3);
   }
 
   setNewReviewRating(rating: number) {
@@ -1679,7 +1825,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.newReviewComment = '';
         this.notificationService.success('Review submitted successfully!');
         this.loadReviews();
-        this.loadTurfDetails(); // Reload turf to get updated average rating!
+        this.loadData(); // Reload turf to get updated average rating!
       },
       error: (err) => {
         this.isSubmittingReview.set(false);
@@ -1721,15 +1867,29 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     const selected = this.selectedSlots();
     if (selected.length === 0) return '';
     
-    // Sort slots by start time to get chronological min and max
+    // Sort slots by start time
     const sorted = [...selected].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-    const minStart = new Date(sorted[0].startTime);
-    const maxEnd = new Date(sorted[sorted.length - 1].endTime);
-    
     const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
-    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
-    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
+    const ranges: string[] = [];
     
-    return `${startStr} to ${endStr}`;
+    let currentStart = new Date(sorted[0].startTime);
+    let currentEnd = new Date(sorted[0].endTime);
+    
+    for (let i = 1; i < sorted.length; i++) {
+      const slotStart = new Date(sorted[i].startTime);
+      const slotEnd = new Date(sorted[i].endTime);
+      
+      if (slotStart.getTime() === currentEnd.getTime()) {
+        currentEnd = slotEnd;
+      } else {
+        ranges.push(`${currentStart.toLocaleTimeString([], formatOptions).toLowerCase()} to ${currentEnd.toLocaleTimeString([], formatOptions).toLowerCase()}`);
+        currentStart = slotStart;
+        currentEnd = slotEnd;
+      }
+    }
+    
+    ranges.push(`${currentStart.toLocaleTimeString([], formatOptions).toLowerCase()} to ${currentEnd.toLocaleTimeString([], formatOptions).toLowerCase()}`);
+    
+    return ranges.join(', ');
   }
 }

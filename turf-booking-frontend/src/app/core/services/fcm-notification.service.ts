@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage, isSupported } from 'firebase/messaging';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -21,12 +21,36 @@ export class FcmNotificationService {
   };
 
   private app = initializeApp(this.firebaseConfig);
-  private messaging = getMessaging(this.app);
+  private messaging: any = null;
+
+  constructor() {
+    this.initMessaging();
+  }
+
+  private async initMessaging() {
+    try {
+      if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+        const supported = await isSupported();
+        if (supported) {
+          this.messaging = getMessaging(this.app);
+        } else {
+          console.warn('Firebase Messaging is not supported in this environment (likely due to insecure HTTP connection).');
+        }
+      }
+    } catch (e) {
+      console.warn('Firebase Messaging initialization failed:', e);
+    }
+  }
 
   /**
    * Request permission from the browser and get the FCM Token
    */
   async requestNotificationPermission() {
+    if (!this.messaging) {
+      console.warn('Skipping notification permission: Messaging not supported.');
+      return;
+    }
+    
     try {
       console.log('Requesting notification permission...');
       const permission = await Notification.requestPermission();
@@ -61,6 +85,8 @@ export class FcmNotificationService {
    * Listen for incoming messages while the app is open (Foreground)
    */
   listenForMessages() {
+    if (!this.messaging) return;
+    
     onMessage(this.messaging, (payload) => {
       console.log('🔔 Message received in foreground:', payload);
       

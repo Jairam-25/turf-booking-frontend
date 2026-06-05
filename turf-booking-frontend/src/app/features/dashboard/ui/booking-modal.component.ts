@@ -64,9 +64,9 @@ import { SignalrService } from '../../../core/services/signalr.service';
           </div>
 
           <footer class="modal-footer">
-            <button class="btn-premium secondary" (click)="onClose()">Cancel</button>
+            <button class="btn-premium btn-uniform secondary" (click)="onClose()">Cancel</button>
             <button 
-              class="btn-premium" 
+              class="btn-premium btn-uniform" 
               [disabled]="!selectedSlot() || isBooking()" 
               (click)="confirmBooking()"
             >
