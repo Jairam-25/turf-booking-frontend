@@ -59,6 +59,18 @@
           <a routerLink="/leaderboard" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Community</a>
           <a routerLink="/reviews" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Reviews</a>
           <a routerLink="/support" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Support & FAQs</a>
+          <ng-container *ngIf="authStore.user()?.role === 'User'">
+            <div class="border-t border-white/10 my-1"></div>
+            <a routerLink="/become-owner" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-purple-400 font-bold">Become an Owner</a>
+          </ng-container>
+          <ng-container *ngIf="authStore.user()?.role === 'Owner' || authStore.user()?.role === 'SuperAdmin'">
+            <div class="border-t border-white/10 my-1"></div>
+            <a routerLink="/owner-dashboard" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-[var(--primary)] font-bold">Owner Dashboard</a>
+          </ng-container>
+          <ng-container *ngIf="authStore.user()?.role === 'SuperAdmin'">
+            <div *ngIf="authStore.user()?.role !== 'Owner'" class="border-t border-white/10 my-1"></div>
+            <a routerLink="/superadmin" class="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-red-400 font-bold">SuperAdmin Portal</a>
+          </ng-container>
         </div>
       </div>
     </ng-container>

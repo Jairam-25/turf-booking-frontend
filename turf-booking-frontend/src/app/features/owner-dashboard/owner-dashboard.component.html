@@ -1,0 +1,109 @@
+<div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in">
+  <div class="dashboard-header glass">
+    <div class="header-left">
+      <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">Owner Dashboard</h1>
+      <p class="text-[var(--text-secondary)] mt-1">Managing: <strong>{{ turfName() }}</strong></p>
+    </div>
+    <div class="header-right">
+      <button class="btn-premium btn-uniform" (click)="exportReport()">Export Report</button>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar glass">
+      <nav class="sidebar-nav">
+        <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'bookings'" (click)="setTab('bookings')">Bookings</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'settings'" (click)="setTab('settings')">Settings</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-content">
+      <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
+        <h2 class="section-title">Performance Overview</h2>
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <span class="stat-label">Revenue</span>
+            <h3 class="stat-value text-green-400">₹{{ stats.revenue }}</h3>
+          </div>
+          <div class="stat-card glass">
+            <span class="stat-label">Total Bookings</span>
+            <h3 class="stat-value text-blue-400">{{ stats.bookings }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'bookings'" class="tab-content fade-in">
+        <h2 class="section-title">Recent Bookings</h2>
+        <div class="table-container glass overflow-x-auto">
+          <table class="data-table w-full text-left">
+            <thead>
+              <tr>
+                <th>ID</th><th>User</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of recentBookings">
+                <td class="font-bold text-[var(--primary)]">#{{ b.Id || b.id }}</td>
+                <td>{{ b.User || b.user }}</td>
+                <td>{{ b.Date || b.date }}</td>
+                <td>{{ b.Time || b.time }}</td>
+                <td>₹{{ b.Amount || b.amount }}</td>
+                <td><span class="status-badge" [class.status-confirmed]="(b.Status || b.status) === 'Confirmed'" [class.status-pending]="(b.Status || b.status) === 'Pending'" [class.status-cancelled]="(b.Status || b.status) === 'Cancelled'">{{ b.Status || b.status }}</span></td>
+                <td>
+                  <div class="flex gap-2">
+                    <button *ngIf="(b.Status || b.status) === 'Pending'" class="action-btn text-green-400" (click)="approveBooking(b.Id || b.id)">Approve</button>
+                    <button *ngIf="(b.Status || b.status) === 'Pending' || (b.Status || b.status) === 'Confirmed'" class="action-btn text-red-400" (click)="cancelBooking(b.Id || b.id)">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="recentBookings.length === 0">
+                <td colspan="7" class="text-center py-4 text-[var(--text-secondary)]">No recent bookings found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'settings'" class="tab-content fade-in">
+        <h2 class="section-title">Turf Settings</h2>
+        <div class="glass p-6 rounded-lg">
+          <form [formGroup]="settingsForm" class="flex flex-col gap-4" (ngSubmit)="saveSettings()">
+            <div class="form-group">
+              <label>Turf Name</label>
+              <input type="text" formControlName="turfName" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Base Price Per Hour (₹)</label>
+              <input type="number" formControlName="pricePerHour" class="form-control" />
+            </div>
+            
+            <h3 class="mt-4 font-bold">Custom Pricing (Optional)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="form-group">
+                <label>Day Time Price (₹) <br/><span class="text-xs text-gray-400">6 AM - 12 PM</span></label>
+                <input type="number" formControlName="dayTimePrice" class="form-control" placeholder="Default: Base * 0.75" />
+              </div>
+              <div class="form-group">
+                <label>Afternoon Price (₹) <br/><span class="text-xs text-gray-400">12 PM - 5 PM</span></label>
+                <input type="number" formControlName="afternoonPrice" class="form-control" placeholder="Default: Base * 1.0" />
+              </div>
+              <div class="form-group">
+                <label>Night Time Price (₹) <br/><span class="text-xs text-gray-400">5 PM - Midnight</span></label>
+                <input type="number" formControlName="nightTimePrice" class="form-control" placeholder="Default: Base * 1.125" />
+              </div>
+            </div>
+
+            <div class="form-group flex items-center gap-2 mt-4">
+              <input type="checkbox" formControlName="isActive" id="isActive" />
+              <label for="isActive">Currently Active / Available</label>
+            </div>
+            <div class="mt-4">
+              <button type="submit" class="btn-primary w-max">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in">
+  <div class="dashboard-header glass">
+    <div class="header-left">
+      <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">SuperAdmin Portal</h1>
+      <p class="text-[var(--text-secondary)] mt-1">Full System Overview</p>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar glass">
+      <nav class="sidebar-nav">
+        <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'requests'" (click)="setTab('requests')">Owner Requests</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-content">
+      <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
+        <h2 class="section-title">System Metrics</h2>
+        <div class="stats-grid">
+          <div class="stat-card glass flex-card-layout">
+            <span class="stat-label">Total Users</span>
+            <h3 class="stat-value text-blue-400">{{ stats.users }}</h3>
+          </div>
+          <div class="stat-card glass flex-card-layout">
+            <span class="stat-label">Total Owners</span>
+            <h3 class="stat-value text-purple-400">{{ stats.owners }}</h3>
+          </div>
+          <div class="stat-card glass flex-card-layout">
+            <span class="stat-label">Total Revenue</span>
+            <h3 class="stat-value text-green-400">₹{{ stats.revenue | number }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab() === 'requests'" class="tab-content fade-in">
+        <h2 class="section-title">Pending Owner Requests</h2>
+        <div class="table-container glass overflow-x-auto">
+          <table class="data-table w-full text-left">
+            <thead>
+              <tr>
+                <th>ID</th><th>User</th><th>Business</th><th>Turf</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let req of ownerRequests">
+                <td class="font-bold text-[var(--primary)]">#{{ req.id }}</td>
+                <td>{{ req.user }}</td>
+                <td>{{ req.business }}</td>
+                <td>{{ req.turf }}</td>
+                <td><span class="status-badge" [class.status-confirmed]="req.status === 'Approved'" [class.status-pending]="req.status === 'Pending'" [class.status-cancelled]="req.status === 'Rejected'">{{ req.status }}</span></td>
+                <td>
+                  <div class="flex gap-2">
+                    <button *ngIf="req.status === 'Pending'" class="action-btn text-green-400" (click)="approveRequest(req.id)">Approve</button>
+                    <button *ngIf="req.status === 'Pending'" class="action-btn text-red-400" (click)="rejectRequest(req.id)">Reject</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

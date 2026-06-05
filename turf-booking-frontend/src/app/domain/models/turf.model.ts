@@ -8,6 +8,9 @@ export interface Turf {
   description?: string;
   latitude?: number;
   longitude?: number;
+  dayTimePrice?: number;
+  afternoonPrice?: number;
+  nightTimePrice?: number;
 }
 
 export interface TurfResponse {

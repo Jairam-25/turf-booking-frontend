@@ -1569,8 +1569,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
       const idStr = params.get('id');
       if (idStr) {
         this.turfId = parseInt(idStr, 10);
-        this.loadTurfDetails();
-        this.loadSlots();
+        this.loadData();
         this.loadReviews();
         
         try {
@@ -1597,45 +1596,38 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadTurfDetails() {
+  loadData() {
     this.isLoading.set(true);
-    this.turfRepository.getById(this.turfId).subscribe({
-      next: (data) => {
-        this.turf.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.notificationService.error('Failed to load turf details.');
-        this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
-      }
-    });
-  }
-
-  loadSlots() {
     this.isLoadingSlots.set(true);
-    this.bookingRepository.getSlotsByTurf(this.turfId).subscribe({
-      next: (slotsList) => {
-        // Map raw slots to categorized pricing
-        const mapped = slotsList.map(s => {
+    
+    forkJoin({
+      turf: this.turfRepository.getById(this.turfId),
+      slotsList: this.bookingRepository.getSlotsByTurf(this.turfId)
+    }).subscribe({
+      next: (result) => {
+        this.turf.set(result.turf);
+        this.isLoading.set(false);
+        
+        // Now that turf is set, we can map slots with accurate pricing
+        const mapped = result.slotsList.map(s => {
           const catInfo = this.getSlotCategory(s.startTime);
           const basePrice = this.turf()?.pricePerHour ?? 40;
           return {
             ...s,
             category: catInfo.category,
-            calculatedPrice: Math.round(basePrice * catInfo.multiplier)
+            calculatedPrice: catInfo.exactPrice ?? Math.round(basePrice * catInfo.multiplier)
           } as CategorizedSlot;
         });
 
-        // Sort slots chronologically by start time
         mapped.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-
         this.slots.set(mapped);
         this.isLoadingSlots.set(false);
       },
       error: () => {
-        this.notificationService.error('Failed to load slots.');
+        this.notificationService.error('Failed to load turf details or slots.');
+        this.isLoading.set(false);
         this.isLoadingSlots.set(false);
+        this.router.navigate(['/dashboard']);
       }
     });
   }
@@ -1687,29 +1679,31 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSlotCategory(startTimeStr: string): { category: 'Day' | 'Afternoon' | 'Night', multiplier: number } {
+  getSlotCategory(startTimeStr: string): { category: 'Day' | 'Afternoon' | 'Night', multiplier: number, exactPrice?: number } {
     const date = new Date(startTimeStr);
     const hour = date.getHours();
     
     // Day time: 6 AM to 12 PM (noon)
     if (hour >= 6 && hour < 12) {
-      return { category: 'Day', multiplier: 0.75 };
+      return { category: 'Day', multiplier: 0.75, exactPrice: this.turf()?.dayTimePrice };
     } 
     // Afternoon: 12 PM to 5 PM
     else if (hour >= 12 && hour < 17) {
-      return { category: 'Afternoon', multiplier: 1.0 };
+      return { category: 'Afternoon', multiplier: 1.0, exactPrice: this.turf()?.afternoonPrice };
     } 
     // Night: 5 PM to Midnight
     else {
-      return { category: 'Night', multiplier: 1.125 };
+      return { category: 'Night', multiplier: 1.125, exactPrice: this.turf()?.nightTimePrice };
     }
   }
 
   getTierPrice(tier: 'Day' | 'Afternoon' | 'Night'): number {
-    const basePrice = this.turf()?.pricePerHour ?? 40;
-    if (tier === 'Day') return Math.round(basePrice * 0.75);
-    if (tier === 'Afternoon') return basePrice;
-    return Math.round(basePrice * 1.125);
+    const t = this.turf();
+    const basePrice = t?.pricePerHour ?? 40;
+    
+    if (tier === 'Day') return t?.dayTimePrice ?? Math.round(basePrice * 0.75);
+    if (tier === 'Afternoon') return t?.afternoonPrice ?? basePrice;
+    return t?.nightTimePrice ?? Math.round(basePrice * 1.125);
   }
 
   getSlotStatus(slot: CategorizedSlot): 'Available' | 'Selected' | 'Booked' | 'Unavailable' {
@@ -1818,7 +1812,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.newReviewComment = '';
         this.notificationService.success('Review submitted successfully!');
         this.loadReviews();
-        this.loadTurfDetails(); // Reload turf to get updated average rating!
+        this.loadData(); // Reload turf to get updated average rating!
       },
       error: (err) => {
         this.isSubmittingReview.set(false);
