@@ -78,7 +78,7 @@ import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
               <magic-number-ticker [value]="10000" [format]="'compact'" [swipeDelay]="600"></magic-number-ticker>
             </h3>
-            <h4 class="font-manrope font-semibold text-lg mb-2">Happy Players</h4>
+            <h4 class="font-manrope font-semibold text-lg mb-2">Join the Community</h4>
             <p class="font-inter text-sm">An active community of sports enthusiasts playing daily.</p>
           </div>
 
@@ -90,11 +90,14 @@ import { MagicBorderBeamComponent } from '../../shared/components/magic-ui/magic
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
               <magic-number-ticker [value]="24" [format]="'full'" [swipeDelay]="800">/7</magic-number-ticker>
             </h3>
-            <h4 class="font-manrope font-semibold text-lg mb-2">Instant Slots</h4>
+            <h4 class="font-manrope font-semibold text-lg mb-2">Book Instantly</h4>
             <p class="font-inter text-sm">Book slots and verify availability instantly, day or night.</p>
           </div>
         </div>
       </section>
+
+
+
 
       <div class="goal-overlay" [class.active]="isOverlayActive()">
         <div class="transition-content">

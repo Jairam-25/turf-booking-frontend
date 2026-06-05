@@ -1,0 +1,48 @@
+<div class="auth-page min-h-screen flex items-center justify-center p-4">
+  <div class="auth-container glass max-w-lg w-full p-8 rounded-2xl fade-in">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-[var(--primary)] mb-2">Partner with TurfXpert</h1>
+      <p class="text-[var(--text-secondary)]">Submit a request to claim and manage your turf</p>
+    </div>
+
+    <form [formGroup]="ownerForm" (ngSubmit)="submitRequest()" class="space-y-6">
+      
+      <div class="form-group">
+        <label class="form-label">Turf ID</label>
+        <div class="input-wrapper">
+          <input type="number" formControlName="turfId" class="form-input" placeholder="e.g. 1" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Business Name</label>
+        <div class="input-wrapper">
+          <input type="text" formControlName="businessName" class="form-input" placeholder="e.g. City Sports Enterprise" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contact Number</label>
+        <div class="input-wrapper">
+          <input type="tel" formControlName="contactNumber" class="form-input" placeholder="+91 98765 43210" />
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-sm text-blue-400 mb-4">
+        <strong>Note:</strong> We automatically attached a dummy proof document link for testing purposes.
+      </div>
+
+      <button type="submit" [disabled]="ownerForm.invalid || isSubmitting" class="btn-primary w-full py-3 rounded-xl font-bold transition-all relative overflow-hidden group">
+        <span class="relative z-10 flex items-center justify-center gap-2">
+          <span *ngIf="isSubmitting" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+        </span>
+      </button>
+
+      <p class="text-center text-sm text-[var(--text-secondary)]">
+        By submitting, you agree to our <a href="#" class="text-[var(--primary)] hover:underline">Terms of Partnership</a>
+      </p>
+
+    </form>
+  </div>
+</div>

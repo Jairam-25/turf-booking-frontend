@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const authRoutes: Routes = [
   { path: '', component: WelcomeComponent, canActivate: [guestGuard] },
@@ -54,6 +55,33 @@ export const routes: Routes = [
   {
     path: 'dashboard/turf/:id',
     loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'payment',
+    loadComponent: () => import('./features/dashboard/payment/payment.component').then(m => m.PaymentComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () => import('./features/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'owner-dashboard',
+    loadComponent: () => import('./features/owner-dashboard/owner-dashboard.component').then(m => m.OwnerDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Owner', 'SuperAdmin'] }
+  },
+  {
+    path: 'superadmin',
+    loadComponent: () => import('./features/superadmin-dashboard/superadmin-dashboard.component').then(m => m.SuperadminDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['SuperAdmin'] }
+  },
+  {
+    path: 'become-owner',
+    loadComponent: () => import('./features/become-owner/become-owner.component').then(m => m.BecomeOwnerComponent),
     canActivate: [authGuard]
   }
 ];

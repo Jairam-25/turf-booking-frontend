@@ -13,6 +13,7 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class NavbarComponent implements OnInit {
   isMobileMenuOpen = false;
+  isAnnouncementVisible = true;
 
   constructor(
     private router: Router,

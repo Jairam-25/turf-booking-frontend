@@ -14,6 +14,7 @@ export interface GroupedBooking {
   bookedOn: string;
   startTime: string;
   endTime: string;
+  rawSlots: { startTime: string; endTime: string }[];
   pricePerHour: number;
   totalPrice: number;
   durationHours: number;
@@ -24,26 +25,72 @@ export interface GroupedBooking {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div class="bookings-container fade-in">
+    <div class="bookings-container container-fluid spacing-vertical-24 fade-in">
       <!-- Back Button -->
       <div class="navigation-bar">
         <button class="btn-back" routerLink="/dashboard">
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Dashboard
+          Back to Book Turf
         </button>
       </div>
 
-      <div class="glass header-card">
-        <h1>My Bookings</h1>
-        <p>Manage and track all your premium turf reservations</p>
+      <!-- Analytics & Insights -->
+      <div class="glass header-card" style="margin-bottom: 2rem;">
+        <div class="insights-header">
+          <h1>My Insights</h1>
+          <p>Personalized analytics based on your booking history</p>
+        </div>
+        
+        <div class="insights-grid" *ngIf="bookings().length > 0; else noInsights">
+           <!-- Most Played Arena -->
+           <div class="insight-card">
+              <div class="insight-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Most Played Arena</h4>
+                <h2>{{ mostPlayedArena }}</h2>
+                <span class="trend">{{ mostPlayedCount }} Bookings</span>
+              </div>
+           </div>
+           
+           <!-- Preferred Time Slots -->
+           <div class="insight-card">
+              <div class="insight-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Preferred Time</h4>
+                <h2>{{ preferredTimeSlot }}</h2>
+                <span class="trend">Night Owl Badge</span>
+              </div>
+           </div>
+           
+           <!-- Recommended Turf -->
+           <div class="insight-card highlight">
+              <div class="insight-icon" style="background: rgba(255, 255, 255, 0.2); color: #fff;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Recommended for You</h4>
+                <h2>{{ recommendedTurf }}</h2>
+                <button class="btn-book-now btn-uniform" routerLink="/dashboard">Book Now</button>
+              </div>
+           </div>
+        </div>
+        <ng-template #noInsights>
+          <div class="no-insights">Play more matches to unlock your personalized insights!</div>
+        </ng-template>
       </div>
+
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Booking History</h2>
 
       <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
         <div 
           *ngFor="let booking of bookings()" 
-          class="glass booking-card"
+          class="glass booking-card flex-card-layout"
         >
           <div class="booking-header">
             <div class="turf-info">
@@ -66,14 +113,14 @@ export interface GroupedBooking {
             </div>
           </div>
           
-          <div class="booking-body">
+          <div class="booking-body flex-card-body">
             <div class="info-row">
               <span class="label">Date</span>
               <span class="value">{{ formatBookingDate(booking.startTime) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Time</span>
-              <span class="value">{{ formatTimeRange(booking.startTime, booking.endTime) }}</span>
+              <span class="value">{{ formatTimeBlocks(booking.rawSlots) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Duration</span>
@@ -89,14 +136,21 @@ export interface GroupedBooking {
           </div>
           
           <div class="booking-actions">
-            <button class="btn-cancel" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
+            <button class="btn-share btn-uniform" (click)="shareBooking(booking)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+              </svg>
+              Share
+            </button>
+            <button class="btn-cancel btn-uniform" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
+            <button class="btn-share btn-uniform" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: 1px solid var(--primary);" (click)="openFeedbackModal(booking)">Rate Turf</button>
           </div>
         </div>
 
         <div class="empty-state glass" *ngIf="bookings().length === 0">
           <h3>No bookings found</h3>
           <p>You haven't booked any turfs yet. Start playing today!</p>
-          <button class="btn-premium" routerLink="/dashboard">Book a Turf</button>
+          <button class="btn-premium btn-uniform" routerLink="/dashboard">Book a Turf</button>
         </div>
       </div>
 
@@ -118,11 +172,41 @@ export interface GroupedBooking {
           rows="4">
         </textarea>
         <div class="modal-actions">
-          <button class="btn-secondary" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
-          <button class="btn-cancel-confirm" (click)="confirmCancel()" [disabled]="isCancelling()">
+          <button class="btn-secondary btn-uniform" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
+          <button class="btn-cancel-confirm btn-uniform" (click)="confirmCancel()" [disabled]="isCancelling()">
             <span *ngIf="!isCancelling()">Confirm Cancel</span>
             <span *ngIf="isCancelling()" class="spinner-small"></span>
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal-overlay" *ngIf="isFeedbackModalOpen()">
+      <div class="modal-content glass text-center">
+        <h3>Rate Your Experience</h3>
+        <p>How was your game at <strong>{{ feedbackBooking?.turfName }}</strong>?</p>
+        
+        <div class="star-rating" style="display: flex; justify-content: center; gap: 8px; margin: 1.5rem 0;">
+          <svg *ngFor="let star of [1, 2, 3, 4, 5]" 
+               (click)="feedbackRating = star"
+               [attr.fill]="star <= feedbackRating ? '#fbbf24' : 'none'"
+               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" 
+               style="width: 32px; height: 32px; cursor: pointer; color: #fbbf24; transition: transform 0.2s;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+        </div>
+        
+        <textarea 
+          [(ngModel)]="feedbackText" 
+          placeholder="Leave a quick review... (Optional)" 
+          rows="3"
+          style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white; margin-bottom: 1.5rem;">
+        </textarea>
+        
+        <div class="modal-actions">
+          <button class="btn-secondary btn-uniform" (click)="closeFeedbackModal()">Skip</button>
+          <button class="btn-premium btn-uniform" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
         </div>
       </div>
     </div>
@@ -153,6 +237,19 @@ export interface GroupedBooking {
       font-weight: 600;
       transition: var(--transition-smooth);
     }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
     .btn-back:hover {
       background: rgba(255,255,255,0.05);
       border-color: var(--primary);
@@ -179,6 +276,101 @@ export interface GroupedBooking {
       margin: 0;
       color: var(--text-secondary);
       font-size: 1rem;
+    }
+    
+    /* Insights Grid */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .insight-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: var(--transition-smooth);
+    }
+    .insight-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .insight-card.highlight {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      color: white;
+    }
+    .insight-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .insight-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    .insight-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .insight-info h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
+    }
+    .insight-info h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
+    }
+    .insight-card.highlight .insight-info h4,
+    .insight-card.highlight .insight-info h2 {
+      color: white;
+    }
+    .trend {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .insight-card.highlight .trend {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .btn-book-now {
+      margin-top: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      transition: background 0.2s;
+    }
+    .btn-book-now:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .no-insights {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      border: 1px dashed var(--border-color);
     }
 
     .bookings-list {
@@ -276,6 +468,8 @@ export interface GroupedBooking {
 
     .booking-actions {
       display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
       width: 100%;
     }
     .btn-cancel {
@@ -290,10 +484,42 @@ export interface GroupedBooking {
       transition: var(--transition-smooth);
     }
     .btn-cancel:hover {
-      background: #ef4444;
-      color: white;
-      border-color: #ef4444;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+      background: var(--error-color);
+      color: #ffffff;
+      border-color: var(--error-color);
+    }
+    .btn-share {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      transition: var(--transition-smooth);
+    }
+    .btn-share svg {
+      width: 18px;
+      height: 18px;
+    }
+    .btn-share:hover {
+      background: rgba(var(--primary-rgb), 0.1);
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
+    }
+    
+    .empty-state {
+      padding: 5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      grid-column: 1 / -1;
     }
 
     /* Modal Styles */
@@ -431,6 +657,30 @@ export interface GroupedBooking {
       .header-card h1 {
         font-size: 1.8rem;
       }
+      .insights-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1rem;
+        gap: 1rem;
+      }
+      .insight-card {
+        min-width: 85vw;
+        scroll-snap-align: center;
+        flex-shrink: 0;
+        padding: 1rem;
+      }
+      .insight-icon {
+        width: 44px;
+        height: 44px;
+      }
+      .insight-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .insight-info h2 {
+        font-size: 1.1rem;
+      }
       .booking-card {
         padding: 1.25rem;
         gap: 1.25rem;
@@ -464,6 +714,18 @@ export class BookingsComponent implements OnInit {
   bookingsToCancel: number[] = [];
   cancelReason: string = '';
 
+  // Analytics state
+  mostPlayedArena = 'N/A';
+  mostPlayedCount = 0;
+  preferredTimeSlot = 'N/A';
+  recommendedTurf = 'Green Field Arena';
+  
+  // Feedback state
+  isFeedbackModalOpen = signal(false);
+  feedbackBooking: GroupedBooking | null = null;
+  feedbackRating = 0;
+  feedbackText = '';
+
   constructor(
     private bookingRepository: BookingRepository,
     private notificationService: NotificationService
@@ -477,7 +739,9 @@ export class BookingsComponent implements OnInit {
     this.isLoading.set(true);
     this.bookingRepository.getMyBookings().subscribe({
       next: (data) => {
-        this.bookings.set(this.groupBookings(data));
+        const grouped = this.groupBookings(data);
+        this.bookings.set(grouped);
+        this.calculateAnalytics(grouped);
         this.isLoading.set(false);
       },
       error: () => {
@@ -485,6 +749,57 @@ export class BookingsComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  calculateAnalytics(bookings: GroupedBooking[]) {
+    if (!bookings || bookings.length === 0) return;
+    
+    // 1. Most Played Arena
+    const arenaCounts: Record<string, number> = {};
+    bookings.forEach(b => {
+      arenaCounts[b.turfName] = (arenaCounts[b.turfName] || 0) + b.rawSlots.length;
+    });
+    
+    let maxArena = 'N/A';
+    let maxCount = 0;
+    for (const [arena, count] of Object.entries(arenaCounts)) {
+      if (count > maxCount) {
+        maxCount = count;
+        maxArena = arena;
+      }
+    }
+    this.mostPlayedArena = maxArena;
+    this.mostPlayedCount = maxCount;
+    
+    // 2. Preferred Time Slot
+    const timeCounts: Record<string, number> = {};
+    bookings.forEach(b => {
+      b.rawSlots.forEach(slot => {
+        const hour = new Date(slot.startTime).getHours();
+        if (hour < 12) timeCounts['Morning (6 AM - 12 PM)'] = (timeCounts['Morning (6 AM - 12 PM)'] || 0) + 1;
+        else if (hour < 17) timeCounts['Afternoon (12 PM - 5 PM)'] = (timeCounts['Afternoon (12 PM - 5 PM)'] || 0) + 1;
+        else timeCounts['Evening (5 PM - 11 PM)'] = (timeCounts['Evening (5 PM - 11 PM)'] || 0) + 1;
+      });
+    });
+    
+    let maxTime = 'N/A';
+    let maxTimeCount = 0;
+    for (const [time, count] of Object.entries(timeCounts)) {
+      if (count > maxTimeCount) {
+        maxTimeCount = count;
+        maxTime = time;
+      }
+    }
+    this.preferredTimeSlot = maxTime;
+    
+    // 3. Recommended Turf
+    const allTurfs = ['Spartan Arena', 'Kickoff Turf', 'Galaxy Sports', 'Green Field Arena', 'Urban Pitch'];
+    const unplayedTurfs = allTurfs.filter(t => !arenaCounts[t]);
+    if (unplayedTurfs.length > 0) {
+      this.recommendedTurf = unplayedTurfs[Math.floor(Math.random() * unplayedTurfs.length)];
+    } else {
+      this.recommendedTurf = maxArena;
+    }
   }
 
   groupBookings(flatBookings: Booking[]): GroupedBooking[] {
@@ -518,7 +833,8 @@ export class BookingsComponent implements OnInit {
         existingGroup.bookingIds.push(booking.bookingId);
         existingGroup.totalPrice += booking.price;
         existingGroup.durationHours += 1;
-        // Update startTime and endTime to span the whole selection
+        existingGroup.rawSlots.push({ startTime: booking.startTime, endTime: booking.endTime });
+        // Update startTime and endTime to span the whole selection (still kept for backward compatibility)
         if (new Date(booking.startTime).getTime() < new Date(existingGroup.startTime).getTime()) {
           existingGroup.startTime = booking.startTime;
         }
@@ -533,6 +849,7 @@ export class BookingsComponent implements OnInit {
           bookedOn: booking.bookedOn,
           startTime: booking.startTime,
           endTime: booking.endTime,
+          rawSlots: [{ startTime: booking.startTime, endTime: booking.endTime }],
           pricePerHour: booking.price, // Base hourly rate
           totalPrice: booking.price,
           durationHours: 1
@@ -570,16 +887,35 @@ export class BookingsComponent implements OnInit {
 
     forkJoin(cancelRequests).subscribe({
       next: () => {
-        this.notificationService.success('Booking(s) cancelled successfully');
-        this.closeCancelModal();
-        this.loadBookings(); // Reload to get updated list
+        this.notificationService.success(`Booking cancelled. Reason recorded: ${this.cancelReason}`);
         this.isCancelling.set(false);
+        this.closeCancelModal();
+        this.loadBookings(); // Refresh the list
       },
-      error: (err) => {
-        this.notificationService.error(err.error?.message || 'Failed to cancel booking(s)');
+      error: () => {
+        this.notificationService.error('Failed to cancel the booking. Please try again.');
         this.isCancelling.set(false);
       }
     });
+  }
+
+  // Feedback Methods
+  openFeedbackModal(booking: GroupedBooking) {
+    this.feedbackBooking = booking;
+    this.feedbackRating = 0;
+    this.feedbackText = '';
+    this.isFeedbackModalOpen.set(true);
+  }
+
+  closeFeedbackModal() {
+    this.isFeedbackModalOpen.set(false);
+    this.feedbackBooking = null;
+  }
+
+  submitFeedback() {
+    // Here you would typically call your backend API to save the review
+    this.notificationService.success(`Thank you for rating ${this.feedbackBooking?.turfName} ${this.feedbackRating} stars!`);
+    this.closeFeedbackModal();
   }
 
   encodeURIComponent(val: string): string {
@@ -591,14 +927,59 @@ export class BookingsComponent implements OnInit {
     return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
   }
 
-  formatTimeRange(startTime: string, endTime: string): string {
-    const minStart = new Date(startTime);
-    const maxEnd = new Date(endTime);
+  formatTimeBlocks(slots: { startTime: string; endTime: string }[]): string {
+    if (!slots || slots.length === 0) return '';
+
+    // Sort slots by start time
+    const sortedSlots = [...slots].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
     
+    const mergedBlocks: { start: Date, end: Date, hours: number }[] = [];
+    
+    for (const slot of sortedSlots) {
+      const slotStart = new Date(slot.startTime);
+      const slotEnd = new Date(slot.endTime);
+      
+      const lastBlock = mergedBlocks.length > 0 ? mergedBlocks[mergedBlocks.length - 1] : null;
+      
+      if (lastBlock && lastBlock.end.getTime() === slotStart.getTime()) {
+        // Contiguous slot, extend the last block
+        lastBlock.end = slotEnd;
+        lastBlock.hours += 1;
+      } else {
+        // New block
+        mergedBlocks.push({ start: slotStart, end: slotEnd, hours: 1 });
+      }
+    }
+
+    // Format blocks
     const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
-    const startStr = minStart.toLocaleTimeString([], formatOptions).toLowerCase();
-    const endStr = maxEnd.toLocaleTimeString([], formatOptions).toLowerCase();
+    const parts = mergedBlocks.map(block => {
+      let startStr = block.start.toLocaleTimeString([], formatOptions).toUpperCase();
+      let endStr = block.end.toLocaleTimeString([], formatOptions).toUpperCase();
+      
+      // Clean up ":00" for a cleaner look if desired
+      startStr = startStr.replace(':00', '');
+      endStr = endStr.replace(':00', '');
+
+      if (block.hours === 1) {
+        return `${startStr} (1 hr)`;
+      } else {
+        return `${startStr} to ${endStr} (${block.hours} hr${block.hours > 1 ? 's' : ''})`;
+      }
+    });
     
-    return `${startStr} to ${endStr}`;
+    return parts.join(', ');
+  }
+
+  shareBooking(booking: GroupedBooking) {
+    if (navigator.share) {
+      navigator.share({
+        title: 'TurfXpert Booking',
+        text: `I just booked ${booking.turfName} on TurfXpert for ${this.formatBookingDate(booking.startTime)} at ${this.formatTimeBlocks(booking.rawSlots)}! Care to join me?`,
+        url: window.location.origin
+      }).catch(err => console.error('Share failed:', err));
+    } else {
+      alert('Sharing is not supported on this device/browser.');
+    }
   }
 }

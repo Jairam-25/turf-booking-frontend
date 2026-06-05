@@ -24,6 +24,8 @@ export class TurfRepositoryImpl implements TurfRepository {
     let httpParams = new HttpParams();
     // Default to pageSize 100 to ensure all active turfs are fetched
     httpParams = httpParams.set('pageSize', '100');
+    // Add cache buster to prevent browser caching of GET requests
+    httpParams = httpParams.set('_t', new Date().getTime().toString());
 
     if (params) {
       Object.keys(params).forEach(key => {
@@ -48,6 +50,9 @@ export class TurfRepositoryImpl implements TurfRepository {
             name: item.name || item.Name,
             location: item.location || item.Location,
             pricePerHour: item.pricePerHour || item.PricePerHour,
+            dayTimePrice: item.dayTimePrice || item.DayTimePrice,
+            afternoonPrice: item.afternoonPrice || item.AfternoonPrice,
+            nightTimePrice: item.nightTimePrice || item.NightTimePrice,
             imageUrl: this.mockImages[index % this.mockImages.length],
             rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
             description: 'Experience professional-grade turf with premium facilities and easy booking.',
@@ -75,6 +80,9 @@ export class TurfRepositoryImpl implements TurfRepository {
           name: item.name || item.Name,
           location: item.location || item.Location,
           pricePerHour: item.pricePerHour || item.PricePerHour,
+          dayTimePrice: item.dayTimePrice || item.DayTimePrice,
+          afternoonPrice: item.afternoonPrice || item.AfternoonPrice,
+          nightTimePrice: item.nightTimePrice || item.NightTimePrice,
           imageUrl: this.mockImages[0],
           rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0)
         };
