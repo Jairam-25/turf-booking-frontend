@@ -649,6 +649,22 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       .header-content h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
       
       /* Mobile Search Bar Stacking */
+      
+      /* Horizontal Scroll for Insights */
+      .insights-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1rem;
+        gap: 1rem;
+      }
+      .insight-card {
+        min-width: 85vw;
+        scroll-snap-align: center;
+        flex-shrink: 0;
+        padding: 1rem;
+      }
+      
       .search-bar { 
         flex-direction: column; 
         align-items: stretch; 
@@ -685,6 +701,11 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       .grid-header h2 { justify-content: center; }
       .view-toggles { justify-content: center; }
       .view-btn { flex: 1; justify-content: center; }
+      
+      .turf-grid {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 0.5rem;
+      }
       
       /* Mobile Map */
       .map-wrapper { height: 400px; padding: 0.5rem; border-radius: 16px; }

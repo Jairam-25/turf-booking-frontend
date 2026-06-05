@@ -27,7 +27,7 @@ interface PromoOffer {
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Dashboard
+          Back to Book Turf
         </button>
       </div>
 
@@ -130,6 +130,19 @@ interface PromoOffer {
       cursor: pointer;
       font-weight: 600;
       transition: var(--transition-smooth);
+    }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
     }
     .btn-back:hover {
       background: rgba(255,255,255,0.05);
@@ -364,6 +377,7 @@ interface PromoOffer {
     :host-context(body[data-theme="light"]) .tab-btn {
       background: rgba(0, 0, 0, 0.02);
       border-color: rgba(0, 0, 0, 0.06);
+      color: var(--text-primary);
     }
 
     :host-context(body[data-theme="light"]) .tab-btn:hover {
@@ -372,9 +386,9 @@ interface PromoOffer {
     }
 
     :host-context(body[data-theme="light"]) .tab-btn.active {
-      background: var(--primary);
-      color: var(--on-primary);
-      border-color: var(--primary);
+      background: var(--primary) !important;
+      color: var(--on-primary) !important;
+      border-color: var(--primary) !important;
     }
 
     .code-box {

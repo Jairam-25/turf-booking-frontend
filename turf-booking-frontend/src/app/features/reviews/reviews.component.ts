@@ -30,7 +30,7 @@ interface FeaturedTestimonial {
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Dashboard
+          Back to Book Turf
         </button>
       </div>
 
@@ -190,6 +190,19 @@ interface FeaturedTestimonial {
       cursor: pointer;
       font-weight: 600;
       transition: var(--transition-smooth);
+    }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
     }
     .btn-back:hover {
       background: rgba(255,255,255,0.05);

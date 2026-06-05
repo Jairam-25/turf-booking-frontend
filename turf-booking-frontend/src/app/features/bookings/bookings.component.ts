@@ -32,7 +32,7 @@ export interface GroupedBooking {
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Dashboard
+          Back to Book Turf
         </button>
       </div>
 
@@ -236,6 +236,19 @@ export interface GroupedBooking {
       cursor: pointer;
       font-weight: 600;
       transition: var(--transition-smooth);
+    }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
     }
     .btn-back:hover {
       background: rgba(255,255,255,0.05);
@@ -643,6 +656,30 @@ export interface GroupedBooking {
       }
       .header-card h1 {
         font-size: 1.8rem;
+      }
+      .insights-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1rem;
+        gap: 1rem;
+      }
+      .insight-card {
+        min-width: 85vw;
+        scroll-snap-align: center;
+        flex-shrink: 0;
+        padding: 1rem;
+      }
+      .insight-icon {
+        width: 44px;
+        height: 44px;
+      }
+      .insight-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .insight-info h2 {
+        font-size: 1.1rem;
       }
       .booking-card {
         padding: 1.25rem;
