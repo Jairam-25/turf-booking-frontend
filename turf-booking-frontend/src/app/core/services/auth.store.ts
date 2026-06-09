@@ -37,5 +37,14 @@ export class AuthStore {
     localStorage.removeItem('user');
   }
 
+  updateUser(updates: Partial<User>) {
+    const currentUser = this._user();
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...updates };
+      this._user.set(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  }
+
   // Optional: Add logic to fetch user profile if token exists but user is null
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../core/services/notification.service';
 import { Chart, registerables } from 'chart.js';
 
@@ -9,7 +10,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-superadmin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './superadmin-dashboard.component.html',
   styleUrls: ['./superadmin-dashboard.component.css']
 })
@@ -18,7 +19,7 @@ export class SuperadminDashboardComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   isOverlayActive = signal<boolean>(true);
-  activeTab = signal<'overview' | 'users' | 'turfs' | 'requests'>('overview');
+  activeTab = signal<'overview' | 'users' | 'turfs' | 'requests' | 'verifications'>('overview');
   
   stats = {
     users: 0,
@@ -29,10 +30,25 @@ export class SuperadminDashboardComponent implements OnInit {
   };
 
   ownerRequests: any[] = [];
+  verifications = signal<any[]>([]);
   radialChartInstance: any = null;
 
+  // Rejection modal state
+  isRejectionModalOpen = signal<boolean>(false);
+  selectedOwnerId = signal<number | null>(null);
+  rejectionReason = '';
+
+  // Edit modal state
+  isEditModalOpen = signal<boolean>(false);
+  editOwnerData = { ownerId: 0, fullName: '', mobileNumber: '', email: '', address: '' };
+
   ngOnInit(): void {
-    // Load real metrics
+    this.loadStats();
+    this.loadOwnerRequests();
+    this.loadVerifications();
+  }
+
+  loadStats() {
     this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/dashboard-metrics').subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
@@ -43,15 +59,15 @@ export class SuperadminDashboardComponent implements OnInit {
           bookings: data.bookings || data.Bookings || 0,
           revenue: data.revenue || data.Revenue || 0
         };
-        // Initialize chart with real data if on overview tab
         if (this.activeTab() === 'overview') {
           setTimeout(() => this.initRadialChart(), 100);
         }
       },
       error: () => this.notificationService.error('Failed to load system metrics')
     });
+  }
 
-    // Load owner requests
+  loadOwnerRequests() {
     this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/owner-requests').subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
@@ -60,7 +76,7 @@ export class SuperadminDashboardComponent implements OnInit {
           this.isOverlayActive.set(false);
         }, 1500);
       },
-      error: (err) => {
+      error: () => {
         this.notificationService.error('Failed to load owner requests');
         setTimeout(() => {
           this.isOverlayActive.set(false);
@@ -69,7 +85,17 @@ export class SuperadminDashboardComponent implements OnInit {
     });
   }
 
-  setTab(tab: 'overview' | 'users' | 'turfs' | 'requests') {
+  loadVerifications() {
+    this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/verifications').subscribe({
+      next: (res) => {
+        const data = res.data || res.Data || res;
+        this.verifications.set(data || []);
+      },
+      error: () => this.notificationService.error('Failed to load owner verifications')
+    });
+  }
+
+  setTab(tab: 'overview' | 'users' | 'turfs' | 'requests' | 'verifications') {
     this.activeTab.set(tab);
     if (tab === 'overview') {
       setTimeout(() => this.initRadialChart(), 100);
@@ -84,7 +110,6 @@ export class SuperadminDashboardComponent implements OnInit {
     const ctx = document.getElementById('radialChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    // Background track color (subtle gray)
     const bgTrack = 'rgba(150, 150, 150, 0.1)';
 
     this.radialChartInstance = new Chart(ctx, {
@@ -93,7 +118,6 @@ export class SuperadminDashboardComponent implements OnInit {
         labels: ['Users', 'Turfs', 'Owners'],
         datasets: [
           {
-            // Inner Ring: Owners (Goal: 50)
             data: [this.stats.owners, 50 - this.stats.owners],
             backgroundColor: ['#eab308', bgTrack],
             borderWidth: 0,
@@ -101,7 +125,6 @@ export class SuperadminDashboardComponent implements OnInit {
             weight: 1
           },
           {
-            // Middle Ring: Turfs (Goal: 100)
             data: [this.stats.turfs, 100 - this.stats.turfs],
             backgroundColor: ['#ec4899', bgTrack],
             borderWidth: 0,
@@ -109,7 +132,6 @@ export class SuperadminDashboardComponent implements OnInit {
             weight: 1
           },
           {
-            // Outer Ring: Users (Goal: 2000)
             data: [this.stats.users, 2000 - this.stats.users],
             backgroundColor: ['#a855f7', bgTrack],
             borderWidth: 0,
@@ -121,7 +143,7 @@ export class SuperadminDashboardComponent implements OnInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '45%', // Makes rings appropriately thick
+        cutout: '45%',
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -146,10 +168,11 @@ export class SuperadminDashboardComponent implements OnInit {
 
   approveRequest(id: number) {
     this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/approve-owner', { requestId: id }).subscribe({
-      next: (res) => {
+      next: () => {
         const req = this.ownerRequests.find(r => r.id === id);
         if (req) req.status = 'Approved';
         this.notificationService.success('Owner request approved successfully!');
+        this.loadStats();
       },
       error: (err) => {
         this.notificationService.error(err.error?.Message || 'Failed to approve request');
@@ -160,5 +183,106 @@ export class SuperadminDashboardComponent implements OnInit {
   rejectRequest(id: number) {
     const req = this.ownerRequests.find(r => r.id === id);
     if (req) req.status = 'Rejected';
+  }
+
+  // Verification actions
+  approveVerification(ownerId: number, turfId?: number) {
+    this.submitVerificationStatus(ownerId, 'Approved', '', turfId);
+  }
+
+  selectedTurfId = signal<number | null>(null);
+
+  openRejectionModal(ownerId: number, turfId?: number) {
+    this.selectedOwnerId.set(ownerId);
+    this.selectedTurfId.set(turfId || null);
+    this.rejectionReason = '';
+    this.isRejectionModalOpen.set(true);
+  }
+
+  closeRejectionModal() {
+    this.isRejectionModalOpen.set(false);
+    this.selectedOwnerId.set(null);
+    this.selectedTurfId.set(null);
+  }
+
+  submitRejection() {
+    if (!this.rejectionReason.trim()) {
+      this.notificationService.error('Please enter a rejection reason.');
+      return;
+    }
+    const ownerId = this.selectedOwnerId();
+    const turfId = this.selectedTurfId();
+    if (ownerId) {
+      this.submitVerificationStatus(ownerId, 'Rejected', this.rejectionReason, turfId || undefined);
+      this.closeRejectionModal();
+    }
+  }
+
+  submitVerificationStatus(ownerId: number, status: string, reason: string = '', turfId?: number) {
+    const payload = {
+      ownerId: ownerId,
+      turfId: turfId,
+      status: status,
+      rejectionReason: reason
+    };
+
+    this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/verify', payload).subscribe({
+      next: () => {
+        this.notificationService.success(`Verification set to '${status}' successfully.`);
+        this.loadVerifications();
+        this.loadStats();
+      },
+      error: (err) => {
+        this.notificationService.error(err.error?.Message || 'Failed to update verification status');
+      }
+    });
+  }
+
+  openEditModal(owner: any) {
+    this.editOwnerData = {
+      ownerId: owner.ownerId,
+      fullName: owner.fullName || '',
+      mobileNumber: owner.mobileNumber || '',
+      email: owner.email || '',
+      address: owner.address || ''
+    };
+    this.isEditModalOpen.set(true);
+  }
+
+  closeEditModal() {
+    this.isEditModalOpen.set(false);
+  }
+
+  submitEdit() {
+    if (!this.editOwnerData.fullName.trim() || !this.editOwnerData.email.trim()) {
+      this.notificationService.error('Full Name and Email are required.');
+      return;
+    }
+
+    this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/edit-owner', this.editOwnerData).subscribe({
+      next: () => {
+        this.notificationService.success('Owner information updated successfully.');
+        this.loadVerifications();
+        this.closeEditModal();
+      },
+      error: (err) => {
+        this.notificationService.error(err.error?.Message || 'Failed to update owner details');
+      }
+    });
+  }
+
+  removeOwner(ownerId: number) {
+    if (confirm('Are you sure you want to remove this owner? All associated turf listings, documents, and payments will be permanently deleted.')) {
+      this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/remove-owner', { ownerId }).subscribe({
+        next: () => {
+          this.notificationService.success('Owner and associated turf removed successfully.');
+          this.loadVerifications();
+          this.loadStats();
+        },
+        error: (err) => {
+          this.notificationService.error(err.error?.Message || 'Failed to remove owner');
+        }
+      });
+    }
   }
 }

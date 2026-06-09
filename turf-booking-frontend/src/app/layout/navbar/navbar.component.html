@@ -94,7 +94,7 @@
         Welcome, <strong>{{ authStore.user()?.name }}</strong>
       </span>
       <button
-        (click)="logout()"
+        (click)="openLogoutConfirm()"
         class="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-[8px] text-red-400 font-semibold text-[13px] transition-all duration-200 hover:bg-red-500/20"
       >
         Logout
@@ -146,6 +146,30 @@
   *ngIf="isMobileMenuOpen" 
   class="fixed inset-0 z-[1010] bg-black/50 backdrop-blur-sm transition-opacity" 
   (click)="toggleMobileMenu()">
+</div>
+
+<!-- Global Logout Confirmation Modal -->
+<div *ngIf="showLogoutConfirm" class="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+  <div class="glass max-w-sm w-full p-6 rounded-2xl border border-slate-700/50 shadow-2xl fade-in text-center">
+    <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+      </svg>
+    </div>
+    <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">Ready to Leave?</h3>
+    <p class="text-[var(--text-secondary)] text-sm mb-6 leading-relaxed">
+      You are about to log out of your TurfXpert session. We hope to see you back on the field soon!
+    </p>
+    
+    <div class="flex gap-3 w-full">
+      <button (click)="cancelLogout()" class="flex-1 py-2.5 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:bg-[var(--surface-color)] transition-colors">
+        Cancel
+      </button>
+      <button (click)="confirmLogout()" class="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-bold hover:bg-red-500 transition-colors shadow-lg shadow-red-600/20">
+        Yes, Logout
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Slide-in Drawer -->
@@ -289,7 +313,7 @@
           Theme
         </button>
         <button
-          (click)="logout(); toggleMobileMenu()"
+          (click)="openLogoutConfirm()"
           class="flex items-center justify-center gap-2 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-red-500 text-sm font-medium transition-colors"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>

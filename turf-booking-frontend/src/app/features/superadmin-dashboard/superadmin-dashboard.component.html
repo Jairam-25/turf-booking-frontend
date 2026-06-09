@@ -18,11 +18,12 @@
     <aside class="dashboard-sidebar glass">
       <nav class="sidebar-nav">
         <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
-        <button class="sidebar-link" [class.active]="activeTab() === 'requests'" (click)="setTab('requests')">Owner Requests</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'verifications'" (click)="setTab('verifications')">Owner Verifications</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'requests'" (click)="setTab('requests')">Legacy Requests</button>
       </nav>
     </aside>
 
-    <main class="dashboard-content">
+    <main class="dashboard-content text-white">
       <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
         <h2 class="section-title">System Metrics</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
@@ -50,14 +51,12 @@
 
         <!-- System Capacity Radial Chart Card -->
         <div class="glass p-8 rounded-[1.5rem] mt-8 flex flex-col md:flex-row items-center gap-8 shadow-md border border-[rgba(150,150,150,0.1)] animate-fade-in-up">
-          <!-- Left side: Legends and text -->
           <div class="flex-1 flex flex-col justify-center px-4">
-            <h3 class="font-bold text-xl mb-1 fade-in animation-delay-100" style="color: var(--text-primary)">System Capacity Overview</h3>
-            <p class="text-sm mb-8 fade-in animation-delay-200" style="color: var(--text-secondary)">Current vs Maximum Target Capacity</p>
+            <h3 class="font-bold text-xl mb-1" style="color: var(--text-primary)">System Capacity Overview</h3>
+            <p class="text-sm mb-8" style="color: var(--text-secondary)">Current vs Maximum Target Capacity</p>
             
             <div class="flex flex-col gap-6">
-              <!-- Users Dataset -->
-              <div class="fade-in animation-delay-300">
+              <div>
                 <div class="flex items-baseline gap-1">
                   <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</span>
                   <span class="text-lg font-medium" style="color: var(--text-secondary)">/2000</span>
@@ -68,8 +67,7 @@
                 </div>
               </div>
 
-              <!-- Turfs Dataset -->
-              <div class="fade-in animation-delay-400">
+              <div>
                 <div class="flex items-baseline gap-1">
                   <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</span>
                   <span class="text-lg font-medium" style="color: var(--text-secondary)">/100</span>
@@ -80,8 +78,7 @@
                 </div>
               </div>
 
-              <!-- Owners Dataset -->
-              <div class="fade-in animation-delay-500">
+              <div>
                 <div class="flex items-baseline gap-1">
                   <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</span>
                   <span class="text-lg font-medium" style="color: var(--text-secondary)">/50</span>
@@ -94,15 +91,125 @@
             </div>
           </div>
           
-          <!-- Right side: Chart Canvas -->
-          <div class="w-full md:w-[350px] h-[350px] relative flex justify-center items-center scale-in animation-delay-500">
+          <div class="w-full md:w-[350px] h-[350px] relative flex justify-center items-center">
             <canvas id="radialChart"></canvas>
           </div>
         </div>
       </div>
 
+      <!-- New Verifications Tab -->
+      <div *ngIf="activeTab() === 'verifications'" class="tab-content fade-in space-y-6">
+        <h2 class="section-title text-2xl font-bold">Owner & Turf Verification Requests</h2>
+
+        <div class="space-y-6">
+          <div *ngFor="let ver of verifications()" class="glass p-6 rounded-2xl border border-slate-800/80 space-y-4">
+            <div class="flex flex-wrap justify-between items-start gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="text-xl font-bold text-white">{{ ver.fullName }}</h3>
+                <p class="text-xs text-slate-400 mt-1">UserId: {{ ver.userId }} | Email: {{ ver.email }} | Mob: {{ ver.mobileNumber }}</p>
+                <p class="text-xs text-slate-400">Address: {{ ver.address }}</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="status-badge px-3 py-1 rounded-full text-xs font-semibold" 
+                      [ngClass]="{
+                        'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': ver.status === 'Approved',
+                        'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': ver.status === 'Pending Verification' || ver.status === 'Under Review',
+                        'bg-red-500/10 text-red-400 border border-red-500/20': ver.status === 'Rejected'
+                      }">
+                  {{ ver.status }}
+                </span>
+                <span class="text-xs text-slate-500">Registered: {{ ver.createdAt }}</span>
+              </div>
+            </div>
+
+            <!-- Turf Details -->
+            <div *ngIf="ver.turf" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              <div class="space-y-2.5">
+                <h4 class="font-bold text-slate-300 text-lg">Turf Details: {{ ver.turf.turfName }}</h4>
+                <p class="text-sm text-slate-400"><strong>Type:</strong> {{ ver.turf.turfType }}</p>
+                <p class="text-sm text-slate-400"><strong>Location Contact:</strong> {{ ver.turf.contactNumber }}</p>
+                <p class="text-sm text-slate-400"><strong>Pincode / State:</strong> {{ ver.turf.pincode }} ({{ ver.turf.state }}, {{ ver.turf.city }})</p>
+                <p class="text-sm text-slate-400"><strong>Full Address:</strong> {{ ver.turf.address }}</p>
+                <p class="text-sm text-slate-400"><strong>Coordinates/Map:</strong> <a [href]="ver.turf.googleMapLocation" target="_blank" class="text-blue-400 hover:underline">View Google Maps ↗</a></p>
+                <p class="text-sm text-slate-400"><strong>Description:</strong> {{ ver.turf.description }}</p>
+              </div>
+
+              <!-- Media Preview -->
+              <div class="space-y-4">
+                <!-- Documents list -->
+                <div>
+                  <h5 class="text-xs uppercase font-bold text-slate-500 mb-2 tracking-wider">Uploaded Documents</h5>
+                  <div class="flex flex-col gap-2">
+                    <a *ngFor="let doc of ver.turf.documents" 
+                       [href]="'https://localhost:7273' + doc.fileUrl" 
+                       target="_blank" 
+                       class="text-xs bg-slate-900/60 hover:bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between text-blue-400 transition-colors">
+                      <span>{{ doc.documentType }}</span>
+                      <span class="text-[10px] text-slate-500 font-bold">View File ↗</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Images list -->
+                <div>
+                  <h5 class="text-xs uppercase font-bold text-slate-500 mb-2 tracking-wider">Turf Images</h5>
+                  <div class="flex gap-3 overflow-x-auto pb-2">
+                    <a *ngFor="let img of ver.turf.images" 
+                       [href]="'https://localhost:7273' + img" 
+                       target="_blank" 
+                       class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border border-slate-700 bg-slate-800">
+                      <img [src]="'https://localhost:7273' + img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!ver.turf" class="text-sm text-slate-500 italic py-2">
+              Payment cleared, but turf details and documents package not yet submitted.
+            </div>
+
+            <!-- Action buttons for Pending Verification -->
+            <div *ngIf="ver.status === 'Pending Verification' || ver.status === 'Under Review'" class="flex justify-end gap-3 pt-4 border-t border-slate-800/60">
+              <button (click)="approveVerification(ver.ownerId, ver.turf?.turfId)" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors">
+                Approve & Activate Owner
+              </button>
+              <button (click)="openRejectionModal(ver.ownerId, ver.turf?.turfId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
+                Reject Listing
+              </button>
+            </div>
+
+            <!-- Action buttons for Approved Owner -->
+            <div *ngIf="ver.status === 'Approved'" class="flex justify-end gap-3 pt-4 border-t border-slate-800/60">
+              <button (click)="openEditModal(ver)" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-bold transition-colors">
+                Edit Owner Info
+              </button>
+              <button (click)="removeOwner(ver.ownerId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
+                Remove Owner
+              </button>
+            </div>
+            
+            <!-- Rejection reason if already rejected -->
+            <div *ngIf="ver.status === 'Rejected'" class="mt-2">
+              <div *ngIf="ver.rejectionReason" class="bg-red-500/5 border border-red-500/10 text-red-400 p-3 rounded-lg text-xs mb-3">
+                <strong>Rejection Reason:</strong> "{{ ver.rejectionReason }}"
+              </div>
+              <div class="flex justify-end pt-2">
+                <button (click)="removeOwner(ver.ownerId)" class="px-5 py-2 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 rounded-lg text-sm font-bold transition-colors">
+                  Remove Owner (Reset Account)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="verifications().length === 0" class="text-center py-12 text-slate-500 font-semibold">
+            No owner verification packages found.
+          </div>
+        </div>
+      </div>
+
       <div *ngIf="activeTab() === 'requests'" class="tab-content fade-in">
-        <h2 class="section-title">Pending Owner Requests</h2>
+        <h2 class="section-title">Pending Owner Requests (Legacy)</h2>
         <div class="table-container glass overflow-x-auto">
           <table class="data-table w-full text-left">
             <thead>
@@ -116,11 +223,11 @@
                 <td>{{ req.user }}</td>
                 <td>{{ req.business }}</td>
                 <td>{{ req.turf }}</td>
-                <td><span class="status-badge" [class.status-confirmed]="req.status === 'Approved'" [class.status-pending]="req.status === 'Pending'" [class.status-cancelled]="req.status === 'Rejected'">{{ req.status }}</span></td>
+                <td><span class="status-badge px-2 py-0.5 rounded text-xs" [class.status-confirmed]="req.status === 'Approved'" [class.status-pending]="req.status === 'Pending'" [class.status-cancelled]="req.status === 'Rejected'">{{ req.status }}</span></td>
                 <td>
                   <div class="flex gap-2">
-                    <button *ngIf="req.status === 'Pending'" class="action-btn text-green-400" (click)="approveRequest(req.id)">Approve</button>
-                    <button *ngIf="req.status === 'Pending'" class="action-btn text-red-400" (click)="rejectRequest(req.id)">Reject</button>
+                    <button *ngIf="req.status === 'Pending'" class="action-btn text-green-400 hover:underline" (click)="approveRequest(req.id)">Approve</button>
+                    <button *ngIf="req.status === 'Pending'" class="action-btn text-red-400 hover:underline" (click)="rejectRequest(req.id)">Reject</button>
                   </div>
                 </td>
               </tr>
@@ -129,5 +236,60 @@
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- Rejection Reason Modal -->
+<div *ngIf="isRejectionModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+  <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-700 fade-in text-white space-y-4 shadow-2xl">
+    <h3 class="text-lg font-bold text-slate-200">Reject Verification Application</h3>
+    <p class="text-xs text-slate-400 leading-relaxed">Please provide a clear explanation. The owner will see this statement and can re-upload corrections accordingly.</p>
+    
+    <textarea [(ngModel)]="rejectionReason" rows="4" class="form-input w-full bg-slate-900 border-slate-800 text-white rounded-lg p-3 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20" placeholder="e.g. Business registration is expired, or ID proof is blurry. Please re-upload."></textarea>
+    
+    <div class="flex justify-end gap-3 pt-2">
+      <button (click)="closeRejectionModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-bold text-slate-300 transition-colors">
+        Cancel
+      </button>
+      <button (click)="submitRejection()" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors">
+        Submit Rejection
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Owner Modal -->
+<div *ngIf="isEditModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+  <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-700 fade-in text-white space-y-4 shadow-2xl">
+    <h3 class="text-lg font-bold text-slate-200">Edit Owner Information</h3>
+    <p class="text-xs text-slate-400 leading-relaxed">Modify owner contact information in the system.</p>
+    
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1 block">Full Name</label>
+        <input [(ngModel)]="editOwnerData.fullName" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1 block">Mobile Number</label>
+        <input [(ngModel)]="editOwnerData.mobileNumber" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1 block">Email Address</label>
+        <input [(ngModel)]="editOwnerData.email" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1 block">Address</label>
+        <input [(ngModel)]="editOwnerData.address" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20" />
+      </div>
+    </div>
+    
+    <div class="flex justify-end gap-3 pt-2">
+      <button (click)="closeEditModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-bold text-slate-300 transition-colors">
+        Cancel
+      </button>
+      <button (click)="submitEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold text-white transition-colors">
+        Save Changes
+      </button>
+    </div>
   </div>
 </div>

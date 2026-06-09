@@ -4,13 +4,16 @@ import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../../core/services/notification.service';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
+import { Router, RouterModule } from '@angular/router';
+import { AuthStore } from '../../core/services/auth.store';
+import { ChangeDetectorRef } from '@angular/core';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-owner-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './owner-dashboard.component.html',
   styleUrls: ['./owner-dashboard.component.css']
 })
@@ -19,19 +22,53 @@ export class OwnerDashboardComponent implements OnInit {
   activeTab = signal<'overview' | 'bookings' | 'settings' | 'offline'>('overview');
   turfName = signal<string>('Loading...');
   turfId = signal<number | null>(null);
+  isDropdownOpen = signal<boolean>(false);
   stats = { revenue: 0, bookings: 0, utilization: 0, pending: 0 };
   recentBookings: any[] = [];
   availableSlots: any[] = [];
+  ownedTurfs = signal<any[]>([]);
   selectedDate: string = new Date().toISOString().split('T')[0];
   todayDate: string = new Date().toISOString().split('T')[0];
 
+  // Logout properties
+  isLogoutModalOpen = signal<boolean>(false);
+  otpSent = signal<boolean>(false);
+  isSendingOtp = signal<boolean>(false);
+  isVerifyingOtp = signal<boolean>(false);
+  remainingDays = signal<number>(365);
+  maskedEmail = signal<string>('');
+  logoutOtpCode = '';
+
+  // Slot Filters
+  statusFilter = signal<'all' | 'available' | 'booked' | 'unavailable'>('all');
+  timeFilter = signal<'all' | 'day' | 'afternoon' | 'night'>('all');
+
+  // Cancel Modal State
+  isCancelModalOpen = signal(false);
+  isCancelling = signal(false);
+  cancelReason = '';
+  bookingToCancelId: string | null = null;
+
+  // Image State
+  imageUrl = signal<string | null>(null);
+  isUploadingImage = signal<boolean>(false);
+
   get filteredSlots() {
     return this.availableSlots.filter(s => {
-      const st = s.StartTime || s.startTime;
-      if (!st) return false;
-      const slotDate = new Date(st).toISOString().split('T')[0];
-      return slotDate === this.selectedDate;
-    }).sort((a, b) => new Date(a.StartTime || a.startTime).getTime() - new Date(b.StartTime || b.startTime).getTime());
+      let matchesStatus = true;
+      let matchesTime = true;
+
+      const isBooked = s.IsBooked || s.isBooked;
+      if (this.statusFilter() === 'available') matchesStatus = !isBooked;
+      if (this.statusFilter() === 'booked') matchesStatus = isBooked;
+
+      const timeSlotStr = (s.TimeSlot || s.timeSlot || '').toLowerCase();
+      if (this.timeFilter() !== 'all') {
+        matchesTime = timeSlotStr.includes(this.timeFilter());
+      }
+
+      return matchesStatus && matchesTime;
+    });
   }
 
   isSlotPast(slot: any): boolean {
@@ -43,6 +80,9 @@ export class OwnerDashboardComponent implements OnInit {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
   private notificationService = inject(NotificationService);
+  private authStore = inject(AuthStore);
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   // New mock data properties for analytics
   analyticsStats = {
@@ -66,13 +106,34 @@ export class OwnerDashboardComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.http.get<any>('https://localhost:7273/api/v1/owner/dashboard').subscribe({
+    this.loadDashboardData();
+  }
+
+  loadDashboardData(tId?: number) {
+    this.isOverlayActive.set(true);
+    let url = 'https://localhost:7273/api/v1/owner/dashboard';
+    if (tId) {
+      url += `?turfId=${tId}`;
+    }
+
+    this.http.get<any>(url).subscribe({
       next: (res: any) => {
         const data = res.data || res.Data || res.value || res.Value || res;
         this.turfName.set(data.TurfName || data.turfName);
         this.turfId.set(data.TurfId || data.turfId);
+        
+        const allTurfs = data.OwnedTurfs || data.ownedTurfs;
+        if (allTurfs && Array.isArray(allTurfs)) {
+          this.ownedTurfs.set(allTurfs);
+        }
+
         this.stats = data.Stats || data.stats;
         this.recentBookings = data.RecentBookings || data.recentBookings;
+        
+        const remaining = data.RemainingDays || data.remainingDays;
+        if (remaining !== undefined) {
+          this.remainingDays.set(remaining);
+        }
         
         const analytics = data.Analytics || data.analytics;
         if (analytics) {
@@ -85,6 +146,8 @@ export class OwnerDashboardComponent implements OnInit {
             unassigned: analytics.Unassigned || analytics.unassigned || 0
           };
         }
+        
+        this.imageUrl.set(data.ImageUrl || data.imageUrl || null);
         
         this.settingsForm.patchValue({
           turfName: this.turfName(),
@@ -112,6 +175,19 @@ export class OwnerDashboardComponent implements OnInit {
         this.isOverlayActive.set(false);
       }
     });
+  }
+
+  switchTurfModel(tId: any) {
+    const id = parseInt(tId, 10);
+    if (!isNaN(id)) {
+      this.isDropdownOpen.set(false);
+      this.turfName.set('Loading...');
+      this.loadDashboardData(id);
+    }
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen.update(v => !v);
   }
 
   setTab(tab: 'overview' | 'bookings' | 'settings' | 'offline') {
@@ -170,18 +246,43 @@ export class OwnerDashboardComponent implements OnInit {
     this.chartInstances.forEach(chart => chart.destroy());
     this.chartInstances = [];
 
+    const timeLabels = ['6 AM', '8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', '12 AM'];
+    const onlineData = new Array(10).fill(0);
+    const offlineData = new Array(10).fill(0);
+
+    let onlineTotal = 0;
+    let offlineTotal = 0;
+
+    this.recentBookings.forEach(booking => {
+      const timeStr = booking.Time || booking.time;
+      if (timeStr) {
+        const startHour = parseInt(timeStr.split(':')[0], 10);
+        let index = Math.floor((startHour - 6) / 2);
+        if (index < 0) index = 0;
+        if (index > 9) index = 9;
+        
+        if (booking.User === 'Offline Booking') {
+          offlineData[index]++;
+          offlineTotal++;
+        } else {
+          onlineData[index]++;
+          onlineTotal++;
+        }
+      }
+    });
+
     // Main Chart: Online vs Offline Bookings (Line + Bar)
     const mainCtx = document.getElementById('mainChart') as HTMLCanvasElement;
     if (mainCtx) {
       const mainChart = new Chart(mainCtx, {
         type: 'bar',
         data: {
-          labels: ['6 AM', '8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', '12 AM'],
+          labels: timeLabels,
           datasets: [
             {
               type: 'line',
               label: 'Online Bookings',
-              data: [5, 10, 25, 40, 35, 50, 80, 60, 45, 15],
+              data: onlineData,
               borderColor: '#7b39fc',
               backgroundColor: '#7b39fc',
               borderWidth: 2,
@@ -194,7 +295,7 @@ export class OwnerDashboardComponent implements OnInit {
             {
               type: 'bar',
               label: 'Offline Bookings',
-              data: [10, 20, 15, 30, 25, 45, 60, 50, 40, 10],
+              data: offlineData,
               backgroundColor: '#22c55e',
               borderRadius: 4,
               barPercentage: 0.5
@@ -219,12 +320,15 @@ export class OwnerDashboardComponent implements OnInit {
     // Donut Chart 1: Traffic Analysis
     const trafficCtx = document.getElementById('trafficChart') as HTMLCanvasElement;
     if (trafficCtx) {
+      const totalWeb = Math.round(onlineTotal * 0.6);
+      const totalApp = onlineTotal - totalWeb;
+
       const trafficChart = new Chart(trafficCtx, {
         type: 'doughnut',
         data: {
           labels: ['Web', 'App', 'Direct Walk-in', 'Partners'],
           datasets: [{
-            data: [435, 251, 138, 85],
+            data: [totalWeb, totalApp, offlineTotal, 0],
             backgroundColor: ['#7b39fc', '#20c997', '#ffc107', '#dc3545'],
             borderWidth: 0,
             hoverOffset: 4
@@ -303,9 +407,50 @@ export class OwnerDashboardComponent implements OnInit {
     if (b) b.Status = b.status = 'Confirmed';
   }
 
-  cancelBooking(id: string) {
-    const b = this.recentBookings.find(x => x.Id === id || x.id === id);
-    if (b) b.Status = b.status = 'Cancelled';
+  openCancelModal(id: string) {
+    this.bookingToCancelId = id;
+    this.cancelReason = '';
+    this.isCancelModalOpen.set(true);
+  }
+
+  closeCancelModal() {
+    this.isCancelModalOpen.set(false);
+    this.bookingToCancelId = null;
+    this.cancelReason = '';
+  }
+
+  confirmCancel() {
+    if (!this.bookingToCancelId) return;
+
+    if (!this.cancelReason.trim()) {
+      this.notificationService.error('A cancellation reason is required.');
+      return;
+    }
+
+    const id = this.bookingToCancelId;
+    const bookingIdNum = parseInt(id.replace('B-', ''), 10);
+    this.isCancelling.set(true);
+
+    this.http.delete(`https://localhost:7273/api/v1/owner/booking/${bookingIdNum}?reason=${encodeURIComponent(this.cancelReason)}`).subscribe({
+      next: () => {
+        const b = this.recentBookings.find(x => x.Id === id || x.id === id);
+        if (b) {
+          b.Status = 'Cancelled';
+          b.status = 'Cancelled';
+        }
+        this.notificationService.success('Booking cancelled successfully.');
+        this.cdr.detectChanges();
+        
+        // Refresh slots so the UI shows the slot as Available again
+        this.loadAvailableSlots();
+        this.isCancelling.set(false);
+        this.closeCancelModal();
+      },
+      error: (err) => {
+        this.notificationService.error(err.error?.Message || err.error?.message || 'Failed to cancel booking.');
+        this.isCancelling.set(false);
+      }
+    });
   }
 
   exportReport() {
@@ -342,17 +487,103 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
   saveSettings() {
-    if (this.settingsForm.invalid) return;
+    if (this.settingsForm.invalid) {
+      this.notificationService.error('Please fill all required settings properly.');
+      return;
+    }
+    const payload = {
+      ...this.settingsForm.value,
+      imageUrl: this.imageUrl()
+    };
+    this.http.post('https://localhost:7273/api/v1/owner/settings', payload).subscribe({
+      next: () => this.notificationService.success('Settings updated successfully.'),
+      error: () => this.notificationService.error('Failed to update settings.')
+    });
+  }
+
+  onImageSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    this.isUploadingImage.set(true);
+    this.cdr.detectChanges();
     
-    const payload = this.settingsForm.value;
-    
-    this.http.post<any>('https://localhost:7273/api/v1/owner/settings', payload).subscribe({
+    // Clear input so same file can be selected again
+    event.target.value = '';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.http.post<any>('https://localhost:7273/api/v1/Upload', formData).subscribe({
       next: (res) => {
-        this.notificationService.success('Turf settings updated successfully!');
-        if (payload.turfName) this.turfName.set(payload.turfName);
+        this.imageUrl.set(res.url);
+        this.notificationService.success('Image uploaded temporarily. Click Save Changes to apply.');
+        this.isUploadingImage.set(false);
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        this.notificationService.error('Failed to update turf settings.');
+        this.notificationService.error('Failed to upload image. Please try again.');
+        this.isUploadingImage.set(false);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  clearImage() {
+    this.imageUrl.set('CLEAR');
+    this.notificationService.success('Image cleared temporarily. Click Save Changes to apply.');
+    this.cdr.detectChanges();
+  }
+
+  openLogoutModal() {
+    this.logoutOtpCode = '';
+    this.otpSent.set(false);
+    this.isLogoutModalOpen.set(true);
+  }
+
+  closeLogoutModal() {
+    this.isLogoutModalOpen.set(false);
+  }
+
+  sendLogoutOtp() {
+    this.isSendingOtp.set(true);
+    this.http.post<any>('https://localhost:7273/api/v1/owner/send-logout-otp', {}).subscribe({
+      next: (res: any) => {
+        const data = res.data || res.Data || res.value || res.Value || res;
+        this.maskedEmail.set(data.email || 'your email');
+        this.otpSent.set(true);
+        this.notificationService.success('Logout verification OTP sent successfully!');
+        this.isSendingOtp.set(false);
+      },
+      error: (err: any) => {
+        this.notificationService.error(err.error?.Message || err.error?.message || 'Failed to send OTP email.');
+        this.isSendingOtp.set(false);
+      }
+    });
+  }
+
+  resendOtp() {
+    this.sendLogoutOtp();
+  }
+
+  verifyAndLogout() {
+    if (!this.logoutOtpCode.trim()) {
+      this.notificationService.error('Please enter the OTP.');
+      return;
+    }
+    this.isVerifyingOtp.set(true);
+    this.http.post<any>('https://localhost:7273/api/v1/owner/verify-logout-otp', { otpCode: this.logoutOtpCode }).subscribe({
+      next: (res) => {
+        this.isVerifyingOtp.set(false);
+        this.isLogoutModalOpen.set(false);
+        this.notificationService.success(res.message || res.Message || 'Partnership cancelled successfully.');
+        // Update role locally without logging out of the app entirely
+        this.authStore.updateUser({ role: 'User', Role: 'User' } as any);
+        this.router.navigate(['/home']);
+      },
+      error: (err: any) => {
+        this.notificationService.error(err.error?.Message || err.error?.message || 'Invalid or expired OTP.');
+        this.isVerifyingOtp.set(false);
       }
     });
   }

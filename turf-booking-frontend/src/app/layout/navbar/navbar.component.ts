@@ -14,6 +14,7 @@ import { ThemeService } from '../../core/services/theme.service';
 export class NavbarComponent implements OnInit {
   isMobileMenuOpen = false;
   isAnnouncementVisible = true;
+  showLogoutConfirm = false;
 
   constructor(
     private router: Router,
@@ -42,8 +43,17 @@ export class NavbarComponent implements OnInit {
     this.themeService.toggle();
   }
 
-  logout() {
+  openLogoutConfirm() {
     this.isMobileMenuOpen = false;
+    this.showLogoutConfirm = true;
+  }
+
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+  }
+
+  confirmLogout() {
+    this.showLogoutConfirm = false;
     this.authStore.clearSession();
     this.router.navigate(['/auth/login']);
   }

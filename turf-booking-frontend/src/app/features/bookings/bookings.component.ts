@@ -105,7 +105,7 @@ export interface GroupedBooking {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
                   <circle cx="12" cy="10.5" r="2.5" />
                 </svg>
-                <span>{{ booking.location }} ↗</span>
+                <span>Location View ↗</span>
               </a>
             </div>
             <div class="booking-status">
