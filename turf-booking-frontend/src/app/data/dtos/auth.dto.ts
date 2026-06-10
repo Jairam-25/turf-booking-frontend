@@ -16,6 +16,7 @@ export interface AuthResponseDto {
   email: string;
   number: string;
   role: string;
+  profilePictureUrl?: string;
   token: string;
   refreshToken: string;
 }

@@ -7,14 +7,17 @@
 </div>
 
 <div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
-  <div class="dashboard-header glass">
+  <!-- Magic Particles Background -->
+  <app-magic-particles [quantity]="80" [color]="'#ef4444'"></app-magic-particles>
+
+  <div class="dashboard-header glass relative z-[50]">
     <div class="header-left">
       <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">SuperAdmin Portal</h1>
       <p class="text-[var(--text-secondary)] mt-1">Full System Overview</p>
     </div>
   </div>
 
-  <div class="dashboard-layout">
+  <div class="dashboard-layout relative z-10">
     <aside class="dashboard-sidebar glass">
       <nav class="sidebar-nav">
         <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>

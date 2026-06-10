@@ -7,7 +7,10 @@
 </div>
 
 <div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
-  <div class="dashboard-header glass">
+  <!-- Magic Particles Background -->
+  <app-magic-particles [quantity]="80" [color]="'#7b39fc'"></app-magic-particles>
+
+  <div class="dashboard-header glass relative z-[50]">
     <div class="header-left">
       <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)] flex items-center gap-3">
         Owner Dashboard
@@ -59,7 +62,7 @@
     </div>
   </div>
 
-  <div class="dashboard-layout">
+  <div class="dashboard-layout relative z-10">
     <aside class="dashboard-sidebar glass">
       <nav class="sidebar-nav">
         <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
@@ -198,22 +201,36 @@
 
             <div class="flex items-center gap-2">
               <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Status:</span>
-              <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)" class="form-control m-0 border border-[rgba(150,150,150,0.2)] rounded-lg py-1.5 px-3 text-sm cursor-pointer" style="color-scheme: dark; background-color: var(--surface-color); color: var(--text-primary);">
-                <option value="all" style="background-color: #1a1a2e; color: #ffffff;">All Slots</option>
-                <option value="available" style="background-color: #1a1a2e; color: #ffffff;">Available</option>
-                <option value="booked" style="background-color: #1a1a2e; color: #ffffff;">Booked</option>
-                <option value="unavailable" style="background-color: #1a1a2e; color: #ffffff;">Unavailable / Past</option>
-              </select>
+              <div class="relative z-40">
+                <button (click)="isStatusDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[150px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
+                  <span class="font-medium truncate">{{ statusFilter() === 'all' ? 'All Slots' : (statusFilter() === 'available' ? 'Available' : (statusFilter() === 'booked' ? 'Booked' : 'Unavailable / Past')) }}</span>
+                  <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isStatusDropdownOpen()"></i>
+                </button>
+                <div *ngIf="isStatusDropdownOpen()" class="absolute top-full left-0 mt-1 w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                  <button (click)="setStatusFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Slots</button>
+                  <button (click)="setStatusFilter('available')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'available' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Available</button>
+                  <button (click)="setStatusFilter('booked')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'booked' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Booked</button>
+                  <button (click)="setStatusFilter('unavailable')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'unavailable' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Unavailable / Past</button>
+                </div>
+              </div>
+              <div *ngIf="isStatusDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isStatusDropdownOpen.set(false)"></div>
             </div>
 
             <div class="flex items-center gap-2">
               <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Time:</span>
-              <select [ngModel]="timeFilter()" (ngModelChange)="timeFilter.set($event)" class="form-control m-0 border border-[rgba(150,150,150,0.2)] rounded-lg py-1.5 px-3 text-sm cursor-pointer" style="color-scheme: dark; background-color: var(--surface-color); color: var(--text-primary);">
-                <option value="all" style="background-color: #1a1a2e; color: #ffffff;">All Day</option>
-                <option value="day" style="background-color: #1a1a2e; color: #ffffff;">Morning (6 AM - 12 PM)</option>
-                <option value="afternoon" style="background-color: #1a1a2e; color: #ffffff;">Afternoon (12 PM - 5 PM)</option>
-                <option value="night" style="background-color: #1a1a2e; color: #ffffff;">Evening (5 PM onwards)</option>
-              </select>
+              <div class="relative z-40">
+                <button (click)="isTimeDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[210px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
+                  <span class="font-medium truncate">{{ timeFilter() === 'all' ? 'All Times' : (timeFilter() === 'day' ? 'Morning (6 AM - 12 PM)' : (timeFilter() === 'afternoon' ? 'Afternoon (12 PM - 5 PM)' : 'Evening (5 PM onwards)')) }}</span>
+                  <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isTimeDropdownOpen()"></i>
+                </button>
+                <div *ngIf="isTimeDropdownOpen()" class="absolute top-full left-0 mt-1 min-w-[210px] w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                  <button (click)="setTimeFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Times</button>
+                  <button (click)="setTimeFilter('day')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'day' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Morning (6 AM - 12 PM)</button>
+                  <button (click)="setTimeFilter('afternoon')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'afternoon' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Afternoon (12 PM - 5 PM)</button>
+                  <button (click)="setTimeFilter('night')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'night' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Evening (5 PM onwards)</button>
+                </div>
+              </div>
+              <div *ngIf="isTimeDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isTimeDropdownOpen.set(false)"></div>
             </div>
           </div>
         </div>

@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../core/services/notification.service';
 import { Chart, registerables } from 'chart.js';
+import { MagicParticlesComponent } from '../../shared/components/magic-ui/magic-particles/magic-particles.component';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-superadmin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MagicParticlesComponent],
   templateUrl: './superadmin-dashboard.component.html',
   styleUrls: ['./superadmin-dashboard.component.css']
 })

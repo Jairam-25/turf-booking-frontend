@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Turf } from '../../../domain/models/turf.model';
@@ -12,6 +12,9 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     <div class="turf-card flex-card-layout glass scale-in">
       <div class="card-image">
         <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
+        <button class="like-btn" [class.liked]="isLiked" (click)="toggleLike($event)" title="Like Turf">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" [class.fill-current]="isLiked"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        </button>
         <img class="fallback" [src]="getImageSrc()" [alt]="turf.name" (error)="onImageError($event)" style="display:none;">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
       </div>
@@ -74,6 +77,36 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       font-weight: 700;
       font-size: 0.8125rem;
       border: 1px solid var(--glass-border);
+    }
+    .like-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 10;
+    }
+    .like-btn:hover {
+      background: rgba(0, 0, 0, 0.6);
+      transform: scale(1.1);
+    }
+    .like-btn.liked {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #ef4444;
+    }
+    .like-btn.liked svg {
+      fill: #ef4444;
     }
     .card-content {
       padding: 1.5rem;
@@ -177,10 +210,55 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     }
   `]
 })
-export class TurfCardComponent {
+export class TurfCardComponent implements OnInit {
   @Input({ required: true }) turf!: Turf;
+  isLiked = false;
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.checkIfLiked();
+  }
+
+  checkIfLiked() {
+    const liked = localStorage.getItem('likedTurfs');
+    if (liked) {
+      try {
+        const parsed = JSON.parse(liked);
+        this.isLiked = parsed.some((t: any) => t.id === this.turf.id);
+      } catch (e) {}
+    }
+  }
+
+  toggleLike(event: Event) {
+    event.stopPropagation();
+    this.isLiked = !this.isLiked;
+    
+    let likedTurfs = [];
+    const likedStr = localStorage.getItem('likedTurfs');
+    if (likedStr) {
+      try { likedTurfs = JSON.parse(likedStr); } catch (e) {}
+    }
+
+    if (this.isLiked) {
+      // Add to liked
+      if (!likedTurfs.some((t: any) => t.id === this.turf.id)) {
+        likedTurfs.push({
+          id: this.turf.id,
+          name: this.turf.name,
+          location: this.turf.location,
+          image: this.getImageSrc(),
+          price: this.turf.pricePerHour,
+          rating: this.turf.rating
+        });
+      }
+    } else {
+      // Remove from liked
+      likedTurfs = likedTurfs.filter((t: any) => t.id !== this.turf.id);
+    }
+    
+    localStorage.setItem('likedTurfs', JSON.stringify(likedTurfs));
+  }
 
   getImageSrc(): string {
     return this.turf?.imageUrl ?? '/images/turf_sports_ground.png';

@@ -7,13 +7,14 @@ import { Chart, registerables } from 'chart.js';
 import { Router, RouterModule } from '@angular/router';
 import { AuthStore } from '../../core/services/auth.store';
 import { ChangeDetectorRef } from '@angular/core';
+import { MagicParticlesComponent } from '../../shared/components/magic-ui/magic-particles/magic-particles.component';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-owner-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, MagicParticlesComponent],
   templateUrl: './owner-dashboard.component.html',
   styleUrls: ['./owner-dashboard.component.css']
 })
@@ -42,6 +43,8 @@ export class OwnerDashboardComponent implements OnInit {
   // Slot Filters
   statusFilter = signal<'all' | 'available' | 'booked' | 'unavailable'>('all');
   timeFilter = signal<'all' | 'day' | 'afternoon' | 'night'>('all');
+  isStatusDropdownOpen = signal<boolean>(false);
+  isTimeDropdownOpen = signal<boolean>(false);
 
   // Cancel Modal State
   isCancelModalOpen = signal(false);
@@ -55,19 +58,29 @@ export class OwnerDashboardComponent implements OnInit {
 
   get filteredSlots() {
     return this.availableSlots.filter(s => {
+      let matchesDate = true;
       let matchesStatus = true;
       let matchesTime = true;
 
+      if (this.selectedDate) {
+        const slotDateObj = new Date(s.StartTime || s.startTime);
+        const slotDateStr = new Date(slotDateObj.getTime() - (slotDateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        matchesDate = slotDateStr === this.selectedDate;
+      }
+
       const isBooked = s.IsBooked || s.isBooked;
-      if (this.statusFilter() === 'available') matchesStatus = !isBooked;
-      if (this.statusFilter() === 'booked') matchesStatus = isBooked;
+      const isPast = this.isSlotPast(s);
+      
+      if (this.statusFilter() === 'available') matchesStatus = !isBooked && !isPast;
+      else if (this.statusFilter() === 'booked') matchesStatus = isBooked;
+      else if (this.statusFilter() === 'unavailable') matchesStatus = !isBooked && isPast;
 
       const timeSlotStr = (s.TimeSlot || s.timeSlot || '').toLowerCase();
       if (this.timeFilter() !== 'all') {
         matchesTime = timeSlotStr.includes(this.timeFilter());
       }
 
-      return matchesStatus && matchesTime;
+      return matchesDate && matchesStatus && matchesTime;
     });
   }
 
@@ -188,6 +201,16 @@ export class OwnerDashboardComponent implements OnInit {
 
   toggleDropdown() {
     this.isDropdownOpen.update(v => !v);
+  }
+
+  setStatusFilter(val: 'all' | 'available' | 'booked' | 'unavailable') {
+    this.statusFilter.set(val);
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  setTimeFilter(val: 'all' | 'day' | 'afternoon' | 'night') {
+    this.timeFilter.set(val);
+    this.isTimeDropdownOpen.set(false);
   }
 
   setTab(tab: 'overview' | 'bookings' | 'settings' | 'offline') {

@@ -9,6 +9,7 @@
   overflow: hidden;
   perspective: 1000px;
   isolation: isolate;
+  background: var(--bg-primary);
 }
 
 /* Full-viewport background video (fixed so height:100% parent issues don't hide it) */
@@ -68,9 +69,17 @@
 }
 
 @keyframes float-logo {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .glow-brand-title {
@@ -163,8 +172,7 @@
   border-radius: 24px;
   position: relative;
   overflow: hidden;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
+  background: var(--bg-card);
 }
 
 .auth-header {
@@ -233,7 +241,7 @@
   border-top: none;
   border-radius: 0 0 6px 6px;
   z-index: 2;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   left: 50%;
   transform: translateX(-50%);
 }
@@ -241,7 +249,7 @@
 .goal-net {
   width: 100%;
   height: 100%;
-  background-image: 
+  background-image:
     linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
     linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.15) 75%),
@@ -255,9 +263,19 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  25% { transform: translateX(-50%) translateY(3px) skewX(-2deg); }
-  75% { transform: translateX(-50%) translateY(-2px) skewX(2deg); }
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  25% {
+    transform: translateX(-50%) translateY(3px) skewX(-2deg);
+  }
+
+  75% {
+    transform: translateX(-50%) translateY(-2px) skewX(2deg);
+  }
 }
 
 /* Soccer Kicker (Striker) Image Styling */
@@ -300,7 +318,7 @@
 /* Failure: Goalkeeper dives and blocks the ball in the top-right corner! */
 .goalkeeper-player-img.goalkeeper-save {
   transform: translate(32px, -8px) rotate(65deg) scale(1.05);
-  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.85)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.85)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
 /* Cricket Batsman Image Styling */
@@ -336,7 +354,7 @@
 /* Bowler bowling release animation */
 .bowler-player-img.bowler-release {
   transform: translate(-14px, 14px) scale(1.05);
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
 /* Ping Pong Paddle Image Styling */
@@ -354,7 +372,7 @@
 
 .pingpong-paddle-img.paddle-swing {
   transform: translate(18px, -15px) rotate(35deg) scale(1.15);
-  filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.65)) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.65)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
 /* Cricket Wickets */
@@ -391,14 +409,33 @@
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.bail-1 { left: 0px; }
-.bail-2 { right: 0px; }
+.bail-1 {
+  left: 0px;
+}
 
-.wickets-shattered .stump-1 { transform: rotate(-25deg) translate(-6px, -4px); }
-.wickets-shattered .stump-2 { transform: translateY(3px) rotate(5deg); }
-.wickets-shattered .stump-3 { transform: rotate(25deg) translate(6px, -4px); }
-.wickets-shattered .bail-1 { transform: translate(-12px, -14px) rotate(-110deg); }
-.wickets-shattered .bail-2 { transform: translate(12px, -14px) rotate(110deg); }
+.bail-2 {
+  right: 0px;
+}
+
+.wickets-shattered .stump-1 {
+  transform: rotate(-25deg) translate(-6px, -4px);
+}
+
+.wickets-shattered .stump-2 {
+  transform: translateY(3px) rotate(5deg);
+}
+
+.wickets-shattered .stump-3 {
+  transform: rotate(25deg) translate(6px, -4px);
+}
+
+.wickets-shattered .bail-1 {
+  transform: translate(-12px, -14px) rotate(-110deg);
+}
+
+.wickets-shattered .bail-2 {
+  transform: translate(12px, -14px) rotate(110deg);
+}
 
 /* Ping-Pong Net */
 .pingpong-net {
@@ -426,17 +463,33 @@
   background: #ffffff;
   top: -3px;
 }
-.left-post { left: 0; }
-.right-post { right: 0; }
+
+.left-post {
+  left: 0;
+}
+
+.right-post {
+  right: 0;
+}
 
 .pingpong-net.net-shake {
   animation: pp-net-shake 0.3s ease-in-out 3;
 }
 
 @keyframes pp-net-shake {
-  0%, 100% { transform: translateY(0); }
-  33% { transform: translateY(-1.5px); }
-  66% { transform: translateY(1.5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  33% {
+    transform: translateY(-1.5px);
+  }
+
+  66% {
+    transform: translateY(1.5px);
+  }
 }
 
 /* Penalty markings */
@@ -500,7 +553,9 @@
   z-index: 3;
 }
 
-.football, .cricket-ball, .pingpong-ball {
+.football,
+.cricket-ball,
+.pingpong-ball {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
@@ -521,8 +576,13 @@
 }
 
 @keyframes float-ball {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-3px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-3px);
+  }
 }
 
 /* Success Kick Path */
@@ -536,9 +596,18 @@
 }
 
 @keyframes kick-success {
-  0% { transform: translateY(0) scale(1) translateX(0); }
-  20% { transform: translateY(-20px) scale(1.1) translateX(-5px); }
-  100% { transform: translateY(-130px) scale(0.35) translateX(-25px); opacity: 0.1; }
+  0% {
+    transform: translateY(0) scale(1) translateX(0);
+  }
+
+  20% {
+    transform: translateY(-20px) scale(1.1) translateX(-5px);
+  }
+
+  100% {
+    transform: translateY(-130px) scale(0.35) translateX(-25px);
+    opacity: 0.1;
+  }
 }
 
 /* Failure Kick Path (Goalie saves it) */
@@ -552,10 +621,23 @@
 }
 
 @keyframes kick-fail {
-  0% { transform: translateY(0) scale(1) translateX(0); }
-  35% { transform: translateY(-105px) scale(0.6) translateX(20px); }
-  60% { transform: translateY(-105px) scale(0.6) translateX(20px); } /* Hits goalie glove */
-  100% { transform: translateY(-50px) scale(0.8) translateX(45px); opacity: 0.8; }
+  0% {
+    transform: translateY(0) scale(1) translateX(0);
+  }
+
+  35% {
+    transform: translateY(-105px) scale(0.6) translateX(20px);
+  }
+
+  60% {
+    transform: translateY(-105px) scale(0.6) translateX(20px);
+  }
+
+  /* Hits goalie glove */
+  100% {
+    transform: translateY(-50px) scale(0.8) translateX(45px);
+    opacity: 0.8;
+  }
 }
 
 /* Cricket Success Path */
@@ -569,9 +651,18 @@
 }
 
 @keyframes cricket-six {
-  0% { transform: translateY(0) scale(1) rotate(0deg); }
-  30% { transform: translateY(-40px) scale(1.3) rotate(45deg); }
-  100% { transform: translateY(-140px) scale(0.4) rotate(360deg); opacity: 0.15; }
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+
+  30% {
+    transform: translateY(-40px) scale(1.3) rotate(45deg);
+  }
+
+  100% {
+    transform: translateY(-140px) scale(0.4) rotate(360deg);
+    opacity: 0.15;
+  }
 }
 
 /* Cricket Failure Path (Bowled OUT) */
@@ -585,8 +676,13 @@
 }
 
 @keyframes cricket-bowled {
-  0% { transform: translateY(0) scale(1) translateX(0); }
-  100% { transform: translateY(-120px) scale(0.45) translateX(0); }
+  0% {
+    transform: translateY(0) scale(1) translateX(0);
+  }
+
+  100% {
+    transform: translateY(-120px) scale(0.45) translateX(0);
+  }
 }
 
 /* Ping Pong Success Path */
@@ -600,10 +696,22 @@
 }
 
 @keyframes pp-smash {
-  0% { transform: translateY(0) scale(1); }
-  25% { transform: translateY(-45px) scale(0.7) translateX(-15px); }
-  50% { transform: translateY(-85px) scale(0.9) translateX(20px); }
-  100% { transform: translateY(-135px) scale(0.3) translateX(0); opacity: 0.1; }
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  25% {
+    transform: translateY(-45px) scale(0.7) translateX(-15px);
+  }
+
+  50% {
+    transform: translateY(-85px) scale(0.9) translateX(20px);
+  }
+
+  100% {
+    transform: translateY(-135px) scale(0.3) translateX(0);
+    opacity: 0.1;
+  }
 }
 
 /* Ping Pong Failure Path (Hits Net) */
@@ -617,14 +725,28 @@
 }
 
 @keyframes pp-net-hit {
-  0% { transform: translateY(0) scale(1) translateX(0); }
-  45% { transform: translateY(-75px) scale(0.65) translateX(0); } /* Hits net */
-  100% { transform: translateY(-45px) scale(0.75) translateX(-8px); }
+  0% {
+    transform: translateY(0) scale(1) translateX(0);
+  }
+
+  45% {
+    transform: translateY(-75px) scale(0.65) translateX(0);
+  }
+
+  /* Hits net */
+  100% {
+    transform: translateY(-45px) scale(0.75) translateX(-8px);
+  }
 }
 
 @keyframes spin-ball {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(720deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(720deg);
+  }
 }
 
 .football-wrapper.kicked-success .football-shadow,
@@ -672,8 +794,13 @@ body[data-theme="light"] .error-banner {
 }
 
 @keyframes float-orb-1 {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-30px) scale(1.05); }
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(-30px) scale(1.05);
+  }
 }
 
 .orb-2 {
@@ -686,8 +813,13 @@ body[data-theme="light"] .error-banner {
 }
 
 @keyframes float-orb-2 {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(30px) scale(0.95); }
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(30px) scale(0.95);
+  }
 }
 
 .orb-3 {
@@ -840,14 +972,17 @@ body[data-theme="light"] .welcome-card {
     gap: 2rem;
     padding: 2rem 0;
   }
+
   .info-pane {
     align-items: center;
     text-align: center;
     gap: 1.25rem;
   }
+
   .glow-brand-title {
     font-size: 3rem;
   }
+
   .specs-list {
     display: flex;
     flex-direction: row;
@@ -856,6 +991,7 @@ body[data-theme="light"] .welcome-card {
     max-width: 100%;
     gap: 1rem;
   }
+
   .spec-item {
     flex-direction: row;
     align-items: center;
@@ -866,6 +1002,7 @@ body[data-theme="light"] .welcome-card {
     border-radius: 12px;
     flex: 1 1 300px;
   }
+
   .brand-header {
     align-items: center;
   }
@@ -875,20 +1012,27 @@ body[data-theme="light"] .welcome-card {
   .auth-container {
     padding: 1.5rem 1rem;
   }
+
   .split-layout {
     gap: 1.5rem;
   }
+
   .glow-brand-title {
     font-size: 2.5rem;
   }
+
   .specs-list {
-    display: none; /* Hide specs on mobile for a cleaner login/register view */
+    display: none;
+    /* Hide specs on mobile for a cleaner login/register view */
   }
+
   .app-logo {
     width: 40px;
     height: 40px;
   }
-  .auth-card, .welcome-card {
+
+  .auth-card,
+  .welcome-card {
     padding: 2rem 1.5rem;
     max-width: 100%;
     border-radius: 20px;
@@ -899,16 +1043,21 @@ body[data-theme="light"] .welcome-card {
   .auth-container {
     padding: 1rem;
   }
-  .auth-card, .welcome-card {
+
+  .auth-card,
+  .welcome-card {
     padding: 1.5rem 1.25rem;
     gap: 1rem;
   }
+
   .glow-brand-title {
     font-size: 2rem;
   }
+
   .brand-tagline {
     font-size: 0.95rem;
   }
+
   .btn-kick {
     font-size: 0.85rem;
     padding: 12px 16px;
