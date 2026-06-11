@@ -99,6 +99,8 @@ export class TurfRepositoryImpl implements TurfRepository {
 
   getById(id: number): Observable<Turf> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map(response => {
+        const item = response.data || response.Data || response.value || response.Value || response;
       map(item => {
         const locStr = (item.location || item.Location || '').trim();
         let parsedLat: number | null = null;
