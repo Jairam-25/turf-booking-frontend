@@ -5,13 +5,14 @@ import { NotificationService } from '../../../core/services/notification.service
 import { BookingRepository } from '../../../domain/repositories/booking.repository';
 import { forkJoin } from 'rxjs';
 import confetti from 'canvas-confetti';
+import { MagicCardDirective } from '../../../shared/directives/magic-card.directive';
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MagicCardDirective],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })

@@ -10,6 +10,7 @@ export class AuthMapper {
         name: data.name || data.Name || '',
         email: data.email || data.Email || '',
         phoneNumber: data.phoneNumber || data.PhoneNumber || data.number || data.Number || '',
+        profilePictureUrl: data.profilePictureUrl || data.ProfilePictureUrl || '',
         role: data.role || data.Role || 'User'
       },
       auth: {

@@ -3,6 +3,8 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { unwrapResponseInterceptor } from './core/interceptors/unwrap-response.interceptor';
+import { errorHandlingInterceptor } from './core/interceptors/error-handling.interceptor';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
@@ -23,7 +25,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, unwrapResponseInterceptor, errorHandlingInterceptor])
     ),
     // Firebase initialization
     provideFirebaseApp(() => initializeApp(environment.firebase)),

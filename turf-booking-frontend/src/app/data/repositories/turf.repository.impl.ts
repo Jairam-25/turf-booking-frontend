@@ -4,11 +4,13 @@ import { Observable, map, of } from 'rxjs';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TurfRepositoryImpl implements TurfRepository {
-  private apiUrl = 'https://localhost:7273/api/v1/Turf';
+  private apiUrl = `${environment.apiUrl}/Turf`;
 
   // Mock images to make it look professional
   private mockImages = [
@@ -36,28 +38,52 @@ export class TurfRepositoryImpl implements TurfRepository {
     }
 
     return this.http.get<any>(this.apiUrl, { params: httpParams }).pipe(
-      map(response => {
-        // Handle Result wrapper if present
-        const result = response.data || response.Data || response.value || response.Value || response;
-        
+      map(result => {
         const items = (result.items || result.Items || []).map((item: any, index: number) => {
           // Deterministic pseudo-random generation based on ID so markers stay in place
           const latOffset = ((item.id || item.Id || index) % 10) * 0.01;
           const lngOffset = (((item.id || item.Id || index) * 3) % 10) * 0.01;
           
-          return {
-            id: item.id || item.Id,
-            name: item.name || item.Name,
-            location: item.location || item.Location,
-            pricePerHour: item.pricePerHour || item.PricePerHour,
-            dayTimePrice: item.dayTimePrice || item.DayTimePrice,
-            afternoonPrice: item.afternoonPrice || item.AfternoonPrice,
-            nightTimePrice: item.nightTimePrice || item.NightTimePrice,
-            imageUrl: this.mockImages[index % this.mockImages.length],
+          const locStr = (item.location || item.Location || '').trim();
+          let parsedLat: number | null = null;
+          let parsedLng: number | null = null;
+
+          if (locStr.includes(',')) {
+            const parts = locStr.split(',');
+            if (parts.length === 2) {
+              const latNum = parseFloat(parts[0].trim());
+              const lngNum = parseFloat(parts[1].trim());
+              if (!isNaN(latNum) && !isNaN(lngNum) && latNum >= -90 && latNum <= 90 && lngNum >= -180 && lngNum <= 180) {
+                parsedLat = latNum;
+                parsedLng = lngNum;
+              }
+            }
+          }
+
+          const locLower = locStr.toLowerCase();
+          const cityLower = (item.city || item.City || '').toLowerCase();
+          const isThanjavur = locLower.includes('thanjavur') || cityLower.includes('thanjavur');
+          const isBangalore = locLower.includes('bangalore') || locLower.includes('bengaluru') || cityLower.includes('bangalore');
+          
+          const finalLat = parsedLat !== null ? parsedLat : (isThanjavur ? 10.7870 : (isBangalore ? 12.9716 : 13.0827)) + latOffset;
+          const finalLng = parsedLng !== null ? parsedLng : (isThanjavur ? 79.1378 : (isBangalore ? 77.5946 : 80.2707)) + lngOffset;
+          
+            let rawImgUrl = item.imageUrl || item.ImageUrl;
+            let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://localhost:7273${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[index % this.mockImages.length];
+
+            return {
+              id: item.id || item.Id,
+              name: item.name || item.Name,
+              location: item.location || item.Location,
+              pricePerHour: item.pricePerHour || item.PricePerHour,
+              dayTimePrice: item.dayTimePrice || item.DayTimePrice,
+              afternoonPrice: item.afternoonPrice || item.AfternoonPrice,
+              nightTimePrice: item.nightTimePrice || item.NightTimePrice,
+              imageUrl: formattedImgUrl,
             rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
             description: 'Experience professional-grade turf with premium facilities and easy booking.',
-            latitude: item.latitude || item.Latitude || (item.location === 'Thanjavur' ? 10.7870 + latOffset : (item.location === 'Bangalore' ? 12.9716 + latOffset : 13.0827 + latOffset)),
-            longitude: item.longitude || item.Longitude || (item.location === 'Thanjavur' ? 79.1378 + lngOffset : (item.location === 'Bangalore' ? 77.5946 + lngOffset : 80.2707 + lngOffset))
+            latitude: item.latitude || item.Latitude || finalLat,
+            longitude: item.longitude || item.Longitude || finalLng
           };
         });
 
@@ -73,8 +99,34 @@ export class TurfRepositoryImpl implements TurfRepository {
 
   getById(id: number): Observable<Turf> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map(response => {
-        const item = response.data || response.Data || response.value || response.Value || response;
+      map(item => {
+        const locStr = (item.location || item.Location || '').trim();
+        let parsedLat: number | null = null;
+        let parsedLng: number | null = null;
+
+        if (locStr.includes(',')) {
+          const parts = locStr.split(',');
+          if (parts.length === 2) {
+            const latNum = parseFloat(parts[0].trim());
+            const lngNum = parseFloat(parts[1].trim());
+            if (!isNaN(latNum) && !isNaN(lngNum) && latNum >= -90 && latNum <= 90 && lngNum >= -180 && lngNum <= 180) {
+              parsedLat = latNum;
+              parsedLng = lngNum;
+            }
+          }
+        }
+
+        const locLower = locStr.toLowerCase();
+        const cityLower = (item.city || item.City || '').toLowerCase();
+        const isThanjavur = locLower.includes('thanjavur') || cityLower.includes('thanjavur');
+        const isBangalore = locLower.includes('bangalore') || locLower.includes('bengaluru') || cityLower.includes('bangalore');
+        
+        const finalLat = parsedLat !== null ? parsedLat : (isThanjavur ? 10.7870 : (isBangalore ? 12.9716 : 13.0827));
+        const finalLng = parsedLng !== null ? parsedLng : (isThanjavur ? 79.1378 : (isBangalore ? 77.5946 : 80.2707));
+
+        let rawImgUrl = item.imageUrl || item.ImageUrl;
+        let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://localhost:7273${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[0];
+
         return {
           id: item.id || item.Id,
           name: item.name || item.Name,
@@ -83,8 +135,10 @@ export class TurfRepositoryImpl implements TurfRepository {
           dayTimePrice: item.dayTimePrice || item.DayTimePrice,
           afternoonPrice: item.afternoonPrice || item.AfternoonPrice,
           nightTimePrice: item.nightTimePrice || item.NightTimePrice,
-          imageUrl: this.mockImages[0],
-          rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0)
+          imageUrl: formattedImgUrl,
+          rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
+          latitude: item.latitude || item.Latitude || finalLat,
+          longitude: item.longitude || item.Longitude || finalLng
         };
       })
     );

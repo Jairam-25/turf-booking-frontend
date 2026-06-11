@@ -7,6 +7,8 @@ import { filter } from 'rxjs/operators';
 import { ThemeService } from './core/services/theme.service';
 import { ChatbotComponent } from './layout/chatbot/chatbot.component';
 import { BottomNavComponent } from './layout/bottom-nav/bottom-nav.component';
+import { AuthStore } from './core/services/auth.store';
+import { AuthRepository } from './domain/repositories/auth.repository';
 
 @Component({
   selector: 'app-root',
@@ -27,12 +29,30 @@ export class App implements OnInit {
 
   constructor(
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private authStore: AuthStore,
+    private authRepo: AuthRepository
   ) {}
 
   ngOnInit() {
     this.themeService.init();
     this.updateNavbarVisibility(this.router.url);
+
+    // Silent refresh on app init
+    const token = this.authStore.token();
+    const refreshToken = this.authStore.refreshToken();
+
+    if (token && refreshToken && this.authStore.isTokenExpired()) {
+      this.authRepo.refreshToken({ token, refreshToken }).subscribe({
+        next: (response) => {
+          this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
+        },
+        error: () => {
+          this.authStore.clearSession();
+          this.router.navigate(['/auth/login']);
+        }
+      });
+    }
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))

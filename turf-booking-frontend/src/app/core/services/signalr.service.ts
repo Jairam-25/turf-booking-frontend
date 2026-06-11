@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from './auth.store';
+import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class SignalrService {
   private connection: signalR.HubConnection | null = null;
   private hubUrl = 'https://localhost:7273/hubs/slots';
 
-  constructor(private auth: AuthStore) {
+  constructor(private auth: AuthStore, private notificationService: NotificationService) {
     this.init();
   }
 
@@ -19,6 +20,23 @@ export class SignalrService {
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Warning)
       .build();
+
+    if (this.connection) {
+      const conn = this.connection as any;
+      conn.onreconnecting((error?: Error) => {
+        this.notificationService.warning('Live availability connection lost. Reconnecting...');
+      });
+
+      conn.onreconnected((connectionId?: string) => {
+        this.notificationService.success('Live availability reconnected.');
+      });
+
+      conn.onclose((error?: Error) => {
+        if (error) {
+          this.notificationService.error('Live availability disconnected. Please refresh the page.');
+        }
+      });
+    }
 
     this.startPromise = this.connection.start();
     this.startPromise.catch(() => {
