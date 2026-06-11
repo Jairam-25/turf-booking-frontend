@@ -4,6 +4,11 @@ export interface User {
   phoneNumber: string;
   profilePictureUrl?: string;
   role: string;
+  address?: string;
+  state?: string;
+  maritalStatus?: string;
+  playerType?: string;
+  playingLevel?: string;
 }
 
 export interface AuthToken {

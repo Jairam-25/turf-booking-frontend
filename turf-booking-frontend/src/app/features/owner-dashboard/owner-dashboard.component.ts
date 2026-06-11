@@ -28,6 +28,7 @@ export class OwnerDashboardComponent implements OnInit {
   recentBookings: any[] = [];
   availableSlots: any[] = [];
   ownedTurfs = signal<any[]>([]);
+  verificationStatus = signal<string | null>(null);
   selectedDate: string = new Date().toISOString().split('T')[0];
   todayDate: string = new Date().toISOString().split('T')[0];
 
@@ -142,6 +143,7 @@ export class OwnerDashboardComponent implements OnInit {
 
         this.stats = data.Stats || data.stats;
         this.recentBookings = data.RecentBookings || data.recentBookings;
+        this.verificationStatus.set(data.VerificationStatus || data.verificationStatus || null);
         
         const remaining = data.RemainingDays || data.remainingDays;
         if (remaining !== undefined) {

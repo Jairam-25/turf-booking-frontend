@@ -13,11 +13,7 @@ export interface InboxNotification {
   providedIn: 'root'
 })
 export class InboxService {
-  private _notifications = signal<InboxNotification[]>([
-    { id: 1, title: 'Booking Confirmed', message: 'Your booking at Green Valley Turf for tomorrow at 6 PM is confirmed.', time: new Date(Date.now() - 3600000).toISOString(), isRead: false, type: 'success' },
-    { id: 2, title: 'System Update', message: 'We have updated our terms of service. Please review them.', time: new Date(Date.now() - 86400000).toISOString(), isRead: true, type: 'info' },
-    { id: 3, title: 'Promo Offer', message: 'Get 20% off on your next booking using code TURF20!', time: new Date(Date.now() - 172800000).toISOString(), isRead: false, type: 'warning' },
-  ]);
+  private _notifications = signal<InboxNotification[]>([]);
 
   notifications = this._notifications.asReadonly();
   unreadCount = computed(() => this._notifications().filter(n => !n.isRead).length);

@@ -23,6 +23,9 @@
             <button (click)="toggleDropdown()" class="flex items-center gap-2 bg-[#13151a]/80 backdrop-blur-md border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#7b39fc] transition-all shadow-lg">
               <i class="fa-solid fa-location-dot text-[#7b39fc] text-sm"></i>
               <span class="font-medium truncate max-w-[200px]">{{ turfName() }}</span>
+              <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="ml-1 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+                {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
+              </span>
               <i class="fa-solid fa-chevron-down text-slate-400 text-xs ml-2 transition-transform duration-200" [class.rotate-180]="isDropdownOpen()"></i>
             </button>
             
@@ -30,14 +33,20 @@
               <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-white/5 mb-1">Your Turfs</div>
               <button *ngFor="let t of ownedTurfs()" 
                       (click)="switchTurfModel(t.Id || t.id)"
-                      class="w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3 relative group"
+                      class="w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between relative group"
                       [ngClass]="(t.Id || t.id) === turfId() ? 'text-white bg-white/5' : 'text-slate-300 hover:bg-white/5 hover:text-white'">
                 
-                <!-- Active indicator bar -->
-                <div *ngIf="(t.Id || t.id) === turfId()" class="absolute left-0 top-0 bottom-0 w-1 bg-[#7b39fc] rounded-r-md"></div>
-                
-                <div class="w-2 h-2 rounded-full transition-colors" [ngClass]="(t.Id || t.id) === turfId() ? 'bg-[#7b39fc] shadow-[0_0_8px_#7b39fc]' : 'bg-slate-600 group-hover:bg-slate-400'"></div>
-                <span class="truncate font-medium">{{ t.Name || t.name }}</span>
+                <div class="flex items-center gap-3">
+                  <!-- Active indicator bar -->
+                  <div *ngIf="(t.Id || t.id) === turfId()" class="absolute left-0 top-0 bottom-0 w-1 bg-[#7b39fc] rounded-r-md"></div>
+                  
+                  <div class="w-2 h-2 rounded-full transition-colors shrink-0" [ngClass]="(t.Id || t.id) === turfId() ? 'bg-[#7b39fc] shadow-[0_0_8px_#7b39fc]' : 'bg-slate-600 group-hover:bg-slate-400'"></div>
+                  <span class="truncate font-medium max-w-[130px]">{{ t.Name || t.name }}</span>
+                </div>
+
+                <span *ngIf="(t.Status || t.status) && (t.Status || t.status) !== 'Approved'" class="ml-2 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap shrink-0">
+                  {{ (t.Status || t.status) === 'Pending Verification' ? 'Pending' : (t.Status || t.status) }}
+                </span>
               </button>
             </div>
           </div>
@@ -47,7 +56,12 @@
         </ng-container>
         
         <ng-template #singleTurf>
-          <strong class="text-white">{{ turfName() }}</strong>
+          <div class="flex items-center gap-2">
+            <strong class="text-white">{{ turfName() }}</strong>
+            <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+              {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
+            </span>
+          </div>
         </ng-template>
         
         <button class="text-xs px-3 py-1.5 ml-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md transition-colors border border-slate-700 font-medium whitespace-nowrap" 
@@ -78,8 +92,9 @@
     </aside>
 
     <main class="dashboard-content">
-      <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in w-full h-full">
-        <!-- Top Stats Row -->
+      <ng-container *ngIf="!verificationStatus() || verificationStatus() === 'Approved'; else pendingVerification">
+        <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in w-full h-full">
+          <!-- Top Stats Row -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
             <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Customers</span>
@@ -372,6 +387,31 @@
           </form>
         </div>
       </div>
+      </ng-container>
+
+      <ng-template #pendingVerification>
+        <div class="glass w-full h-full flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-[rgba(150,150,150,0.1)] relative overflow-hidden" style="min-height: 60vh;">
+          <div class="absolute inset-0 bg-amber-500/5 z-0"></div>
+          
+          <div class="relative z-10 w-24 h-24 rounded-full bg-amber-500/10 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+            <i class="fa-solid fa-hourglass-half text-4xl text-amber-500 animate-pulse"></i>
+          </div>
+          
+          <h2 class="relative z-10 text-3xl font-bold mb-4" style="color: var(--text-primary)">Pending Verification</h2>
+          
+          <p class="relative z-10 max-w-md mx-auto text-lg leading-relaxed" style="color: var(--text-secondary)">
+            This turf is currently under review by our administration team. You will gain full access to charts, settings, and offline bookings once it is approved.
+          </p>
+          
+          <div class="relative z-10 mt-8 px-6 py-3 bg-amber-500/10 border border-amber-500/20 rounded-xl inline-flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <span class="text-amber-400 font-medium tracking-wide uppercase text-sm">Waiting for SuperAdmin Approval</span>
+          </div>
+        </div>
+      </ng-template>
     </main>
   </div>
 </div>

@@ -60,6 +60,55 @@
                    class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all placeholder:text-[var(--text-secondary)]/50" 
                    placeholder="+91 98765 43210" />
           </div>
+
+          <!-- Address -->
+          <div class="form-group flex flex-col gap-2 md:col-span-2">
+            <label class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-1">Address</label>
+            <input type="text" formControlName="address" 
+                   class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all placeholder:text-[var(--text-secondary)]/50" 
+                   placeholder="123 Street Name, City" />
+          </div>
+
+          <!-- State -->
+          <div class="form-group flex flex-col gap-2">
+            <label class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-1">State</label>
+            <input type="text" formControlName="state" 
+                   class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all placeholder:text-[var(--text-secondary)]/50" 
+                   placeholder="Your State" />
+          </div>
+
+          <!-- Marital Status -->
+          <div class="form-group flex flex-col gap-2">
+            <label class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-1">Marital Status</label>
+            <select formControlName="maritalStatus" 
+                   class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all">
+              <option value="" disabled selected>Select Status</option>
+              <option value="Unmarried">Unmarried</option>
+              <option value="Married">Married</option>
+            </select>
+          </div>
+
+          <!-- Player Type -->
+          <div class="form-group flex flex-col gap-2">
+            <label class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-1">Player Type</label>
+            <input type="text" formControlName="playerType" 
+                   class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all placeholder:text-[var(--text-secondary)]/50" 
+                   placeholder="e.g., Football, Cricket" />
+          </div>
+
+          <!-- Playing Level -->
+          <div class="form-group flex flex-col gap-2">
+            <label class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-1">Playing Level</label>
+            <select formControlName="playingLevel" 
+                   class="w-full bg-black/5 dark:bg-white/5 border border-transparent focus:border-[#7b39fc]/50 text-[var(--text-primary)] rounded-2xl px-4 py-3.5 focus:ring-4 focus:ring-[#7b39fc]/10 outline-none transition-all">
+              <option value="" disabled selected>Select Level</option>
+              <option value="Amateur">Amateur</option>
+              <option value="District Level">District Level</option>
+              <option value="State Level">State Level</option>
+              <option value="National Level">National Level</option>
+              <option value="Professional">Professional</option>
+            </select>
+          </div>
         </div>
 
         <div class="pt-8 mt-4 border-t border-[rgba(150,150,150,0.1)] flex justify-end">

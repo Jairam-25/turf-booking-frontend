@@ -35,12 +35,16 @@ export class ProfileComponent implements OnInit {
   private authStore = inject(AuthStore);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
-
   constructor() {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: [{ value: '', disabled: true }],
-      phoneNumber: ['']
+      phoneNumber: [''],
+      address: [''],
+      state: [''],
+      maritalStatus: [''],
+      playerType: [''],
+      playingLevel: ['']
     });
   }
 
@@ -54,7 +58,12 @@ export class ProfileComponent implements OnInit {
       this.profileForm.patchValue({
         name: user.name,
         email: user.email,
-        phoneNumber: user.phoneNumber || ''
+        phoneNumber: user.phoneNumber || '',
+        address: user.address || '',
+        state: user.state || '',
+        maritalStatus: user.maritalStatus || '',
+        playerType: user.playerType || '',
+        playingLevel: user.playingLevel || ''
       });
       if (user.profilePictureUrl) {
         this.profilePictureUrl.set(user.profilePictureUrl);
@@ -74,6 +83,11 @@ export class ProfileComponent implements OnInit {
     this.http.put<any>('https://localhost:7273/api/v1/Auth/update-profile', {
       name: data.name,
       phoneNumber: data.phoneNumber,
+      address: data.address,
+      state: data.state,
+      maritalStatus: data.maritalStatus,
+      playerType: data.playerType,
+      playingLevel: data.playingLevel,
       profilePictureUrl: this.profilePictureUrl()
     }).subscribe({
       next: (res) => {
@@ -85,6 +99,11 @@ export class ProfileComponent implements OnInit {
           ...currentUser,
           name: data.name,
           phoneNumber: data.phoneNumber,
+          address: data.address,
+          state: data.state,
+          maritalStatus: data.maritalStatus,
+          playerType: data.playerType,
+          playingLevel: data.playingLevel,
           profilePictureUrl: this.profilePictureUrl() || undefined
         });
 
