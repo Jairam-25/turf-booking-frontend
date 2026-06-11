@@ -4,11 +4,13 @@ import { Observable, map, of } from 'rxjs';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TurfRepositoryImpl implements TurfRepository {
-  private apiUrl = 'https://localhost:7273/api/v1/Turf';
+  private apiUrl = `${environment.apiUrl}/Turf`;
 
   // Mock images to make it look professional
   private mockImages = [
@@ -36,10 +38,7 @@ export class TurfRepositoryImpl implements TurfRepository {
     }
 
     return this.http.get<any>(this.apiUrl, { params: httpParams }).pipe(
-      map(response => {
-        // Handle Result wrapper if present
-        const result = response.data || response.Data || response.value || response.Value || response;
-        
+      map(result => {
         const items = (result.items || result.Items || []).map((item: any, index: number) => {
           // Deterministic pseudo-random generation based on ID so markers stay in place
           const latOffset = ((item.id || item.Id || index) % 10) * 0.01;
@@ -100,8 +99,7 @@ export class TurfRepositoryImpl implements TurfRepository {
 
   getById(id: number): Observable<Turf> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map(response => {
-        const item = response.data || response.Data || response.value || response.Value || response;
+      map(item => {
         const locStr = (item.location || item.Location || '').trim();
         let parsedLat: number | null = null;
         let parsedLng: number | null = null;
