@@ -482,7 +482,7 @@ export class LoginFormComponent implements OnDestroy {
 
   sendGoogleOtp() {
     this.googleLoading.set(true);
-    this.authRepository.googleSignIn(this.googleIdToken, this.googleEmail, this.googleDisplayName).subscribe({
+    this.authRepository.sendGoogleOtp(this.googleIdToken, this.googleEmail, this.googleDisplayName).subscribe({
       next: (maskedEmail: string) => {
         setTimeout(() => {
           this.googleLoading.set(false);
@@ -509,7 +509,7 @@ export class LoginFormComponent implements OnDestroy {
       return;
     }
     this.googleLoading.set(true);
-    this.authRepository.googleVerifyOtp(this.googleEmail, this.googleOtpControl.value as string).subscribe({
+    this.authRepository.verifyGoogleOtp(this.googleEmail, this.googleOtpControl.value as string).subscribe({
       next: (response) => {
         this.googleLoading.set(false);
         this.clearInterval();

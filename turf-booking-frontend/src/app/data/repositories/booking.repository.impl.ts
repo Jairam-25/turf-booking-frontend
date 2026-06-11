@@ -3,32 +3,29 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, catchError, of, throwError } from 'rxjs';
 import { BookingRepository } from '../../domain/repositories/booking.repository';
 import { Booking, CreateBookingDto, Slot } from '../../domain/models/booking.model';
+import { environment } from '../../../environments/environment';
+import { STORAGE_KEYS } from '../../core/constants/storage.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingRepositoryImpl implements BookingRepository {
-  private bookingUrl = 'https://localhost:7273/api/v1/Booking';
-  private slotUrl = 'https://localhost:7273/api/v1/Slot';
+  private bookingUrl = `${environment.apiUrl}/Booking`;
+  private slotUrl = `${environment.apiUrl}/Slot`;
 
   constructor(private http: HttpClient) {}
 
   bookSlot(dto: CreateBookingDto): Observable<any> {
-    return this.http.post<any>(this.bookingUrl, dto).pipe(
-      map(response => response.data || response.Data || response.value || response.Value || response)
-    );
+    return this.http.post<any>(this.bookingUrl, dto);
   }
 
   createOrder(amount: number): Observable<any> {
-    return this.http.post<any>('https://localhost:7273/api/v1/Payment/create-order', { amount }).pipe(
-      map(response => response.data || response.Data || response.value || response.Value || response)
-    );
+    return this.http.post<any>('https://localhost:7273/api/v1/Payment/create-order', { amount });
   }
 
   getMyBookings(): Observable<Booking[]> {
     return this.http.get<any>(`${this.bookingUrl}/my`).pipe(
-      map(response => {
-        const result = response.data || response.Data || response.value || response.Value || response;
+      map(result => {
         const mapped = (Array.isArray(result) ? result : []).map((b: any) => ({
           bookingId: b.bookingId || b.BookingId,
           bookedOn: b.bookedOn || b.BookedOn,
@@ -40,14 +37,14 @@ export class BookingRepositoryImpl implements BookingRepository {
         }));
         // Cache for offline mode
         try {
-          localStorage.setItem('turf_cached_bookings', JSON.stringify(mapped));
+          localStorage.setItem(STORAGE_KEYS.TURF_CACHED_BOOKINGS, JSON.stringify(mapped));
         } catch (e) { }
         return mapped;
       }),
       catchError(error => {
         // Fallback to offline cache
         try {
-          const cached = localStorage.getItem('turf_cached_bookings');
+          const cached = localStorage.getItem(STORAGE_KEYS.TURF_CACHED_BOOKINGS);
           if (cached) {
             console.warn('Network error, loading bookings from offline cache.');
             return of(JSON.parse(cached) as Booking[]);
@@ -63,8 +60,7 @@ export class BookingRepositoryImpl implements BookingRepository {
       .set('turfId', turfId)
       .set('_t', new Date().getTime().toString());
     return this.http.get<any>(this.slotUrl, { params }).pipe(
-      map(response => {
-        const result = response.data || response.Data || response.value || response.Value || response;
+      map(result => {
         return (Array.isArray(result) ? result : []).map((s: any) => ({
           id: s.slotId || s.SlotId,
           turfId: s.turfId || s.TurfId,
@@ -78,9 +74,7 @@ export class BookingRepositoryImpl implements BookingRepository {
 
   cancelBooking(bookingId: number, reason: string): Observable<any> {
     const params = new HttpParams().set('reason', reason);
-    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`, { params }).pipe(
-      map(response => response.data || response.Data || response.value || response.Value || response)
-    );
+    return this.http.delete<any>(`${this.bookingUrl}/${bookingId}`, { params });
   }
 }
 
