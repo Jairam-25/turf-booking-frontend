@@ -203,7 +203,8 @@ body {
   background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: auto;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -796,3 +797,47 @@ body:not([data-theme="light"]) img[src*="logo.png"] {
   }
 }
 
+/* Magic Card Border Animation (Spotlight on Hover) */
+.magic-card {
+  position: relative;
+  background: var(--bg-card);
+  padding: 1px; /* Border thickness */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.magic-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(var(--primary-rgb), 0.5),
+    transparent 40%
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.magic-card:hover::before {
+  opacity: 1;
+}
+
+.magic-card-inner {
+  position: relative;
+  background: var(--bg-card) !important;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+.dark .magic-card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(var(--primary-rgb), 0.6),
+    transparent 40%
+  );
+}

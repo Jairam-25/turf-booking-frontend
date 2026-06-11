@@ -11,6 +11,8 @@ export interface Turf {
   dayTimePrice?: number;
   afternoonPrice?: number;
   nightTimePrice?: number;
+  state?: string;
+  city?: string;
 }
 
 export interface TurfResponse {

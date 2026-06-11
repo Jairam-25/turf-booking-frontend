@@ -63,6 +63,16 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'liked-turfs',
+    loadComponent: () => import('./features/liked-turfs/liked-turfs').then(m => m.LikedTurfsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'leaderboard',
     loadComponent: () => import('./features/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent),
     canActivate: [authGuard]

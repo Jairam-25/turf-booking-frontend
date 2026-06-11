@@ -6,29 +6,30 @@ import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
-import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/magic-border-beam/magic-border-beam.component';
+import { MagicCardDirective } from '../../../shared/directives/magic-card.directive';
+import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic-hexagon/magic-hexagon.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RegisterFormComponent, ThemeToggleComponent, TurfBackgroundComponent, MagicBorderBeamComponent],
+  imports: [CommonModule, RegisterFormComponent, ThemeToggleComponent, MagicCardDirective, MagicHexagonComponent],
 
   template: `
     <div class="auth-container" [class.transitioning]="isTransitioning()">
-      <div class="auth-theme-bar">
+      <div class="auth-theme-bar absolute top-4 right-4 z-50">
         <app-theme-toggle />
       </div>
 
-      <!-- Custom realistic animated turf background -->
-      <app-turf-background></app-turf-background>
-      <div class="video-overlay"></div>
+      <!-- Magic Hexagon Background filling the ENTIRE page -->
+      <div class="absolute inset-0 pointer-events-none z-0">
+        <app-magic-hexagon [size]="32" color="#7b39fc" [backgroundColor]="'transparent'" [animationSpeed]="0.05"></app-magic-hexagon>
+      </div>
 
-      <!-- High-End Split Grid Layout -->
+      <!-- High-End Layout -->
       <div class="split-layout">
         
         <!-- Left Side: App Specs & Points -->
-        <div class="info-pane">
+        <div class="info-pane relative z-10">
           <div class="brand-header animate-fade-in-down">
             <div class="app-logo">
               <img src="/images/logo.png" alt="TurfXpert Logo" class="h-full w-auto object-contain">
@@ -79,10 +80,9 @@ import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/ma
         </div>
 
         <!-- Right Side: The Interactive Shootout Register Card -->
-        <div class="card-pane animate-fade-in-up animation-delay-200">
-          <div class="glass auth-card">
-            <!-- Glowing Magic Border Beam -->
-            <magic-border-beam [duration]="'6s'" [borderWidth]="3"></magic-border-beam>
+        <div class="card-pane relative z-10 animate-fade-in-up animation-delay-200">
+          <div class="magic-card w-full max-w-[460px] rounded-[2rem]">
+            <div class="magic-card-inner auth-card border-none">
             
             <div class="auth-header">
               <h1>Create Account</h1>
@@ -101,6 +101,7 @@ import { MagicBorderBeamComponent } from '../../../shared/components/magic-ui/ma
             <div class="error-banner" *ngIf="errorMessage()">
               {{ errorMessage() }}
             </div>
+          </div>
           </div>
         </div>
 

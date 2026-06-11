@@ -4,61 +4,114 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterModule } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { pickRandomAuthVideo } from '../../../core/constants/auth-background-videos';
+import { MagicCardDirective } from '../../../shared/directives/magic-card.directive';
+import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic-hexagon/magic-hexagon.component';
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, ThemeToggleComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ThemeToggleComponent, MagicCardDirective, MagicHexagonComponent],
   template: `
     <div class="auth-container">
-      <div class="auth-theme-bar">
+      <div class="auth-theme-bar absolute top-4 right-4 z-50">
         <app-theme-toggle />
       </div>
-      <video class="auth-bg-video bg-video" autoplay loop muted playsinline preload="auto" [src]="backgroundVideo"></video>
-      <div class="video-overlay"></div>
-      <div class="glass auth-card floating">
-        <div class="auth-header">
-          <h1>Forgot Password?</h1>
-          <p>No worries! Enter your email and we'll send you reset instructions.</p>
-        </div>
-
-        <form [formGroup]="forgetForm" (ngSubmit)="onSubmit()" class="auth-form" *ngIf="!emailSent()">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input 
-              id="email" 
-              type="email" 
-              formControlName="email" 
-              placeholder="name@example.com"
-              [class.invalid]="isFieldInvalid('email')"
-            >
-          </div>
-
-          <button type="submit" class="btn-premium btn-uniform" [disabled]="isLoading()">
-            <span *ngIf="!isLoading()">Send Reset Link</span>
-            <span *ngIf="isLoading()" class="spinner"></span>
-          </button>
-        </form>
-
-        <div class="success-message" *ngIf="emailSent()">
-          <div class="icon">✓</div>
-          <h2>Check your email</h2>
-          <p>We've sent a password reset link to <strong>{{ forgetForm.value.email }}</strong></p>
-          <button class="btn-premium btn-uniform" routerLink="/auth/login" style="margin-top: 1.5rem;">Back to Login</button>
-        </div>
-
-        <div class="error-banner" *ngIf="errorMessage()">
-          {{ errorMessage() }}
-        </div>
-
-        <div class="form-footer" *ngIf="!emailSent()">
-          <a routerLink="/auth/login">Back to Login</a>
-        </div>
+      
+      <!-- Magic Hexagon Background filling the ENTIRE page -->
+      <div class="absolute inset-0 pointer-events-none z-0">
+        <app-magic-hexagon [size]="32" color="#7b39fc" [backgroundColor]="'transparent'" [animationSpeed]="0.05"></app-magic-hexagon>
       </div>
 
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
+      <div class="split-layout">
+        
+        <!-- Left Side: App Specs & Points for Password Recovery -->
+        <div class="info-pane relative z-10">
+          <div class="brand-header animate-fade-in-down">
+            <div class="app-logo">
+              <img src="/images/logo.png" alt="TurfXpert Logo" class="h-full w-auto object-contain">
+            </div>
+            <h1 class="glow-brand-title">TurfXpert</h1>
+            <p class="brand-tagline">Account Recovery</p>
+          </div>
+
+          <div class="specs-list">
+            <div class="spec-item animate-fade-in-up animation-delay-100">
+              <div class="spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                </svg>
+              </div>
+              <div class="spec-details">
+                <h3>Secure Reset</h3>
+                <p>We take your account security seriously. Reset your password safely via email.</p>
+              </div>
+            </div>
+
+            <div class="spec-item animate-fade-in-up animation-delay-200">
+              <div class="spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="spec-details">
+                <h3>Fast Recovery</h3>
+                <p>Receive your link instantly and get right back to booking your favorite turfs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Forgot Password Card -->
+        <div class="card-pane relative z-10 animate-fade-in-up animation-delay-200">
+          <div class="magic-card w-full max-w-[460px] rounded-[2rem]">
+            <div class="magic-card-inner auth-card border-none">
+              
+              <div class="auth-header">
+                <h1>Forgot Password?</h1>
+                <p>No worries! Enter your email and we'll send you reset instructions.</p>
+              </div>
+
+              <form [formGroup]="forgetForm" (ngSubmit)="onSubmit()" class="auth-form" *ngIf="!emailSent()">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input 
+                    id="email" 
+                    type="email" 
+                    formControlName="email" 
+                    placeholder="name@example.com"
+                    [class.invalid]="isFieldInvalid('email')"
+                    style="margin-top: 0.5rem;"
+                  >
+                </div>
+
+                <div class="form-actions" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                  <button type="submit" class="btn-premium btn-uniform" [disabled]="isLoading()">
+                    <span *ngIf="!isLoading()">Send Reset Link</span>
+                    <span *ngIf="isLoading()" class="spinner"></span>
+                  </button>
+                  
+                  <button type="button" class="btn-premium secondary btn-uniform" routerLink="/auth/login">
+                    Back to Login
+                  </button>
+                </div>
+              </form>
+
+              <div class="success-message" *ngIf="emailSent()">
+                <div class="icon">✓</div>
+                <h2>Check your email</h2>
+                <p>We've sent a password reset link to <strong>{{ forgetForm.value.email }}</strong></p>
+                <button class="btn-premium btn-uniform" routerLink="/auth/login" style="margin-top: 2rem;">Back to Login</button>
+              </div>
+
+              <div class="error-banner" *ngIf="errorMessage()" style="margin-top: 1.5rem;">
+                {{ errorMessage() }}
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   `,
   styleUrls: ['../login/login.component.css'],
@@ -66,7 +119,7 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 2rem; /* Increased gap */
     }
     .success-message {
       text-align: center;
@@ -86,7 +139,6 @@ import { pickRandomAuthVideo } from '../../../core/constants/auth-background-vid
   `]
 })
 export class ForgotPasswordComponent {
-  backgroundVideo = pickRandomAuthVideo();
   isLoading = signal(false);
   emailSent = signal(false);
   errorMessage = signal<string | null>(null);

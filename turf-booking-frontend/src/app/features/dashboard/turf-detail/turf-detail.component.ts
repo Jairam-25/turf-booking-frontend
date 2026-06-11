@@ -61,7 +61,7 @@ interface CategorizedSlot extends Slot {
                 <circle cx="12" cy="10.5" r="2.5" />
               </svg>
               <span>{{ turf()?.location }}</span>
-              <span class="map-tag">View on Map ↗</span>
+              <span class="map-tag">View Map ↗</span>
             </a>
 
             <p class="turf-description">
@@ -488,7 +488,8 @@ interface CategorizedSlot extends Slot {
       gap: 8px;
       color: var(--text-secondary);
       font-weight: 500;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
     .link-map {
       text-decoration: none;
@@ -503,10 +504,12 @@ interface CategorizedSlot extends Slot {
       font-size: 0.75rem;
       background: rgba(var(--primary-rgb), 0.08);
       color: var(--primary);
-      padding: 2px 8px;
+      padding: 4px 10px;
       border-radius: 8px;
-      margin-left: 0.5rem;
+      margin-left: auto;
       font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .location-icon {
       width: 20px;

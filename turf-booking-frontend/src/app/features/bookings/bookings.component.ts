@@ -105,7 +105,7 @@ export interface GroupedBooking {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
                   <circle cx="12" cy="10.5" r="2.5" />
                 </svg>
-                <span>{{ booking.location }} ↗</span>
+                <span>Location View ↗</span>
               </a>
             </div>
             <div class="booking-status">
@@ -163,17 +163,18 @@ export interface GroupedBooking {
 
     <!-- Cancellation Modal -->
     <div class="modal-overlay" *ngIf="isCancelModalOpen()">
-      <div class="modal-content glass">
-        <h3>Cancel Booking</h3>
-        <p>Please provide a reason for cancelling this booking. This will be sent to your email.</p>
+      <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4">
+        <h3 class="text-xl font-bold text-[#ef4444] m-0">Cancel Booking</h3>
+        <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">Please provide a reason for cancelling this booking. This will be sent to your email.</p>
         <textarea 
           [(ngModel)]="cancelReason" 
           placeholder="e.g., Change of plans, Injury, Weather..." 
-          rows="4">
+          rows="4"
+          class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#ef4444] focus:ring-1 focus:ring-[#ef4444]/20 placeholder:text-[var(--text-secondary)]/50">
         </textarea>
-        <div class="modal-actions">
-          <button class="btn-secondary btn-uniform" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
-          <button class="btn-cancel-confirm btn-uniform" (click)="confirmCancel()" [disabled]="isCancelling()">
+        <div class="flex justify-end gap-3 pt-2">
+          <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
+          <button class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center min-w-[130px] disabled:opacity-50 disabled:cursor-not-allowed" (click)="confirmCancel()" [disabled]="isCancelling()">
             <span *ngIf="!isCancelling()">Confirm Cancel</span>
             <span *ngIf="isCancelling()" class="spinner-small"></span>
           </button>
@@ -183,9 +184,9 @@ export interface GroupedBooking {
 
     <!-- Feedback Modal -->
     <div class="modal-overlay" *ngIf="isFeedbackModalOpen()">
-      <div class="modal-content glass text-center">
-        <h3>Rate Your Experience</h3>
-        <p>How was your game at <strong>{{ feedbackBooking?.turfName }}</strong>?</p>
+      <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4 text-center">
+        <h3 class="text-xl font-bold text-[var(--text-primary)] m-0">Rate Your Experience</h3>
+        <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">How was your game at <strong>{{ feedbackBooking?.turfName }}</strong>?</p>
         
         <div class="star-rating" style="display: flex; justify-content: center; gap: 8px; margin: 1.5rem 0;">
           <svg *ngFor="let star of [1, 2, 3, 4, 5]" 
@@ -201,12 +202,12 @@ export interface GroupedBooking {
           [(ngModel)]="feedbackText" 
           placeholder="Leave a quick review... (Optional)" 
           rows="3"
-          style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white; margin-bottom: 1.5rem;">
+          class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder:text-[var(--text-secondary)]/50 mb-2">
         </textarea>
         
-        <div class="modal-actions">
-          <button class="btn-secondary btn-uniform" (click)="closeFeedbackModal()">Skip</button>
-          <button class="btn-premium btn-uniform" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
+        <div class="flex justify-center gap-3 pt-2">
+          <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeFeedbackModal()">Skip</button>
+          <button class="px-4 py-2 bg-[#7b39fc] hover:bg-[#6b21a8] rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
         </div>
       </div>
     </div>

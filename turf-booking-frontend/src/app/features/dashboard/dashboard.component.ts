@@ -28,8 +28,31 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
                 </div>
                 
                 <div class="custom-select-dropdown glass-card" [class.show]="isLocationSelectOpen()">
-                  <div class="select-option" (click)="selectLocation($event, '')" [class.active]="selectedLocation() === ''">All Locations</div>
-                  <div class="select-option" *ngFor="let loc of allLocations()" (click)="selectLocation($event, loc)" [class.active]="selectedLocation() === loc">{{ loc }}</div>
+                  
+                  <ng-container *ngIf="!viewingDistrictsForState()">
+                    <div class="select-option" (click)="selectLocation($event, '', '')" [class.active]="selectedState() === '' && selectedDistrict() === ''">All Locations</div>
+                    <div class="select-option flex justify-between items-center" *ngFor="let state of statesList()" (click)="openStateDistricts($event, state)" [class.active]="selectedState() === state">
+                      <span>{{ state }}</span>
+                      <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="viewingDistrictsForState() as stateName">
+                    <div class="select-option flex items-center gap-2 font-bold border-b border-white/10 dark:border-white/5 pb-2 mb-2 text-[var(--primary)]" (click)="backToStates($event)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                      Back to States
+                    </div>
+                    <div class="select-option" (click)="selectLocation($event, stateName, '')" [class.active]="selectedState() === stateName && selectedDistrict() === ''">
+                      All of {{ stateName }}
+                    </div>
+                    <div class="select-option" *ngFor="let dist of getDistrictsForState(stateName)" (click)="selectLocation($event, stateName, dist)" [class.active]="selectedDistrict() === dist">
+                      {{ dist }}
+                    </div>
+                    <div *ngIf="getDistrictsForState(stateName).length === 0" class="px-4 py-2 text-xs text-[var(--text-secondary)]">
+                      No districts available
+                    </div>
+                  </ng-container>
+
                 </div>
               </div>
               
@@ -248,6 +271,8 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       padding: 4rem 2rem;
       border-radius: 24px;
       text-align: center;
+      position: relative;
+      z-index: 50;
       background:
         linear-gradient(rgba(var(--primary-rgb), 0.35), rgba(15, 23, 42, 0.75)),
         url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2000&auto=format&fit=crop');
@@ -299,6 +324,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       cursor: pointer;
       user-select: none;
       min-width: 160px;
+      z-index: 30;
     }
     .custom-select-value {
       display: flex;
@@ -723,8 +749,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   turfs = signal<Turf[]>([]);
   isLoading = signal(true);
   searchTerm = signal<string>('');
-  selectedLocation = signal<string>('');
-  allLocations = signal<string[]>([]);
+  selectedLocation = signal<string>(''); // Used for the display text
+  selectedState = signal<string>('');
+  selectedDistrict = signal<string>('');
+  
+  statesList = signal<string[]>([]);
+  districtsMap = signal<Map<string, Set<string>>>(new Map());
+  viewingDistrictsForState = signal<string | null>(null);
 
   isLocationSelectOpen = signal(false);
   isFilterOpen = signal(false);
@@ -810,14 +841,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const items = response.items;
         this.turfs.set(items);
         
-        // Extract unique locations from turfs and merge with popular defaults like Thanjavur
-        const defaultLocations = ['Thanjavur', 'Chennai', 'Coimbatore', 'Trichy', 'Madurai', 'Bangalore'];
-        const uniqueLocations = Array.from(new Set([
-          ...defaultLocations,
-          ...items.map(t => t.location)
-        ])).filter(Boolean).sort();
+        // Extract unique locations from turfs, grouping by state -> districts
+        const defaultStates = ['Tamil Nadu', 'Karnataka', 'Maharashtra', 'Kerala', 'Delhi'];
+        const map = new Map<string, Set<string>>();
+        defaultStates.forEach(s => map.set(s, new Set()));
         
-        this.allLocations.set(uniqueLocations);
+        const getState = (t: Turf) => {
+          if (t.state) return t.state;
+          const parts = t.location.split(',');
+          if (parts.length > 1) {
+            return parts[parts.length - 1].replace(/[0-9]/g, '').trim();
+          }
+          return t.location.trim(); // Fallback
+        };
+
+        const getCity = (t: Turf) => {
+          if (t.city) return t.city;
+          const parts = t.location.split(',').map(s => s.trim());
+          if (parts.length >= 2) {
+             // Usually City is the second to last part before State
+             const stateIndex = parts.length - 1; 
+             return parts[stateIndex - 1].replace(/[0-9]/g, '').trim();
+          }
+          return '';
+        };
+
+        items.forEach(t => {
+          const state = getState(t);
+          const city = getCity(t);
+          
+          if (state) {
+            if (!map.has(state)) map.set(state, new Set());
+            if (city) {
+              map.get(state)!.add(city);
+            }
+          }
+        });
+
+        this.statesList.set(Array.from(map.keys()).sort());
+        this.districtsMap.set(map);
         this.isLoading.set(false);
       },
       error: () => {
@@ -830,12 +892,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadTurfs() {
     this.isLoading.set(true);
     const search = this.searchTerm();
-    const location = this.selectedLocation();
+    const state = this.selectedState();
+    const district = this.selectedDistrict();
     const game = this.selectedGame();
 
     const params: any = {};
     if (search) params.search = search;
-    if (location) params.location = location;
+    // For backend filtering, if district is selected, search by district. Otherwise search by state.
+    if (district) {
+      params.location = district;
+    } else if (state) {
+      params.location = state;
+    }
 
     this.turfRepository.getAll(params).subscribe({
       next: (response: TurfResponse) => {
@@ -851,9 +919,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
           );
         }
         
-        if (location) {
-          const locQuery = location.toLowerCase().trim();
-          items = items.filter(t => t.location.toLowerCase() === locQuery);
+        if (state) {
+          const stateQuery = state.toLowerCase().trim();
+          items = items.filter(t => {
+            if (t.state && t.state.toLowerCase() === stateQuery) return true;
+            const extractedState = t.location.split(',').pop()?.replace(/[0-9]/g, '').trim().toLowerCase();
+            return extractedState === stateQuery || t.location.toLowerCase().includes(stateQuery);
+          });
+        }
+
+        if (district) {
+          const distQuery = district.toLowerCase().trim();
+          items = items.filter(t => {
+            if (t.city && t.city.toLowerCase() === distQuery) return true;
+            return t.location.toLowerCase().includes(distQuery);
+          });
         }
 
         if (game && game !== 'All') {
@@ -1008,16 +1088,47 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   toggleLocationSelect() {
     this.isLocationSelectOpen.update(v => !v);
+    if (!this.isLocationSelectOpen()) {
+      // Reset view to states when closed
+      setTimeout(() => this.viewingDistrictsForState.set(null), 300);
+    }
   }
 
   closeLocationSelect() {
     this.isLocationSelectOpen.set(false);
+    setTimeout(() => this.viewingDistrictsForState.set(null), 300);
   }
 
-  selectLocation(event: Event, loc: string) {
+  openStateDistricts(event: Event, state: string) {
     event.stopPropagation();
-    this.selectedLocation.set(loc);
+    this.viewingDistrictsForState.set(state);
+  }
+
+  backToStates(event: Event) {
+    event.stopPropagation();
+    this.viewingDistrictsForState.set(null);
+  }
+
+  getDistrictsForState(state: string): string[] {
+    const districts = this.districtsMap().get(state);
+    return districts ? Array.from(districts).sort() : [];
+  }
+
+  selectLocation(event: Event, state: string, district: string) {
+    event.stopPropagation();
+    this.selectedState.set(state);
+    this.selectedDistrict.set(district);
+    
+    if (!state) {
+      this.selectedLocation.set('');
+    } else if (district) {
+      this.selectedLocation.set(`${district}, ${state}`);
+    } else {
+      this.selectedLocation.set(state);
+    }
+    
     this.isLocationSelectOpen.set(false);
+    setTimeout(() => this.viewingDistrictsForState.set(null), 300);
     this.loadTurfs();
   }
 
