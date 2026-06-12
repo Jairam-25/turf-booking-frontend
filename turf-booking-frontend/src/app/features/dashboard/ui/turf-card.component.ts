@@ -247,9 +247,10 @@ export class TurfCardComponent implements OnInit {
           id: this.turf.id,
           name: this.turf.name,
           location: this.turf.location,
-          image: this.getImageSrc(),
-          price: this.turf.pricePerHour,
-          rating: this.turf.rating
+          imageUrl: this.getImageSrc(),
+          pricePerHour: this.turf.pricePerHour,
+          rating: this.turf.rating,
+          description: this.turf.description
         });
       }
     } else {

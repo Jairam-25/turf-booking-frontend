@@ -81,7 +81,7 @@ export class TurfRepositoryImpl implements TurfRepository {
               nightTimePrice: item.nightTimePrice || item.NightTimePrice,
               imageUrl: formattedImgUrl,
             rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
-            description: 'Experience professional-grade turf with premium facilities and easy booking.',
+            description: item.description || item.Description || 'Experience professional-grade turf with premium facilities and easy booking.',
             latitude: item.latitude || item.Latitude || finalLat,
             longitude: item.longitude || item.Longitude || finalLng
           };
@@ -138,6 +138,7 @@ export class TurfRepositoryImpl implements TurfRepository {
           nightTimePrice: item.nightTimePrice || item.NightTimePrice,
           imageUrl: formattedImgUrl,
           rating: item.rating !== undefined ? item.rating : (item.Rating !== undefined ? item.Rating : 0),
+          description: item.description || item.Description || 'Experience professional-grade turf with premium facilities and easy booking.',
           latitude: item.latitude || item.Latitude || finalLat,
           longitude: item.longitude || item.Longitude || finalLng
         };

@@ -746,12 +746,15 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
   `]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  allTurfs = signal<Turf[]>([]);
   turfs = signal<Turf[]>([]);
   isLoading = signal(true);
-  searchTerm = signal<string>('');
-  selectedLocation = signal<string>(''); // Used for the display text
-  selectedState = signal<string>('');
-  selectedDistrict = signal<string>('');
+  
+  // Load state from sessionStorage if available
+  searchTerm = signal<string>(sessionStorage.getItem('dashboard_search') || '');
+  selectedLocation = signal<string>(sessionStorage.getItem('dashboard_locationStr') || '');
+  selectedState = signal<string>(sessionStorage.getItem('dashboard_state') || '');
+  selectedDistrict = signal<string>(sessionStorage.getItem('dashboard_district') || '');
   
   statesList = signal<string[]>([]);
   districtsMap = signal<Map<string, Set<string>>>(new Map());
@@ -762,10 +765,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   // Filters
   gameTypes = ['All', 'Football', 'Cricket', 'Tennis', 'Badminton', 'Basketball'];
-  selectedGame = signal<string>('All');
-  maxPrice = signal<number>(5000);
-  minRating = signal<number>(0);
-  sortBy = signal<string>('recommended');
+  selectedGame = signal<string>(sessionStorage.getItem('dashboard_game') || 'All');
+  maxPrice = signal<number>(Number(sessionStorage.getItem('dashboard_maxPrice')) || 5000);
+  minRating = signal<number>(Number(sessionStorage.getItem('dashboard_minRating')) || 0);
+  sortBy = signal<string>(sessionStorage.getItem('dashboard_sort') || 'recommended');
 
   sortOptions = [
     { label: 'Recommended', value: 'recommended' },
@@ -774,7 +777,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { label: 'Highest Rated', value: 'rating_desc' }
   ];
 
-  viewMode = signal<'grid' | 'map'>('grid');
+  viewMode = signal<'grid' | 'map'>((sessionStorage.getItem('dashboard_view') as 'grid' | 'map') || 'grid');
   private map: L.Map | null = null;
   private markersLayer: L.LayerGroup | null = null;
 
@@ -839,7 +842,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.turfRepository.getAll().subscribe({
       next: (response: TurfResponse) => {
         const items = response.items;
-        this.turfs.set(items);
+        this.allTurfs.set(items);
+        this.applyFiltersLocally(); // Apply saved filters on initial load
         
         // Extract unique locations from turfs, grouping by state -> districts
         const defaultStates = ['Tamil Nadu', 'Karnataka', 'Maharashtra', 'Kerala', 'Delhi'];
@@ -889,25 +893,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  saveStateToStorage() {
+    sessionStorage.setItem('dashboard_search', this.searchTerm());
+    sessionStorage.setItem('dashboard_state', this.selectedState());
+    sessionStorage.setItem('dashboard_district', this.selectedDistrict());
+    sessionStorage.setItem('dashboard_locationStr', this.selectedLocation());
+    sessionStorage.setItem('dashboard_game', this.selectedGame());
+    sessionStorage.setItem('dashboard_maxPrice', this.maxPrice().toString());
+    sessionStorage.setItem('dashboard_minRating', this.minRating().toString());
+    sessionStorage.setItem('dashboard_sort', this.sortBy());
+    sessionStorage.setItem('dashboard_view', this.viewMode());
+  }
+
   loadTurfs() {
-    this.isLoading.set(true);
+    this.applyFiltersLocally();
+  }
+
+  applyFiltersLocally() {
+    this.saveStateToStorage();
     const search = this.searchTerm();
     const state = this.selectedState();
     const district = this.selectedDistrict();
     const game = this.selectedGame();
 
-    const params: any = {};
-    if (search) params.search = search;
-    // For backend filtering, if district is selected, search by district. Otherwise search by state.
-    if (district) {
-      params.location = district;
-    } else if (state) {
-      params.location = state;
-    }
-
-    this.turfRepository.getAll(params).subscribe({
-      next: (response: TurfResponse) => {
-        let items = response.items;
+    let items = [...this.allTurfs()];
         
         // Failsafe client-side filtering to guarantee exact match search results
         if (search) {
@@ -965,23 +974,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
         
         this.turfs.set(items);
-        this.isLoading.set(false);
         if (this.viewMode() === 'map') {
           setTimeout(() => {
             this.updateMapMarkers();
             if (this.map) this.map.invalidateSize();
           }, 150);
         }
-      },
-      error: () => {
-        this.notificationService.error('Failed to load turfs. Please try again later.');
-        this.isLoading.set(false);
-      }
-    });
   }
 
   setViewMode(mode: 'grid' | 'map') {
     this.viewMode.set(mode);
+    this.saveStateToStorage();
     if (mode === 'map') {
       setTimeout(() => {
         this.initMap();

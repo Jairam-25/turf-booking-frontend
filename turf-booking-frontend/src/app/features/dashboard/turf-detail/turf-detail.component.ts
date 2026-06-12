@@ -65,9 +65,7 @@ interface CategorizedSlot extends Slot {
             </a>
 
             <p class="turf-description">
-              Experience the best-in-class sports infrastructure at {{ turf()?.name }}. 
-              Equipped with professional-grade turf, ambient night floodlighting, change rooms, 
-              and pure athletic vibes. Perfect for friendly matches, corporate tournaments, and skill sessions.
+              {{ turf()?.description }}
             </p>
 
             <div class="pricing-rules-card glass">
