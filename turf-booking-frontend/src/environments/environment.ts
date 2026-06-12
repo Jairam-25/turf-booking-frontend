@@ -2,7 +2,7 @@
 // Go to: https://console.firebase.google.com → Your Project → Project Settings → Your Apps → Firebase SDK snippet
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7273/api/v1',
+  apiUrl: 'https://turf-booking-backend-fixl.onrender.com/api/v1',
   firebase: {
     apiKey: 'AIzaSyDUuQ0-cRMkWYzs1rd_W78FK8kqalZUXWA',
     authDomain: 'turf-booking-a7f92.firebaseapp.com',
