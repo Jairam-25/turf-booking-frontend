@@ -145,3 +145,10 @@
 .footer-link-item:hover::after {
   width: 100%;
 }
+
+/* Hide the large global footer on mobile to avoid clashing with the bottom navigation bar */
+@media (max-width: 768px) {
+  .footer-container {
+    display: none !important;
+  }
+}
