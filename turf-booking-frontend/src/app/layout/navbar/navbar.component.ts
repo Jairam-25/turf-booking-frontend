@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
     const url = this.authStore.user()?.profilePictureUrl;
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    return `https://localhost:7273${url.startsWith('/') ? '' : '/'}${url}`;
+    return `https://turf-booking-backend-fixl.onrender.com${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
   toggleTheme() {

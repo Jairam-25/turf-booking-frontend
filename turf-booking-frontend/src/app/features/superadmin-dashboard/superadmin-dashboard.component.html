@@ -178,7 +178,7 @@
                         <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Uploaded Documents</h5>
                         <div class="flex flex-col gap-2">
                           <a *ngFor="let doc of turf.documents" 
-                             [href]="'https://localhost:7273' + doc.fileUrl" 
+                             [href]="'https://turf-booking-backend-fixl.onrender.com' + doc.fileUrl" 
                              target="_blank" 
                              class="text-xs border p-2.5 rounded-lg flex items-center justify-between text-blue-400 transition-colors"
                              style="background: var(--bg-color); border-color: var(--border-color);">
@@ -193,11 +193,11 @@
                         <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Turf Images</h5>
                         <div class="flex gap-3 overflow-x-auto pb-2">
                           <a *ngFor="let img of turf.images" 
-                             [href]="'https://localhost:7273' + img" 
+                             [href]="'https://turf-booking-backend-fixl.onrender.com' + img" 
                              target="_blank" 
                              class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border"
                              style="background: var(--bg-color); border-color: var(--border-color);">
-                            <img [src]="'https://localhost:7273' + img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
+                            <img [src]="'https://turf-booking-backend-fixl.onrender.com' + img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
                           </a>
                         </div>
                       </div>

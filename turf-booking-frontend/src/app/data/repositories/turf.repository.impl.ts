@@ -69,7 +69,7 @@ export class TurfRepositoryImpl implements TurfRepository {
           const finalLng = parsedLng !== null ? parsedLng : (isThanjavur ? 79.1378 : (isBangalore ? 77.5946 : 80.2707)) + lngOffset;
           
             let rawImgUrl = item.imageUrl || item.ImageUrl;
-            let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://localhost:7273${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[index % this.mockImages.length];
+            let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://turf-booking-backend-fixl.onrender.com${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[index % this.mockImages.length];
 
             return {
               id: item.id || item.Id,
@@ -126,7 +126,7 @@ export class TurfRepositoryImpl implements TurfRepository {
         const finalLng = parsedLng !== null ? parsedLng : (isThanjavur ? 79.1378 : (isBangalore ? 77.5946 : 80.2707));
 
         let rawImgUrl = item.imageUrl || item.ImageUrl;
-        let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://localhost:7273${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[0];
+        let formattedImgUrl = rawImgUrl ? (rawImgUrl.startsWith('http') ? rawImgUrl : `https://turf-booking-backend-fixl.onrender.com${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`) : this.mockImages[0];
 
         return {
           id: item.id || item.Id,

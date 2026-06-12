@@ -20,7 +20,7 @@ export class BookingRepositoryImpl implements BookingRepository {
   }
 
   createOrder(amount: number): Observable<any> {
-    return this.http.post<any>('https://localhost:7273/api/v1/Payment/create-order', { amount });
+    return this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Payment/create-order', { amount });
   }
 
   getMyBookings(): Observable<Booking[]> {

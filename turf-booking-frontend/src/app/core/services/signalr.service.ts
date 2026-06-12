@@ -6,7 +6,7 @@ import { NotificationService } from './notification.service';
 @Injectable({ providedIn: 'root' })
 export class SignalrService {
   private connection: signalR.HubConnection | null = null;
-  private hubUrl = 'https://localhost:7273/hubs/slots';
+  private hubUrl = 'https://turf-booking-backend-fixl.onrender.com/hubs/slots';
 
   constructor(private auth: AuthStore, private notificationService: NotificationService) {
     this.init();

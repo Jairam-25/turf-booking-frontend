@@ -51,7 +51,7 @@ export class SuperadminDashboardComponent implements OnInit {
   }
 
   loadStats() {
-    this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/dashboard-metrics').subscribe({
+    this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/dashboard-metrics').subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
         this.stats = {
@@ -72,7 +72,7 @@ export class SuperadminDashboardComponent implements OnInit {
 
 
   loadVerifications() {
-    this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/verifications').subscribe({
+    this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/verifications').subscribe({
       next: (res) => {
         const data = res.data || res.Data || res;
         
@@ -226,7 +226,7 @@ export class SuperadminDashboardComponent implements OnInit {
       rejectionReason: reason
     };
 
-    this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/verify', payload).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/verify', payload).subscribe({
       next: () => {
         this.notificationService.success(`Verification set to '${status}' successfully.`);
         this.loadVerifications();
@@ -259,7 +259,7 @@ export class SuperadminDashboardComponent implements OnInit {
       return;
     }
 
-    this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/edit-owner', this.editOwnerData).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/edit-owner', this.editOwnerData).subscribe({
       next: () => {
         this.notificationService.success('Owner information updated successfully.');
         this.loadVerifications();
@@ -273,7 +273,7 @@ export class SuperadminDashboardComponent implements OnInit {
 
   removeOwner(ownerId: number) {
     if (confirm('Are you sure you want to remove this owner? All associated turf listings, documents, and payments will be permanently deleted.')) {
-      this.http.post<any>('https://localhost:7273/api/v1/SuperAdmin/remove-owner', { ownerId }).subscribe({
+      this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/remove-owner', { ownerId }).subscribe({
         next: () => {
           this.notificationService.success('Owner and associated turf removed successfully.');
           this.loadVerifications();

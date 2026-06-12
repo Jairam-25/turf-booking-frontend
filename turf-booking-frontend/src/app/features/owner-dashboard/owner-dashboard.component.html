@@ -344,7 +344,7 @@
             <h3 class="mt-6 mb-2 font-bold text-lg" style="color: var(--text-primary)">Turf Image</h3>
             <div class="flex flex-col md:flex-row gap-6 items-start border border-[rgba(150,150,150,0.2)] rounded-xl p-4 bg-[var(--surface-color)]">
               <div class="relative w-full max-w-[300px] h-[200px] rounded-lg overflow-hidden border border-[rgba(150,150,150,0.1)] bg-black/10 flex-shrink-0">
-                <img *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" [src]="imageUrl()!.startsWith('http') ? imageUrl() : 'https://localhost:7273' + imageUrl()" alt="Turf Preview" class="w-full h-full object-cover" />
+                <img *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" [src]="imageUrl()!.startsWith('http') ? imageUrl() : 'https://turf-booking-backend-fixl.onrender.com' + imageUrl()" alt="Turf Preview" class="w-full h-full object-cover" />
                 <div *ngIf="!imageUrl() || imageUrl() === 'CLEAR'" class="w-full h-full flex flex-col items-center justify-center text-[var(--text-secondary)]">
                   <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   <span class="text-sm font-medium">No Image Uploaded</span>

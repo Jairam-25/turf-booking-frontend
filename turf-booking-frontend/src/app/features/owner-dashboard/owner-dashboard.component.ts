@@ -125,7 +125,7 @@ export class OwnerDashboardComponent implements OnInit {
 
   loadDashboardData(tId?: number) {
     this.isOverlayActive.set(true);
-    let url = 'https://localhost:7273/api/v1/owner/dashboard';
+    let url = 'https://turf-booking-backend-fixl.onrender.com/api/v1/owner/dashboard';
     if (tId) {
       url += `?turfId=${tId}`;
     }
@@ -229,7 +229,7 @@ export class OwnerDashboardComponent implements OnInit {
     const id = this.turfId();
     if (!id) return;
 
-    this.http.get<any>(`https://localhost:7273/api/v1/slot?turfId=${id}`).subscribe({
+    this.http.get<any>(`https://turf-booking-backend-fixl.onrender.com/api/v1/slot?turfId=${id}`).subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
         this.availableSlots = Array.isArray(data) ? data : [];
@@ -239,7 +239,7 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
   bookOffline(slotId: number) {
-    this.http.post<any>('https://localhost:7273/api/v1/booking', { slotId }).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/booking', { slotId }).subscribe({
       next: (res) => {
         this.notificationService.success('Offline booking created successfully!');
         const slot = this.availableSlots.find(s => s.slotId === slotId || s.SlotId === slotId);
@@ -456,7 +456,7 @@ export class OwnerDashboardComponent implements OnInit {
     const bookingIdNum = parseInt(id.replace('B-', ''), 10);
     this.isCancelling.set(true);
 
-    this.http.delete(`https://localhost:7273/api/v1/owner/booking/${bookingIdNum}?reason=${encodeURIComponent(this.cancelReason)}`).subscribe({
+    this.http.delete(`https://turf-booking-backend-fixl.onrender.com/api/v1/owner/booking/${bookingIdNum}?reason=${encodeURIComponent(this.cancelReason)}`).subscribe({
       next: () => {
         const b = this.recentBookings.find(x => x.Id === id || x.id === id);
         if (b) {
@@ -520,7 +520,7 @@ export class OwnerDashboardComponent implements OnInit {
       ...this.settingsForm.value,
       imageUrl: this.imageUrl()
     };
-    this.http.post('https://localhost:7273/api/v1/owner/settings', payload).subscribe({
+    this.http.post('https://turf-booking-backend-fixl.onrender.com/api/v1/owner/settings', payload).subscribe({
       next: () => this.notificationService.success('Settings updated successfully.'),
       error: () => this.notificationService.error('Failed to update settings.')
     });
@@ -539,7 +539,7 @@ export class OwnerDashboardComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.http.post<any>('https://localhost:7273/api/v1/Upload', formData).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Upload', formData).subscribe({
       next: (res) => {
         this.imageUrl.set(res.url);
         this.notificationService.success('Image uploaded temporarily. Click Save Changes to apply.');
@@ -572,7 +572,7 @@ export class OwnerDashboardComponent implements OnInit {
 
   sendLogoutOtp() {
     this.isSendingOtp.set(true);
-    this.http.post<any>('https://localhost:7273/api/v1/owner/send-logout-otp', {}).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/owner/send-logout-otp', {}).subscribe({
       next: (res: any) => {
         const data = res.data || res.Data || res.value || res.Value || res;
         this.maskedEmail.set(data.email || 'your email');
@@ -597,7 +597,7 @@ export class OwnerDashboardComponent implements OnInit {
       return;
     }
     this.isVerifyingOtp.set(true);
-    this.http.post<any>('https://localhost:7273/api/v1/owner/verify-logout-otp', { otpCode: this.logoutOtpCode }).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/owner/verify-logout-otp', { otpCode: this.logoutOtpCode }).subscribe({
       next: (res) => {
         this.isVerifyingOtp.set(false);
         this.isLogoutModalOpen.set(false);

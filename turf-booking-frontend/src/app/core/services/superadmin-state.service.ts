@@ -15,7 +15,7 @@ export class SuperadminStateService {
       return;
     }
 
-    this.http.get<any>('https://localhost:7273/api/v1/SuperAdmin/verifications').subscribe({
+    this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/verifications').subscribe({
       next: (res) => {
         const data = res.data || res.Data || res;
         let count = 0;

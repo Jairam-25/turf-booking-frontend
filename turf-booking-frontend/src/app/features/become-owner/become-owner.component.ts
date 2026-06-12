@@ -84,7 +84,7 @@ export class BecomeOwnerComponent implements OnInit {
   checkStatus(showUserFeedback: boolean = false) {
     if (showUserFeedback) this.isCheckingStatus.set(true);
     
-    this.http.get<any>('https://localhost:7273/api/v1/OwnerOnboarding/status').subscribe({
+    this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/OwnerOnboarding/status').subscribe({
       next: (res) => {
         if (showUserFeedback) this.isCheckingStatus.set(false);
         
@@ -134,7 +134,7 @@ export class BecomeOwnerComponent implements OnInit {
     this.isSubmitting = true;
     const payload = this.ownerForm.value;
 
-    this.http.post<any>('https://localhost:7273/api/v1/OwnerOnboarding/register', payload).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/OwnerOnboarding/register', payload).subscribe({
       next: (res) => {
         const data = res.data || res.Data || res;
         this.ownerId.set(data.ownerId);
@@ -211,7 +211,7 @@ export class BecomeOwnerComponent implements OnInit {
       status: 'Success'
     };
 
-    this.http.post<any>('https://localhost:7273/api/v1/OwnerOnboarding/payment', payload).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/OwnerOnboarding/payment', payload).subscribe({
       next: () => {
         this.notificationService.success('Payment received successfully!');
         this.isSubmitting = false;
@@ -240,7 +240,7 @@ export class BecomeOwnerComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.http.post<any>('https://localhost:7273/api/v1/Upload', formData).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Upload', formData).subscribe({
       next: (res) => {
         this.turfImages.update(imgs => [...imgs, res.url]);
         this.notificationService.success('Image uploaded successfully');
@@ -274,7 +274,7 @@ export class BecomeOwnerComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.http.post<any>('https://localhost:7273/api/v1/Upload', formData).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Upload', formData).subscribe({
       next: (res) => {
         this.requiredDocs[docIndex].url = res.url;
         this.requiredDocs[docIndex].uploading = false;
@@ -322,7 +322,7 @@ export class BecomeOwnerComponent implements OnInit {
         .map(d => ({ documentType: d.type, fileUrl: d.url }))
     };
 
-    this.http.post<any>('https://localhost:7273/api/v1/OwnerOnboarding/submit-turf', payload).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/OwnerOnboarding/submit-turf', payload).subscribe({
       next: () => {
         this.notificationService.success('Turf details and documents submitted for verification!');
         this.isSubmitting = false;

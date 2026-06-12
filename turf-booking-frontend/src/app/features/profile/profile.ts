@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
     const url = this.profilePictureUrl();
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    return `https://localhost:7273${url.startsWith('/') ? '' : '/'}${url}`;
+    return `https://turf-booking-backend-fixl.onrender.com${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
   private fb = inject(FormBuilder);
@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit {
     this.isSaving.set(true);
     const data = this.profileForm.getRawValue();
 
-    this.http.put<any>('https://localhost:7273/api/v1/Auth/update-profile', {
+    this.http.put<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Auth/update-profile', {
       name: data.name,
       phoneNumber: data.phoneNumber,
       address: data.address,
@@ -120,7 +120,7 @@ export class ProfileComponent implements OnInit {
     if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) {
       this.isDeleting.set(true);
       
-      this.http.delete('https://localhost:7273/api/v1/Auth/delete-account').subscribe({
+      this.http.delete('https://turf-booking-backend-fixl.onrender.com/api/v1/Auth/delete-account').subscribe({
         next: () => {
           this.notificationService.success('Account deleted successfully. We\'re sad to see you go!');
           this.isDeleting.set(false);
@@ -147,7 +147,7 @@ export class ProfileComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.http.post<any>('https://localhost:7273/api/v1/Upload', formData).subscribe({
+    this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Upload', formData).subscribe({
       next: (res) => {
         this.profilePictureUrl.set(res.url);
         this.notificationService.success('Profile picture uploaded successfully. Click Save Changes to apply.');

@@ -65,7 +65,7 @@ export class FcmNotificationService {
           console.log('🎉 Successfully retrieved FCM Token:', token);
           
           // Send this token to C# backend to save in the User's FcmToken column
-          this.http.post('https://localhost:7273/api/v1/auth/update-fcm-token', { token: token }).subscribe({
+          this.http.post('https://turf-booking-backend-fixl.onrender.com/api/v1/auth/update-fcm-token', { token: token }).subscribe({
             next: () => console.log('✅ FCM Token saved to database successfully!'),
             error: (err) => console.error('❌ Failed to save FCM Token to database', err)
           });
