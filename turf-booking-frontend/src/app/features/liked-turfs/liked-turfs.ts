@@ -36,4 +36,8 @@ export class LikedTurfsComponent implements OnInit {
     localStorage.setItem('likedTurfs', JSON.stringify(current));
     this.notificationService.success('Removed from liked turfs.');
   }
+
+  onImageError(event: any) {
+    event.target.src = '/images/turf_sports_ground.png';
+  }
 }

@@ -26,6 +26,7 @@ import { AuthRepository } from './domain/repositories/auth.repository';
 })
 export class App implements OnInit {
   hideNavbar = signal(false);
+  hideFooter = signal(false);
 
   constructor(
     private router: Router,
@@ -36,7 +37,7 @@ export class App implements OnInit {
 
   ngOnInit() {
     this.themeService.init();
-    this.updateNavbarVisibility(this.router.url);
+    this.updateVisibility(this.router.url);
 
     // Silent refresh on app init
     const token = this.authStore.token();
@@ -56,10 +57,13 @@ export class App implements OnInit {
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => this.updateNavbarVisibility(event.urlAfterRedirects));
+      .subscribe((event) => this.updateVisibility(event.urlAfterRedirects));
   }
 
-  private updateNavbarVisibility(url: string) {
-    this.hideNavbar.set(url.startsWith('/auth'));
+  private updateVisibility(url: string) {
+    const cleanUrl = url.split('?')[0];
+    this.hideNavbar.set(cleanUrl.startsWith('/auth'));
+    // Hide footer on auth pages, payment, and possibly others if needed
+    this.hideFooter.set(cleanUrl.startsWith('/auth') || cleanUrl.startsWith('/payment'));
   }
 }

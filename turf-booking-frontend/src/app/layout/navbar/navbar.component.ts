@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
   isAnnouncementVisible = true;
   showLogoutConfirm = false;
   isNotificationsOpen = false;
+  profileImageError = false;
 
   constructor(
     private router: Router,

@@ -6,8 +6,8 @@
     <div class="glass rounded-3xl p-6 md:p-10 shadow-sm border border-[rgba(150,150,150,0.1)] mb-8">
       <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left">
         <div class="relative group w-28 h-28 rounded-full flex-shrink-0 cursor-pointer overflow-hidden shadow-xl border-4 border-[var(--bg-card)] ring-2 ring-[#7b39fc]/30 hover:ring-[#7b39fc] transition-all mx-auto sm:mx-0" (click)="fileInput.click()">
-          <img *ngIf="profilePictureUrl() && !isUploadingImage()" [src]="getFullProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover">
-          <div *ngIf="!profilePictureUrl() && !isUploadingImage()" class="w-full h-full bg-gradient-to-br from-[#7b39fc] to-[#5a24c3] flex items-center justify-center text-white font-bold text-4xl">
+          <img *ngIf="profilePictureUrl() && !isUploadingImage() && !profileImageError()" [src]="getFullProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError.set(true)">
+          <div *ngIf="(!profilePictureUrl() || profileImageError()) && !isUploadingImage()" class="w-full h-full bg-gradient-to-br from-[#7b39fc] to-[#5a24c3] flex items-center justify-center text-white font-bold text-4xl">
             {{ profileForm.get('name')?.value?.charAt(0) || 'U' }}
           </div>
           <div *ngIf="isUploadingImage()" class="w-full h-full bg-[var(--bg-card)] flex items-center justify-center">

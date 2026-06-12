@@ -91,8 +91,8 @@
           <!-- Notification Dot -->
           <span *ngIf="(inboxService.unreadCount() + (authStore.user()?.role === 'SuperAdmin' ? superadminStateService.pendingVerificationsCount() : 0)) > 0" class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 rounded-full border-2 border-[var(--bg-card)]"></span>
           <div class="relative flex items-center justify-center w-9 h-9 rounded-full overflow-hidden border border-[var(--border-color)] shadow-sm">
-            <img *ngIf="getProfilePictureUrl()" [src]="getProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover">
-            <div *ngIf="!getProfilePictureUrl()" class="w-full h-full bg-gradient-to-tr from-[#7b39fc] to-[#4c1d95] flex items-center justify-center text-white font-bold text-xs">
+            <img *ngIf="getProfilePictureUrl() && !profileImageError" [src]="getProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError = true">
+            <div *ngIf="!getProfilePictureUrl() || profileImageError" class="w-full h-full bg-gradient-to-tr from-[#7b39fc] to-[#4c1d95] flex items-center justify-center text-white font-bold text-xs">
               {{ authStore.user()?.name?.charAt(0) || 'U' }}
             </div>
           </div>
@@ -430,8 +430,8 @@
     <div *ngIf="isLoggedIn()" class="flex flex-col gap-4">
       <div class="flex items-center gap-3 px-2">
         <button class="relative flex items-center justify-center w-10 h-10 rounded-full border border-[var(--border-color)] bg-[var(--surface-color)] hover:bg-[var(--background-color)] transition-colors overflow-hidden group">
-          <img *ngIf="getProfilePictureUrl()" [src]="getProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover">
-          <div *ngIf="!getProfilePictureUrl()" class="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
+          <img *ngIf="getProfilePictureUrl() && !profileImageError" [src]="getProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError = true">
+          <div *ngIf="!getProfilePictureUrl() || profileImageError" class="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
             {{ authStore.user()?.name?.charAt(0) || 'U' }}
           </div>
           

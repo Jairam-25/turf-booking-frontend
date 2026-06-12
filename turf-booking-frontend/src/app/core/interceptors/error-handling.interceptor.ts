@@ -8,8 +8,8 @@ export const errorHandlingInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Auth interceptor handles 401
-      if (error.status !== 401) {
+      // Auth interceptor handles 401, and refresh-token failures should just logout silently
+      if (error.status !== 401 && !req.url.includes('/refresh-token')) {
         let message = 'An unexpected error occurred';
         if (error.error) {
           if (typeof error.error === 'string') {

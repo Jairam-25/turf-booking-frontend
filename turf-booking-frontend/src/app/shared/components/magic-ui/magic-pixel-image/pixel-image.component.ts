@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PixelImageComponent implements AfterViewInit, OnDestroy {
   @Input() src?: string;
+  @Input() fallbackSrc: string = '/images/turf_sports_ground.png';
   @Input() duration = 700; // animation duration in ms
   @Input() minPixel = 4; // biggest pixel size
   @Input() steps = 8;
@@ -89,9 +90,27 @@ export class PixelImageComponent implements AfterViewInit, OnDestroy {
 
   private drawFallback() {
     if (!this.ctx) return;
-    // fill with placeholder color
-    this.ctx.fillStyle = '#e5e7eb';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.fallbackSrc) {
+      const fallbackImg = new Image();
+      fallbackImg.onload = () => {
+        if (!this.ctx) return;
+        const canvas = this.canvas;
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+        this.ctx.drawImage(fallbackImg, 0, 0, canvas.width, canvas.height);
+      };
+      fallbackImg.onerror = () => {
+        if (!this.ctx) return;
+        this.ctx.fillStyle = '#e5e7eb';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      };
+      fallbackImg.src = this.fallbackSrc;
+    } else {
+      this.ctx.fillStyle = '#e5e7eb';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
   }
 
   onError() { this.drawFallback(); }

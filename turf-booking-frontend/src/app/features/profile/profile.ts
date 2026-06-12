@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   
   // Profile Picture
   profilePictureUrl = signal<string | null>(null);
+  profileImageError = signal(false);
   isUploadingImage = signal<boolean>(false);
 
   getFullProfilePictureUrl(): string {
