@@ -31,12 +31,12 @@ interface ChatMessage {
         aria-label="Toggle XpertBot Chat"
       >
         <!-- Chat Icon -->
-        <svg *ngIf="!isOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="trigger-icon">
+        <svg title="Close" *ngIf="!isOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="trigger-icon">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         
         <!-- Close Icon -->
-        <svg *ngIf="isOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="trigger-icon close-icon">
+        <svg title="Close" *ngIf="isOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="trigger-icon close-icon">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -54,7 +54,7 @@ interface ChatMessage {
             <div class="bot-avatar">
               <!-- Animated glowing status ring -->
               <div class="avatar-ring"></div>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path>
                 <path d="M8 10h.01"></path>
                 <path d="M16 10h.01"></path>
@@ -71,14 +71,14 @@ interface ChatMessage {
           <div class="header-actions">
             <!-- Reset chat icon button -->
             <button class="btn-header-action" (click)="clearChat()" title="Reset Conversation">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg title="Close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
               </svg>
             </button>
             <!-- Close icon button -->
             <button class="btn-header-action close-btn" (click)="toggleChat()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg title="Close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
@@ -103,7 +103,7 @@ interface ChatMessage {
           >
             <!-- Bot Avatar inside the row -->
             <div class="message-avatar" *ngIf="msg.sender === 'bot'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path>
                 <path d="M8 10h.01"></path>
                 <path d="M16 10h.01"></path>
@@ -124,7 +124,7 @@ interface ChatMessage {
                 (click)="handleAction(msg.action.route)"
               >
                 <span>{{ msg.action.label }}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
+                <svg title="Expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -135,7 +135,7 @@ interface ChatMessage {
           <!-- Typing state dot pulse -->
           <div class="message-row bot-row" *ngIf="isTyping()">
             <div class="message-avatar">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path>
                 <path d="M8 10h.01"></path>
                 <path d="M16 10h.01"></path>
@@ -179,7 +179,7 @@ interface ChatMessage {
             autocomplete="off"
           />
           <button type="submit" [disabled]="!userInput.trim() || isTyping()" aria-label="Send message">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>

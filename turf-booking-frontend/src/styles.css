@@ -850,3 +850,55 @@ body:not([data-theme="light"]) img[src*="logo.png"] {
     transparent 40%
   );
 }
+
+/* Animated Theme Toggler CSS */
+.theme-toggle-animated {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.theme-toggle-animated .sun-moon {
+  transition: r 0.5s ease;
+}
+.theme-toggle-animated .moon-hole {
+  transition: cx 0.5s ease, cy 0.5s ease;
+}
+.theme-toggle-animated .sun-rays {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  transform-origin: center;
+}
+
+/* Light Mode (Sun) */
+body[data-theme="light"] .theme-toggle-animated .sun-moon {
+  r: 5;
+  fill: none;
+}
+body[data-theme="light"] .theme-toggle-animated .moon-hole {
+  cx: 30;
+  cy: 0;
+}
+body[data-theme="light"] .theme-toggle-animated .sun-rays {
+  transform: rotate(0);
+  opacity: 1;
+}
+body[data-theme="light"] .theme-toggle-animated {
+  color: #0ea5e9; /* sky-500 */
+}
+
+/* Dark Mode (Moon) */
+body:not([data-theme="light"]) .theme-toggle-animated .sun-moon {
+  r: 9;
+  fill: currentColor;
+}
+body:not([data-theme="light"]) .theme-toggle-animated .moon-hole {
+  cx: 17;
+  cy: 9;
+}
+body:not([data-theme="light"]) .theme-toggle-animated .sun-rays {
+  transform: rotate(45deg);
+  opacity: 0;
+}
+body:not([data-theme="light"]) .theme-toggle-animated {
+  color: #fbbf24; /* amber-400 */
+}

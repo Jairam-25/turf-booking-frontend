@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -29,7 +29,7 @@ export interface GroupedBooking {
       <!-- Back Button -->
       <div class="navigation-bar">
         <button class="btn-back" routerLink="/dashboard">
-          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Back">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           Back to Book Turf
@@ -47,7 +47,7 @@ export interface GroupedBooking {
            <!-- Most Played Arena -->
            <div class="insight-card">
               <div class="insight-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Most Played Arena"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
               </div>
               <div class="insight-info">
                 <h4>Most Played Arena</h4>
@@ -59,7 +59,7 @@ export interface GroupedBooking {
            <!-- Preferred Time Slots -->
            <div class="insight-card">
               <div class="insight-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Preferred Time"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
               <div class="insight-info">
                 <h4>Preferred Time</h4>
@@ -71,7 +71,7 @@ export interface GroupedBooking {
            <!-- Recommended Turf -->
            <div class="insight-card highlight">
               <div class="insight-icon" style="background: rgba(255, 255, 255, 0.2); color: #fff;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" /></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Recommended Turf"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" /></svg>
               </div>
               <div class="insight-info">
                 <h4>Recommended for You</h4>
@@ -85,7 +85,14 @@ export interface GroupedBooking {
         </ng-template>
       </div>
 
-      <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Booking History</h2>
+      <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+        <h2 style="font-size: 1.5rem; margin: 0; color: var(--text-primary);">My Bookings</h2>
+        
+        <div class="tabs-container">
+          <button [class.active]="activeTab() === 'today'" (click)="activeTab.set('today')" class="tab-btn">Today's Bookings</button>
+          <button [class.active]="activeTab() === 'history'" (click)="activeTab.set('history')" class="tab-btn">Booking History</button>
+        </div>
+      </div>
 
       <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
         <div 
@@ -101,7 +108,7 @@ export interface GroupedBooking {
                 class="location-link"
                 title="Open in Google Maps"
               >
-                <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px;">
+                <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Location" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px;">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
                   <circle cx="12" cy="10.5" r="2.5" />
                 </svg>
@@ -137,7 +144,7 @@ export interface GroupedBooking {
           
           <div class="booking-actions">
             <button class="btn-share btn-uniform" (click)="shareBooking(booking)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Share">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
               </svg>
               Share
@@ -193,6 +200,7 @@ export interface GroupedBooking {
                (click)="feedbackRating = star"
                [attr.fill]="star <= feedbackRating ? '#fbbf24' : 'none'"
                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" 
+               title="Star Rating"
                style="width: 32px; height: 32px; cursor: pointer; color: #fbbf24; transition: transform 0.2s;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
@@ -277,6 +285,33 @@ export interface GroupedBooking {
       margin: 0;
       color: var(--text-secondary);
       font-size: 1rem;
+    }
+    
+    .tabs-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
     }
     
     /* Insights Grid */
@@ -706,7 +741,24 @@ export interface GroupedBooking {
   `]
 })
 export class BookingsComponent implements OnInit {
-  bookings = signal<GroupedBooking[]>([]);
+  allBookings = signal<GroupedBooking[]>([]);
+  activeTab = signal<'today' | 'history'>('today');
+  
+  bookings = computed(() => {
+    const all = this.allBookings();
+    if (this.activeTab() === 'history') {
+      return all;
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return all.filter(b => {
+        const bookingDate = new Date(b.startTime);
+        bookingDate.setHours(0, 0, 0, 0);
+        return bookingDate.getTime() === today.getTime();
+      });
+    }
+  });
+
   isLoading = signal(true);
   
   // Modal state
@@ -741,7 +793,7 @@ export class BookingsComponent implements OnInit {
     this.bookingRepository.getMyBookings().subscribe({
       next: (data) => {
         const grouped = this.groupBookings(data);
-        this.bookings.set(grouped);
+        this.allBookings.set(grouped);
         this.calculateAnalytics(grouped);
         this.isLoading.set(false);
       },

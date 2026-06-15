@@ -36,7 +36,7 @@ interface ChatMessage {
       <!-- Back Button -->
       <div class="navigation-bar">
         <button class="btn-back" routerLink="/dashboard">
-          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg title="Back" class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           Back to Book Turf
@@ -69,7 +69,7 @@ interface ChatMessage {
             <!-- Search and Filter Bar -->
             <div class="filter-bar">
               <div class="search-box glass">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg title="Search" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -103,7 +103,7 @@ interface ChatMessage {
                 <button class="faq-trigger" (click)="toggleFAQ(faq)">
                   <span class="faq-question">{{ faq.question }}</span>
                   <span class="faq-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <svg title="Support" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </span>
@@ -214,7 +214,7 @@ interface ChatMessage {
             <div class="chat-header">
               <div class="agent-avatar">
                 <div class="avatar-inner">
-                  <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <!-- <svg title="Information" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg> -->
                   <i class="bi bi-robot"></i>
@@ -264,7 +264,7 @@ interface ChatMessage {
                 required
               />
               <button type="submit" [disabled]="!chatInput.trim() || isBotTyping()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>

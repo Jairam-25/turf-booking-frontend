@@ -22,7 +22,7 @@ interface Player {
       <!-- Header -->
       <div class="navigation-bar">
         <button class="btn-back" routerLink="/dashboard">
-          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg title="Back" class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           Back to Book Turf
@@ -101,9 +101,9 @@ interface Player {
           <div class="rank-col">
             <span class="rank-num">{{ p.rank }}</span>
             <span class="trend" [class]="p.trend">
-              <svg *ngIf="p.trend === 'up'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
-              <svg *ngIf="p.trend === 'down'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-              <svg *ngIf="p.trend === 'same'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+              <svg title="Action" *ngIf="p.trend === 'up'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
+              <svg title="Action" *ngIf="p.trend === 'down'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+              <svg title="Action" *ngIf="p.trend === 'same'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
             </span>
           </div>
           
