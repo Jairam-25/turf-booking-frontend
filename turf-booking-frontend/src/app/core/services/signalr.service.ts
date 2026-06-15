@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { Subject } from 'rxjs';
 import { AuthStore } from './auth.store';
 import { NotificationService } from './notification.service';
 
@@ -7,6 +8,7 @@ import { NotificationService } from './notification.service';
 export class SignalrService {
   private connection: signalR.HubConnection | null = null;
   private hubUrl = 'https://turf-booking-backend-fixl.onrender.com/hubs/slots';
+  public reconnected$ = new Subject<void>();
 
   constructor(private auth: AuthStore, private notificationService: NotificationService) {
     this.init();
@@ -15,9 +17,9 @@ export class SignalrService {
   private startPromise: Promise<void> | null = null;
 
   private init() {
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(this.hubUrl, { accessTokenFactory: () => this.auth.token() || '' })
-      .withAutomaticReconnect()
+    this.connection = (new signalR.HubConnectionBuilder()
+      .withUrl(this.hubUrl, { accessTokenFactory: () => this.auth.token() || '' }) as any)
+      .withAutomaticReconnect([0, 2000, 5000, 10000, null])
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 
@@ -29,6 +31,7 @@ export class SignalrService {
 
       conn.onreconnected((connectionId?: string) => {
         this.notificationService.success('Live availability reconnected.');
+        this.reconnected$.next();
       });
 
       conn.onclose((error?: Error) => {
@@ -36,12 +39,11 @@ export class SignalrService {
           this.notificationService.error('Live availability disconnected. Please refresh the page.');
         }
       });
+      this.startPromise = this.connection.start();
+      this.startPromise.catch(() => {
+        // swallow startup errors; will try connecting on demand
+      });
     }
-
-    this.startPromise = this.connection.start();
-    this.startPromise.catch(() => {
-      // swallow startup errors; will try connecting on demand
-    });
   }
 
   private async ensureConnected() {

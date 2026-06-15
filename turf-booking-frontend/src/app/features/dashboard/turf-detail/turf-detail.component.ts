@@ -2,7 +2,7 @@ import { Component, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { TurfRepository } from '../../../domain/repositories/turf.repository';
 import { BookingRepository } from '../../../domain/repositories/booking.repository';
 import { ReviewRepository } from '../../../domain/repositories/review.repository';
@@ -1559,6 +1559,8 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   newReviewComment = '';
   isSubmittingReview = signal(false);
 
+  private signalrSubscription: Subscription | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -1604,8 +1606,31 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
             }
           }
         });
+
+        this.signalrSubscription = this.signalr.reconnected$.subscribe(() => {
+          this.fetchSlots();
+        });
       } else {
         this.router.navigate(['/dashboard']);
+      }
+    });
+  }
+
+  fetchSlots() {
+    this.bookingRepository.getSlotsByTurf(this.turfId).subscribe({
+      next: (slotsList) => {
+        const mapped = slotsList.map(s => {
+          const catInfo = this.getSlotCategory(s.startTime);
+          const basePrice = this.turf()?.pricePerHour ?? 40;
+          return {
+            ...s,
+            category: catInfo.category,
+            calculatedPrice: catInfo.exactPrice ?? Math.round(basePrice * catInfo.multiplier)
+          } as CategorizedSlot;
+        });
+
+        mapped.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+        this.slots.set(mapped);
       }
     });
   }
@@ -1846,6 +1871,9 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
       this.signalr.off('SlotBooked');
       this.signalr.leaveTurfGroup(String(this.turfId));
     } catch {}
+    if (this.signalrSubscription) {
+      this.signalrSubscription.unsubscribe();
+    }
   }
 
   encodeURIComponent(val: string | undefined): string {
