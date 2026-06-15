@@ -36,8 +36,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
 
           <div class="specs-list">
             <div class="spec-item animate-fade-in-up animation-delay-100">
-              <div class="spec-icon">
-                <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <div class="spec-icon" title="Action">
+                <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
                 </svg>
               </div>
@@ -48,8 +48,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
             </div>
 
             <div class="spec-item animate-fade-in-up animation-delay-200">
-              <div class="spec-icon">
-                <svg title="Back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <div class="spec-icon" title="Back">
+                <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>

@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <svg title="Action" class="beam-svg" preserveAspectRatio="none">
+    <svg  class="beam-svg" preserveAspectRatio="none">
+<title>Action</title>
       <rect
         class="border-beam-path"
         x="0" y="0"

@@ -29,8 +29,8 @@ interface CategorizedSlot extends Slot {
       
       <!-- Header Bar / Back Navigation -->
       <div class="navigation-bar">
-        <button class="btn-back" routerLink="/dashboard">
-          <svg title="Back" class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="btn-back" routerLink="/dashboard" title="Back">
+          <svg  class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           Back to Book Turf
@@ -56,7 +56,7 @@ interface CategorizedSlot extends Slot {
               class="location-bar link-map"
               title="Open in Google Maps"
             >
-              <svg title="Location" class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg  class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
                 <circle cx="12" cy="10.5" r="2.5" />
               </svg>
@@ -101,8 +101,8 @@ interface CategorizedSlot extends Slot {
             <!-- Booking Progress Steps -->
             <div class="booking-steps-indicator">
               <div class="step" [class.active]="true" [class.completed]="selectedSlots().length > 0">
-                <div class="step-icon">
-                  <svg title="Time" *ngIf="selectedSlots().length > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <div class="step-icon" title="Time">
+                  <svg  *ngIf="selectedSlots().length > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                   <span *ngIf="selectedSlots().length === 0">1</span>
                 </div>
                 <span class="step-label">Select Time</span>
@@ -110,8 +110,8 @@ interface CategorizedSlot extends Slot {
               <div class="step-line" [class.active]="selectedSlots().length > 0"></div>
               
               <div class="step" [class.active]="selectedSlots().length > 0" [class.completed]="selectedSlots().length > 0 && paymentOption()">
-                <div class="step-icon">
-                  <svg title="Action" *ngIf="selectedSlots().length > 0 && paymentOption()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <div class="step-icon" title="Action">
+                  <svg  *ngIf="selectedSlots().length > 0 && paymentOption()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                   <span *ngIf="selectedSlots().length === 0 || !paymentOption()">2</span>
                 </div>
                 <span class="step-label">Payment</span>

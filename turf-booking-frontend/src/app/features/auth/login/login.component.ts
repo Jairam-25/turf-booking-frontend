@@ -40,8 +40,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
           <!-- Specs matching user requirements -->
           <div class="specs-list">
             <div class="spec-item animate-fade-in-up animation-delay-100">
-              <div class="spec-icon">
-                <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <div class="spec-icon" title="Action">
+                <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                 </svg>
               </div>
@@ -52,8 +52,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
             </div>
 
             <div class="spec-item animate-fade-in-up animation-delay-200">
-              <div class="spec-icon">
-                <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <div class="spec-icon" title="Action">
+                <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
                 </svg>
               </div>
@@ -64,8 +64,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
             </div>
 
             <div class="spec-item animate-fade-in-up animation-delay-300">
-              <div class="spec-icon">
-                <svg title="Location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <div class="spec-icon" title="Location">
+                <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
                 </svg>
@@ -134,7 +134,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
                    [class.pingpong-failure]="isKickedFailure() && activeSport() === 'pingpong'">
                 
                 <!-- Soccer Ball -->
-                <svg title="Action" *ngIf="activeSport() === 'football'" class="football" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <svg  *ngIf="activeSport() === 'football'" class="football" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<title>Action</title>
                   <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
                   <polygon points="50,34 35,45 41,61 59,61 65,45" fill="#1e293b"/>
                   <polygon points="50,12 37,2 63,2" fill="#1e293b"/>
@@ -164,7 +165,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
                 </svg>
 
                 <!-- Cricket Ball -->
-                <svg title="Action" *ngIf="activeSport() === 'cricket'" class="cricket-ball" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <svg  *ngIf="activeSport() === 'cricket'" class="cricket-ball" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<title>Action</title>
                   <circle cx="50" cy="50" r="46" fill="#dc2626" stroke="#991b1b" stroke-width="2.5"/>
                   <path d="M12,30 A46,46 0 0,0 88,70" fill="none" stroke="#ef4444" stroke-width="5" opacity="0.4"/>
                   <line x1="50" y1="4" x2="50" y2="96" stroke="#ffffff" stroke-width="3" stroke-dasharray="2 2"/>
@@ -173,7 +175,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
                 </svg>
 
                 <!-- Ping-Pong Ball -->
-                <svg title="Action" *ngIf="activeSport() === 'pingpong'" class="pingpong-ball" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <svg  *ngIf="activeSport() === 'pingpong'" class="pingpong-ball" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<title>Action</title>
                   <circle cx="50" cy="50" r="46" fill="#f97316" stroke="#ea580c" stroke-width="2.5"/>
                   <circle cx="38" cy="38" r="14" fill="#ffedd5" opacity="0.65"/>
                 </svg>

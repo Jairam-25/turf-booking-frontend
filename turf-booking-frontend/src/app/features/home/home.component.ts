@@ -61,8 +61,8 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="group animate-scroll-fade-in animation-delay-300 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="turfSwiped()">
             <div class="magic-card-inner flex flex-col items-center text-center p-8 rounded-[calc(2rem-2px)]">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
-              <svg title="Back" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+              <svg  class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
               <magic-number-ticker [value]="50" [format]="'full'" [swipeDelay]="400">+</magic-number-ticker>
@@ -74,8 +74,8 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
 
           <div class="group animate-scroll-fade-in animation-delay-400 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="playersSwiped()">
             <div class="magic-card-inner flex flex-col items-center text-center p-8 rounded-[calc(2rem-2px)]">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
-              <svg title="Back" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+              <svg  class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
               <magic-number-ticker [value]="10000" [format]="'compact'" [swipeDelay]="600"></magic-number-ticker>
@@ -87,8 +87,8 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
 
           <div class="group animate-scroll-fade-in animation-delay-500 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="slotsSwiped()">
             <div class="magic-card-inner flex flex-col items-center text-center p-8 rounded-[calc(2rem-2px)]">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);">
-              <svg title="Back" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+              <svg  class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
               <magic-number-ticker [value]="24" [format]="'full'" [swipeDelay]="800">/7</magic-number-ticker>

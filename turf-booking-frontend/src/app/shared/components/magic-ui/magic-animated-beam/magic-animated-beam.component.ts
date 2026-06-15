@@ -9,7 +9,8 @@ import { CommonModule } from '@angular/common';
     <div class="animated-beam-container relative w-full rounded-2xl p-6 overflow-hidden">
       
       <!-- SVG Connecting Beams -->
-      <svg title="Back" class="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-0" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+      <svg  class="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-0" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+<title>Back</title>
         
         <!-- Subtle dot pattern background -->
         <defs>

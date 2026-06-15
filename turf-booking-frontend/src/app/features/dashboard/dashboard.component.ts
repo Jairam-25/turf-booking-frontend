@@ -21,10 +21,11 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
               
               <!-- Professional Location Select -->
               <div class="custom-select-container" (click)="toggleLocationSelect()">
-                <div class="custom-select-value">
-                  <svg title="Location" class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <div class="custom-select-value" title="Location">
+                  <svg  class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                   <span class="whitespace-nowrap">{{ selectedLocation() || 'All Locations' }}</span>
-                  <svg title="Location" class="w-4 h-4 ml-2 transition-transform duration-300" [class.rotate-180]="isLocationSelectOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  <svg  class="w-4 h-4 ml-2 transition-transform duration-300" [class.rotate-180]="isLocationSelectOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<title>Location</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
                 
                 <div class="custom-select-dropdown glass-card" [class.show]="isLocationSelectOpen()">
@@ -33,13 +34,14 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
                     <div class="select-option" (click)="selectLocation($event, '', '')" [class.active]="selectedState() === '' && selectedDistrict() === ''">All Locations</div>
                     <div class="select-option flex justify-between items-center" *ngFor="let state of statesList()" (click)="openStateDistricts($event, state)" [class.active]="selectedState() === state">
                       <span>{{ state }}</span>
-                      <svg title="Expand" class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                      <svg  class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<title>Expand</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                   </ng-container>
 
                   <ng-container *ngIf="viewingDistrictsForState() as stateName">
-                    <div class="select-option flex items-center gap-2 font-bold border-b border-white/10 dark:border-white/5 pb-2 mb-2 text-[var(--primary)]" (click)="backToStates($event)">
-                      <svg title="Back" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    <div class="select-option flex items-center gap-2 font-bold border-b border-white/10 dark:border-white/5 pb-2 mb-2 text-[var(--primary)]" (click)="backToStates($event)" title="Back">
+                      <svg  class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                       Back to States
                     </div>
                     <div class="select-option" (click)="selectLocation($event, stateName, '')" [class.active]="selectedState() === stateName && selectedDistrict() === ''">
@@ -67,8 +69,8 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
                 [value]="searchTerm()"
               >
               
-              <button class="btn-filter" (click)="toggleFilter()" [class.active]="isFilterOpen()">
-                <svg title="Search" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+              <button class="btn-filter" (click)="toggleFilter()" [class.active]="isFilterOpen()" title="Search">
+                <svg  class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
               </button>
               
               <button class="btn-search" (click)="loadTurfs()">Search</button>
@@ -142,8 +144,8 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         <h2 class="font-instrument-serif text-2xl mb-4 text-[var(--text-primary)]">Your Insights</h2>
         <div class="insights-grid">
           <div class="insight-card glass">
-            <div class="insight-icon bg-blue-500/20 text-blue-400">
-              <svg title="Information" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <div class="insight-icon bg-blue-500/20 text-blue-400" title="Information">
+              <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
             <div class="insight-info">
               <span class="insight-label text-xs uppercase tracking-wider text-[var(--text-secondary)] font-bold">Most Played Turf</span>
@@ -153,8 +155,8 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
           </div>
 
           <div class="insight-card glass">
-            <div class="insight-icon bg-amber-500/20 text-amber-400">
-              <svg title="Information" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div class="insight-icon bg-amber-500/20 text-amber-400" title="Information">
+              <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
             <div class="insight-info">
               <span class="insight-label text-xs uppercase tracking-wider text-[var(--text-secondary)] font-bold">Preferred Time</span>
@@ -164,8 +166,8 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
           </div>
 
           <div class="insight-card glass border border-purple-500/30" style="background: linear-gradient(145deg, rgba(var(--primary-rgb), 0.1), rgba(var(--bg-card-rgb), 1));">
-            <div class="insight-icon bg-purple-500/20 text-purple-400">
-              <svg title="Action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            <div class="insight-icon bg-purple-500/20 text-purple-400" title="Action">
+              <svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
             </div>
             <div class="insight-info">
               <span class="insight-label text-xs uppercase tracking-wider text-purple-400 font-bold">Upcoming Event</span>
@@ -181,12 +183,12 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         <div class="grid-header">
           <h2>Available Turfs <span class="badge">{{ turfs().length }}</span></h2>
           <div class="view-toggles">
-            <button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')">
-              <svg title="Action" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')" title="Action">
+              <svg  class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
               Grid
             </button>
-            <button class="view-btn" [class.active]="viewMode() === 'map'" (click)="setViewMode('map')">
-              <svg title="Location" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+            <button class="view-btn" [class.active]="viewMode() === 'map'" (click)="setViewMode('map')" title="Location">
+              <svg  class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
               Map
             </button>
           </div>

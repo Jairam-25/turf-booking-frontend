@@ -13,7 +13,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       <div class="card-image">
         <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
         <button class="like-btn" [class.liked]="isLiked" (click)="toggleLike($event)" title="Like Turf">
-          <svg title="Back" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" [class.fill-current]="isLiked"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          <svg  class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" [class.fill-current]="isLiked"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
         </button>
         <img class="fallback" [src]="getImageSrc()" [alt]="turf.name" (error)="onImageError($event)" style="display:none;">
         <div class="rating-badge">★ {{ turf.rating?.toFixed(1) }}</div>
@@ -27,7 +27,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
         
         <div class="card-info">
           <a *ngIf="turf.location" [href]="turf.location" target="_blank" class="location" title="Open in Google Maps" style="text-decoration: none; cursor: pointer;">
-            <svg title="Location" class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px; padding-bottom: 2px;">
+            <svg  class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px; padding-bottom: 2px;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
               <circle cx="12" cy="10.5" r="2.5" />
             </svg>
