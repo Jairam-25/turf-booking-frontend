@@ -12,6 +12,7 @@ import { ThemeService } from '../../core/services/theme.service';
       class="theme-toggle-btn"
       (click)="themeService.toggle()"
       [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+      [title]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
     >
       <svg title="Theme Toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-toggle-animated">
         <mask id="moon-mask-theme-comp">
