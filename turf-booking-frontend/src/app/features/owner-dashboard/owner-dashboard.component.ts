@@ -56,6 +56,7 @@ export class OwnerDashboardComponent implements OnInit {
   // Image State
   imageUrl = signal<string | null>(null);
   isUploadingImage = signal<boolean>(false);
+  isSavingSettings = signal<boolean>(false);
 
   // Booking State
   isBookingSlotId = signal<number | null>(null);
@@ -522,13 +523,22 @@ export class OwnerDashboardComponent implements OnInit {
       this.notificationService.error('Please fill all required settings properly.');
       return;
     }
+
+    this.isSavingSettings.set(true);
     const payload = {
       ...this.settingsForm.value,
       imageUrl: this.imageUrl()
     };
+
     this.http.post('https://turf-booking-backend-fixl.onrender.com/api/v1/owner/settings', payload).subscribe({
-      next: () => this.notificationService.success('Settings updated successfully.'),
-      error: () => this.notificationService.error('Failed to update settings.')
+      next: () => {
+        this.notificationService.success('Settings updated successfully.');
+        this.isSavingSettings.set(false);
+      },
+      error: () => {
+        this.notificationService.error('Failed to update settings.');
+        this.isSavingSettings.set(false);
+      }
     });
   }
 

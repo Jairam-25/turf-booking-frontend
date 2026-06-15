@@ -391,7 +391,13 @@
               <label for="isActive" class="cursor-pointer font-medium m-0" style="color: var(--text-primary)">Currently Active / Available to Book</label>
             </div>
             <div class="mt-4 flex justify-end">
-              <button type="submit" class="btn-premium px-8 py-3 font-bold text-base shadow-md">Save Changes</button>
+              <button type="submit" [disabled]="isSavingSettings()" class="btn-premium px-8 py-3 font-bold text-base shadow-md flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed">
+                <ng-container *ngIf="!isSavingSettings()">Save Changes</ng-container>
+                <ng-container *ngIf="isSavingSettings()">
+                  <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  Saving...
+                </ng-container>
+              </button>
             </div>
           </form>
         </div>
