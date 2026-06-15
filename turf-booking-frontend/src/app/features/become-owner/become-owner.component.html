@@ -257,7 +257,7 @@
 
             <!-- Uploaded Image Previews -->
             <div *ngFor="let img of turfImages(); let i = index" class="relative group rounded-xl h-28 overflow-hidden border border-[var(--input-border)]/60 bg-[var(--input-bg)]">
-              <img [src]="img.startsWith('http') ? img : 'https://turf-booking-backend-fixl.onrender.com' + (img.startsWith('/') ? '' : '/') + img" class="w-full h-full object-cover" alt="Uploaded turf image" />
+              <img [src]="(img.startsWith('http') || img.startsWith('data:')) ? img : 'https://turf-booking-backend-fixl.onrender.com' + (img.startsWith('/') ? '' : '/') + img" class="w-full h-full object-cover" alt="Uploaded turf image" />
               <!-- Remove image button overlay -->
               <button type="button" (click)="removeImage(i)" class="absolute top-1.5 right-1.5 bg-red-600 hover:bg-red-500 text-[var(--text-primary)] rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity" title="Close">
                 <svg  class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>

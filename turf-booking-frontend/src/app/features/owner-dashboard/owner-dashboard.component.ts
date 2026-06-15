@@ -57,6 +57,9 @@ export class OwnerDashboardComponent implements OnInit {
   imageUrl = signal<string | null>(null);
   isUploadingImage = signal<boolean>(false);
 
+  // Booking State
+  isBookingSlotId = signal<number | null>(null);
+
   get filteredSlots() {
     return this.availableSlots.filter(s => {
       let matchesDate = true;
@@ -239,8 +242,10 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
   bookOffline(slotId: number) {
+    this.isBookingSlotId.set(slotId);
     this.http.post<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/booking', { slotId }).subscribe({
       next: (res) => {
+        this.isBookingSlotId.set(null);
         this.notificationService.success('Offline booking created successfully!');
         const slot = this.availableSlots.find(s => s.slotId === slotId || s.SlotId === slotId);
         if (slot) {
@@ -261,6 +266,7 @@ export class OwnerDashboardComponent implements OnInit {
         }
       },
       error: (err) => {
+        this.isBookingSlotId.set(null);
         this.notificationService.error(err.error?.Message || err.error?.message || 'Failed to book slot offline');
       }
     });

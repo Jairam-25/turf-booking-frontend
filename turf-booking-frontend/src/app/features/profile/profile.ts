@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   getFullProfilePictureUrl(): string {
     const url = this.profilePictureUrl();
     if (!url) return '';
-    if (url.startsWith('http')) return url;
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
     return `https://turf-booking-backend-fixl.onrender.com${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
