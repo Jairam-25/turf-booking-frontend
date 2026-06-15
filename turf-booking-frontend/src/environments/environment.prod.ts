@@ -3,7 +3,7 @@ export const environment = {
   production: true,
   apiUrl: 'https://turf-booking-backend-fixl.onrender.com/api/v1',
   firebase: {
-    apiKey: 'AIzaSyDUuQ0-cRMkWYzs1rd_W78FK8kqalZUXWA',
+    apiKey: 'YOUR_FIREBASE_API_KEY_HERE',
     authDomain: 'turf-booking-a7f92.firebaseapp.com',
     projectId: 'turf-booking-a7f92',
     storageBucket: 'turf-booking-a7f92.firebasestorage.app',

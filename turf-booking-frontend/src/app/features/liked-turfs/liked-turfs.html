@@ -22,12 +22,12 @@
     <div *ngIf="likedTurfs().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div *ngFor="let turf of likedTurfs()" class="glass rounded-2xl overflow-hidden group border border-white/5 shadow-lg">
         <div class="relative h-48 w-full overflow-hidden">
-          <img [src]="turf.imageUrl || turf['image'] || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2070&auto=format&fit=crop'" [alt]="turf.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" (error)="onImageError($event)">
+          <img [src]="turf.imageUrl || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2070&auto=format&fit=crop'" [alt]="turf.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" (error)="onImageError($event)">
           <button (click)="removeLikedTurf(turf.id)" class="absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 hover:text-white transition-colors border border-white/30" title="Remove from Liked Turfs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
           <div class="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20" title="Price Per Hour">
-            ₹{{ turf.pricePerHour || turf['price'] }}/hr
+            ₹{{ turf.pricePerHour }}/hr
           </div>
         </div>
         <div class="p-5">

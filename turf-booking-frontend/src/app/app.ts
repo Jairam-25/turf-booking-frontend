@@ -9,6 +9,9 @@ import { ChatbotComponent } from './layout/chatbot/chatbot.component';
 import { BottomNavComponent } from './layout/bottom-nav/bottom-nav.component';
 import { AuthStore } from './core/services/auth.store';
 import { AuthRepository } from './domain/repositories/auth.repository';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
+import { NotificationService } from './core/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +35,9 @@ export class App implements OnInit {
     private router: Router,
     private themeService: ThemeService,
     private authStore: AuthStore,
-    private authRepo: AuthRepository
+    private authRepo: AuthRepository,
+    private http: HttpClient,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -58,6 +63,30 @@ export class App implements OnInit {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => this.updateVisibility(event.urlAfterRedirects));
+
+    // Render Cold-Start UX: Health check on app init
+    const healthCheckStart = Date.now();
+    let toastShown = false;
+
+    // Set a timeout to show the toast if the server takes more than 5 seconds
+    const timeoutId = setTimeout(() => {
+      toastShown = true;
+      this.notificationService.info('Server waking up... Please wait a moment (Render free tier cold-start).');
+    }, 5000);
+
+    // Call the backend API (e.g. turfs endpoint) to wake it up
+    this.http.get(`${environment.apiUrl}/turf`).subscribe({
+      next: () => {
+        clearTimeout(timeoutId);
+        if (toastShown) {
+          this.notificationService.success('Server is awake and ready!');
+        }
+      },
+      error: () => {
+        clearTimeout(timeoutId);
+        // If it fails, the global error handler or interceptor might catch it, or it's just down.
+      }
+    });
   }
 
   private updateVisibility(url: string) {
