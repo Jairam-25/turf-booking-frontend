@@ -978,7 +978,7 @@ export class BookingsComponent implements OnInit {
         title: 'TurfXpert Booking',
         text: `I just booked ${booking.turfName} on TurfXpert for ${this.formatBookingDate(booking.startTime)} at ${this.formatTimeBlocks(booking.rawSlots)}! Care to join me?`,
         url: window.location.origin
-      }).catch(err => console.error('Share failed:', err));
+      }).catch(err => { /* Share failed */ });
     } else {
       alert('Sharing is not supported on this device/browser.');
     }

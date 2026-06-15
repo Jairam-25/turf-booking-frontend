@@ -474,7 +474,7 @@ export class LoginFormComponent implements OnDestroy {
         };
         const msg = errorMessages[code]
           || `Google sign-in failed (${code || 'unknown'}). Check console for details.`;
-        console.error('[Google Sign-In Error]', err);
+        // Google Sign-In Error
         this.notificationService.error(msg);
       }
     });

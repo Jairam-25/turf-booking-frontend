@@ -94,7 +94,7 @@ export class PaymentComponent implements OnInit {
         title: 'Split Turf Bill',
         text: `Join my TurfXpert booking! Please pay your share of ₹${Math.round(this.bookingData.amountToPay / 4)} using this link:`,
         url: window.location.origin + '/pay/split-1234'
-      }).catch(err => console.error('Share failed:', err));
+      }).catch(err => { /* Share failed */ });
     } else {
       alert('Split link copied to clipboard!');
     }

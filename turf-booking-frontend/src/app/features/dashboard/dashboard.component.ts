@@ -1079,7 +1079,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .bindPopup('<b style="font-size: 1.1rem; color: #7b39fc">You are here!</b>')
           .addTo(this.map!);
       }, () => {
-        console.warn('Geolocation denied or failed.');
+        // Geolocation denied or failed.
       });
     }
   }

@@ -334,7 +334,7 @@ export class BecomeOwnerComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Submit turf error:', err);
+        // Submit turf error
         const errorMsg = err.error?.message || err.error?.Message || err.error?.title || 'Failed to submit turf details';
         this.notificationService.error(errorMsg);
         this.isSubmitting = false;

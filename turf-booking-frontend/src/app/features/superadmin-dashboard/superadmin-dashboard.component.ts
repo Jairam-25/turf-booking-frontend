@@ -86,7 +86,6 @@ export class SuperadminDashboardComponent implements OnInit {
           });
         }
 
-        console.log('Verifications data:', data);
         this.verifications.set(data || []);
         setTimeout(() => {
           this.isOverlayActive.set(false);

@@ -25,7 +25,7 @@ export class LikedTurfsComponent implements OnInit {
       try {
         this.likedTurfs.set(JSON.parse(saved));
       } catch (e) {
-        console.error('Failed to parse liked turfs', e);
+        // Failed to parse liked turfs
       }
     }
   }

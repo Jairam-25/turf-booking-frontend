@@ -46,7 +46,7 @@ export class BookingRepositoryImpl implements BookingRepository {
         try {
           const cached = localStorage.getItem(STORAGE_KEYS.TURF_CACHED_BOOKINGS);
           if (cached) {
-            console.warn('Network error, loading bookings from offline cache.');
+            // Network error, loading bookings from offline cache.
             return of(JSON.parse(cached) as Booking[]);
           }
         } catch (e) { }

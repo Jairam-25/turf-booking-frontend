@@ -33,12 +33,10 @@ export class FcmNotificationService {
         const supported = await isSupported();
         if (supported) {
           this.messaging = getMessaging(this.app);
-        } else {
-          console.warn('Firebase Messaging is not supported in this environment (likely due to insecure HTTP connection).');
         }
       }
     } catch (e) {
-      console.warn('Firebase Messaging initialization failed:', e);
+      // Firebase Messaging initialization failed
     }
   }
 
@@ -47,37 +45,28 @@ export class FcmNotificationService {
    */
   async requestNotificationPermission() {
     if (!this.messaging) {
-      console.warn('Skipping notification permission: Messaging not supported.');
       return;
     }
     
     try {
-      console.log('Requesting notification permission...');
       const permission = await Notification.requestPermission();
       
       if (permission === 'granted') {
-        console.log('Notification permission granted.');
         
         // Get the token (Firebase uses the service worker 'firebase-messaging-sw.js' automatically)
         const token = await getToken(this.messaging);
         
         if (token) {
-          console.log('🎉 Successfully retrieved FCM Token:', token);
-          
           // Send this token to C# backend to save in the User's FcmToken column
           this.http.post('https://turf-booking-backend-fixl.onrender.com/api/v1/auth/update-fcm-token', { token: token }).subscribe({
-            next: () => console.log('✅ FCM Token saved to database successfully!'),
-            error: (err) => console.error('❌ Failed to save FCM Token to database', err)
+            next: () => {},
+            error: (err) => {}
           });
           
-        } else {
-          console.log('No registration token available. Request permission to generate one.');
         }
-      } else {
-        console.log('Notification permission denied by user.');
       }
     } catch (error) {
-      console.error('Error getting FCM token:', error);
+      // Error getting FCM token
     }
   }
 
@@ -88,7 +77,6 @@ export class FcmNotificationService {
     if (!this.messaging) return;
     
     onMessage(this.messaging, (payload) => {
-      console.log('🔔 Message received in foreground:', payload);
       
       // Force a system popup even when the website is open!
       if (payload.notification) {

@@ -55,7 +55,7 @@ export class SignalrService {
       try {
         await this.startPromise;
       } catch (err) {
-        console.warn('SignalR start failed:', err);
+        // SignalR start failed
         this.startPromise = null;
       }
     } else if (this.connection.state === signalR.HubConnectionState.Connecting) {
@@ -80,10 +80,10 @@ export class SignalrService {
       if (this.connection && this.connection.state === signalR.HubConnectionState.Connected) {
         await this.connection.invoke('JoinTurfGroup', turfId);
       } else {
-        console.warn('SignalR connection is not connected, state:', this.connection?.state);
+        // SignalR connection is not connected
       }
     } catch (err) {
-      console.warn('SignalR JoinTurfGroup failed:', err);
+      // SignalR JoinTurfGroup failed
     }
   }
 
@@ -94,7 +94,7 @@ export class SignalrService {
         await this.connection.invoke('LeaveTurfGroup', turfId);
       }
     } catch (err) {
-      console.warn('SignalR LeaveTurfGroup failed:', err);
+      // SignalR LeaveTurfGroup failed
     }
   }
 
