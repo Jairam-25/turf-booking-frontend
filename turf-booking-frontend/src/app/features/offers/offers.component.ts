@@ -44,22 +44,24 @@ interface PromoOffer {
       </header>
 
       <!-- Category Filter Tabs -->
-      <div class="category-tabs">
-        <button 
-          class="tab-btn glass" 
-          [class.active]="selectedCategory() === 'All'"
-          (click)="selectedCategory.set('All')"
-        >
-          All Deals
-        </button>
-        <button 
-          *ngFor="let cat of categories" 
-          class="tab-btn glass" 
-          [class.active]="selectedCategory() === cat"
-          (click)="selectedCategory.set(cat)"
-        >
-          {{ cat }}
-        </button>
+      <div class="category-tabs-wrapper">
+        <div class="category-tabs">
+          <button 
+            class="tab-btn glass" 
+            [class.active]="selectedCategory() === 'All'"
+            (click)="selectedCategory.set('All')"
+          >
+            All Deals
+          </button>
+          <button 
+            *ngFor="let cat of categories" 
+            class="tab-btn glass" 
+            [class.active]="selectedCategory() === cat"
+            (click)="selectedCategory.set(cat)"
+          >
+            {{ cat }}
+          </button>
+        </div>
       </div>
 
       <!-- Offers Grid -->
@@ -225,23 +227,43 @@ interface PromoOffer {
       margin: 0;
     }
 
+    .category-tabs-wrapper {
+      position: sticky;
+      top: 80px; /* Accounts for mobile navbar */
+      z-index: 30;
+      padding: 10px 0;
+      background: var(--bg-body);
+      margin: 0 -1rem; /* Full bleed on mobile */
+      padding: 10px 1rem;
+    }
+    :host-context(body[data-theme="light"]) .category-tabs-wrapper {
+      background: #f8fafc;
+    }
+
     .category-tabs {
       display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    .category-tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .tab-btn {
-      padding: 10px 20px;
-      border-radius: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
       cursor: pointer;
       color: var(--text-secondary);
       background: rgba(255,255,255,0.01);
       transition: var(--transition-smooth);
       border-color: var(--border-color);
+      flex-shrink: 0;
     }
 
     .tab-btn:hover {
@@ -255,6 +277,24 @@ interface PromoOffer {
       color: var(--on-primary);
       border-color: var(--primary);
       box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
+    }
+
+    @media (min-width: 768px) {
+      .category-tabs-wrapper {
+        position: static;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+      .category-tabs {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .tab-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
     }
 
     .offers-grid {
@@ -445,12 +485,42 @@ interface PromoOffer {
     @media (max-width: 768px) {
       .offers-page-container {
         padding: 1rem;
+        gap: 1.5rem;
       }
       .offers-hero {
         padding: 3rem 1.5rem;
       }
       .offers-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .offer-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+        gap: 1rem;
+      }
+      .discount-display {
+        font-size: 1.75rem;
+      }
+      .offer-title {
+        font-size: 1.1rem;
+      }
+      .offer-desc {
+        font-size: 0.8rem;
+      }
+      .promo-code-bar {
+        padding: 8px 12px;
+      }
+      .code-value {
+        font-size: 0.95rem;
+      }
+      .btn-copy {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+      .card-book-btn {
+        height: 40px;
+        font-size: 0.85rem;
       }
     }
   `]
