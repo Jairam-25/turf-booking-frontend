@@ -15,6 +15,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (token) {
     authStore.clearSession();
   }
-  router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+  router.navigate(['/auth'], { queryParams: { returnUrl: state.url } });
   return false;
 };
