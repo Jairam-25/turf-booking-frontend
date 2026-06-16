@@ -232,12 +232,16 @@ interface PromoOffer {
       top: 80px; /* Accounts for mobile navbar */
       z-index: 30;
       padding: 10px 0;
-      background: var(--bg-body);
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       margin: 0 -1rem; /* Full bleed on mobile */
       padding: 10px 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     :host-context(body[data-theme="light"]) .category-tabs-wrapper {
-      background: #f8fafc;
+      background: rgba(248, 250, 252, 0.85);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .category-tabs {
@@ -285,6 +289,9 @@ interface PromoOffer {
         margin: 0;
         padding: 0;
         background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-bottom: none;
       }
       .category-tabs {
         justify-content: center;
@@ -488,7 +495,7 @@ interface PromoOffer {
         gap: 1.5rem;
       }
       .offers-hero {
-        padding: 3rem 1.5rem;
+        padding: 2rem 1.25rem;
       }
       .offers-grid {
         grid-template-columns: 1fr;
@@ -496,31 +503,37 @@ interface PromoOffer {
       }
       .offer-card {
         padding: 1.25rem;
-        border-radius: 16px;
-        gap: 1rem;
+        border-radius: 12px;
+        gap: 0.75rem;
       }
       .discount-display {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
       }
       .offer-title {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .offer-desc {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        line-height: 1.4;
       }
       .promo-code-bar {
         padding: 8px 12px;
+        border-radius: 10px;
+      }
+      .code-label {
+        font-size: 0.55rem;
       }
       .code-value {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
       }
       .btn-copy {
-        padding: 6px 12px;
-        font-size: 0.75rem;
+        padding: 6px 10px;
+        font-size: 0.7rem;
       }
       .card-book-btn {
-        height: 40px;
-        font-size: 0.85rem;
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 8px;
       }
     }
   `]
