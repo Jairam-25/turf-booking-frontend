@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MagicShinyButtonComponent } from '../../../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
 import { AuthRepository } from '../../../../domain/repositories/auth.repository';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -431,7 +431,8 @@ export class LoginFormComponent implements OnDestroy {
     private fb: FormBuilder,
     private authRepository: AuthRepository,
     private notificationService: NotificationService,
-    private firebaseAuth: FirebaseAuthService
+    private firebaseAuth: FirebaseAuthService,
+    private router: Router
   ) {
     this.googleOtpControl = this.fb.control('', [Validators.required, Validators.pattern(/^\d{6}$/)]);
     this.loginForm = this.fb.group({
@@ -632,6 +633,16 @@ export class LoginFormComponent implements OnDestroy {
       },
       error: (err) => {
         this.sendingOtp = false;
+        
+        // Smart Authentication Flow handling
+        if (err.error && err.error.isRegistered === false) {
+          this.notificationService.info("We could not find an account associated with this email. Redirecting you to account registration.");
+          setTimeout(() => {
+            this.router.navigate(['/auth/register']);
+          }, 2500);
+          return;
+        }
+
         this.notificationService.error(err.error?.message || err.error?.Message || 'Failed to send OTP.');
       }
     });
