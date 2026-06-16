@@ -498,71 +498,78 @@ interface PromoOffer {
         padding: 1.5rem 1rem;
       }
       .offers-hero h1 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
       }
       .offers-hero p {
         font-size: 0.75rem;
       }
       
       .offers-grid {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        scroll-snap-type: x mandatory;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      .offers-grid::-webkit-scrollbar {
-        display: none;
       }
       .offer-card {
-        min-width: 240px;
-        scroll-snap-align: start;
-        padding: 1rem;
+        padding: 0.75rem;
         border-radius: 12px;
-        gap: 0.75rem;
-        flex-shrink: 0;
+        gap: 0.5rem;
+      }
+      .cat-tag {
+        font-size: 0.5rem;
+        padding: 3px 6px;
+        border-radius: 4px;
+      }
+      .valid-badge {
+        font-size: 0.5rem;
+      }
+      .card-main {
+        gap: 0.25rem;
       }
       .discount-display {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
+        margin-bottom: 0;
       }
       .offer-title {
-        font-size: 1rem;
+        font-size: 0.8rem;
+        line-height: 1.2;
       }
       .offer-desc {
-        font-size: 0.75rem;
+        font-size: 0.6rem;
         line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
       .promo-code-bar {
-        padding: 6px 10px;
+        padding: 6px;
         border-radius: 8px;
         flex-direction: column;
         gap: 4px;
-        align-items: flex-start;
+        align-items: center;
       }
       .code-box {
         width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
+        gap: 0;
       }
       .code-label {
         font-size: 0.5rem;
       }
       .code-value {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
       }
       .btn-copy {
         width: 100%;
-        padding: 6px 0;
-        font-size: 0.7rem;
+        padding: 4px 0;
+        font-size: 0.65rem;
         text-align: center;
       }
       .card-book-btn {
-        height: 36px;
-        font-size: 0.75rem;
-        border-radius: 8px;
+        height: 32px;
+        font-size: 0.7rem;
+        border-radius: 6px;
       }
     }
   `]
