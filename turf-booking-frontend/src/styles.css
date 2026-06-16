@@ -924,3 +924,9 @@ body:not([data-theme="light"]) .theme-toggle-animated {
 .theme-transition-dark::view-transition-new(root) {
   z-index: 2;
 }
+
+@media (max-width: 768px) {
+  main.has-bottom-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom) + 16px);
+  }
+}

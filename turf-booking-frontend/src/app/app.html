@@ -2,7 +2,9 @@
   <app-navbar-component></app-navbar-component>
 }
 
-<router-outlet></router-outlet>
+<main [class.has-bottom-nav]="!hideBottomNav()" class="min-h-screen">
+  <router-outlet></router-outlet>
+</main>
 
 @if (!hideFooter()) {
   <app-footer-component></app-footer-component>

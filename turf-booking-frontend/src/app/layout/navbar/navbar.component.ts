@@ -55,8 +55,8 @@ export class NavbarComponent implements OnInit {
     return `https://turf-booking-backend-fixl.onrender.com${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
-  toggleTheme() {
-    this.themeService.toggle();
+  toggleTheme(event?: MouseEvent) {
+    this.themeService.toggle(event);
   }
 
   openLogoutConfirm() {
