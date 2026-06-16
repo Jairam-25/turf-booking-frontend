@@ -17,436 +17,185 @@ interface Player {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="leaderboard-container container-fluid spacing-vertical-24 fade-in">
+    <div class="leaderboard-container max-w-6xl mx-auto py-8 px-4 font-manrope">
       
       <!-- Header -->
-      <div class="navigation-bar">
-        <button class="btn-back" routerLink="/dashboard" title="Back">
-          <svg  class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="flex items-center justify-between mb-8">
+        <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.05)] hover:border-[#7b39fc] transition-all font-semibold" routerLink="/dashboard" title="Back">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           Back to Book Turf
         </button>
       </div>
 
-      <header class="leaderboard-hero glass">
-        <div class="glow-blob -top-20 -left-20"></div>
-        <div class="glow-blob bottom-[-150px] right-[-150px]" style="background: radial-gradient(circle, #f59e0b 0%, transparent 70%);"></div>
-        
-        <div class="hero-content">
-          <span class="hero-badge">COMMUNITY</span>
-          <h1>Hall of Fame</h1>
-          <p>Compete with local players, earn badges for your bookings, and climb the ranks!</p>
+      <!-- Hero Header -->
+      <div class="text-center mb-12 relative flex flex-col items-center justify-center fade-in">
+        <div class="flex items-center justify-center gap-4 mb-2">
+          <svg class="w-8 h-12 text-[#7b39fc]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z"></path>
+          </svg>
+          <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight">Community Leaderboard</h1>
+          <svg class="w-8 h-12 text-[#7b39fc] transform scale-x-[-1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z"></path>
+          </svg>
         </div>
-      </header>
-
-      <!-- Tabs -->
-      <div class="category-tabs">
-        <button 
-          class="tab-btn glass" 
-          [class.active]="selectedTab() === 'Global'"
-          (click)="selectedTab.set('Global')"
-        >Global Rank</button>
-        <button 
-          class="tab-btn glass" 
-          [class.active]="selectedTab() === 'Friends'"
-          (click)="selectedTab.set('Friends')"
-        >My Friends</button>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
+          Book more. Rank higher. Get <span class="text-yellow-500 font-bold">10% OFF</span> on any turf booking!
+        </p>
       </div>
 
-      <!-- Top 3 Podium -->
-      <div class="podium-section">
+      <!-- Top 3 Podium Cards -->
+      <div class="flex flex-col md:flex-row justify-center items-end gap-6 mb-16 fade-in px-4">
+        
         <!-- Second Place -->
-        <div class="podium-item second">
-          <div class="avatar-wrap">
-            <img [src]="topPlayers[1].avatar" alt="Avatar">
-            <div class="rank-badge silver">2</div>
+        <div class="flex-1 max-w-[320px] order-2 md:order-1 flex flex-col items-center p-6 bg-[rgba(148,163,184,0.05)] border border-[rgba(148,163,184,0.3)] rounded-2xl relative shadow-lg">
+          <div class="relative mb-4 mt-2">
+            <img [src]="topPlayers[1].avatar" class="w-20 h-20 rounded-full border-4 border-slate-400 object-cover shadow-md" />
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">2</div>
           </div>
-          <span class="player-name">{{ topPlayers[1].name }}</span>
-          <span class="player-points">{{ topPlayers[1].points }} pts</span>
+          <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers[1].name }}</h2>
+          <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers[1].points }}</div>
+          <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+          
+          <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
+            <svg class="w-5 h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <div class="flex flex-col text-left leading-tight">
+              <span class="text-yellow-500 font-bold text-sm">10% OFF</span>
+              <span class="text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
+            </div>
+          </div>
         </div>
         
         <!-- First Place -->
-        <div class="podium-item first">
-          <div class="avatar-wrap">
-            <div class="crown">👑</div>
-            <img [src]="topPlayers[0].avatar" alt="Avatar">
-            <div class="rank-badge gold">1</div>
+        <div class="flex-1 max-w-[360px] order-1 md:order-2 flex flex-col items-center p-8 bg-[rgba(245,158,11,0.08)] border-2 border-[rgba(245,158,11,0.5)] rounded-[1.5rem] relative shadow-[0_0_40px_rgba(245,158,11,0.15)] z-10 transform md:-translate-y-4">
+          <div class="relative mb-5 mt-4">
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-4xl filter drop-shadow-lg">👑</div>
+            <img [src]="topPlayers[0].avatar" class="w-28 h-28 rounded-full border-4 border-yellow-500 object-cover shadow-[0_0_20px_rgba(245,158,11,0.3)]" />
+            <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-lg">1</div>
           </div>
-          <span class="player-name">{{ topPlayers[0].name }}</span>
-          <span class="player-points">{{ topPlayers[0].points }} pts</span>
+          <h2 class="text-2xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers[0].name }}</h2>
+          <div class="text-4xl font-extrabold text-[#7b39fc] my-2 drop-shadow-sm">{{ topPlayers[0].points }}</div>
+          <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+          
+          <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(245,158,11,0.2)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
+            <svg class="w-6 h-6 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <div class="flex flex-col text-left leading-tight">
+              <span class="text-yellow-500 font-extrabold text-base">10% OFF</span>
+              <span class="text-[0.7rem] text-[var(--text-secondary)]">on any turf booking</span>
+            </div>
+          </div>
         </div>
         
         <!-- Third Place -->
-        <div class="podium-item third">
-          <div class="avatar-wrap">
-            <img [src]="topPlayers[2].avatar" alt="Avatar">
-            <div class="rank-badge bronze">3</div>
+        <div class="flex-1 max-w-[320px] order-3 md:order-3 flex flex-col items-center p-6 bg-[rgba(180,83,9,0.05)] border border-[rgba(180,83,9,0.3)] rounded-2xl relative shadow-lg">
+          <div class="relative mb-4 mt-2">
+            <img [src]="topPlayers[2].avatar" class="w-20 h-20 rounded-full border-4 border-amber-700 object-cover shadow-md" />
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-amber-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">3</div>
           </div>
-          <span class="player-name">{{ topPlayers[2].name }}</span>
-          <span class="player-points">{{ topPlayers[2].points }} pts</span>
+          <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers[2].name }}</h2>
+          <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers[2].points }}</div>
+          <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+          
+          <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
+            <svg class="w-5 h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <div class="flex flex-col text-left leading-tight">
+              <span class="text-yellow-500 font-bold text-sm">10% OFF</span>
+              <span class="text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- List -->
-      <div class="leaderboard-list glass">
-        <div class="list-header">
-          <span>Rank</span>
-          <span>Player</span>
-          <span>Badges</span>
-          <span>Points</span>
+      <!-- List Section -->
+      <div class="bg-[var(--surface-color)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-xl fade-in mx-4 md:mx-0">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[600px]">
+            <thead>
+              <tr class="text-xs font-bold text-[var(--text-secondary)] border-b border-[var(--border-color)] bg-[rgba(0,0,0,0.2)]">
+                <th class="py-5 px-6 uppercase tracking-wider w-24">Rank</th>
+                <th class="py-5 px-6 uppercase tracking-wider">Player</th>
+                <th class="py-5 px-6 uppercase tracking-wider text-center">Total Bookings</th>
+                <th class="py-5 px-6 uppercase tracking-wider text-right">Reward</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of otherPlayers" class="border-b border-[var(--border-color)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors group">
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-3">
+                     <span class="text-xl font-bold text-[var(--text-secondary)] w-6 text-center">{{ p.rank }}</span>
+                     <svg *ngIf="p.trend === 'up'" class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
+                     <svg *ngIf="p.trend === 'down'" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                     <svg *ngIf="p.trend === 'same'" class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14"></path></svg>
+                  </div>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-4">
+                    <img [src]="p.avatar" class="w-12 h-12 rounded-full object-cover border-2 border-transparent group-hover:border-[var(--primary)] transition-all" />
+                    <span class="font-bold text-[var(--text-primary)] text-base">{{ p.name }}</span>
+                  </div>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span class="font-extrabold text-[#7b39fc] text-lg">{{ p.points }}</span>
+                </td>
+                <td class="py-4 px-6 text-right">
+                  <div class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-[#a855f7]/30 bg-[#a855f7]/10 shadow-sm transition-all hover:bg-[#a855f7]/20">
+                    <svg class="w-4 h-4 text-[#a855f7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <span class="text-[#a855f7] font-bold text-sm tracking-wide">5% OFF</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        
-        <div class="list-row" *ngFor="let p of otherPlayers">
-          <div class="rank-col">
-            <span class="rank-num">{{ p.rank }}</span>
-            <span class="trend" [class]="p.trend" title="Action">
-              <svg  *ngIf="p.trend === 'up'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
-              <svg  *ngIf="p.trend === 'down'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<title>Action</title><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-              <svg  *ngIf="p.trend === 'same'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<title>Action</title><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
-            </span>
-          </div>
-          
-          <div class="player-col">
-            <img [src]="p.avatar" alt="avatar" class="sm-avatar">
-            <span class="name">{{ p.name }}</span>
-          </div>
-          
-          <div class="badges-col">
-            <span class="badge" *ngFor="let b of p.badges" [title]="b">
-              {{ getBadgeIcon(b) }}
-            </span>
-          </div>
-          
-          <div class="points-col">
-            {{ p.points }}
-          </div>
-        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="mt-8 text-center text-sm text-[var(--text-secondary)] flex flex-col md:flex-row items-center justify-center gap-2 mb-12">
+        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>Ranking is based on total number of bookings. Top 3 users get <span class="text-yellow-500 font-bold">10% OFF</span> and Top 4-7 get <span class="text-[#a855f7] font-bold">5% OFF</span> on any turf booking.</span>
       </div>
 
     </div>
   `,
   styles: [`
-    .leaderboard-container {
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
+    .font-manrope {
       font-family: 'Manrope', sans-serif;
     }
-    .navigation-bar {
-      display: flex;
-      align-items: center;
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
     }
-    .btn-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      padding: 8px 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: var(--transition-smooth);
-    }
-    @media (max-width: 768px) {
-      .btn-back {
-        padding: 6px 10px;
-        font-size: 0.75rem; 
-        border-radius: 6px;
-        gap: 4px;
-        min-height: 32px !important;
-      }
-      .back-icon, .btn-back svg {
-        width: 14px;
-        height: 14px;
-      }
-    }
-    .btn-back:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: var(--primary);
-    }
-    .back-icon {
-      width: 16px;
-      height: 16px;
-    }
-
-    .leaderboard-hero {
-      position: relative;
-      padding: 4rem 2rem;
-      border-radius: 24px;
-      text-align: center;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(31, 41, 55, 0.45) 0%, rgba(12, 10, 20, 0.8) 100%);
-    }
-    .glow-blob {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(123, 57, 252, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 10;
-    }
-    .hero-badge {
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      color: #f59e0b;
-      background: rgba(245, 158, 11, 0.1);
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(245, 158, 11, 0.25);
-    }
-    .hero-content h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 850;
-      margin: 1rem 0;
-      color: var(--text-primary);
-    }
-    .hero-content p {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .category-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-    .tab-btn {
-      padding: 10px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      color: var(--text-secondary);
-      background: rgba(255,255,255,0.01);
-      transition: var(--transition-smooth);
-      border-color: var(--border-color);
-    }
-    .tab-btn:hover {
-      border-color: var(--primary);
-      color: var(--text-primary);
-    }
-    .tab-btn.active {
-      background: var(--primary);
-      color: var(--on-primary);
-      border-color: var(--primary);
-    }
-
-    .podium-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 1.5rem;
-      margin: 2rem 0;
-      min-height: 220px;
-    }
-    .podium-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .podium-item.second { margin-bottom: 20px; }
-    .podium-item.first { margin-bottom: 50px; z-index: 10; }
-    .podium-item.third { margin-bottom: 0px; }
-    
-    .avatar-wrap {
-      position: relative;
-    }
-    .avatar-wrap img {
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid var(--border-color);
-    }
-    .first .avatar-wrap img { width: 100px; height: 100px; border-color: #f59e0b; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
-    .second .avatar-wrap img { width: 80px; height: 80px; border-color: #94a3b8; }
-    .third .avatar-wrap img { width: 70px; height: 70px; border-color: #b45309; }
-    
-    .crown {
-      position: absolute;
-      top: -24px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
-    .rank-badge {
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: white;
-      font-size: 0.85rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    /* Light theme adaptations if any */
+    :host-context(body[data-theme="light"]) .bg-\\[rgba\\(0\\,0\\,0\\,0\\.2\\)\\] {
+      background-color: rgba(0, 0, 0, 0.03);
     }
-    .rank-badge.gold { background: #f59e0b; width: 34px; height: 34px; font-size: 1rem; }
-    .rank-badge.silver { background: #94a3b8; }
-    .rank-badge.bronze { background: #b45309; }
-    
-    .player-name {
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: var(--text-primary);
+    :host-context(body[data-theme="light"]) .text-\\[var\\(--text-secondary\\)\\] {
+      color: #64748b;
     }
-    .player-points {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      font-weight: 600;
+    :host-context(body[data-theme="light"]) .border-\\[rgba\\(255\\,255\\,255\\,0\\.05\\)\\] {
+      border-color: rgba(0,0,0,0.05);
     }
-
-    .leaderboard-list {
-      border-radius: 20px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-    .list-header {
-      display: grid;
-      grid-template-columns: 80px 2fr 1fr 100px;
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      font-weight: 700;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .list-row {
-      display: grid;
-      grid-template-columns: 80px 2fr 1fr 100px;
-      padding: 1rem;
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      transition: var(--transition-smooth);
-      border-radius: 12px;
-    }
-    .list-row:hover {
-      background: rgba(255,255,255,0.02);
-    }
-    .list-row:last-child {
-      border-bottom: none;
-    }
-    
-    .rank-col {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .rank-num {
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      width: 20px;
-    }
-    .trend { width: 16px; height: 16px; }
-    .trend.up { color: #10b981; }
-    .trend.down { color: #ef4444; }
-    .trend.same { color: #64748b; }
-    
-    .player-col {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .sm-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .name {
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    
-    .badges-col {
-      display: flex;
-      gap: 6px;
-    }
-    .badge {
-      font-size: 1.25rem;
-      cursor: help;
-      transition: transform 0.2s;
-    }
-    .badge:hover {
-      transform: scale(1.2);
-    }
-    
-    .points-col {
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    @media (max-width: 768px) {
-      .leaderboard-container { padding: 1rem; gap: 1.5rem; }
-      .leaderboard-hero { padding: 3rem 1.5rem; }
-      .podium-section { gap: 0.5rem; }
-      .first .avatar-wrap img { width: 80px; height: 80px; }
-      .second .avatar-wrap img, .third .avatar-wrap img { width: 60px; height: 60px; }
-      .list-header { display: none; } /* Hide headers on mobile */
-      .list-row {
-        grid-template-columns: 50px 1fr 60px;
-        gap: 8px;
-        padding: 1rem 0.5rem;
-      }
-      .badges-col { display: none; } /* Hide badges on mobile row to save space */
-    }
-    
-    /* Light theme adaptions */
-    :host-context(body[data-theme="light"]) .leaderboard-hero {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(241, 245, 249, 0.95) 100%);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-    }
-    :host-context(body[data-theme="light"]) .tab-btn {
-      background: rgba(0,0,0,0.03);
-      border-color: rgba(0,0,0,0.06);
-      color: var(--text-primary);
-    }
-    :host-context(body[data-theme="light"]) .tab-btn.active {
-      background: var(--primary) !important;
-      color: var(--on-primary) !important;
-      border-color: var(--primary) !important;
-    }
-    :host-context(body[data-theme="light"]) .list-row {
-      border-bottom-color: rgba(0,0,0,0.05);
-    }
-    :host-context(body[data-theme="light"]) .list-row:hover {
-      background: rgba(0,0,0,0.02);
+    :host-context(body[data-theme="light"]) .bg-\\[rgba\\(255\\,255\\,255\\,0\\.03\\)\\] {
+      background-color: rgba(0,0,0,0.02);
     }
   `]
 })
 export class LeaderboardComponent {
-  selectedTab = signal<'Global' | 'Friends'>('Global');
-
   allPlayers: Player[] = [
-    { id: '1', name: 'Alex Johnson', avatar: 'https://i.pravatar.cc/150?u=1', points: 12450, badges: ['Early Bird', 'Weekend Warrior', 'Night Owl'], rank: 1, trend: 'same' },
-    { id: '2', name: 'Sam Rivera', avatar: 'https://i.pravatar.cc/150?u=2', points: 11200, badges: ['First Time', 'Hat Trick'], rank: 2, trend: 'up' },
-    { id: '3', name: 'Michael Chen', avatar: 'https://i.pravatar.cc/150?u=3', points: 10850, badges: ['Weekend Warrior'], rank: 3, trend: 'down' },
-    { id: '4', name: 'David Smith', avatar: 'https://i.pravatar.cc/150?u=4', points: 9400, badges: ['Night Owl'], rank: 4, trend: 'up' },
-    { id: '5', name: 'Chris Evans', avatar: 'https://i.pravatar.cc/150?u=5', points: 8900, badges: [], rank: 5, trend: 'down' },
-    { id: '6', name: 'Sarah Connor', avatar: 'https://i.pravatar.cc/150?u=6', points: 8200, badges: ['Hat Trick'], rank: 6, trend: 'same' },
-    { id: '7', name: 'Tom Hardy', avatar: 'https://i.pravatar.cc/150?u=7', points: 7600, badges: ['Early Bird'], rank: 7, trend: 'up' },
+    { id: '1', name: 'Alex Johnson', avatar: 'https://i.pravatar.cc/150?u=1', points: 58, badges: [], rank: 1, trend: 'same' },
+    { id: '2', name: 'Sam Rivera', avatar: 'https://i.pravatar.cc/150?u=2', points: 42, badges: [], rank: 2, trend: 'up' },
+    { id: '3', name: 'Michael Chen', avatar: 'https://i.pravatar.cc/150?u=3', points: 37, badges: [], rank: 3, trend: 'down' },
+    { id: '4', name: 'David Smith', avatar: 'https://i.pravatar.cc/150?u=4', points: 28, badges: [], rank: 4, trend: 'up' },
+    { id: '5', name: 'Chris Evans', avatar: 'https://i.pravatar.cc/150?u=5', points: 25, badges: [], rank: 5, trend: 'down' },
+    { id: '6', name: 'Sarah Connor', avatar: 'https://i.pravatar.cc/150?u=6', points: 21, badges: [], rank: 6, trend: 'same' },
+    { id: '7', name: 'Tom Hardy', avatar: 'https://i.pravatar.cc/150?u=7', points: 18, badges: [], rank: 7, trend: 'up' },
   ];
 
   get topPlayers() {
@@ -455,16 +204,5 @@ export class LeaderboardComponent {
 
   get otherPlayers() {
     return this.allPlayers.slice(3);
-  }
-
-  getBadgeIcon(badge: string): string {
-    switch (badge) {
-      case 'Early Bird': return '🌅';
-      case 'Weekend Warrior': return '⚔️';
-      case 'Night Owl': return '🦉';
-      case 'First Time': return '🔰';
-      case 'Hat Trick': return '⚽';
-      default: return '🏅';
-    }
   }
 }
