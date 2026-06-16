@@ -227,9 +227,14 @@ export class LeaderboardComponent implements OnInit {
 
   ngOnInit() {
     this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Community/leaderboard').subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.allPlayers.set(res.data);
+      next: (res: any) => {
+        // Due to the unwrap-response interceptor, 'res' might already be the array of players (res.data)
+        if (Array.isArray(res)) {
+          this.allPlayers.set(res);
+        } else if (res && res.success) {
+          this.allPlayers.set(res.data || []);
+        } else {
+          this.allPlayers.set([]);
         }
         this.isLoading.set(false);
       },
