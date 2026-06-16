@@ -533,7 +533,7 @@ interface PromoOffer {
       .offer-card {
         padding: 0.75rem;
         border-radius: 12px;
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
       .cat-tag {
         font-size: 0.5rem;
@@ -544,7 +544,7 @@ interface PromoOffer {
         font-size: 0.5rem;
       }
       .card-main {
-        gap: 0.25rem;
+        gap: 0.5rem;
       }
       .discount-display {
         font-size: 1.1rem;
@@ -587,10 +587,11 @@ interface PromoOffer {
         height: 14px;
       }
       .card-book-btn {
-        height: 28px;
-        font-size: 0.65rem;
+        height: 24px;
+        font-size: 0.55rem;
         border-radius: 6px;
-        margin-top: -4px; /* Pull it slightly up to save space */
+        margin-top: 0;
+        padding: 0;
       }
     }
   `]
