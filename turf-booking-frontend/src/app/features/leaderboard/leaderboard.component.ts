@@ -64,65 +64,65 @@ interface Player {
 
         <ng-container *ngIf="allPlayers().length > 0">
           <!-- Top 3 Podium Cards -->
-          <div class="flex flex-col md:flex-row justify-center items-center md:items-end gap-6 mb-16 fade-in px-4">
+          <div class="flex flex-row justify-center items-end gap-2 md:gap-6 mb-12 md:mb-16 fade-in px-1 md:px-4">
             
             <!-- Second Place -->
-            <div *ngIf="topPlayers().length > 1" class="w-full flex-1 max-w-[320px] order-2 md:order-1 flex flex-col items-center p-6 bg-[rgba(148,163,184,0.05)] border border-[rgba(148,163,184,0.3)] rounded-2xl relative shadow-lg">
-              <div class="relative mb-4 mt-2">
-                <img [src]="topPlayers()[1].avatar" class="w-20 h-20 rounded-full border-4 border-slate-400 object-cover shadow-md" />
-                <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">2</div>
+            <div *ngIf="topPlayers().length > 1" class="w-full flex-1 max-w-[320px] order-1 flex flex-col items-center p-3 md:p-6 bg-[rgba(148,163,184,0.05)] border border-[rgba(148,163,184,0.3)] rounded-xl md:rounded-2xl relative shadow-lg">
+              <div class="relative mb-3 md:mb-4 mt-1 md:mt-2">
+                <img [src]="topPlayers()[1].avatar" class="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 md:border-4 border-slate-400 object-cover shadow-md" />
+                <div class="absolute -bottom-2 md:-bottom-3 left-1/2 -translate-x-1/2 bg-slate-500 text-white w-5 h-5 md:w-8 md:h-8 rounded-full flex items-center justify-center font-bold text-[10px] md:text-sm shadow-lg">2</div>
               </div>
-              <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[1].name }}</h2>
-              <div class="text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[1].turfName }}</div>
-              <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers()[1].points }}</div>
-              <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+              <h2 class="text-xs md:text-xl font-bold text-[var(--text-primary)] text-center truncate w-full">{{ topPlayers()[1].name }}</h2>
+              <div class="hidden md:block text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[1].turfName }}</div>
+              <div class="text-lg md:text-3xl font-bold text-[#7b39fc] my-0.5 md:my-1">{{ topPlayers()[1].points }}</div>
+              <div class="text-[9px] md:text-sm text-[var(--text-secondary)] mb-2 md:mb-6 text-center leading-tight">Bookings</div>
               
-              <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
-                <svg class="w-5 h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                <div class="flex flex-col text-left leading-tight">
-                  <span class="text-yellow-500 font-bold text-sm">10% OFF</span>
-                  <span class="text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
+              <div class="w-full px-1 py-1.5 md:px-4 md:py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-lg md:rounded-xl flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3 shadow-inner">
+                <svg class="w-3 h-3 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                <div class="flex flex-col text-center md:text-left leading-tight">
+                  <span class="text-yellow-500 font-bold text-[10px] md:text-sm">10% OFF</span>
+                  <span class="hidden md:block text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
                 </div>
               </div>
             </div>
             
             <!-- First Place -->
-            <div *ngIf="topPlayers().length > 0" class="w-full flex-1 max-w-[360px] order-1 md:order-2 flex flex-col items-center p-8 bg-[rgba(245,158,11,0.08)] border-2 border-[rgba(245,158,11,0.5)] rounded-[1.5rem] relative shadow-[0_0_40px_rgba(245,158,11,0.15)] z-10 transform md:-translate-y-4">
-              <div class="relative mb-5 mt-4">
-                <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-4xl filter drop-shadow-lg">👑</div>
-                <img [src]="topPlayers()[0].avatar" class="w-28 h-28 rounded-full border-4 border-yellow-500 object-cover shadow-[0_0_20px_rgba(245,158,11,0.3)]" />
-                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-lg">1</div>
+            <div *ngIf="topPlayers().length > 0" class="w-full flex-1 max-w-[360px] order-2 flex flex-col items-center p-4 md:p-8 bg-[rgba(245,158,11,0.08)] border md:border-2 border-[rgba(245,158,11,0.5)] rounded-[1rem] md:rounded-[1.5rem] relative shadow-[0_0_20px_rgba(245,158,11,0.15)] z-10 transform md:-translate-y-4">
+              <div class="relative mb-3 md:mb-5 mt-2 md:mt-4">
+                <div class="absolute -top-6 md:-top-10 left-1/2 -translate-x-1/2 text-2xl md:text-4xl filter drop-shadow-lg">👑</div>
+                <img [src]="topPlayers()[0].avatar" class="w-16 h-16 md:w-28 md:h-28 rounded-full border-2 md:border-4 border-yellow-500 object-cover shadow-[0_0_20px_rgba(245,158,11,0.3)]" />
+                <div class="absolute -bottom-2 md:-bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-xs md:text-xl shadow-lg">1</div>
               </div>
-              <h2 class="text-2xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[0].name }}</h2>
-              <div class="text-sm text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[0].turfName }}</div>
-              <div class="text-4xl font-extrabold text-[#7b39fc] my-2 drop-shadow-sm">{{ topPlayers()[0].points }}</div>
-              <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+              <h2 class="text-sm md:text-2xl font-bold text-[var(--text-primary)] text-center truncate w-full">{{ topPlayers()[0].name }}</h2>
+              <div class="hidden md:block text-sm text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[0].turfName }}</div>
+              <div class="text-xl md:text-4xl font-extrabold text-[#7b39fc] my-1 md:my-2 drop-shadow-sm">{{ topPlayers()[0].points }}</div>
+              <div class="text-[10px] md:text-sm text-[var(--text-secondary)] mb-2 md:mb-6 text-center leading-tight">Bookings</div>
               
-              <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(245,158,11,0.2)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
-                <svg class="w-6 h-6 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                <div class="flex flex-col text-left leading-tight">
-                  <span class="text-yellow-500 font-extrabold text-base">10% OFF</span>
-                  <span class="text-[0.7rem] text-[var(--text-secondary)]">on any turf booking</span>
+              <div class="w-full px-1 py-1.5 md:px-4 md:py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(245,158,11,0.2)] rounded-lg md:rounded-xl flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3 shadow-inner">
+                <svg class="w-4 h-4 md:w-6 md:h-6 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                <div class="flex flex-col text-center md:text-left leading-tight">
+                  <span class="text-yellow-500 font-extrabold text-xs md:text-base">10% OFF</span>
+                  <span class="hidden md:block text-[0.7rem] text-[var(--text-secondary)]">on any turf booking</span>
                 </div>
               </div>
             </div>
             
             <!-- Third Place -->
-            <div *ngIf="topPlayers().length > 2" class="w-full flex-1 max-w-[320px] order-3 md:order-3 flex flex-col items-center p-6 bg-[rgba(180,83,9,0.05)] border border-[rgba(180,83,9,0.3)] rounded-2xl relative shadow-lg">
-              <div class="relative mb-4 mt-2">
-                <img [src]="topPlayers()[2].avatar" class="w-20 h-20 rounded-full border-4 border-amber-700 object-cover shadow-md" />
-                <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-amber-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">3</div>
+            <div *ngIf="topPlayers().length > 2" class="w-full flex-1 max-w-[320px] order-3 flex flex-col items-center p-3 md:p-6 bg-[rgba(180,83,9,0.05)] border border-[rgba(180,83,9,0.3)] rounded-xl md:rounded-2xl relative shadow-lg">
+              <div class="relative mb-3 md:mb-4 mt-1 md:mt-2">
+                <img [src]="topPlayers()[2].avatar" class="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 md:border-4 border-amber-700 object-cover shadow-md" />
+                <div class="absolute -bottom-2 md:-bottom-3 left-1/2 -translate-x-1/2 bg-amber-700 text-white w-5 h-5 md:w-8 md:h-8 rounded-full flex items-center justify-center font-bold text-[10px] md:text-sm shadow-lg">3</div>
               </div>
-              <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[2].name }}</h2>
-              <div class="text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[2].turfName }}</div>
-              <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers()[2].points }}</div>
-              <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
+              <h2 class="text-xs md:text-xl font-bold text-[var(--text-primary)] text-center truncate w-full">{{ topPlayers()[2].name }}</h2>
+              <div class="hidden md:block text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[2].turfName }}</div>
+              <div class="text-lg md:text-3xl font-bold text-[#7b39fc] my-0.5 md:my-1">{{ topPlayers()[2].points }}</div>
+              <div class="text-[9px] md:text-sm text-[var(--text-secondary)] mb-2 md:mb-6 text-center leading-tight">Bookings</div>
               
-              <div class="w-full px-4 py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-xl flex items-center justify-center gap-3 shadow-inner">
-                <svg class="w-5 h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                <div class="flex flex-col text-left leading-tight">
-                  <span class="text-yellow-500 font-bold text-sm">10% OFF</span>
-                  <span class="text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
+              <div class="w-full px-1 py-1.5 md:px-4 md:py-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-lg md:rounded-xl flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3 shadow-inner">
+                <svg class="w-3 h-3 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                <div class="flex flex-col text-center md:text-left leading-tight">
+                  <span class="text-yellow-500 font-bold text-[10px] md:text-sm">10% OFF</span>
+                  <span class="hidden md:block text-[0.65rem] text-[var(--text-secondary)]">on any turf booking</span>
                 </div>
               </div>
             </div>
