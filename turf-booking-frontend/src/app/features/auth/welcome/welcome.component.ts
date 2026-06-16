@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
 import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
+import { SparklesTextComponent } from '../../../shared/components/magic-ui/sparkles-text/sparkles-text.component';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, RouterModule, ThemeToggleComponent, TurfBackgroundComponent],
+  imports: [CommonModule, RouterModule, ThemeToggleComponent, TurfBackgroundComponent, SparklesTextComponent],
   template: `
     <div class="hero-page font-inter">
       <!-- Custom realistic animated turf background -->
@@ -27,9 +28,7 @@ import { TurfBackgroundComponent } from '../../../shared/components/turf-backgro
             </svg>
           </div>
 
-          <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-3 font-instrument-serif tracking-tight">
-            Welcome to TurfXpert
-          </h2>
+          <app-sparkles-text text="Welcome to TurfXpert" className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3 font-inter tracking-tight"></app-sparkles-text>
           
           <p class="text-[var(--text-secondary)] mb-8 text-[0.95rem] leading-relaxed px-2">
             To continue, please sign in to your existing account or create a new account to access all booking features and community benefits.
