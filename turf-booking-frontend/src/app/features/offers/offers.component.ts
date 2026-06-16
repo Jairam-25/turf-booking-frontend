@@ -587,8 +587,8 @@ interface PromoOffer {
         height: 14px;
       }
       .card-book-btn {
-        height: 24px;
-        font-size: 0.55rem;
+        height: 14px;
+        font-size: 0.60rem;
         border-radius: 6px;
         margin-top: 0;
         padding: 0;
