@@ -92,19 +92,23 @@ interface PromoOffer {
           </div>
 
           <!-- Promo Code Bar -->
-          <div class="promo-code-bar">
+          <button 
+            class="promo-code-bar w-full" 
+            (click)="copyPromoCode(offer.code, offer.id)"
+            [class.copied]="copiedId() === offer.id"
+            title="Tap to Copy"
+          >
             <div class="code-box">
-              <span class="code-label">PROMO CODE</span>
+              <span class="code-label">{{ copiedId() === offer.id ? 'COPIED!' : 'TAP TO COPY CODE' }}</span>
               <span class="code-value">{{ offer.code }}</span>
             </div>
-            <button 
-              class="btn-copy" 
-              (click)="copyPromoCode(offer.code, offer.id)"
-              [class.copied]="copiedId() === offer.id"
-            >
-              {{ copiedId() === offer.id ? '✓ Copied' : 'Copy' }}
-            </button>
-          </div>
+            <svg *ngIf="copiedId() !== offer.id" class="copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <svg *ngIf="copiedId() === offer.id" class="copy-icon text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
 
           <!-- Card Action Button -->
           <button class="btn-premium btn-uniform card-book-btn" routerLink="/dashboard">
@@ -402,11 +406,33 @@ interface PromoOffer {
       border: 1px dashed var(--border-color);
       border-radius: 14px;
       transition: var(--transition-smooth);
+      cursor: pointer;
+      text-align: left;
+    }
+    
+    .promo-code-bar:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: var(--primary);
+    }
+    
+    .promo-code-bar.copied {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: #10b981;
     }
 
     :host-context(body[data-theme="light"]) .promo-code-bar {
       background: rgba(0, 0, 0, 0.02);
       border: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+    
+    :host-context(body[data-theme="light"]) .promo-code-bar:hover {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: var(--primary);
+    }
+    
+    :host-context(body[data-theme="light"]) .promo-code-bar.copied {
+      background: rgba(16, 185, 129, 0.05);
+      border-color: #10b981;
     }
 
     :host-context(body[data-theme="light"]) .offer-card {
@@ -459,27 +485,22 @@ interface PromoOffer {
       color: var(--text-primary);
       letter-spacing: 0.02em;
     }
+    
+    .promo-code-bar.copied .code-label,
+    .promo-code-bar.copied .code-value {
+      color: #10b981;
+    }
 
-    .btn-copy {
-      background: var(--primary);
-      color: var(--on-primary);
-      border: none;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
+    .copy-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--text-secondary);
       transition: var(--transition-smooth);
     }
-
-    .btn-copy:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-copy.copied {
-      background: #10b981;
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    
+    .promo-code-bar:hover .copy-icon {
+      color: var(--primary);
+      transform: scale(1.1);
     }
 
     .card-book-btn {
@@ -542,34 +563,34 @@ interface PromoOffer {
         overflow: hidden;
       }
       .promo-code-bar {
-        padding: 6px;
+        padding: 6px 8px;
         border-radius: 8px;
-        flex-direction: column;
+        flex-direction: row;
         gap: 4px;
         align-items: center;
+        justify-content: space-between;
       }
       .code-box {
-        width: 100%;
+        width: auto;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         gap: 0;
       }
       .code-label {
-        font-size: 0.5rem;
+        font-size: 0.45rem;
       }
       .code-value {
-        font-size: 0.7rem;
-      }
-      .btn-copy {
-        width: 100%;
-        padding: 4px 0;
         font-size: 0.65rem;
-        text-align: center;
+      }
+      .copy-icon {
+        width: 14px;
+        height: 14px;
       }
       .card-book-btn {
-        height: 32px;
-        font-size: 0.7rem;
+        height: 28px;
+        font-size: 0.65rem;
         border-radius: 6px;
+        margin-top: -4px; /* Pull it slightly up to save space */
       }
     }
   `]
