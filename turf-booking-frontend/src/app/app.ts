@@ -30,6 +30,7 @@ import { NotificationService } from './core/services/notification.service';
 export class App implements OnInit {
   hideNavbar = signal(false);
   hideFooter = signal(false);
+  hideBottomNav = signal(false);
 
   constructor(
     private router: Router,
@@ -91,8 +92,10 @@ export class App implements OnInit {
 
   private updateVisibility(url: string) {
     const cleanUrl = url.split('?')[0];
-    this.hideNavbar.set(cleanUrl.startsWith('/auth'));
+    const isAuth = cleanUrl.startsWith('/auth');
+    this.hideNavbar.set(isAuth);
+    this.hideBottomNav.set(isAuth);
     // Hide footer on auth pages, payment, and possibly others if needed
-    this.hideFooter.set(cleanUrl.startsWith('/auth') || cleanUrl.startsWith('/payment'));
+    this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment'));
   }
 }

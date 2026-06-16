@@ -10,4 +10,6 @@
 
 <app-toast></app-toast>
 <app-chatbot></app-chatbot>
-<app-bottom-nav></app-bottom-nav>
+@if (!hideBottomNav()) {
+  <app-bottom-nav></app-bottom-nav>
+}
