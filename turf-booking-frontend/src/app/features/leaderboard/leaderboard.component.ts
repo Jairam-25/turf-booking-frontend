@@ -11,6 +11,7 @@ interface Player {
   badges: string[];
   rank: number;
   trend: 'up' | 'down' | 'same';
+  turfName: string;
 }
 
 @Component({
@@ -72,6 +73,7 @@ interface Player {
                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">2</div>
               </div>
               <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[1].name }}</h2>
+              <div class="text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[1].turfName }}</div>
               <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers()[1].points }}</div>
               <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
               
@@ -92,6 +94,7 @@ interface Player {
                 <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-lg">1</div>
               </div>
               <h2 class="text-2xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[0].name }}</h2>
+              <div class="text-sm text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[0].turfName }}</div>
               <div class="text-4xl font-extrabold text-[#7b39fc] my-2 drop-shadow-sm">{{ topPlayers()[0].points }}</div>
               <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
               
@@ -111,6 +114,7 @@ interface Player {
                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-amber-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">3</div>
               </div>
               <h2 class="text-xl font-bold text-[var(--text-primary)] text-center">{{ topPlayers()[2].name }}</h2>
+              <div class="text-xs text-[var(--text-secondary)] opacity-80 mt-0.5 truncate w-full text-center">Booked: {{ topPlayers()[2].turfName }}</div>
               <div class="text-3xl font-bold text-[#7b39fc] my-1">{{ topPlayers()[2].points }}</div>
               <div class="text-sm text-[var(--text-secondary)] mb-6 text-center">Total Bookings</div>
               
@@ -149,7 +153,10 @@ interface Player {
                     <td class="py-4 px-6">
                       <div class="flex items-center gap-4">
                         <img [src]="p.avatar" class="w-12 h-12 rounded-full object-cover border-2 border-transparent group-hover:border-[var(--primary)] transition-all" />
-                        <span class="font-bold text-[var(--text-primary)] text-base">{{ p.name }}</span>
+                        <div class="flex flex-col">
+                          <span class="font-bold text-[var(--text-primary)] text-base">{{ p.name }}</span>
+                          <span class="text-xs text-[var(--text-secondary)] opacity-80">Booked: {{ p.turfName }}</span>
+                        </div>
                       </div>
                     </td>
                     <td class="py-4 px-6 text-center">
