@@ -16,11 +16,11 @@ interface Sparkle {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="relative inline-block" [ngClass]="className">
+    <div class="relative inline-block">
       <!-- Sparkles -->
       <ng-container *ngFor="let sparkle of sparkles()">
         <svg
-          class="absolute animate-sparkle pointer-events-none"
+          class="absolute animate-sparkle pointer-events-none z-0"
           [style.left]="sparkle.x"
           [style.top]="sparkle.y"
           [style.color]="sparkle.color"
@@ -41,7 +41,7 @@ interface Sparkle {
       </ng-container>
 
       <!-- The Text -->
-      <span class="relative z-10">{{ text }}</span>
+      <span class="relative z-10 inline-block" [ngClass]="className">{{ text }}</span>
     </div>
   `,
   styles: [
