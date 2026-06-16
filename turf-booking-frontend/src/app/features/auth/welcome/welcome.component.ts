@@ -2,18 +2,17 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
-import { TurfBackgroundComponent } from '../../../shared/components/turf-background/turf-background.component';
 import { SparklesTextComponent } from '../../../shared/components/magic-ui/sparkles-text/sparkles-text.component';
+import { DotPatternComponent } from '../../../shared/components/magic-ui/dot-pattern/dot-pattern.component';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, RouterModule, ThemeToggleComponent, TurfBackgroundComponent, SparklesTextComponent],
+  imports: [CommonModule, RouterModule, ThemeToggleComponent, DotPatternComponent, SparklesTextComponent],
   template: `
-    <div class="hero-page font-inter">
-      <!-- Custom realistic animated turf background -->
-      <app-turf-background></app-turf-background>
-      <div class="hero-overlay"></div>
+    <div class="relative w-full min-h-screen bg-[var(--bg-primary)] overflow-hidden font-inter">
+      <!-- Magic UI Dot Pattern Background -->
+      <app-dot-pattern className="[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"></app-dot-pattern>
 
       <div class="auth-theme-bar">
         <app-theme-toggle />
