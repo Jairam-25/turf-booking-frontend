@@ -228,7 +228,7 @@ export class LeaderboardComponent implements OnInit {
   ngOnInit() {
     this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/Community/leaderboard').subscribe({
       next: (res) => {
-        if (res.isSuccess) {
+        if (res.success) {
           this.allPlayers.set(res.data);
         }
         this.isLoading.set(false);
