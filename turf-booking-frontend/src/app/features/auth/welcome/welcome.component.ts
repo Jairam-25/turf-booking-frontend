@@ -46,8 +46,8 @@ import { DotPatternComponent } from '../../../shared/components/magic-ui/dot-pat
 
       <div class="goal-overlay" [class.active]="isOverlayActive()">
         <div class="transition-content">
-          <span class="overlay-label">Welcome To</span>
-          <span class="overlay-brand">TurfXpert</span>
+          <span class="overlay-label">{{ overlayLabel() }}</span>
+          <span class="overlay-brand">{{ overlayBrand() }}</span>
         </div>
       </div>
     </div>
@@ -57,11 +57,21 @@ import { DotPatternComponent } from '../../../shared/components/magic-ui/dot-pat
 export class WelcomeComponent {
   isOverlayActive = signal(false);
   isTransitioning = signal(false);
+  overlayLabel = signal('Welcome To');
+  overlayBrand = signal('TurfXpert');
 
   constructor(private router: Router) {}
 
   onNavigate(action: 'login' | 'register') {
     if (this.isTransitioning()) return;
+
+    if (action === 'login') {
+      this.overlayLabel.set('Welcome back');
+      this.overlayBrand.set('TurfXpert');
+    } else {
+      this.overlayLabel.set('Welcome TurfXpert');
+      this.overlayBrand.set('Registration');
+    }
 
     this.isTransitioning.set(true);
     this.isOverlayActive.set(true);
