@@ -33,13 +33,13 @@ interface Player {
 
       <!-- Hero Header -->
       <div class="text-center mb-12 relative flex flex-col items-center justify-center fade-in">
-        <div class="flex items-center justify-center gap-4 mb-2">
-          <svg class="w-8 h-12 text-[#7b39fc]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-2">
+          <svg class="w-6 h-8 sm:w-8 sm:h-12 text-[#7b39fc] hidden sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z"></path>
           </svg>
-          <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight">Community Leaderboard</h1>
-          <svg class="w-8 h-12 text-[#7b39fc] transform scale-x-[-1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight text-center">Community Leaderboard</h1>
+          <svg class="w-6 h-8 sm:w-8 sm:h-12 text-[#7b39fc] transform scale-x-[-1] hidden sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z"></path>
           </svg>
@@ -64,10 +64,10 @@ interface Player {
 
         <ng-container *ngIf="allPlayers().length > 0">
           <!-- Top 3 Podium Cards -->
-          <div class="flex flex-col md:flex-row justify-center items-end gap-6 mb-16 fade-in px-4">
+          <div class="flex flex-col md:flex-row justify-center items-center md:items-end gap-6 mb-16 fade-in px-4">
             
             <!-- Second Place -->
-            <div *ngIf="topPlayers().length > 1" class="flex-1 max-w-[320px] order-2 md:order-1 flex flex-col items-center p-6 bg-[rgba(148,163,184,0.05)] border border-[rgba(148,163,184,0.3)] rounded-2xl relative shadow-lg">
+            <div *ngIf="topPlayers().length > 1" class="w-full flex-1 max-w-[320px] order-2 md:order-1 flex flex-col items-center p-6 bg-[rgba(148,163,184,0.05)] border border-[rgba(148,163,184,0.3)] rounded-2xl relative shadow-lg">
               <div class="relative mb-4 mt-2">
                 <img [src]="topPlayers()[1].avatar" class="w-20 h-20 rounded-full border-4 border-slate-400 object-cover shadow-md" />
                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">2</div>
@@ -87,7 +87,7 @@ interface Player {
             </div>
             
             <!-- First Place -->
-            <div *ngIf="topPlayers().length > 0" class="flex-1 max-w-[360px] order-1 md:order-2 flex flex-col items-center p-8 bg-[rgba(245,158,11,0.08)] border-2 border-[rgba(245,158,11,0.5)] rounded-[1.5rem] relative shadow-[0_0_40px_rgba(245,158,11,0.15)] z-10 transform md:-translate-y-4">
+            <div *ngIf="topPlayers().length > 0" class="w-full flex-1 max-w-[360px] order-1 md:order-2 flex flex-col items-center p-8 bg-[rgba(245,158,11,0.08)] border-2 border-[rgba(245,158,11,0.5)] rounded-[1.5rem] relative shadow-[0_0_40px_rgba(245,158,11,0.15)] z-10 transform md:-translate-y-4">
               <div class="relative mb-5 mt-4">
                 <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-4xl filter drop-shadow-lg">👑</div>
                 <img [src]="topPlayers()[0].avatar" class="w-28 h-28 rounded-full border-4 border-yellow-500 object-cover shadow-[0_0_20px_rgba(245,158,11,0.3)]" />
@@ -108,7 +108,7 @@ interface Player {
             </div>
             
             <!-- Third Place -->
-            <div *ngIf="topPlayers().length > 2" class="flex-1 max-w-[320px] order-3 md:order-3 flex flex-col items-center p-6 bg-[rgba(180,83,9,0.05)] border border-[rgba(180,83,9,0.3)] rounded-2xl relative shadow-lg">
+            <div *ngIf="topPlayers().length > 2" class="w-full flex-1 max-w-[320px] order-3 md:order-3 flex flex-col items-center p-6 bg-[rgba(180,83,9,0.05)] border border-[rgba(180,83,9,0.3)] rounded-2xl relative shadow-lg">
               <div class="relative mb-4 mt-2">
                 <img [src]="topPlayers()[2].avatar" class="w-20 h-20 rounded-full border-4 border-amber-700 object-cover shadow-md" />
                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-amber-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">3</div>
