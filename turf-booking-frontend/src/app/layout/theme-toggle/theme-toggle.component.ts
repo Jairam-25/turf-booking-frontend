@@ -10,7 +10,7 @@ import { ThemeService } from '../../core/services/theme.service';
     <button
       type="button"
       class="theme-toggle-btn"
-      (click)="themeService.toggle()"
+      (click)="themeService.toggle($event)"
       [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
       [title]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
      title="Theme Toggle">

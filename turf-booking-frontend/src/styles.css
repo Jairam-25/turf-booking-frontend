@@ -902,3 +902,25 @@ body:not([data-theme="light"]) .theme-toggle-animated .sun-rays {
 body:not([data-theme="light"]) .theme-toggle-animated {
   color: #fbbf24; /* amber-400 */
 }
+/* View Transitions for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Light transition: switching TO light. The old view (dark) shrinks, so it must be on top. */
+.theme-transition-light::view-transition-old(root) {
+  z-index: 2;
+}
+.theme-transition-light::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Dark transition: switching TO dark. The new view (dark) expands, so it must be on top. */
+.theme-transition-dark::view-transition-old(root) {
+  z-index: 1;
+}
+.theme-transition-dark::view-transition-new(root) {
+  z-index: 2;
+}
