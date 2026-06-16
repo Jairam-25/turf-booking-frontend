@@ -491,20 +491,38 @@ interface PromoOffer {
 
     @media (max-width: 768px) {
       .offers-page-container {
-        padding: 1rem;
-        gap: 1.5rem;
-      }
-      .offers-hero {
-        padding: 2rem 1.25rem;
-      }
-      .offers-grid {
-        grid-template-columns: 1fr;
+        padding: 0.5rem;
         gap: 1rem;
       }
+      .offers-hero {
+        padding: 1.5rem 1rem;
+      }
+      .offers-hero h1 {
+        font-size: 1.25rem;
+      }
+      .offers-hero p {
+        font-size: 0.75rem;
+      }
+      
+      .offers-grid {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        scroll-snap-type: x mandatory;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .offers-grid::-webkit-scrollbar {
+        display: none;
+      }
       .offer-card {
-        padding: 1.25rem;
+        min-width: 240px;
+        scroll-snap-align: start;
+        padding: 1rem;
         border-radius: 12px;
         gap: 0.75rem;
+        flex-shrink: 0;
       }
       .discount-display {
         font-size: 1.5rem;
@@ -514,25 +532,36 @@ interface PromoOffer {
       }
       .offer-desc {
         font-size: 0.75rem;
-        line-height: 1.4;
+        line-height: 1.3;
       }
       .promo-code-bar {
-        padding: 8px 12px;
-        border-radius: 10px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+      }
+      .code-box {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
       }
       .code-label {
-        font-size: 0.55rem;
+        font-size: 0.5rem;
       }
       .code-value {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
       }
       .btn-copy {
-        padding: 6px 10px;
+        width: 100%;
+        padding: 6px 0;
         font-size: 0.7rem;
+        text-align: center;
       }
       .card-book-btn {
-        height: 38px;
-        font-size: 0.8rem;
+        height: 36px;
+        font-size: 0.75rem;
         border-radius: 8px;
       }
     }
