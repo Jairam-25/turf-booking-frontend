@@ -32,8 +32,8 @@ import { CommonModule } from '@angular/common';
   `,
   styles: [`
     .dot-pattern-fill {
-      fill: var(--text-secondary);
-      opacity: 0.15;
+      fill: var(--text-primary);
+      opacity: 0.3;
     }
   `]
 })

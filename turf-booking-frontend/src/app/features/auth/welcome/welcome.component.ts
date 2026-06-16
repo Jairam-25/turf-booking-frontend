@@ -27,7 +27,7 @@ import { DotPatternComponent } from '../../../shared/components/magic-ui/dot-pat
             </svg>
           </div>
 
-          <app-sparkles-text text="Welcome to TurfXpert" className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3 font-inter tracking-tight"></app-sparkles-text>
+          <app-sparkles-text text="Welcome to TurfXpert" className="text-2xl sm:text-3xl md:text-[2.1rem] whitespace-nowrap font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--text-primary)] to-[var(--primary)] mb-3 font-inter tracking-tight"></app-sparkles-text>
           
           <p class="text-[var(--text-secondary)] mb-8 text-[0.95rem] leading-relaxed px-2">
             To continue, please sign in to your existing account or create a new account to access all booking features and community benefits.
