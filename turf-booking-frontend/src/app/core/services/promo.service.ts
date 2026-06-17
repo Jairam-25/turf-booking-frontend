@@ -29,14 +29,14 @@ export class PromoService {
   private apiUrl = `${environment.apiUrl}/PromoOffers`;
 
   getPromoOffers(): Observable<PromoOfferDto[]> {
-    return this.http.get<{ data: PromoOfferDto[] }>(this.apiUrl).pipe(
-      map(res => res.data || [])
+    return this.http.get<any>(this.apiUrl).pipe(
+      map(res => Array.isArray(res) ? res : (res?.data || []))
     );
   }
 
   validatePromoCode(code: string): Observable<ValidatePromoResult> {
-    return this.http.get<{ data: ValidatePromoResult }>(`${this.apiUrl}/validate/${code}`).pipe(
-      map(res => res.data)
+    return this.http.get<any>(`${this.apiUrl}/validate/${code}`).pipe(
+      map(res => res?.data !== undefined ? res.data : res)
     );
   }
 }

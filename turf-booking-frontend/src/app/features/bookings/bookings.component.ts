@@ -688,47 +688,108 @@ export interface GroupedBooking {
         gap: 1rem;
       }
       .header-card {
-        padding: 1.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem !important;
       }
       .header-card h1 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+      }
+      .header-card p {
+        font-size: 0.85rem;
       }
       .insights-grid {
         display: flex;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        padding-bottom: 1rem;
-        gap: 1rem;
+        padding-bottom: 0.5rem;
+        gap: 0.75rem;
+        margin-top: 1rem;
       }
       .insight-card {
-        min-width: 85vw;
+        min-width: 80vw;
         scroll-snap-align: center;
         flex-shrink: 0;
         padding: 1rem;
+        gap: 0.75rem;
       }
       .insight-icon {
-        width: 44px;
-        height: 44px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
       }
       .insight-icon svg {
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
+      }
+      .insight-info h4 {
+        font-size: 0.75rem;
       }
       .insight-info h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+      }
+      .trend {
+        font-size: 0.75rem;
+      }
+      h2 {
+        font-size: 1.25rem !important;
+      }
+      .tab-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      .bookings-list {
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
       .booking-card {
-        padding: 1.25rem;
-        gap: 1.25rem;
+        padding: 1rem;
+        gap: 1rem;
+        min-height: auto;
+      }
+      .turf-info h3 {
+        font-size: 1.1rem;
+      }
+      .location-link {
+        font-size: 0.75rem;
+      }
+      .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+      }
+      .label {
+        font-size: 0.65rem;
+      }
+      .value {
+        font-size: 0.8rem;
+      }
+      .value.price {
+        font-size: 0.9rem;
+      }
+      .btn-cancel, .btn-share {
+        padding: 8px;
+        font-size: 0.8rem;
+        border-radius: 8px;
       }
       .empty-state {
-        padding: 3rem 1rem;
+        padding: 2rem 1rem;
+      }
+      .empty-state h3 {
+        font-size: 1.2rem;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
       }
     }
 
     @media (max-width: 480px) {
       .modal-content {
-        padding: 1.5rem;
+        padding: 1.25rem;
+      }
+      .modal-content h3 {
+        font-size: 1.25rem;
+      }
+      .modal-content p {
+        font-size: 0.85rem;
       }
       .modal-actions {
         flex-direction: column;
@@ -736,6 +797,8 @@ export interface GroupedBooking {
       }
       .modal-actions button {
         width: 100%;
+        padding: 8px;
+        font-size: 0.85rem;
       }
     }
   `]

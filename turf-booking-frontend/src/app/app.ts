@@ -93,9 +93,16 @@ export class App implements OnInit {
   private updateVisibility(url: string) {
     const cleanUrl = url.split('?')[0];
     const isAuth = cleanUrl.startsWith('/auth');
+    const isAppTab = cleanUrl.startsWith('/dashboard') || 
+                     cleanUrl.startsWith('/bookings') || 
+                     cleanUrl.startsWith('/liked-turfs') || 
+                     cleanUrl.startsWith('/profile') || 
+                     cleanUrl.startsWith('/offers') || 
+                     cleanUrl.startsWith('/reviews');
+
     this.hideNavbar.set(isAuth);
     this.hideBottomNav.set(isAuth);
-    // Hide footer on auth pages, payment, and possibly others if needed
-    this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment'));
+    // Hide footer on auth pages, payment, and main app tabs
+    this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment') || isAppTab);
   }
 }
