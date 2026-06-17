@@ -930,3 +930,15 @@ body:not([data-theme="light"]) .theme-toggle-animated {
     padding-bottom: calc(64px + env(safe-area-inset-bottom) + 16px);
   }
 }
+
+.spinner-large {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(var(--primary-rgb), 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

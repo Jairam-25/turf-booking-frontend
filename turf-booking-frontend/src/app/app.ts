@@ -31,6 +31,7 @@ export class App implements OnInit {
   hideNavbar = signal(false);
   hideFooter = signal(false);
   hideBottomNav = signal(false);
+  isRouting = signal(false);
 
   constructor(
     private router: Router,
@@ -61,9 +62,25 @@ export class App implements OnInit {
       });
     }
 
-    this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => this.updateVisibility(event.urlAfterRedirects));
+    this.router.events.subscribe(event => {
+      if (
+        event instanceof import('@angular/router').RouteConfigLoadStart ||
+        event instanceof import('@angular/router').NavigationStart
+      ) {
+        this.isRouting.set(true);
+      } else if (
+        event instanceof import('@angular/router').RouteConfigLoadEnd ||
+        event instanceof import('@angular/router').NavigationEnd ||
+        event instanceof import('@angular/router').NavigationCancel ||
+        event instanceof import('@angular/router').NavigationError
+      ) {
+        this.isRouting.set(false);
+      }
+
+      if (event instanceof import('@angular/router').NavigationEnd) {
+        this.updateVisibility(event.urlAfterRedirects);
+      }
+    });
 
     // Render Cold-Start UX: Health check on app init
     const healthCheckStart = Date.now();
