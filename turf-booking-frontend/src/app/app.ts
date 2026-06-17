@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ToastComponent } from './layout/toast/toast.component';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, RouteConfigLoadStart, NavigationStart, RouteConfigLoadEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer-component/footer-component';
 import { filter } from 'rxjs/operators';
@@ -64,20 +64,20 @@ export class App implements OnInit {
 
     this.router.events.subscribe(event => {
       if (
-        event instanceof import('@angular/router').RouteConfigLoadStart ||
-        event instanceof import('@angular/router').NavigationStart
+        event instanceof RouteConfigLoadStart ||
+        event instanceof NavigationStart
       ) {
         this.isRouting.set(true);
       } else if (
-        event instanceof import('@angular/router').RouteConfigLoadEnd ||
-        event instanceof import('@angular/router').NavigationEnd ||
-        event instanceof import('@angular/router').NavigationCancel ||
-        event instanceof import('@angular/router').NavigationError
+        event instanceof RouteConfigLoadEnd ||
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
       ) {
         this.isRouting.set(false);
       }
 
-      if (event instanceof import('@angular/router').NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.updateVisibility(event.urlAfterRedirects);
       }
     });
