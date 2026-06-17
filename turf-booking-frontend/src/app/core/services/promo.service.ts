@@ -30,7 +30,7 @@ export class PromoService {
 
   getPromoOffers(): Observable<PromoOfferDto[]> {
     return this.http.get<{ data: PromoOfferDto[] }>(this.apiUrl).pipe(
-      map(res => res.data)
+      map(res => res.data || [])
     );
   }
 

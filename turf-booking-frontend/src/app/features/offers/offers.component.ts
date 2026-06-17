@@ -616,7 +616,7 @@ export class OffersComponent implements OnInit {
   ngOnInit() {
     this.promoService.getPromoOffers().subscribe({
       next: (data) => {
-        this.offers = data.map(o => ({
+        this.offers = (data || []).map(o => ({
           id: o.id.toString(),
           title: o.title,
           code: o.promoCode,
