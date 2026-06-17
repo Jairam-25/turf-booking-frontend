@@ -12,6 +12,7 @@ import { Turf } from '../../../domain/models/turf.model';
 import { Slot } from '../../../domain/models/booking.model';
 import { Review } from '../../../domain/models/review.model';
 import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
+import { AuthStore } from '../../../core/services/auth.store';
 
 declare var Razorpay: any;
 
@@ -1568,7 +1569,8 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
     private bookingRepository: BookingRepository,
     private reviewRepository: ReviewRepository,
     private notificationService: NotificationService,
-    private signalr: SignalrService
+    private signalr: SignalrService,
+    private authStore: AuthStore
   ) {}
 
   ngOnInit() {
@@ -1789,6 +1791,13 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
   confirmBooking() {
     const selected = this.selectedSlots();
     if (selected.length === 0) return;
+
+    // "Login on Demand" -> Check if user is authenticated
+    if (!this.authStore.token() || this.authStore.isTokenExpired()) {
+      this.notificationService.info('Please log in to complete your booking.');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
     
     this.isOverlayActive.set(true);
 

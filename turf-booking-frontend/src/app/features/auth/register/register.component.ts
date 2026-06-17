@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RegisterFormComponent } from './ui/register-form.component';
@@ -132,7 +132,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authRepository: AuthRepository,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -173,7 +174,8 @@ export class RegisterComponent implements OnInit {
         // Transition complete -> route to Login
         setTimeout(() => {
           this.notificationService.success(message || 'Registration successful! Please login.');
-          this.router.navigate(['/auth/login']);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+          this.router.navigate(['/auth/login'], { queryParams: returnUrl ? { returnUrl } : undefined });
           this.isLoading.set(false);
         }, 1500);
       },

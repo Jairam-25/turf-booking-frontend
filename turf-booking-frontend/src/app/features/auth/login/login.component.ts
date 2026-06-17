@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -229,7 +229,8 @@ export class LoginComponent implements OnInit {
     private authRepository: AuthRepository,
     private authStore: AuthStore,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -267,7 +268,8 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         this.authStore.setSession(credentials.user, credentials.auth.token, credentials.auth.refreshToken);
         this.notificationService.success('Logged in successfully!');
-        this.router.navigate(['/home']);
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+        this.router.navigateByUrl(returnUrl);
         this.isLoading.set(false);
       }, 1500);
       return;
@@ -293,7 +295,8 @@ export class LoginComponent implements OnInit {
           setTimeout(() => {
             this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
             this.notificationService.success('Logged in successfully!');
-            this.router.navigate(['/home']);
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+            this.router.navigateByUrl(returnUrl);
             this.isLoading.set(false);
           }, 1500);
         } else {

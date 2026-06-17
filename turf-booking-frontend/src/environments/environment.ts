@@ -1,5 +1,3 @@
-// ⚠️ IMPORTANT: Replace these placeholder values with your actual Firebase project credentials.
-// Go to: https://console.firebase.google.com → Your Project → Project Settings → Your Apps → Firebase SDK snippet
 export const environment = {
   production: false,
   apiUrl: 'https://turf-booking-backend-fixl.onrender.com/api/v1',

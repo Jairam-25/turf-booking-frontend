@@ -24,8 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'bookings',
@@ -34,8 +33,7 @@ export const routes: Routes = [
   },
   { 
     path: 'dashboard', 
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'offers',
@@ -54,8 +52,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/turf/:id',
-    loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent)
   },
   {
     path: 'payment',
