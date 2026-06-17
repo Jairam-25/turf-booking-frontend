@@ -32,6 +32,7 @@ export class App implements OnInit {
   hideFooter = signal(false);
   hideBottomNav = signal(false);
   isRouting = signal(false);
+  routingText = signal('Loading page...');
 
   constructor(
     private router: Router,
@@ -63,10 +64,22 @@ export class App implements OnInit {
     }
 
     this.router.events.subscribe(event => {
-      if (
-        event instanceof RouteConfigLoadStart ||
-        event instanceof NavigationStart
-      ) {
+      if (event instanceof NavigationStart) {
+        let text = 'Loading...';
+        const url = event.url.split('?')[0];
+        if (url.includes('/dashboard')) text = 'Loading Book Turf...';
+        else if (url.includes('/offers')) text = 'Loading Promo Offers...';
+        else if (url.includes('/leaderboard')) text = 'Loading Community...';
+        else if (url.includes('/liked-turfs')) text = 'Loading Liked Turfs...';
+        else if (url.includes('/bookings')) text = 'Loading Bookings...';
+        else if (url.includes('/profile')) text = 'Loading Profile...';
+        else if (url.includes('/reviews')) text = 'Loading Reviews...';
+        else if (url.includes('/support')) text = 'Loading Support...';
+        else text = 'Loading page...';
+        
+        this.routingText.set(text);
+        this.isRouting.set(true);
+      } else if (event instanceof RouteConfigLoadStart) {
         this.isRouting.set(true);
       } else if (
         event instanceof RouteConfigLoadEnd ||

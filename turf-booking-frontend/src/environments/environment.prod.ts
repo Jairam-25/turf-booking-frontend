@@ -1,4 +1,3 @@
-// ⚠️ IMPORTANT: Replace these placeholder values with your actual Firebase project credentials.
 export const environment = {
   production: true,
   apiUrl: 'https://turf-booking-backend-fixl.onrender.com/api/v1',
