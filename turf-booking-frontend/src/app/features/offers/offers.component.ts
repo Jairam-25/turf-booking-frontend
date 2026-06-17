@@ -68,60 +68,76 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
       </div>
 
       <!-- Offers Grid -->
-      <div class="offers-grid">
-        <div 
-          *ngFor="let offer of filteredOffers()" 
-          class="offer-card flex-card-layout glass"
-          [style.border-top-color]="getAccentColor(offer.category)"
-        >
-          <!-- Decorative Top Light Bar -->
-          <div class="light-bar" [style.background]="offer.gradient"></div>
-
-          <!-- Card Header -->
-          <div class="card-header">
-            <span class="cat-tag" [style.color]="getAccentColor(offer.category)" [style.background]="getAccentBg(offer.category)">
-              {{ offer.category }}
-            </span>
-            <span class="valid-badge" [class.used]="offer.isUsed">{{ offer.isUsed ? 'USED' : offer.validUntil }}</span>
-          </div>
-
-          <!-- Card Title & Discount -->
-          <div class="card-main flex-card-body">
-            <div class="discount-display" [style.background-image]="offer.gradient">
-              {{ offer.discount }}
-            </div>
-            <h3 class="offer-title">{{ offer.title }}</h3>
-            <p class="offer-desc">{{ offer.description }}</p>
-          </div>
-
-          <!-- Promo Code Bar -->
-          <button 
-            class="promo-code-bar w-full" 
-            (click)="copyPromoCode(offer.code, offer.id, offer.isUsed)"
-            [class.copied]="copiedId() === offer.id"
-            [class.opacity-50]="offer.isUsed"
-            [disabled]="offer.isUsed"
-            title="Tap to Copy"
+      <ng-container *ngIf="!isLoading(); else loadingTemplate">
+        <div class="offers-grid">
+          <div 
+            *ngFor="let offer of filteredOffers()" 
+            class="offer-card flex-card-layout glass"
+            [style.border-top-color]="getAccentColor(offer.category)"
           >
-            <div class="code-box">
-              <span class="code-label" *ngIf="!offer.isUsed">{{ copiedId() === offer.id ? 'COPIED!' : 'TAP TO COPY CODE' }}</span>
-              <span class="code-label text-red-500" *ngIf="offer.isUsed">ALREADY USED</span>
-              <span class="code-value" [class.line-through]="offer.isUsed">{{ offer.code }}</span>
-            </div>
-            <svg *ngIf="copiedId() !== offer.id && !offer.isUsed" class="copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <svg *ngIf="copiedId() === offer.id && !offer.isUsed" class="copy-icon text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </button>
+            <!-- Decorative Top Light Bar -->
+            <div class="light-bar" [style.background]="offer.gradient"></div>
 
-          <!-- Card Action Button -->
-          <button class="btn-premium btn-uniform card-book-btn" routerLink="/dashboard">
-            Book Turf Now
-          </button>
+            <!-- Card Header -->
+            <div class="card-header">
+              <span class="cat-tag" [style.color]="getAccentColor(offer.category)" [style.background]="getAccentBg(offer.category)">
+                {{ offer.category }}
+              </span>
+              <span class="valid-badge" [class.used]="offer.isUsed">{{ offer.isUsed ? 'USED' : offer.validUntil }}</span>
+            </div>
+
+            <!-- Card Title & Discount -->
+            <div class="card-main flex-card-body">
+              <div class="discount-display" [style.background-image]="offer.gradient">
+                {{ offer.discount }}
+              </div>
+              <h3 class="offer-title">{{ offer.title }}</h3>
+              <p class="offer-desc">{{ offer.description }}</p>
+            </div>
+
+            <!-- Promo Code Bar -->
+            <button 
+              class="promo-code-bar w-full" 
+              (click)="copyPromoCode(offer.code, offer.id, offer.isUsed)"
+              [class.copied]="copiedId() === offer.id"
+              [class.opacity-50]="offer.isUsed"
+              [disabled]="offer.isUsed"
+              title="Tap to Copy"
+            >
+              <div class="code-box">
+                <span class="code-label" *ngIf="!offer.isUsed">{{ copiedId() === offer.id ? 'COPIED!' : 'TAP TO COPY CODE' }}</span>
+                <span class="code-label text-red-500" *ngIf="offer.isUsed">ALREADY USED</span>
+                <span class="code-value" [class.line-through]="offer.isUsed">{{ offer.code }}</span>
+              </div>
+              <svg *ngIf="copiedId() !== offer.id && !offer.isUsed" class="copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <svg *ngIf="copiedId() === offer.id && !offer.isUsed" class="copy-icon text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </button>
+
+            <!-- Card Action Button -->
+            <button class="btn-premium btn-uniform card-book-btn" routerLink="/dashboard">
+              Book Turf Now
+            </button>
+          </div>
         </div>
-      </div>
+
+        <!-- Empty State -->
+        <div class="empty-state glass" *ngIf="filteredOffers().length === 0 && !isLoading()">
+          <h3>No offers found</h3>
+          <p>There are no active promos in this category right now.</p>
+          <button class="btn-premium btn-uniform mt-4" (click)="selectedCategory.set('All')">View All Deals</button>
+        </div>
+      </ng-container>
+
+      <!-- Skeleton Loading -->
+      <ng-template #loadingTemplate>
+        <div class="offers-grid">
+          <div class="offer-card glass skeleton" *ngFor="let i of [1,2,3,4]"></div>
+        </div>
+      </ng-template>
 
     </div>
   `,
@@ -606,17 +622,19 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
 export class OffersComponent implements OnInit {
   selectedCategory = signal<string>('All');
   copiedId = signal<string | null>(null);
+  isLoading = signal<boolean>(true);
 
   promoService = inject(PromoService);
 
   categories = ['First Time', 'Weekday Special', 'Night Slot', 'Group Discount', 'General'];
 
-  offers: PromoOffer[] = [];
+  offers = signal<PromoOffer[]>([]);
 
   ngOnInit() {
+    this.isLoading.set(true);
     this.promoService.getPromoOffers().subscribe({
       next: (data) => {
-        this.offers = (data || []).map(o => ({
+        const mappedOffers = (data || []).map(o => ({
           id: o.id.toString(),
           title: o.title,
           code: o.promoCode,
@@ -628,8 +646,13 @@ export class OffersComponent implements OnInit {
           badge: '',
           isUsed: o.isUsed
         }));
+        this.offers.set(mappedOffers);
+        this.isLoading.set(false);
       },
-      error: (err) => console.error('Failed to load promo offers', err)
+      error: (err) => {
+        console.error('Failed to load promo offers', err);
+        this.isLoading.set(false);
+      }
     });
   }
 
@@ -654,8 +677,8 @@ export class OffersComponent implements OnInit {
 
   filteredOffers(): PromoOffer[] {
     const cat = this.selectedCategory();
-    if (cat === 'All') return this.offers;
-    return this.offers.filter(o => o.category === cat);
+    if (cat === 'All') return this.offers();
+    return this.offers().filter(o => o.category === cat);
   }
 
   getAccentColor(category: string): string {
