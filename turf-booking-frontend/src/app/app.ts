@@ -98,6 +98,8 @@ export class App implements OnInit {
                      cleanUrl.startsWith('/liked-turfs') || 
                      cleanUrl.startsWith('/profile') || 
                      cleanUrl.startsWith('/offers') || 
+                     cleanUrl.startsWith('/leaderboard') || 
+                     cleanUrl.startsWith('/support') || 
                      cleanUrl.startsWith('/reviews');
 
     this.hideNavbar.set(isAuth);
