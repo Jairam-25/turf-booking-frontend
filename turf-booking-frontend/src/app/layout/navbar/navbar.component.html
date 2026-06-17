@@ -34,16 +34,9 @@
   <div class="hidden lg:flex items-center gap-4 xl:gap-8 mr-auto ml-6 xl:ml-12">
     <!-- Logged Out Links -->
     <ng-container *ngIf="!isLoggedIn()">
-      <a routerLink="/" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Home</a>
-      <div class="navbar-link relative group cursor-pointer flex items-center gap-1 font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">
-        <span>Services</span>
-        <svg  class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<title>Review</title>
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
-      <a href="#reviews" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Reviews</a>
-      <a href="#contact" class="navbar-link font-medium text-[14px] transition-opacity duration-200 hover:opacity-80">Contact us</a>
+      <a routerLink="/dashboard" routerLinkActive="active-link" class="navbar-link font-medium text-sm transition-colors duration-200 hover:text-[var(--text-primary)] text-[var(--text-secondary)]">Book Turf</a>
+      <a routerLink="/offers" routerLinkActive="active-link" class="navbar-link font-medium text-sm transition-colors duration-200 hover:text-[var(--text-primary)] text-[var(--text-secondary)]">Promo Offers</a>
+      <a routerLink="/leaderboard" routerLinkActive="active-link" class="navbar-link font-medium text-sm transition-colors duration-200 hover:text-[var(--text-primary)] text-[var(--text-secondary)]">Community</a>
     </ng-container>
 
     <!-- Logged In Links -->
@@ -354,21 +347,29 @@
   <div class="flex-1 overflow-y-auto py-4">
     <div class="flex flex-col space-y-1 px-3">
       <ng-container *ngIf="!isLoggedIn()">
-        <a routerLink="/" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Home">
+        <a routerLink="/home" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Home">
           <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
           Home
         </a>
-        <a routerLink="/" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Action">
-          <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-          Services
+        <a routerLink="/dashboard" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Action">
+          <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          Book Turf
         </a>
-        <a href="#reviews" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Review">
-          <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-          Reviews
+        <a routerLink="/offers" (click)="toggleMobileMenu()" class="flex items-center justify-between px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium">
+          <div class="flex items-center gap-3" title="Offers">
+            <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+            Offers
+          </div>
+          <svg  class="w-4 h-4 mobile-drawer-icon opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<title>Profile</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </a>
-        <a href="#contact" (click)="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium" title="Action">
-          <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-          Contact us
+        <a routerLink="/leaderboard" (click)="toggleMobileMenu()" class="flex items-center justify-between px-4 py-3 rounded-lg mobile-drawer-link transition-colors font-medium">
+          <div class="flex items-center gap-3" title="Community">
+            <svg  class="w-5 h-5 mobile-drawer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"></path></svg>
+            Community
+          </div>
+          <svg  class="w-4 h-4 mobile-drawer-icon opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </a>
       </ng-container>
 
