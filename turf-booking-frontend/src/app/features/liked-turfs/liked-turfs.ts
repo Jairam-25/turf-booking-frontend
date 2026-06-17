@@ -16,7 +16,7 @@ export class LikedTurfsComponent implements OnInit {
 
   constructor(
     private notificationService: NotificationService,
-    @Inject('TurfRepository') private turfRepository: TurfRepository
+    private turfRepository: TurfRepository
   ) {}
 
   ngOnInit() {
