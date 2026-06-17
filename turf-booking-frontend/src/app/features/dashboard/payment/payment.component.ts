@@ -2,7 +2,9 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../core/services/notification.service';
+import { PromoService } from '../../../core/services/promo.service';
 import { BookingRepository } from '../../../domain/repositories/booking.repository';
+import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import confetti from 'canvas-confetti';
 import { MagicCardDirective } from '../../../shared/directives/magic-card.directive';
@@ -12,7 +14,7 @@ declare var Razorpay: any;
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, MagicCardDirective],
+  imports: [CommonModule, MagicCardDirective, FormsModule],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
@@ -20,6 +22,7 @@ export class PaymentComponent implements OnInit {
   private router = inject(Router);
   private notificationService = inject(NotificationService);
   private bookingRepository = inject(BookingRepository);
+  private promoService = inject(PromoService);
 
   bookingData: any;
   selectedMethod = signal<string>('razorpay');
@@ -31,6 +34,12 @@ export class PaymentComponent implements OnInit {
   platformFee = 20;
   taxAmount = 0;
   grandTotal = 0;
+  
+  promoCodeInput = signal('');
+  appliedPromoCode = signal<string | null>(null);
+  discountPercentage = signal<number>(0);
+  discountAmount = signal<number>(0);
+  isApplyingPromo = signal(false);
   
   methods = [
     { id: 'wallet', name: 'TurfXpert Wallet', icon: 'wallet', description: 'Available Balance: ₹1,500' },
@@ -50,12 +59,67 @@ export class PaymentComponent implements OnInit {
     this.taxAmount = Math.round(this.bookingData.totalPrice * 0.18);
     this.grandTotal = this.bookingData.totalPrice + this.platformFee + this.taxAmount;
     
-    // Update amountToPay with taxes
-    if (this.bookingData.paymentPlan === 'advance') {
-       this.bookingData.amountToPay += (this.platformFee + this.taxAmount);
+    this.updatePayableAmount();
+  }
+
+  updatePayableAmount() {
+    let baseAmount = this.grandTotal;
+    
+    // Apply promo
+    if (this.appliedPromoCode() && this.discountPercentage() > 0) {
+      const discount = Math.round(this.bookingData.totalPrice * (this.discountPercentage() / 100));
+      this.discountAmount.set(discount);
+      baseAmount -= discount;
     } else {
-       this.bookingData.amountToPay = this.grandTotal;
+      this.discountAmount.set(0);
     }
+
+    // Update amountToPay with taxes and discount
+    if (this.bookingData.paymentPlan === 'advance') {
+       // Assuming advance pays roughly half the final base
+       this.bookingData.amountToPay = Math.max(0, (this.bookingData.totalPrice / 2) + this.platformFee + this.taxAmount - this.discountAmount());
+    } else {
+       this.bookingData.amountToPay = Math.max(0, baseAmount);
+    }
+  }
+
+  applyPromoCode() {
+    const code = this.promoCodeInput().trim();
+    if (!code) {
+      this.notificationService.error('Please enter a promo code');
+      return;
+    }
+
+    if (this.appliedPromoCode() === code.toUpperCase()) {
+      return;
+    }
+
+    this.isApplyingPromo.set(true);
+    this.promoService.validatePromoCode(code).subscribe({
+      next: (res) => {
+        this.isApplyingPromo.set(false);
+        if (res.isValid) {
+          this.appliedPromoCode.set(code.toUpperCase());
+          this.discountPercentage.set(res.discountPercentage);
+          this.notificationService.success(res.message || 'Promo code applied!');
+          this.updatePayableAmount();
+        } else {
+          this.notificationService.error(res.message || 'Invalid promo code');
+        }
+      },
+      error: (err) => {
+        this.isApplyingPromo.set(false);
+        this.notificationService.error(err.error?.message || 'Failed to apply promo code');
+      }
+    });
+  }
+
+  removePromoCode() {
+    this.appliedPromoCode.set(null);
+    this.discountPercentage.set(0);
+    this.promoCodeInput.set('');
+    this.updatePayableAmount();
+    this.notificationService.success('Promo code removed');
   }
 
   selectMethod(methodId: string) {
@@ -173,7 +237,8 @@ export class PaymentComponent implements OnInit {
       slotId: slot.id,
       razorpayOrderId: orderId,
       razorpayPaymentId: paymentId,
-      razorpaySignature: signature
+      razorpaySignature: signature,
+      promoCode: this.appliedPromoCode() || undefined
     }));
 
     forkJoin(bookings).subscribe({

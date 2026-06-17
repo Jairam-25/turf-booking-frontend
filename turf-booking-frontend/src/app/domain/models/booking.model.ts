@@ -21,4 +21,5 @@ export interface CreateBookingDto {
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
   razorpaySignature?: string;
+  promoCode?: string;
 }

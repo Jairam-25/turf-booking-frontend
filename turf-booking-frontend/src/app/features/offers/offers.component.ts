@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -9,10 +9,13 @@ interface PromoOffer {
   discount: string;
   description: string;
   validUntil: string;
-  category: 'First Time' | 'Weekday Special' | 'Night Slot' | 'Group Discount';
+  isUsed: boolean;
+  category: 'First Time' | 'Weekday Special' | 'Night Slot' | 'Group Discount' | 'General';
   gradient: string;
   badge: string;
 }
+
+import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
 
 @Component({
   selector: 'app-offers',
@@ -79,7 +82,7 @@ interface PromoOffer {
             <span class="cat-tag" [style.color]="getAccentColor(offer.category)" [style.background]="getAccentBg(offer.category)">
               {{ offer.category }}
             </span>
-            <span class="valid-badge">{{ offer.validUntil }}</span>
+            <span class="valid-badge" [class.used]="offer.isUsed">{{ offer.isUsed ? 'USED' : offer.validUntil }}</span>
           </div>
 
           <!-- Card Title & Discount -->
@@ -94,18 +97,21 @@ interface PromoOffer {
           <!-- Promo Code Bar -->
           <button 
             class="promo-code-bar w-full" 
-            (click)="copyPromoCode(offer.code, offer.id)"
+            (click)="copyPromoCode(offer.code, offer.id, offer.isUsed)"
             [class.copied]="copiedId() === offer.id"
+            [class.opacity-50]="offer.isUsed"
+            [disabled]="offer.isUsed"
             title="Tap to Copy"
           >
             <div class="code-box">
-              <span class="code-label">{{ copiedId() === offer.id ? 'COPIED!' : 'TAP TO COPY CODE' }}</span>
-              <span class="code-value">{{ offer.code }}</span>
+              <span class="code-label" *ngIf="!offer.isUsed">{{ copiedId() === offer.id ? 'COPIED!' : 'TAP TO COPY CODE' }}</span>
+              <span class="code-label text-red-500" *ngIf="offer.isUsed">ALREADY USED</span>
+              <span class="code-value" [class.line-through]="offer.isUsed">{{ offer.code }}</span>
             </div>
-            <svg *ngIf="copiedId() !== offer.id" class="copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg *ngIf="copiedId() !== offer.id && !offer.isUsed" class="copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            <svg *ngIf="copiedId() === offer.id" class="copy-icon text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg *ngIf="copiedId() === offer.id && !offer.isUsed" class="copy-icon text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </button>
@@ -597,80 +603,54 @@ interface PromoOffer {
     }
   `]
 })
-export class OffersComponent {
+export class OffersComponent implements OnInit {
   selectedCategory = signal<string>('All');
   copiedId = signal<string | null>(null);
 
-  categories = ['First Time', 'Weekday Special', 'Night Slot', 'Group Discount'];
+  promoService = inject(PromoService);
 
-  offers: PromoOffer[] = [
-    {
-      id: 'o1',
-      title: 'Welcome Kickoff discount',
-      code: 'FIRSTKICK20',
-      discount: '20% OFF',
-      description: 'Get an instant 20% discount on your first booking with TurfXpert. Valid for any court, any sport.',
-      validUntil: 'Valid for new users',
-      category: 'First Time',
-      gradient: 'linear-gradient(to right, #7b39fc, #60a5fa)',
-      badge: 'WELCOME'
-    },
-    {
-      id: 'o2',
-      title: 'Midweek Happy Hours',
-      code: 'MIDWEEK30',
-      discount: '30% OFF',
-      description: 'Book slots between 12:00 PM and 5:00 PM on Mondays through Thursdays and score 30% discount off standard prices.',
-      validUntil: 'Valid till June 30',
-      category: 'Weekday Special',
-      gradient: 'linear-gradient(to right, #f59e0b, #eab308)',
-      badge: 'HAPPY HOUR'
-    },
-    {
-      id: 'o3',
-      title: 'Night Owl Matches',
-      code: 'NIGHTOWL15',
-      discount: '₹100 FLAT',
-      description: 'Love playing under the floodlights? Enjoy a flat ₹100 cashback code on slots booked from 6:00 PM till Midnight.',
-      validUntil: 'Valid on weekends',
-      category: 'Night Slot',
-      gradient: 'linear-gradient(to right, #a78bfa, #c084fc)',
-      badge: 'NIGHT PLAY'
-    },
-    {
-      id: 'o4',
-      title: 'Split & Save Billing Offer',
-      code: 'SPLITSAVE10',
-      discount: '10% OFF',
-      description: 'Choose the "Advance Pay" or split option on any booking and apply this code to instantly get 10% discount on entire base total.',
-      validUntil: 'Expires June 15',
-      category: 'Group Discount',
-      gradient: 'linear-gradient(to right, #10b981, #34d399)',
-      badge: 'GROUP DEALS'
-    },
-    {
-      id: 'o5',
-      title: 'Corporate Club Discount',
-      code: 'CORPCLUB15',
-      discount: '15% OFF',
-      description: 'Book 3 or more slots together for team games, practices, or corporate tourneys and get 15% discount on the entire booking.',
-      validUntil: 'Valid for min 3 slots',
-      category: 'Group Discount',
-      gradient: 'linear-gradient(to right, #ec4899, #f43f5e)',
-      badge: 'CORPORATE'
-    },
-    {
-      id: 'o6',
-      title: 'Early Bird Athlete Special',
-      code: 'EARLYBIRD25',
-      discount: '25% OFF',
-      description: 'For early morning enthusiasts! Book slots between 6:00 AM and 9:00 AM and claim a 25% discount on your reservation.',
-      validUntil: 'Valid till June 30',
-      category: 'Weekday Special',
-      gradient: 'linear-gradient(to right, #3b82f6, #06b6d4)',
-      badge: 'EARLY BIRD'
+  categories = ['First Time', 'Weekday Special', 'Night Slot', 'Group Discount', 'General'];
+
+  offers: PromoOffer[] = [];
+
+  ngOnInit() {
+    this.promoService.getPromoOffers().subscribe({
+      next: (data) => {
+        this.offers = data.map(o => ({
+          id: o.id.toString(),
+          title: o.title,
+          code: o.promoCode,
+          discount: o.discountPercentage + '% OFF',
+          description: o.description,
+          validUntil: o.expiryDate ? new Date(o.expiryDate).toLocaleDateString() : 'Available',
+          category: this.mapCategory(o.title),
+          gradient: this.getGradient(this.mapCategory(o.title)),
+          badge: '',
+          isUsed: o.isUsed
+        }));
+      },
+      error: (err) => console.error('Failed to load promo offers', err)
+    });
+  }
+
+  mapCategory(title: string): any {
+    const t = title.toLowerCase();
+    if (t.includes('first')) return 'First Time';
+    if (t.includes('weekday') || t.includes('midweek')) return 'Weekday Special';
+    if (t.includes('night')) return 'Night Slot';
+    if (t.includes('group') || t.includes('split')) return 'Group Discount';
+    return 'General';
+  }
+
+  getGradient(cat: string): string {
+    switch (cat) {
+      case 'First Time': return 'linear-gradient(to right, #7b39fc, #60a5fa)';
+      case 'Weekday Special': return 'linear-gradient(to right, #f59e0b, #eab308)';
+      case 'Night Slot': return 'linear-gradient(to right, #a78bfa, #c084fc)';
+      case 'Group Discount': return 'linear-gradient(to right, #10b981, #34d399)';
+      default: return 'linear-gradient(to right, #ec4899, #f43f5e)';
     }
-  ];
+  }
 
   filteredOffers(): PromoOffer[] {
     const cat = this.selectedCategory();
@@ -698,7 +678,8 @@ export class OffersComponent {
     }
   }
 
-  copyPromoCode(code: string, id: string) {
+  copyPromoCode(code: string, id: string, isUsed: boolean) {
+    if (isUsed) return;
     navigator.clipboard.writeText(code).then(() => {
       this.copiedId.set(id);
       setTimeout(() => {
