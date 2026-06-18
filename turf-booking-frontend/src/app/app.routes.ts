@@ -52,7 +52,8 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/turf/:id',
-    loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent)
+    loadComponent: () => import('./features/dashboard/turf-detail/turf-detail.component').then(m => m.TurfDetailComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'payment',

@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ThemeToggleComponent } from '../../../layout/theme-toggle/theme-toggle.component';
 import { SparklesTextComponent } from '../../../shared/components/magic-ui/sparkles-text/sparkles-text.component';
 import { DotPatternComponent } from '../../../shared/components/magic-ui/dot-pattern/dot-pattern.component';
@@ -60,7 +60,7 @@ export class WelcomeComponent {
   overlayLabel = signal('Welcome To');
   overlayBrand = signal('TurfXpert');
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   onNavigate(action: 'login' | 'register') {
     if (this.isTransitioning()) return;
@@ -76,8 +76,10 @@ export class WelcomeComponent {
     this.isTransitioning.set(true);
     this.isOverlayActive.set(true);
 
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+
     setTimeout(() => {
-      this.router.navigate([`/auth/${action}`]).then(() => {
+      this.router.navigate([`/auth/${action}`], { queryParams: returnUrl ? { returnUrl } : undefined }).then(() => {
         setTimeout(() => {
           this.isOverlayActive.set(false);
           this.isTransitioning.set(false);
