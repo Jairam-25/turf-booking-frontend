@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -204,8 +204,11 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
     }
   `]
 })
-export class RegisterFormComponent {
+export class RegisterFormComponent implements OnInit {
   @Input() loading = false;
+  @Input() initialEmail = '';
+  @Input() initialName = '';
+  @Input() initialPhone = '';
   @Output() register = new EventEmitter<any>();
 
   registerForm: FormGroup;
@@ -223,6 +226,18 @@ export class RegisterFormComponent {
       ]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  ngOnInit() {
+    if (this.initialEmail) {
+      this.registerForm.get('email')?.setValue(this.initialEmail);
+    }
+    if (this.initialName) {
+      this.registerForm.get('name')?.setValue(this.initialName);
+    }
+    if (this.initialPhone) {
+      this.registerForm.get('phoneNumber')?.setValue(this.initialPhone);
+    }
   }
 
   trimField(field: string) {

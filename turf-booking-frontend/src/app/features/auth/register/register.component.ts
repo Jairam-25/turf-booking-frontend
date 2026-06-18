@@ -94,6 +94,9 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
             <!-- Register Form component itself -->
             <app-register-form 
               [loading]="isLoading()" 
+              [initialEmail]="initialEmail"
+              [initialName]="initialName"
+              [initialPhone]="initialPhone"
               (register)="handleRegister($event)"
             ></app-register-form>
 
@@ -129,6 +132,10 @@ export class RegisterComponent implements OnInit {
   isTransitioning = signal(false);
   errorMessage = signal<string>('');
 
+  initialEmail = '';
+  initialName = '';
+  initialPhone = '';
+
   constructor(
     private authRepository: AuthRepository,
     private notificationService: NotificationService,
@@ -140,6 +147,13 @@ export class RegisterComponent implements OnInit {
     // 1. Pick randomly from three active sports!
     const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
     this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
+
+    // 2. Read query parameters to pre-fill registration fields (Smart Auth Flow)
+    this.route.queryParams.subscribe(params => {
+      if (params['email']) this.initialEmail = params['email'];
+      if (params['name']) this.initialName = params['name'];
+      if (params['phone']) this.initialPhone = params['phone'];
+    });
 
     // Fade out the entry overlay transition after component loads
     setTimeout(() => {

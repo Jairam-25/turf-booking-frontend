@@ -498,6 +498,18 @@ export class LoginFormComponent implements OnDestroy {
       },
       error: (err) => {
         this.googleLoading.set(false);
+        
+        // Smart Authentication Flow handling for Google Sign-In
+        if (err.error && err.error.isRegistered === false) {
+          this.notificationService.info("We could not find an account associated with this Google email. Redirecting you to account registration.");
+          setTimeout(() => {
+            this.router.navigate(['/auth/register'], { 
+              queryParams: { email: this.googleEmail, name: this.googleDisplayName } 
+            });
+          }, 2500);
+          return;
+        }
+
         const msg = err.error?.message || err.error?.Message || 'Failed to send OTP. Please try again.';
         this.notificationService.error(msg);
       }
@@ -636,9 +648,16 @@ export class LoginFormComponent implements OnDestroy {
         
         // Smart Authentication Flow handling
         if (err.error && err.error.isRegistered === false) {
-          this.notificationService.info("We could not find an account associated with this email. Redirecting you to account registration.");
+          this.notificationService.info("We could not find an account associated with this detail. Redirecting you to account registration.");
           setTimeout(() => {
-            this.router.navigate(['/auth/register']);
+            const queryParams: any = {};
+            if (val.includes('@')) {
+              queryParams.email = val;
+            } else {
+              // Extract just the 10-digit number if it has the country code
+              queryParams.phone = val.replace('+91', '');
+            }
+            this.router.navigate(['/auth/register'], { queryParams });
           }, 2500);
           return;
         }
