@@ -1664,11 +1664,17 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
         this.slots.set(mapped);
         this.isLoadingSlots.set(false);
       },
-      error: () => {
-        this.notificationService.error('Failed to load turf details or slots.');
+      error: (err) => {
+        if (err.status === 401) {
+          this.notificationService.info('Please sign in or sign up to view turf details.');
+        } else {
+          this.notificationService.error('Failed to load turf details or slots.');
+        }
         this.isLoading.set(false);
         this.isLoadingSlots.set(false);
-        this.router.navigate(['/dashboard']);
+        if (err.status !== 401) {
+          this.router.navigate(['/dashboard']);
+        }
       }
     });
   }
@@ -1794,7 +1800,7 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
 
     // "Login on Demand" -> Check if user is authenticated
     if (!this.authStore.token() || this.authStore.isTokenExpired()) {
-      this.notificationService.info('Please log in to complete your booking.');
+      this.notificationService.info('Please sign in or sign up to continue booking.');
       this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
