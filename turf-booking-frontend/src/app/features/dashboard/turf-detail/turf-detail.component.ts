@@ -1851,6 +1851,14 @@ export class TurfDetailComponent implements OnInit, OnDestroy {
 
   submitReview() {
     if (this.newReviewRating() === 0) return;
+
+    // "Login on Demand" -> Check if user is authenticated
+    if (!this.authStore.token() || this.authStore.isTokenExpired()) {
+      this.notificationService.info('Please sign in or sign up to leave a review.');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
     this.isSubmittingReview.set(true);
 
     const dto = {
