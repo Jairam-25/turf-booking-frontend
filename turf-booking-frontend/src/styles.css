@@ -761,9 +761,9 @@ input::placeholder, textarea::placeholder {
   color: var(--toast-close) !important;
 }
 
-/* Logo color inversion for Dark Theme */
+/* Logo readability for Dark Theme without inverting colors */
 body:not([data-theme="light"]) img[src*="logo.png"] {
-  filter: invert(1) hue-rotate(180deg);
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.8));
 }
 
 /* Mobile tap targets adjust naturally via scaling, removed rigid 44px rules */
