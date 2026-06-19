@@ -705,13 +705,41 @@ interface FeaturedTestimonial {
 
     @media (max-width: 768px) {
       .reviews-page-container {
-        padding: 1rem;
+        padding: 0.5rem;
+        gap: 2rem;
       }
       .reviews-hero {
-        padding: 3rem 1.5rem;
+        padding: 2rem 1rem;
+        border-radius: 16px;
+      }
+      .hero-text-content h1 {
+        font-size: 1.5rem;
+      }
+      .hero-text-content p {
+        font-size: 0.85rem;
+      }
+      .section-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
       }
       .live-hub-section {
-        padding: 1.5rem;
+        padding: 1rem;
+        border-radius: 16px;
+      }
+      .testimonial-card {
+        padding: 1.25rem;
+      }
+      .add-review-container {
+        padding: 1.25rem;
+      }
+      .live-hub-layout {
+        gap: 1.5rem;
+      }
+      .reviews-grid {
+        max-height: 400px;
+      }
+      .review-item {
+        padding: 1rem;
       }
     }
   `]
