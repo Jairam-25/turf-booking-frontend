@@ -332,3 +332,11 @@ canvas {
   background: rgba(239, 68, 68, 0.08) !important;
   color: #f87171 !important;
 }
+
+@media (max-width: 768px) {
+  .owner-dashboard-page { padding: 0.5rem; }
+  .dashboard-header { padding: 1rem; margin-bottom: 1rem; }
+  .dashboard-sidebar { padding: 1rem; }
+  .section-title { font-size: 1.25rem; }
+  .data-table th, .data-table td { font-size: 0.75rem; padding: 0.5rem 0.25rem; }
+}

@@ -60,7 +60,7 @@
     </div>
 
     <!-- Step 1: Owner Details & Terms -->
-    <div *ngIf="currentStep() === 1" class="glass rounded-2xl p-8 fade-in">
+    <div *ngIf="currentStep() === 1" class="glass rounded-2xl p-5 sm:p-8 fade-in">
       <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 1: Owner Profile & Terms</h2>
       
       <form [formGroup]="ownerForm" (ngSubmit)="submitOwnerInfo()" class="space-y-6">
@@ -122,7 +122,7 @@
     </div>
 
     <!-- Step 2: Payment Gateway Interface -->
-    <div *ngIf="currentStep() === 2" class="glass rounded-2xl p-8 fade-in">
+    <div *ngIf="currentStep() === 2" class="glass rounded-2xl p-5 sm:p-8 fade-in">
       <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 2: Onboarding Fee Payment</h2>
 
       <div class="bg-[var(--bg-card)] border border-[var(--input-border)] rounded-xl p-6 mb-8">
@@ -167,7 +167,7 @@
     </div>
 
     <!-- Step 3: Turf Details & Upload Documents -->
-    <div *ngIf="currentStep() === 3" class="glass rounded-2xl p-8 fade-in">
+    <div *ngIf="currentStep() === 3" class="glass rounded-2xl p-5 sm:p-8 fade-in">
       <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 3: Submit Turf Details & Verification Files</h2>
 
       <form [formGroup]="turfForm" (ngSubmit)="submitTurfDetails()" class="space-y-6">
@@ -305,7 +305,7 @@
     </div>
 
     <!-- Step 4: Verification Status Timeline / State -->
-    <div *ngIf="currentStep() === 4" class="glass rounded-2xl p-8 fade-in text-center relative overflow-hidden">
+    <div *ngIf="currentStep() === 4" class="glass rounded-2xl p-5 sm:p-8 fade-in text-center relative overflow-hidden">
       <!-- Background effect based on status -->
       <div class="absolute inset-0 opacity-5 pointer-events-none"
            [ngClass]="{
