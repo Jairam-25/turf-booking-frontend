@@ -349,17 +349,16 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       left: 0;
       width: 100%;
       min-width: 200px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(24px);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 0.5rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 20;
+      z-index: 999;
     }
     .custom-select-dropdown.show {
       opacity: 1;
