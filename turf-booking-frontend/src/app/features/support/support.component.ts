@@ -990,6 +990,48 @@ interface ChatMessage {
       height: 18px;
       transform: rotate(45deg) translate(-2px, 2px);
     }
+    
+    @media (max-width: 768px) {
+      .support-page-container { padding: 1rem; gap: 1.5rem; }
+      .support-hero { padding: 2rem 1rem; border-radius: 16px; }
+      .support-badge { font-size: 0.65rem; padding: 4px 12px; }
+      .hero-content h1 { font-size: 1.5rem; }
+      .hero-content p { font-size: 0.85rem; }
+      
+      .support-card { padding: 1.25rem; border-radius: 16px; gap: 1.25rem; }
+      .card-header h2 { font-size: 1.25rem; }
+      .card-header p { font-size: 0.8rem; }
+      
+      .search-box { padding: 8px 12px; }
+      .search-box input { font-size: 0.8rem; }
+      .cat-tab { padding: 4px 10px; font-size: 0.75rem; }
+      
+      .faq-trigger { padding: 12px 14px; }
+      .faq-question { font-size: 0.85rem; }
+      .faq-answer { font-size: 0.8rem; padding: 0 14px 14px 14px; }
+      
+      .form-group label { font-size: 0.75rem; }
+      .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; font-size: 0.8rem; }
+      .btn-submit-ticket { height: 40px; font-size: 0.85rem; }
+      
+      .tickets-list-wrapper { padding-top: 1.5rem; margin-top: 1rem; }
+      .subsection-title { font-size: 1rem; }
+      .ticket-item { padding: 1rem; gap: 6px; }
+      .ticket-id { font-size: 0.75rem; }
+      .ticket-subject { font-size: 0.85rem; }
+      .ticket-msg { font-size: 0.8rem; }
+      
+      .chat-card { height: 450px; }
+      .chat-header { padding: 1rem; }
+      .agent-avatar { width: 32px; height: 32px; }
+      .agent-info h3 { font-size: 0.85rem; }
+      .agent-info span { font-size: 0.65rem; }
+      .chat-messages { padding: 1rem; gap: 0.75rem; }
+      .message-bubble { font-size: 0.8rem; padding: 10px 14px; }
+      .chat-input-form { padding: 0.75rem; gap: 8px; }
+      .chat-input-form input { padding: 10px 12px; font-size: 0.8rem; }
+      .chat-input-form button { width: 38px; height: 38px; }
+    }
   `]
 })
 export class SupportComponent {

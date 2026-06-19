@@ -214,6 +214,31 @@ interface Player {
     :host-context(body[data-theme="light"]) .bg-\\[rgba\\(255\\,255\\,255\\,0\\.03\\)\\] {
       background-color: rgba(0,0,0,0.02);
     }
+    
+    @media (max-width: 768px) {
+      .leaderboard-container { padding: 1rem 0.5rem !important; }
+      .py-8 { padding-top: 1rem; padding-bottom: 1rem; }
+      .mb-8 { margin-bottom: 1rem; }
+      .mb-12 { margin-bottom: 1.5rem; }
+      
+      /* Table Adjustments */
+      .min-w-\\[600px\\] { min-width: 100% !important; }
+      th, td { padding: 0.5rem 0.25rem !important; }
+      th { font-size: 0.65rem !important; letter-spacing: normal !important; }
+      
+      /* Player Info Adjustments */
+      .text-base { font-size: 0.8rem !important; }
+      .w-12 { width: 32px !important; height: 32px !important; }
+      .text-xl { font-size: 0.85rem !important; }
+      .text-lg { font-size: 0.85rem !important; }
+      .gap-4 { gap: 0.5rem !important; }
+      .gap-3 { gap: 0.25rem !important; }
+      
+      /* Reward Adjustments */
+      td .inline-flex { padding: 0.25rem 0.5rem !important; gap: 0.25rem !important; }
+      td .inline-flex span { font-size: 0.65rem !important; }
+      td .inline-flex svg { width: 12px !important; height: 12px !important; }
+    }
   `]
 })
 export class LeaderboardComponent implements OnInit {

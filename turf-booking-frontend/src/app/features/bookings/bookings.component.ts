@@ -688,8 +688,7 @@ export interface GroupedBooking {
         gap: 1rem;
       }
       .header-card {
-        padding: 1rem;
-        margin-bottom: 1rem !important;
+        display: none !important;
       }
       .header-card h1 {
         font-size: 1.5rem;
