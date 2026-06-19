@@ -664,7 +664,6 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       margin: 0 0 8px 0;
       font-size: 0.95rem;
     }
-
     @keyframes pulse {
       0% { opacity: 0.6; }
       50% { opacity: 0.3; }
@@ -672,9 +671,9 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     }
 
     @media (max-width: 768px) {
-      .dashboard-page { padding: 1rem; gap: 2rem; }
-      .dashboard-header { padding: 2.5rem 1rem; border-radius: 16px; }
-      .header-content h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+      .dashboard-page { padding: 1rem; gap: 1.5rem; }
+      .dashboard-header { padding: 1.5rem 1rem; border-radius: 16px; }
+      .header-content h1 { font-size: 1.25rem; margin-bottom: 1.25rem; }
       
       /* Mobile Search Bar Stacking */
       
@@ -683,35 +682,46 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         display: flex;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        padding-bottom: 1rem;
-        gap: 1rem;
+        padding-bottom: 0.5rem;
+        gap: 0.75rem;
       }
       .insight-card {
         min-width: 85vw;
         scroll-snap-align: center;
         flex-shrink: 0;
-        padding: 1rem;
+        padding: 0.875rem;
+        gap: 0.75rem;
+      }
+      .insight-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+      }
+      .insight-icon svg {
+        width: 20px;
+        height: 20px;
       }
       
       .search-bar { 
         flex-direction: column; 
         align-items: stretch; 
-        gap: 0.75rem; 
-        padding: 1rem; 
-        border-radius: 20px; 
+        gap: 0.5rem; 
+        padding: 0.75rem; 
+        border-radius: 16px; 
       }
       .divider { display: none; }
       .custom-select-container { width: 100%; }
-      .custom-select-value { justify-content: space-between; }
-      .search-input { padding: 0.5rem; text-align: center; }
-      .btn-search { width: 100%; padding: 14px; }
+      .custom-select-value { justify-content: space-between; padding: 0.5rem; font-size: 0.875rem; }
+      .search-input { padding: 0.5rem; text-align: left; font-size: 0.875rem; }
+      .btn-search { width: 100%; padding: 10px; font-size: 0.875rem; }
       
       /* Mobile Filter Button */
       .btn-filter { 
         width: 100%; 
-        border-radius: 12px; 
-        padding: 12px; 
+        border-radius: 10px; 
+        padding: 10px; 
         background: rgba(123, 57, 252, 0.1); 
+        font-size: 0.875rem;
       }
       .btn-filter::after {
         content: 'Filters';
@@ -723,27 +733,27 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       .grid-header { 
         flex-direction: column; 
         align-items: stretch; 
-        gap: 1rem; 
+        gap: 0.75rem; 
         text-align: center;
       }
-      .grid-header h2 { justify-content: center; }
+      .grid-header h2 { justify-content: center; font-size: 1.25rem; }
       .view-toggles { justify-content: center; }
-      .view-btn { flex: 1; justify-content: center; }
+      .view-btn { flex: 1; justify-content: center; padding: 6px 12px; font-size: 0.875rem; }
       
       .turf-grid {
         grid-template-columns: repeat(1, 1fr);
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
       
       /* Mobile Map */
-      .map-wrapper { height: 400px; padding: 0.5rem; border-radius: 16px; }
+      .map-wrapper { height: 350px; padding: 0.5rem; border-radius: 16px; }
       
       /* Mobile Filters */
       .filter-section-wrapper.open { max-height: 1200px; }
-      .filter-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-      .filter-section { padding: 1.25rem; }
-      .filter-chips { justify-content: center; }
-      .filter-group { align-items: center; text-align: center; }
+      .filter-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .filter-section { padding: 1rem; border-radius: 16px; }
+      .filter-chips { justify-content: flex-start; }
+      .filter-group { align-items: flex-start; text-align: left; }
     }
   `]
 })
