@@ -129,8 +129,8 @@ interface Player {
           </div>
 
           <!-- List Section -->
-          <div *ngIf="otherPlayers().length > 0" class="bg-[var(--surface-color)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-xl fade-in mx-4 md:mx-0">
-            <div class="overflow-x-auto">
+          <div *ngIf="otherPlayers().length > 0" class="bg-[var(--surface-color)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-xl fade-in mx-4 md:mx-0 relative">
+            <div class="overflow-x-auto relative z-10">
               <table class="w-full text-left border-collapse min-w-[600px]">
                 <thead>
                   <tr class="text-xs font-bold text-[var(--text-secondary)] border-b border-[var(--border-color)] bg-[rgba(0,0,0,0.2)]">
@@ -174,6 +174,11 @@ interface Player {
                   </tr>
                 </tbody>
               </table>
+            </div>
+            
+            <!-- Scroll indicator > -->
+            <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-end pr-2 bg-gradient-to-l from-[var(--surface-color)] to-transparent pointer-events-none md:hidden z-20">
+              <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
             </div>
           </div>
 

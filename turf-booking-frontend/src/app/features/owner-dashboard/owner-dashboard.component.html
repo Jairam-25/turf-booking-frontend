@@ -77,18 +77,22 @@
   </div>
 
   <div class="dashboard-layout relative z-10">
-    <aside class="dashboard-sidebar glass">
-      <nav class="sidebar-nav">
+    <aside class="dashboard-sidebar glass relative">
+      <nav class="sidebar-nav overflow-x-auto relative z-10">
         <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
         <button class="sidebar-link" [class.active]="activeTab() === 'bookings'" (click)="setTab('bookings')">Recent Bookings</button>
         <button class="sidebar-link" [class.active]="activeTab() === 'offline'" (click)="setTab('offline')">Offline Booking</button>
         <button class="sidebar-link" [class.active]="activeTab() === 'settings'" (click)="setTab('settings')">Settings</button>
-        <div class="my-2 border-t border-[rgba(150,150,150,0.1)] w-full"></div>
+        <div class="my-2 border-t border-[rgba(150,150,150,0.1)] w-full hidden md:block"></div>
         <button class="sidebar-link" style="color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: space-between;" routerLink="/become-owner" [queryParams]="{ action: 'add-turf' }">
           Add Another Turf <span class="text-lg leading-none">+</span>
         </button>
         <button class="sidebar-link logout-sidebar-btn" (click)="openLogoutModal()">Logout</button>
       </nav>
+      <!-- Scroll indicator > -->
+      <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-end pr-2 bg-gradient-to-l from-[rgba(15,23,42,0.9)] to-transparent pointer-events-none lg:hidden z-20 rounded-r-2xl">
+        <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+      </div>
     </aside>
 
     <main class="dashboard-content">
@@ -170,8 +174,12 @@
 
       <div *ngIf="activeTab() === 'bookings'" class="tab-content fade-in">
         <h2 class="section-title">Recent Bookings</h2>
-        <div class="table-container glass overflow-x-auto">
-          <table class="data-table w-full text-left">
+        <div class="table-container glass overflow-x-auto relative">
+          <!-- Scroll indicator > -->
+          <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-end pr-2 bg-gradient-to-l from-[var(--surface-color)] to-transparent pointer-events-none md:hidden z-20">
+            <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+          <table class="data-table w-full text-left relative z-10">
             <thead>
               <tr>
                 <th>ID</th><th>User</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th>Actions</th>

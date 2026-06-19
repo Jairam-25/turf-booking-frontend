@@ -48,7 +48,7 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
 
       <!-- Category Filter Tabs -->
       <div class="category-tabs-wrapper">
-        <div class="category-tabs">
+        <div class="category-tabs pr-8">
           <button 
             class="tab-btn glass" 
             [class.active]="selectedCategory() === 'All'"
@@ -64,6 +64,10 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
           >
             {{ cat }}
           </button>
+        </div>
+        <!-- Scroll indicator > -->
+        <div class="scroll-indicator-right md:hidden">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
         </div>
       </div>
 
@@ -280,6 +284,27 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
     }
     .category-tabs::-webkit-scrollbar {
       display: none;
+    }
+
+    .scroll-indicator-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      background: linear-gradient(to right, transparent, var(--background-color));
+      pointer-events: none;
+      color: var(--text-secondary);
+      animation: pulseRight 2s infinite;
+    }
+    
+    @keyframes pulseRight {
+      0%, 100% { transform: translateX(0); opacity: 0.5; }
+      50% { transform: translateX(4px); opacity: 1; }
     }
 
     .tab-btn {
