@@ -671,9 +671,14 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
     }
 
     @media (max-width: 768px) {
-      .dashboard-page { padding: 1rem; gap: 1.5rem; }
-      .dashboard-header { padding: 1.5rem 1rem; border-radius: 16px; }
-      .header-content h1 { font-size: 1.25rem; margin-bottom: 1.25rem; }
+      .dashboard-page { padding: 0.5rem; gap: 1rem; }
+      .dashboard-header { padding: 1rem 0.5rem; border-radius: 12px; }
+      .header-content h1 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+      
+      /* Hide Insights entirely on mobile */
+      .dashboard-insights { display: none !important; }
+      .insights-grid { display: none !important; }
+      .insight-card { display: none !important; }
       
       /* Mobile Search Bar Stacking */
       
@@ -705,15 +710,15 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       .search-bar { 
         flex-direction: column; 
         align-items: stretch; 
-        gap: 0.5rem; 
-        padding: 0.75rem; 
-        border-radius: 16px; 
+        gap: 0.25rem; 
+        padding: 0.5rem; 
+        border-radius: 12px; 
       }
       .divider { display: none; }
       .custom-select-container { width: 100%; }
-      .custom-select-value { justify-content: space-between; padding: 0.5rem; font-size: 0.875rem; }
-      .search-input { padding: 0.5rem; text-align: left; font-size: 0.875rem; }
-      .btn-search { width: 100%; padding: 10px; font-size: 0.875rem; }
+      .custom-select-value { justify-content: space-between; padding: 0.35rem; font-size: 0.8rem; }
+      .search-input { padding: 0.35rem; text-align: left; font-size: 0.8rem; }
+      .btn-search { width: 100%; padding: 8px; font-size: 0.8rem; border-radius: 8px; }
       
       /* Mobile Filter Button */
       .btn-filter { 
@@ -737,8 +742,10 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
         text-align: center;
       }
       .grid-header h2 { justify-content: center; font-size: 1.25rem; }
-      .view-toggles { justify-content: center; }
-      .view-btn { flex: 1; justify-content: center; padding: 6px 12px; font-size: 0.875rem; }
+      .view-toggles { display: flex; }
+      .view-btn { justify-content: center; padding: 6px 12px; font-size: 0.875rem; }
+      .view-btn:first-child { flex: 1; }
+      .view-btn:last-child { flex: 0 0 auto; padding: 6px 10px; font-size: 0.8rem; }
       
       .turf-grid {
         grid-template-columns: repeat(1, 1fr);
