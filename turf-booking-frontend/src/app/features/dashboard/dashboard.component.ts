@@ -757,10 +757,14 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
       
       /* Mobile Filters */
       .filter-section-wrapper.open { max-height: 1200px; }
-      .filter-grid { grid-template-columns: 1fr; gap: 1rem; }
-      .filter-section { padding: 1rem; border-radius: 16px; }
-      .filter-chips { justify-content: flex-start; }
-      .filter-group { align-items: flex-start; text-align: left; }
+      .filter-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+      .filter-section { padding: 0.75rem; border-radius: 12px; }
+      .filter-chips { justify-content: flex-start; gap: 0.35rem; }
+      .filter-group { align-items: flex-start; text-align: left; gap: 0.25rem; }
+      .filter-label { font-size: 0.75rem; }
+      .filter-chip { padding: 4px 10px; font-size: 0.75rem; border-radius: 8px; }
+      .range-container { height: 28px; gap: 0.5rem; }
+      .range-value { font-size: 0.75rem; min-width: auto; }
     }
   `]
 })
