@@ -394,13 +394,17 @@ export class LoginFormComponent implements OnDestroy {
         this.authRepository.googleSignIn(this.googleIdToken).subscribe({
           next: (response) => {
             this.googleLoading.set(false);
-            const isSuccess = response.success === true || response.Success === true;
-            const isUserExists = response.userExists === true || response.UserExists === true;
+            // The HttpInterceptor unwraps responses with a 'data' property.
+            // If successful, 'response' will be the LoginResponseDto directly (e.g. { name, email, token, ... })
+            // If not found, it won't be unwrapped because it doesn't have a 'data' property.
+            
+            const responseData = (response.token || response.Token) ? response : (response.data || response.Data);
+            const isSuccess = !!responseData;
+            
             const isNotSuccess = response.success === false || response.Success === false;
             const isNotUserExists = response.userExists === false || response.UserExists === false;
-            const responseData = response.data || response.Data;
 
-            if (isSuccess && isUserExists) {
+            if (isSuccess && responseData) {
               // Extract the user data properly for login.emit
               const authResponse = AuthMapper.fromDto(responseData); 
               this.login.emit(authResponse);
