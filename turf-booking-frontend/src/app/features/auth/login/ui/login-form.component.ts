@@ -394,11 +394,17 @@ export class LoginFormComponent implements OnDestroy {
         this.authRepository.googleSignIn(this.googleIdToken).subscribe({
           next: (response) => {
             this.googleLoading.set(false);
-            if (response.success && response.userExists) {
+            const isSuccess = response.success === true || response.Success === true;
+            const isUserExists = response.userExists === true || response.UserExists === true;
+            const isNotSuccess = response.success === false || response.Success === false;
+            const isNotUserExists = response.userExists === false || response.UserExists === false;
+            const responseData = response.data || response.Data;
+
+            if (isSuccess && isUserExists) {
               // Extract the user data properly for login.emit
-              const authResponse = AuthMapper.fromDto(response.data); 
+              const authResponse = AuthMapper.fromDto(responseData); 
               this.login.emit(authResponse);
-            } else if (response.success === false && response.userExists === false) {
+            } else if (isNotSuccess && isNotUserExists) {
               this.notificationService.info("We could not find an account associated with this Google account. Please register to continue.");
               setTimeout(() => {
                 this.router.navigate(['/auth/register'], { 
