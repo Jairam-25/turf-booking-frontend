@@ -420,20 +420,17 @@ export class LoginFormComponent implements OnDestroy {
                 });
               }, 2500);
             } else {
-              console.error("Google login failed. API Response:", response);
-              this.notificationService.error("Google login failed: " + JSON.stringify(response).substring(0, 100));
+              this.notificationService.error("Google login failed.");
             }
           },
           error: (err) => {
             this.googleLoading.set(false);
-            console.error("API AUTH ERROR DETAILS:", err);
             this.notificationService.error(err.error?.message || err.error?.Message || "Failed to authenticate with server.");
           }
         });
       },
       error: (err) => {
         this.googleLoading.set(false);
-        console.error("FIREBASE AUTH ERROR DETAILS:", err);
         const code: string = err.code || '';
         if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
           return;
