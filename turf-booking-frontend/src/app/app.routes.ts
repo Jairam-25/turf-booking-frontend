@@ -91,5 +91,17 @@ export const routes: Routes = [
     path: 'become-owner',
     loadComponent: () => import('./features/become-owner/become-owner.component').then(m => m.BecomeOwnerComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./features/about/about').then(m => m.About)
+  },
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./features/privacy-policy/privacy-policy').then(m => m.PrivacyPolicy)
+  },
+  {
+    path: 'terms-of-service',
+    loadComponent: () => import('./features/terms-of-service/terms-of-service').then(m => m.TermsOfService)
   }
 ];

@@ -70,6 +70,10 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
         {{ googleOtpSent ? 'Verify & Sign In' : 'Send OTP to Email' }}
       </magic-shiny-button>
 
+      <div class="terms-text" style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+        By continuing, you agree to our <a routerLink="/terms-of-service" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy Policy</a>.
+      </div>
+
       <div class="form-footer">
         <a href="javascript:void(0)" (click)="cancelGoogleMode()" class="forgot-link">
           ← Back to Login
@@ -143,6 +147,10 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
       <magic-shiny-button type="submit" [loading]="loading || sendingOtp || verifyingOtp">
         {{ isOtpMode ? (otpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In' }}
       </magic-shiny-button>
+
+      <div class="terms-text" style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+        By continuing, you agree to our <a routerLink="/terms-of-service" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy Policy</a>.
+      </div>
 
       <!-- Google Sign-In Divider -->
       <div class="divider">

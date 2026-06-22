@@ -96,6 +96,13 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
         </span>
       </div>
 
+      <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+        <input type="checkbox" id="terms" formControlName="termsAccepted" style="width: auto; padding: 0;" [class.invalid]="isFieldInvalid('termsAccepted')">
+        <label for="terms" style="font-size: 0.75rem; cursor: pointer;">
+          I agree to the <a routerLink="/terms-of-service" target="_blank" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" style="color: var(--primary);">Privacy Policy</a>
+        </label>
+      </div>
+
       <magic-shiny-button 
         type="submit" 
         [loading]="loading"
@@ -224,7 +231,8 @@ export class RegisterFormComponent implements OnInit {
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$/)
       ]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      termsAccepted: [false, [Validators.requiredTrue]]
     }, { validators: this.passwordMatchValidator });
   }
 

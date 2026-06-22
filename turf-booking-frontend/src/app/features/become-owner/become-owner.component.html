@@ -111,7 +111,7 @@
 
         <div class="flex items-center gap-3 mt-4">
           <input type="checkbox" formControlName="termsAccepted" id="termsCheck" class="w-5 h-5 rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[#146ef5] focus:ring-0" />
-          <label for="termsCheck" class="text-sm text-[var(--text-secondary)] select-none">I accept all the terms and conditions of partnership listed above.</label>
+          <label for="termsCheck" class="text-sm text-[var(--text-secondary)] select-none">I accept all the terms and conditions of partnership listed above, as well as the <a routerLink="/terms-of-service" target="_blank" class="text-[var(--primary)] hover:underline">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" class="text-[var(--primary)] hover:underline">Privacy Policy</a>.</label>
         </div>
 
         <button type="submit" [disabled]="ownerForm.invalid || isSubmitting" class="btn-primary w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 mt-6">

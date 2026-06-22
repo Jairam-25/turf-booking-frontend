@@ -158,6 +158,10 @@
         </p>
       </div>
 
+      <div class="terms-text" style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        By proceeding, you agree to our <a routerLink="/terms-of-service" target="_blank" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" style="color: var(--primary);">Privacy Policy</a>.
+      </div>
+
       <button class="btn-premium btn-uniform pay-btn" (click)="confirmPayment()" [disabled]="isProcessing()" title="Bookings">
         <svg  viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" style="margin-right: 8px;">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
