@@ -30,7 +30,7 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
             <div class="app-logo">
               <img src="/images/logo.png" alt="TurfXpert Logo" class="h-full w-auto object-contain">
             </div>
-            <p class="brand-tagline" style="margin-top: 0.5rem;">Account Recovery</p>
+            <p class="brand-tagline">Account Recovery</p>
           </div>
 
           <div class="specs-list">

@@ -53,18 +53,18 @@
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 2.25rem;
+  gap: 1.5rem;
 }
 
 .brand-header {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .app-logo {
-  height: 140px;
-  width: auto;
+  width: 240px;
+  height: auto;
   animation: float-logo 4s ease-in-out infinite;
 }
 
