@@ -8,9 +8,7 @@ export abstract class AuthRepository {
   abstract resetPassword(data: any): Observable<string>;
   abstract sendOtp(emailOrPhone: string): Observable<string>;
   abstract verifyOtp(emailOrPhone: string, otpCode: string): Observable<AuthResponse>;
-  /** Google Sign-In: send idToken to backend; backend sends OTP to registered email */
-  abstract sendGoogleOtp(idToken: string, email: string, displayName: string): Observable<string>;
-  /** Verify the OTP that was sent after Google account selection */
-  abstract verifyGoogleOtp(email: string, otpCode: string): Observable<AuthResponse>;
+  /** Google Sign-In: directly authenticate via idToken */
+  abstract googleSignIn(idToken: string): Observable<any>;
   abstract refreshToken(data: { token: string, refreshToken: string }): Observable<AuthResponse>;
 }

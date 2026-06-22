@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterModule, Router } from '@angular/router';
 import { MagicShinyButtonComponent } from '../../../../shared/components/magic-ui/magic-shiny-button/magic-shiny-button.component';
 import { AuthRepository } from '../../../../domain/repositories/auth.repository';
+import { AuthMapper } from '../../../../data/mappers/auth.mapper';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { FirebaseAuthService } from '../../../../core/services/firebase-auth.service';
 
@@ -12,77 +13,10 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, MagicShinyButtonComponent],
   template: `
-    <!-- Google OTP Mode -->
-    <div *ngIf="isGoogleOtpMode" class="login-form">
-      <!-- Google User Info Card -->
-      <div class="google-user-card">
-        <img 
-          *ngIf="googlePhotoURL" 
-          [src]="googlePhotoURL" 
-          class="google-avatar" 
-          alt="Google account avatar"
-          (error)="googlePhotoURL = ''"
-        >
-        <div *ngIf="!googlePhotoURL" class="google-avatar-placeholder">
-          {{ googleDisplayName.charAt(0) || 'G' }}
-        </div>
-        <div class="google-user-info">
-          <div class="google-user-header">
-            <span class="google-user-name">{{ googleDisplayName }}</span>
-            <button type="button" class="btn-change-account" (click)="reselectGoogleAccount()">
-              Change
-            </button>
-          </div>
-          <span class="google-user-email">{{ googleEmail }}</span>
-        </div>
-      </div>
 
-      <div class="otp-info-message" *ngIf="googleOtpSent">
-        OTP sent to your registered email: <strong>{{ maskedEmail }}</strong>
-      </div>
-
-      <div class="form-group animate-fade-in-up" *ngIf="googleOtpSent">
-        <label for="googleOtpCode">OTP Verification Code</label>
-        <input
-          id="googleOtpCode"
-          type="text"
-          [formControl]="googleOtpControl"
-          placeholder="Enter 6-digit OTP"
-          maxlength="6"
-          [class.invalid]="googleOtpControl.invalid && googleOtpControl.touched"
-          (keydown.space)="$event.preventDefault()"
-          (input)="onGoogleOtpInput($event)"
-        >
-        <span class="error-text" *ngIf="googleOtpControl.invalid && googleOtpControl.touched">
-          Please enter a valid 6-digit OTP code
-        </span>
-        <div class="otp-timer-container">
-          <span class="timer-text" *ngIf="countdown() > 0">Resend OTP in {{ countdown() }}s</span>
-          <button type="button" class="btn-resend" *ngIf="countdown() === 0" (click)="sendGoogleOtp()">Resend OTP</button>
-        </div>
-      </div>
-
-      <magic-shiny-button
-        type="button"
-        [loading]="loading || googleLoading()"
-        (click)="googleOtpSent ? verifyGoogleOtp() : sendGoogleOtp()"
-      >
-        {{ googleOtpSent ? 'Verify & Sign In' : 'Send OTP to Email' }}
-      </magic-shiny-button>
-
-      <div class="terms-text" style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
-        By continuing, you agree to our <a routerLink="/terms-of-service" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy Policy</a>.
-      </div>
-
-      <div class="form-footer">
-        <a href="javascript:void(0)" (click)="cancelGoogleMode()" class="forgot-link">
-          ← Back to Login
-        </a>
-      </div>
-    </div>
 
     <!-- Normal Login Form -->
-    <form *ngIf="!isGoogleOtpMode" [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
         <label for="emailOrPhone">Email or Phone Number</label>
         <div class="input-prefix-container">
@@ -425,15 +359,10 @@ export class LoginFormComponent implements OnDestroy {
   countdown = signal(60);
   countdownInterval: any;
 
-  // Google OTP state
-  isGoogleOtpMode = false;
   googleLoading = signal(false);
-  googleOtpSent = false;
   googleEmail = '';
   googleDisplayName = '';
-  googlePhotoURL = '';
   googleIdToken = '';
-  googleOtpControl: ReturnType<FormBuilder['control']>;
 
   constructor(
     private fb: FormBuilder,
@@ -442,7 +371,6 @@ export class LoginFormComponent implements OnDestroy {
     private firebaseAuth: FirebaseAuthService,
     private router: Router
   ) {
-    this.googleOtpControl = this.fb.control('', [Validators.required, Validators.pattern(/^\d{6}$/)]);
     this.loginForm = this.fb.group({
       emailOrPhone: ['', [Validators.required, this.emailOrPhoneValidator()]],
       password: [''],
@@ -460,11 +388,32 @@ export class LoginFormComponent implements OnDestroy {
       next: (user) => {
         this.googleEmail = user.email || '';
         this.googleDisplayName = user.displayName || '';
-        this.googlePhotoURL = user.photoURL || '';
         this.googleIdToken = user.idToken;
-        this.isGoogleOtpMode = true;
-        this.googleLoading.set(false);
-        this.sendGoogleOtp();
+        
+        // Call backend API to authenticate directly
+        this.authRepository.googleSignIn(this.googleIdToken).subscribe({
+          next: (response) => {
+            this.googleLoading.set(false);
+            if (response.success && response.userExists) {
+              // Extract the user data properly for login.emit
+              const authResponse = AuthMapper.fromDto(response.data); 
+              this.login.emit(authResponse);
+            } else if (response.success === false && response.userExists === false) {
+              this.notificationService.info("We could not find an account associated with this Google account. Please register to continue.");
+              setTimeout(() => {
+                this.router.navigate(['/auth/register'], { 
+                  queryParams: { email: this.googleEmail } 
+                });
+              }, 2500);
+            } else {
+              this.notificationService.error("Google login failed.");
+            }
+          },
+          error: (err) => {
+            this.googleLoading.set(false);
+            this.notificationService.error(err.error?.message || err.error?.Message || "Failed to authenticate with server.");
+          }
+        });
       },
       error: (err) => {
         this.googleLoading.set(false);
@@ -481,94 +430,10 @@ export class LoginFormComponent implements OnDestroy {
           'auth/popup-blocked':           '🚫 Popup was blocked. Please allow popups for this site.',
           'auth/internal-error':          '⚙️ Firebase internal error. Check your Firebase project configuration.',
         };
-        const msg = errorMessages[code]
-          || `Google sign-in failed (${code || 'unknown'}). Check console for details.`;
-        // Google Sign-In Error
+        const msg = errorMessages[code] || `Google sign-in failed (${code || 'unknown'}). Check console for details.`;
         this.notificationService.error(msg);
       }
     });
-  }
-
-  sendGoogleOtp() {
-    this.googleLoading.set(true);
-    this.authRepository.sendGoogleOtp(this.googleIdToken, this.googleEmail, this.googleDisplayName).subscribe({
-      next: (maskedEmail: string) => {
-        setTimeout(() => {
-          this.googleLoading.set(false);
-          this.googleOtpSent = true;
-          this.maskedEmail = (typeof maskedEmail === 'string' && maskedEmail.includes('@'))
-            ? maskedEmail
-            : this.googleEmail.replace(/(.{2}).+(@.+)/, '$1****$2');
-          this.startTimer();
-          this.notificationService.success(`OTP sent to ${this.maskedEmail}`);
-          this.googleOtpControl.reset();
-        }, 0);
-      },
-      error: (err) => {
-        this.googleLoading.set(false);
-        
-        // Smart Authentication Flow handling for Google Sign-In
-        if (err.error && err.error.isRegistered === false) {
-          this.notificationService.info("We could not find an account associated with this Google email. Redirecting you to account registration.");
-          setTimeout(() => {
-            this.router.navigate(['/auth/register'], { 
-              queryParams: { email: this.googleEmail, name: this.googleDisplayName } 
-            });
-          }, 2500);
-          return;
-        }
-
-        const msg = err.error?.message || err.error?.Message || 'Failed to send OTP. Please try again.';
-        this.notificationService.error(msg);
-      }
-    });
-  }
-
-  verifyGoogleOtp() {
-    if (this.googleOtpControl.invalid) {
-      this.googleOtpControl.markAsTouched();
-      return;
-    }
-    this.googleLoading.set(true);
-    this.authRepository.verifyGoogleOtp(this.googleEmail, this.googleOtpControl.value as string).subscribe({
-      next: (response) => {
-        this.googleLoading.set(false);
-        this.clearInterval();
-        this.login.emit(response);
-      },
-      error: (err) => {
-        this.googleLoading.set(false);
-        const msg = err.error?.message || err.error?.Message || 'Invalid or expired OTP. Please try again.';
-        this.notificationService.error(msg);
-      }
-    });
-  }
-
-  onGoogleOtpInput(event: Event) {
-    const el = event.target as HTMLInputElement;
-    const val = el.value.replace(/\D/g, '').substring(0, 6);
-    this.googleOtpControl.setValue(val);
-    el.value = val;
-  }
-
-  cancelGoogleMode() {
-    this.isGoogleOtpMode = false;
-    this.googleOtpSent = false;
-    this.googleEmail = '';
-    this.googleDisplayName = '';
-    this.googlePhotoURL = '';
-    this.googleIdToken = '';
-    this.maskedEmail = '';
-    this.googleOtpControl.reset();
-    this.clearInterval();
-  }
-
-  reselectGoogleAccount() {
-    this.googleOtpSent = false;
-    this.maskedEmail = '';
-    this.googleOtpControl.reset();
-    this.clearInterval();
-    this.startGoogleSignIn();
   }
 
   // ── OTP / Password Login Flow ────────────────────────────────────────────

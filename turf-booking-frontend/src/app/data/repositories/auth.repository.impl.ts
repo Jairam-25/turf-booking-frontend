@@ -47,17 +47,10 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
 
   /**
-   * Step 1 of Google login: sends an OTP to the selected Gmail address using standard OTP.
+   * Google Sign-In: directly authenticate via idToken and check if user exists
    */
-  sendGoogleOtp(idToken: string, email: string, displayName: string): Observable<string> {
-    return this.sendOtp(email);
-  }
-
-  /**
-   * Step 2 of Google login: verifies the OTP using the standard OTP endpoint.
-   */
-  verifyGoogleOtp(email: string, otpCode: string): Observable<AuthResponse> {
-    return this.verifyOtp(email, otpCode);
+  googleSignIn(idToken: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/google`, { idToken });
   }
 
   refreshToken(data: { token: string, refreshToken: string }): Observable<AuthResponse> {
