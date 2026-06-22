@@ -25,6 +25,7 @@
     "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
     "firebase": "^12.14.0",
+    "jimp": "^0.22.10",
     "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
