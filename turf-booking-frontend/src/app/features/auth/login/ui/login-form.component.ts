@@ -78,12 +78,15 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
         </div>
       </div>
 
-      <magic-shiny-button type="submit" [loading]="loading || sendingOtp || verifyingOtp">
+      <magic-shiny-button type="submit" [loading]="loading || sendingOtp || verifyingOtp" [disabled]="loginForm.get('agreeTerms')?.invalid === true">
         {{ isOtpMode ? (otpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In' }}
       </magic-shiny-button>
 
-      <div class="terms-text" style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
-        By continuing, you agree to our <a routerLink="/terms-of-service" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy Policy</a>.
+      <div class="terms-checkbox-container" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.75rem;">
+        <input type="checkbox" id="loginTerms" formControlName="agreeTerms" style="width: auto; margin: 0; cursor: pointer;">
+        <label for="loginTerms" style="font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+          I agree to the <a routerLink="/terms-of-service" style="color: var(--primary);">Terms</a> & <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy</a>
+        </label>
       </div>
 
       <!-- Google Sign-In Divider -->
@@ -95,7 +98,7 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
       <button
         type="button"
         class="google-btn"
-        [disabled]="googleLoading()"
+        [disabled]="googleLoading() || loginForm.get('agreeTerms')?.invalid === true"
         (click)="startGoogleSignIn()"
         id="google-signin-btn"
       >
@@ -374,7 +377,8 @@ export class LoginFormComponent implements OnDestroy {
     this.loginForm = this.fb.group({
       emailOrPhone: ['', [Validators.required, this.emailOrPhoneValidator()]],
       password: [''],
-      otpCode: ['']
+      otpCode: [''],
+      agreeTerms: [false, Validators.requiredTrue]
     });
   }
 

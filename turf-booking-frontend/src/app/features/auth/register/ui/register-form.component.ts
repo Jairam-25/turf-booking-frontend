@@ -96,16 +96,17 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
         </span>
       </div>
 
-      <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-        <input type="checkbox" id="terms" formControlName="termsAccepted" style="width: auto; padding: 0;" [class.invalid]="isFieldInvalid('termsAccepted')">
-        <label for="terms" style="font-size: 0.75rem; cursor: pointer;">
-          I agree to the <a routerLink="/terms-of-service" target="_blank" style="color: var(--primary);">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" style="color: var(--primary);">Privacy Policy</a>
+      <div class="form-group terms-checkbox-container" style="flex-direction: row; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.75rem; margin-bottom: 0.5rem;">
+        <input type="checkbox" id="terms" formControlName="termsAccepted" style="width: auto; margin: 0; cursor: pointer;" [class.invalid]="isFieldInvalid('termsAccepted')">
+        <label for="terms" style="font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+          I agree to the <a routerLink="/terms-of-service" target="_blank" style="color: var(--primary);">Terms</a> & <a routerLink="/privacy-policy" target="_blank" style="color: var(--primary);">Privacy</a>
         </label>
       </div>
 
       <magic-shiny-button 
         type="submit" 
         [loading]="loading"
+        [disabled]="registerForm.get('termsAccepted')?.invalid === true"
       >
         Create Account
       </magic-shiny-button>
