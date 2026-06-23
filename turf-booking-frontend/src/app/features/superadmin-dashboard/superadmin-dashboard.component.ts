@@ -77,6 +77,7 @@ export class SuperadminDashboardComponent implements OnInit {
     this.loadStats();
     this.loadVerifications();
     this.loadUsers();
+    this.loadTurfs();
   }
 
   loadStats() {
@@ -97,6 +98,38 @@ export class SuperadminDashboardComponent implements OnInit {
       },
       error: () => this.notificationService.error('Failed to load system metrics')
     });
+  }
+
+  loadTurfs() {
+    this.http.get<any>(`${environment.apiUrl}/SuperAdmin/turfs`).subscribe({
+      next: (res) => {
+        const data = res.data || res.Data || res;
+        this.turfsList.set(data || []);
+      },
+      error: () => this.notificationService.error('Failed to load turfs list')
+    });
+  }
+
+  viewTurfBookings(turf: any) {
+    this.selectedTurfForBookings.set(turf);
+    this.isTurfBookingsModalOpen.set(true);
+    this.turfBookingsList.set([]); // Clear previous
+    this.turfBookingSearchQuery.set('');
+    this.turfBookingFilter.set('All');
+    this.turfBookingSortOrder.set('Latest');
+    
+    this.http.get<any>(`${environment.apiUrl}/SuperAdmin/turfs/${turf.id}/bookings`).subscribe({
+      next: (res) => {
+        const data = res.data || res.Data || res.value || res.Value || res;
+        this.turfBookingsList.set(data || []);
+      },
+      error: () => this.notificationService.error('Failed to load turf bookings')
+    });
+  }
+
+  closeTurfBookingsModal() {
+    this.isTurfBookingsModalOpen.set(false);
+    this.selectedTurfForBookings.set(null);
   }
 
   loadUsers() {
@@ -126,6 +159,7 @@ export class SuperadminDashboardComponent implements OnInit {
   userBookingsList = signal<any[]>([]);
   bookingSearchQuery = signal<string>('');
   bookingFilter = signal<string>('All');
+  bookingSortOrder = signal<string>('Latest'); // New sort filter
 
   filteredUserBookings = computed(() => {
     let bookings = this.userBookingsList();
@@ -146,6 +180,52 @@ export class SuperadminDashboardComponent implements OnInit {
         (b.location && b.location.toLowerCase().includes(query))
       );
     }
+    
+    // Sort
+    bookings.sort((a, b) => {
+      const dateA = new Date(a.bookingDate).getTime();
+      const dateB = new Date(b.bookingDate).getTime();
+      return this.bookingSortOrder() === 'Latest' ? dateB - dateA : dateA - dateB;
+    });
+
+    return bookings;
+  });
+
+  // Turfs List & Turf Bookings
+  turfsList = signal<any[]>([]);
+  isTurfBookingsModalOpen = signal<boolean>(false);
+  selectedTurfForBookings = signal<any>(null);
+  turfBookingsList = signal<any[]>([]);
+  turfBookingSearchQuery = signal<string>('');
+  turfBookingFilter = signal<string>('All');
+  turfBookingSortOrder = signal<string>('Latest');
+
+  filteredTurfBookings = computed(() => {
+    let bookings = this.turfBookingsList();
+    
+    if (this.turfBookingFilter() !== 'All') {
+      const now = new Date();
+      if (this.turfBookingFilter() === 'Upcoming') {
+        bookings = bookings.filter(b => new Date(b.startTime) > now);
+      } else if (this.turfBookingFilter() === 'Past') {
+        bookings = bookings.filter(b => new Date(b.startTime) <= now);
+      }
+    }
+    
+    const query = this.turfBookingSearchQuery().toLowerCase().trim();
+    if (query) {
+      bookings = bookings.filter(b => 
+        (b.userName && b.userName.toLowerCase().includes(query)) ||
+        (b.userEmail && b.userEmail.toLowerCase().includes(query))
+      );
+    }
+
+    // Sort
+    bookings.sort((a, b) => {
+      const dateA = new Date(a.bookingDate).getTime();
+      const dateB = new Date(b.bookingDate).getTime();
+      return this.turfBookingSortOrder() === 'Latest' ? dateB - dateA : dateA - dateB;
+    });
     
     return bookings;
   });
