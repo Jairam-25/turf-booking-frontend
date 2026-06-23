@@ -937,3 +937,52 @@ body:not([data-theme="light"]) .theme-toggle-animated {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Custom Checkbox styles */
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background-color: var(--input-bg, rgba(255, 255, 255, 0.05));
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-smooth);
+  flex-shrink: 0;
+  margin: 0;
+}
+
+[data-theme="light"] .custom-checkbox {
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+.custom-checkbox:hover {
+  border-color: rgba(123, 57, 252, 0.5);
+  box-shadow: 0 0 8px rgba(123, 57, 252, 0.2);
+}
+
+.custom-checkbox:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(123, 57, 252, 0.4);
+}
+
+.custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox.invalid {
+  border-color: var(--error-color) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
+}

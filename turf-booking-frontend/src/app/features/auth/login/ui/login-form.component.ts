@@ -82,9 +82,9 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
         {{ isOtpMode ? (otpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In' }}
       </magic-shiny-button>
 
-      <div class="terms-checkbox-container" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.75rem;">
-        <input type="checkbox" id="loginTerms" formControlName="agreeTerms" style="width: auto; margin: 0; cursor: pointer;">
-        <label for="loginTerms" style="font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+      <div class="terms-checkbox-container" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.75rem;">
+        <input type="checkbox" id="loginTerms" formControlName="agreeTerms" class="custom-checkbox">
+        <label for="loginTerms" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap; user-select: none;">
           I agree to the <a routerLink="/terms-of-service" style="color: var(--primary);">Terms</a> & <a routerLink="/privacy-policy" style="color: var(--primary);">Privacy</a>
         </label>
       </div>

@@ -96,9 +96,9 @@ import { MagicShinyButtonComponent } from '../../../../shared/components/magic-u
         </span>
       </div>
 
-      <div class="form-group terms-checkbox-container" style="flex-direction: row; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.75rem; margin-bottom: 0.5rem;">
-        <input type="checkbox" id="terms" formControlName="termsAccepted" style="width: auto; margin: 0; cursor: pointer;" [class.invalid]="isFieldInvalid('termsAccepted')">
-        <label for="terms" style="font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+      <div class="form-group terms-checkbox-container" style="flex-direction: row; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; margin-bottom: 0.5rem;">
+        <input type="checkbox" id="terms" formControlName="termsAccepted" class="custom-checkbox" [class.invalid]="isFieldInvalid('termsAccepted')">
+        <label for="terms" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; white-space: nowrap; user-select: none;">
           I agree to the <a routerLink="/terms-of-service" target="_blank" style="color: var(--primary);">Terms</a> & <a routerLink="/privacy-policy" target="_blank" style="color: var(--primary);">Privacy</a>
         </label>
       </div>
