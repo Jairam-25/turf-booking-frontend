@@ -124,6 +124,31 @@ export class SuperadminDashboardComponent implements OnInit {
   isUserBookingsModalOpen = signal<boolean>(false);
   selectedUserForBookings = signal<any>(null);
   userBookingsList = signal<any[]>([]);
+  bookingSearchQuery = signal<string>('');
+  bookingFilter = signal<string>('All');
+
+  filteredUserBookings = computed(() => {
+    let bookings = this.userBookingsList();
+    
+    if (this.bookingFilter() !== 'All') {
+      const now = new Date();
+      if (this.bookingFilter() === 'Upcoming') {
+        bookings = bookings.filter(b => new Date(b.startTime) > now);
+      } else if (this.bookingFilter() === 'Past') {
+        bookings = bookings.filter(b => new Date(b.startTime) <= now);
+      }
+    }
+    
+    const query = this.bookingSearchQuery().toLowerCase().trim();
+    if (query) {
+      bookings = bookings.filter(b => 
+        (b.turfName && b.turfName.toLowerCase().includes(query)) ||
+        (b.location && b.location.toLowerCase().includes(query))
+      );
+    }
+    
+    return bookings;
+  });
 
   updateUserStatusPrompt(userId: number, newStatus: string) {
     if (newStatus === 'Active') {
@@ -169,6 +194,8 @@ export class SuperadminDashboardComponent implements OnInit {
     this.selectedUserForBookings.set(user);
     this.isUserBookingsModalOpen.set(true);
     this.userBookingsList.set([]); // Clear previous
+    this.bookingSearchQuery.set('');
+    this.bookingFilter.set('All');
     
     this.http.get<any>(`${environment.apiUrl}/SuperAdmin/users/${user.id}/bookings`).subscribe({
       next: (res) => {

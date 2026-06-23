@@ -430,22 +430,37 @@
 <!-- User Bookings Modal -->
 <div *ngIf="isUserBookingsModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
   <div class="bg-[var(--bg-card)] max-w-2xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-start mb-4">
       <div>
         <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedUserForBookings()?.name }}'s Bookings</h3>
         <p class="text-xs text-[var(--text-secondary)]">{{ selectedUserForBookings()?.email }} | Total: {{ selectedUserForBookings()?.totalBookings }}</p>
       </div>
-      <button (click)="closeUserBookingsModal()" class="text-[var(--text-secondary)] hover:text-red-400 p-2 transition-colors">
-        <i class="fa-solid fa-times text-xl"></i>
+      <button (click)="closeUserBookingsModal()" class="bg-black/20 hover:bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </button>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+      <input type="text" [(ngModel)]="bookingSearchQuery" placeholder="Search turf name or location..." class="bg-black/20 border border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow" />
+      <select [(ngModel)]="bookingFilter" class="bg-black/20 border border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+        <option value="All">All Time</option>
+        <option value="Upcoming">Upcoming Bookings</option>
+        <option value="Past">Past Bookings</option>
+      </select>
     </div>
     
     <div class="overflow-y-auto flex-1 pr-2 space-y-4" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
       <div *ngIf="userBookingsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        No booking history found or loading...
+        Loading...
+      </div>
+      <div *ngIf="userBookingsList().length > 0 && filteredUserBookings().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+        No booking history found matching your criteria.
       </div>
       
-      <div *ngFor="let booking of userBookingsList()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4">
+      <div *ngFor="let booking of filteredUserBookings()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4 transition-transform hover:scale-[1.01]">
         <div>
           <h4 class="font-bold text-[var(--text-primary)]">{{ booking.turfName }}</h4>
           <p class="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
