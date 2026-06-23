@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+import { AuthStore } from '../../core/services/auth.store';
+
 @Component({
   selector: 'app-footer-component',
   standalone: true,
@@ -12,4 +14,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './footer-component.html',
   styleUrl: './footer-component.css',
 })
-export class FooterComponent {}
+export class FooterComponent {
+  constructor(public authStore: AuthStore) {}
+}

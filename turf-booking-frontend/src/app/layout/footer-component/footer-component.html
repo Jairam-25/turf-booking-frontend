@@ -72,16 +72,45 @@
         </ul>
       </div>
 
-      <!-- Column 4: Partner with us -->
+      <!-- Column 4: Portal Link -->
       <div class="lg:col-span-3 lg:col-start-10 flex flex-col gap-5">
-        <h4 class="font-bold text-[13px] uppercase tracking-widest text-[var(--text-primary)] opacity-80">For Turf Owners</h4>
-        <p class="text-[14px] text-[var(--text-secondary)] leading-relaxed">
-          Transform your facility management. List your turf on our premium platform to boost bookings.
-        </p>
-        <a routerLink="/become-owner" class="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-[0_0_15px_rgba(8,145,178,0.4)] hover:shadow-[0_0_25px_rgba(8,145,178,0.6)] w-fit group">
-          Become a Partner
-          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        </a>
+        
+        <!-- SuperAdmin Role -->
+        <ng-container *ngIf="authStore.user()?.role === 'SuperAdmin'">
+          <h4 class="font-bold text-[13px] uppercase tracking-widest text-[var(--text-primary)] opacity-80">Admin Control</h4>
+          <p class="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+            Access the super admin dashboard to manage users, turfs, and system settings.
+          </p>
+          <a routerLink="/superadmin" class="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-sm transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)] hover:shadow-[0_0_25px_rgba(124,58,237,0.6)] w-fit group">
+            Super Admin Portal
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+        </ng-container>
+
+        <!-- Owner Role -->
+        <ng-container *ngIf="authStore.user()?.role === 'Owner'">
+          <h4 class="font-bold text-[13px] uppercase tracking-widest text-[var(--text-primary)] opacity-80">Owner Dashboard</h4>
+          <p class="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+            Manage your turfs, view bookings, and optimize your revenue through the portal.
+          </p>
+          <a routerLink="/owner" class="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] w-fit group">
+            Owner Portal
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+        </ng-container>
+
+        <!-- User Role or Guest -->
+        <ng-container *ngIf="authStore.user()?.role !== 'SuperAdmin' && authStore.user()?.role !== 'Owner'">
+          <h4 class="font-bold text-[13px] uppercase tracking-widest text-[var(--text-primary)] opacity-80">For Turf Owners</h4>
+          <p class="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+            Transform your facility management. List your turf on our premium platform to boost bookings.
+          </p>
+          <a routerLink="/become-owner" class="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-[0_0_15px_rgba(8,145,178,0.4)] hover:shadow-[0_0_25px_rgba(8,145,178,0.6)] w-fit group">
+            Become a Partner
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+        </ng-container>
+
       </div>
 
     </div>
