@@ -26,7 +26,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
         </div>
         
         <div class="card-info">
-          <a *ngIf="turf.location" [href]="turf.location" target="_blank" class="location" title="Open in Google Maps" style="text-decoration: none; cursor: pointer;">
+          <a *ngIf="turf.location" [href]="'https://www.google.com/maps/search/?api=1&query=' + turf.location" target="_blank" class="location" title="Open in Google Maps" style="text-decoration: none; cursor: pointer;">
             <svg  class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px; padding-bottom: 2px;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
               <circle cx="12" cy="10.5" r="2.5" />
