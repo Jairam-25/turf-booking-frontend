@@ -267,10 +267,18 @@ export class SuperadminDashboardComponent implements OnInit {
 
       // If we have slots after search filtering, add the group
       if (dailySlots.length > 0) {
-        // Sort slots by time
+        // Sort slots by time safely
         dailySlots.sort((a, b) => {
-          const timeA = new Date(a.startTime).getTime();
-          const timeB = new Date(b.startTime).getTime();
+          let timeA = new Date(a.startTime).getTime();
+          let timeB = new Date(b.startTime).getTime();
+          
+          if (isNaN(timeA)) {
+            timeA = new Date('1970/01/01 ' + a.startTime).getTime();
+          }
+          if (isNaN(timeB)) {
+            timeB = new Date('1970/01/01 ' + b.startTime).getTime();
+          }
+          
           return timeA - timeB;
         });
 
