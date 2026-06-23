@@ -221,7 +221,7 @@ export class SuperadminDashboardComponent implements OnInit {
     });
     datesSet.add(new Date().toDateString()); // Always show today
 
-    let scheduleRows: any[] = [];
+    let groupedSchedule: { date: Date, slots: any[] }[] = [];
     const now = new Date();
     now.setHours(0,0,0,0);
 
@@ -232,10 +232,10 @@ export class SuperadminDashboardComponent implements OnInit {
       if (this.turfBookingDateFilter() === 'Today' && d.toDateString() !== now.toDateString()) return;
       if (this.turfBookingDateFilter() === 'Upcoming' && d < now) return;
 
+      let dailySlots: any[] = [];
       slots.forEach(slot => {
         const booking = bookings.find(b => b.slotId === slot.id && new Date(b.bookingDate).toDateString() === dateStr);
-        scheduleRows.push({
-          date: d,
+        dailySlots.push({
           startTime: slot.startTime,
           endTime: slot.endTime,
           isBooked: !!booking,
@@ -246,25 +246,38 @@ export class SuperadminDashboardComponent implements OnInit {
           status: booking ? booking.status : '-'
         });
       });
+
+      // Search filtering for the daily slots
+      const query = this.turfBookingSearchQuery().toLowerCase().trim();
+      if (query) {
+        dailySlots = dailySlots.filter(r => 
+          r.userName.toLowerCase().includes(query) ||
+          r.userEmail.toLowerCase().includes(query)
+        );
+      }
+
+      // If we have slots after search filtering, add the group
+      if (dailySlots.length > 0) {
+        // Sort slots by time
+        dailySlots.sort((a, b) => {
+          const timeA = new Date(a.startTime).getTime();
+          const timeB = new Date(b.startTime).getTime();
+          return timeA - timeB;
+        });
+
+        groupedSchedule.push({
+          date: d,
+          slots: dailySlots
+        });
+      }
     });
 
-    // Search filtering
-    const query = this.turfBookingSearchQuery().toLowerCase().trim();
-    if (query) {
-      scheduleRows = scheduleRows.filter(r => 
-        r.userName.toLowerCase().includes(query) ||
-        r.userEmail.toLowerCase().includes(query)
-      );
-    }
-
-    // Sorting
-    scheduleRows.sort((a, b) => {
-      const timeA = a.date.getTime() + (new Date(`1970/01/01 ${a.startTime}`).getTime() || 0);
-      const timeB = b.date.getTime() + (new Date(`1970/01/01 ${b.startTime}`).getTime() || 0);
-      return this.turfBookingSortOrder() === 'Latest' ? timeB - timeA : timeA - timeB;
+    // Sort dates
+    groupedSchedule.sort((a, b) => {
+      return this.turfBookingSortOrder() === 'Latest' ? b.date.getTime() - a.date.getTime() : a.date.getTime() - b.date.getTime();
     });
 
-    return scheduleRows;
+    return groupedSchedule;
   });
 
   updateUserStatusPrompt(userId: number, newStatus: string) {
