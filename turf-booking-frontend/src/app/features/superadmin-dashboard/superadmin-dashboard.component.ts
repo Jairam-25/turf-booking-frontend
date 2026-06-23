@@ -114,14 +114,18 @@ export class SuperadminDashboardComponent implements OnInit {
     this.selectedTurfForBookings.set(turf);
     this.isTurfBookingsModalOpen.set(true);
     this.turfBookingsList.set([]); // Clear previous
+    this.turfSlotsList.set([]);
     this.turfBookingSearchQuery.set('');
-    this.turfBookingFilter.set('All');
+    this.turfBookingDateFilter.set('All');
     this.turfBookingSortOrder.set('Latest');
     
     this.http.get<any>(`${environment.apiUrl}/SuperAdmin/turfs/${turf.id}/bookings`).subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
-        this.turfBookingsList.set(data || []);
+        if (data) {
+          this.turfSlotsList.set(data.slots || []);
+          this.turfBookingsList.set(data.bookings || []);
+        }
       },
       error: () => this.notificationService.error('Failed to load turf bookings')
     });
@@ -196,38 +200,65 @@ export class SuperadminDashboardComponent implements OnInit {
   isTurfBookingsModalOpen = signal<boolean>(false);
   selectedTurfForBookings = signal<any>(null);
   turfBookingsList = signal<any[]>([]);
+  turfSlotsList = signal<any[]>([]);
   turfBookingSearchQuery = signal<string>('');
-  turfBookingFilter = signal<string>('All');
+  turfBookingDateFilter = signal<string>('All'); // 'All', 'Today', 'Upcoming'
   turfBookingSortOrder = signal<string>('Latest');
 
-  filteredTurfBookings = computed(() => {
-    let bookings = this.turfBookingsList();
+  turfSchedule = computed(() => {
+    const slots = this.turfSlotsList();
+    const bookings = this.turfBookingsList();
     
-    if (this.turfBookingFilter() !== 'All') {
-      const now = new Date();
-      if (this.turfBookingFilter() === 'Upcoming') {
-        bookings = bookings.filter(b => new Date(b.startTime) > now);
-      } else if (this.turfBookingFilter() === 'Past') {
-        bookings = bookings.filter(b => new Date(b.startTime) <= now);
-      }
-    }
-    
+    const datesSet = new Set<string>();
+    bookings.forEach(b => {
+      if (b.bookingDate) datesSet.add(new Date(b.bookingDate).toDateString());
+    });
+    datesSet.add(new Date().toDateString()); // Always show today
+
+    let scheduleRows: any[] = [];
+    const now = new Date();
+    now.setHours(0,0,0,0);
+
+    Array.from(datesSet).forEach(dateStr => {
+      const d = new Date(dateStr);
+      
+      // Date filtering
+      if (this.turfBookingDateFilter() === 'Today' && d.toDateString() !== now.toDateString()) return;
+      if (this.turfBookingDateFilter() === 'Upcoming' && d < now) return;
+
+      slots.forEach(slot => {
+        const booking = bookings.find(b => b.slotId === slot.id && new Date(b.bookingDate).toDateString() === dateStr);
+        scheduleRows.push({
+          date: d,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          isBooked: !!booking,
+          userName: booking ? booking.userName : 'No booked',
+          userEmail: booking ? booking.userEmail : '-',
+          userPhone: booking ? booking.userPhone : '-',
+          price: booking ? booking.price : '-',
+          status: booking ? booking.status : '-'
+        });
+      });
+    });
+
+    // Search filtering
     const query = this.turfBookingSearchQuery().toLowerCase().trim();
     if (query) {
-      bookings = bookings.filter(b => 
-        (b.userName && b.userName.toLowerCase().includes(query)) ||
-        (b.userEmail && b.userEmail.toLowerCase().includes(query))
+      scheduleRows = scheduleRows.filter(r => 
+        r.userName.toLowerCase().includes(query) ||
+        r.userEmail.toLowerCase().includes(query)
       );
     }
 
-    // Sort
-    bookings.sort((a, b) => {
-      const dateA = new Date(a.bookingDate).getTime();
-      const dateB = new Date(b.bookingDate).getTime();
-      return this.turfBookingSortOrder() === 'Latest' ? dateB - dateA : dateA - dateB;
+    // Sorting
+    scheduleRows.sort((a, b) => {
+      const timeA = a.date.getTime() + (new Date(`1970/01/01 ${a.startTime}`).getTime() || 0);
+      const timeB = b.date.getTime() + (new Date(`1970/01/01 ${b.startTime}`).getTime() || 0);
+      return this.turfBookingSortOrder() === 'Latest' ? timeB - timeA : timeA - timeB;
     });
-    
-    return bookings;
+
+    return scheduleRows;
   });
 
   updateUserStatusPrompt(userId: number, newStatus: string) {

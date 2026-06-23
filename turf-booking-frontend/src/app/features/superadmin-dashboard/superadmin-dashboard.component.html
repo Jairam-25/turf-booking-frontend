@@ -74,6 +74,52 @@
           </div>
         </div>
 
+        <!-- All Turfs Box-Wise Section -->
+        <div class="mt-8">
+          <h3 class="text-xl font-bold text-[var(--text-primary)] mb-4">All Registered Turfs</h3>
+          
+          <div *ngIf="turfsList().length === 0" class="glass p-8 rounded-[1.5rem] text-center text-[var(--text-secondary)] font-semibold shadow-md">
+            No turfs registered yet.
+          </div>
+          
+          <div *ngIf="turfsList().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let turf of turfsList()" 
+                 (click)="viewTurfBookings(turf)"
+                 class="glass p-5 rounded-2xl cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all duration-300 border border-[rgba(150,150,150,0.1)] group flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-3">
+                  <h4 class="font-bold text-lg text-[var(--text-primary)]">{{ turf.name }}</h4>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{
+                      'bg-emerald-500/10 text-emerald-400': turf.status === 'Approved',
+                      'bg-yellow-500/10 text-yellow-400': turf.status === 'Pending Verification' || turf.status === 'Under Review',
+                      'bg-red-500/10 text-red-400': turf.status === 'Rejected'
+                    }">
+                    {{ turf.status === 'Approved' ? 'Active' : turf.status }}
+                  </span>
+                </div>
+                <p class="text-xs text-[var(--text-secondary)] mb-4 flex items-start gap-1.5 line-clamp-2">
+                  <i class="fa-solid fa-location-dot mt-0.5"></i> {{ turf.location }}
+                </p>
+                <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg mb-4">
+                  <div class="text-xs text-[var(--text-secondary)] mb-1">Owner: <span class="text-[var(--text-primary)] font-medium">{{ turf.ownerName }}</span></div>
+                  <div class="text-xs text-[var(--text-secondary)] truncate">{{ turf.ownerEmail }}</div>
+                </div>
+              </div>
+              <div class="flex justify-between items-end mt-2 pt-3 border-t border-[var(--glass-border)]">
+                <div>
+                  <div class="text-xs text-[var(--text-secondary)]">Price</div>
+                  <div class="font-bold text-emerald-400">₹{{ turf.price }}/hr</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-[var(--text-secondary)]">Total Bookings</div>
+                  <div class="font-bold text-blue-400 text-lg group-hover:text-blue-300 transition-colors">{{ turf.totalBookings }} <i class="fa-solid fa-arrow-right text-[10px] ml-1 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- System Capacity Radial Chart Card -->
         <div class="glass p-8 rounded-[1.5rem] mt-8 flex flex-col md:flex-row items-center gap-8 shadow-md border border-[rgba(150,150,150,0.1)] animate-fade-in-up">
           <div class="flex-1 flex flex-col justify-center px-4">
@@ -120,58 +166,6 @@
             <canvas id="radialChart"></canvas>
           </div>
         </div>
-        
-        <!-- All Turfs List Section -->
-        <div class="mt-8 border-t border-[var(--glass-border)] pt-8">
-          <h3 class="text-xl font-bold text-[var(--text-primary)] mb-4">All Registered Turfs</h3>
-          <div class="overflow-x-auto rounded-xl border border-[var(--glass-border)]">
-            <table class="w-full text-left border-collapse min-w-[800px]">
-              <thead>
-                <tr class="bg-black/30 dark:bg-white/5 text-[var(--text-secondary)] text-xs uppercase tracking-wider">
-                  <th class="p-4 font-semibold">Turf Details</th>
-                  <th class="p-4 font-semibold">Owner Info</th>
-                  <th class="p-4 font-semibold">Pricing & Status</th>
-                  <th class="p-4 font-semibold text-right">Bookings</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-[var(--glass-border)] bg-black/10 dark:bg-black/20">
-                <tr *ngFor="let turf of turfsList()" class="hover:bg-black/20 dark:hover:bg-white/5 transition-colors">
-                  <td class="p-4">
-                    <div class="font-bold text-[var(--text-primary)]">{{ turf.name }}</div>
-                    <div class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-[250px]"><i class="fa-solid fa-location-dot mr-1"></i> {{ turf.location }}</div>
-                    <div class="text-[10px] text-gray-500 mt-1">Added: {{ turf.createdAt | date:'mediumDate' }}</div>
-                  </td>
-                  <td class="p-4">
-                    <div class="text-sm text-[var(--text-primary)] font-medium">{{ turf.ownerName }}</div>
-                    <div class="text-xs text-[var(--text-secondary)] mt-1">{{ turf.ownerEmail }}</div>
-                  </td>
-                  <td class="p-4">
-                    <div class="text-sm font-bold text-emerald-400 mb-2">₹{{ turf.price }}/hr</div>
-                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      [ngClass]="{
-                        'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': turf.status === 'Approved',
-                        'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': turf.status === 'Pending Verification' || turf.status === 'Under Review',
-                        'bg-red-500/10 text-red-400 border border-red-500/20': turf.status === 'Rejected'
-                      }">
-                      {{ turf.status }}
-                    </span>
-                  </td>
-                  <td class="p-4 text-right align-middle">
-                    <button (click)="viewTurfBookings(turf)" class="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold transition-colors group flex items-center gap-2 ml-auto">
-                      <span>View {{ turf.totalBookings }} Bookings</span>
-                      <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr *ngIf="turfsList().length === 0">
-                  <td colspan="4" class="p-8 text-center text-[var(--text-secondary)] font-semibold">
-                    No turfs registered yet.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
 
       <!-- Users Management Tab -->
@@ -194,22 +188,22 @@
           <table class="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr class="bg-black/30 text-[var(--text-secondary)] text-xs uppercase tracking-wider">
-                <th class="p-4 font-semibold">User Details</th>
-                <th class="p-4 font-semibold">Activity & Status</th>
-                <th class="p-4 font-semibold">Booking Stats</th>
-                <th class="p-4 font-semibold text-right">Actions</th>
+                <th class="p-3 font-semibold">User Details</th>
+                <th class="p-3 font-semibold">Activity & Status</th>
+                <th class="p-3 font-semibold">Booking Stats</th>
+                <th class="p-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[var(--glass-border)] bg-black/10">
               <tr *ngFor="let user of filteredUsers()" class="hover:bg-black/20 transition-colors">
-                <td class="p-4">
-                  <div class="font-bold text-[var(--text-primary)]">{{ user.name }}</div>
-                  <div class="text-xs text-[var(--text-secondary)] mt-1">{{ user.email }}</div>
-                  <div class="text-xs text-[var(--text-secondary)]">{{ user.phoneNumber }}</div>
-                  <div class="text-[10px] text-gray-500 mt-1">Reg: {{ user.registrationDate | date:'mediumDate' }}</div>
+                <td class="p-3">
+                  <div class="font-bold text-[var(--text-primary)] text-sm">{{ user.name }}</div>
+                  <div class="text-[11px] text-[var(--text-secondary)] mt-0.5">{{ user.email }}</div>
+                  <div class="text-[11px] text-[var(--text-secondary)]">{{ user.phoneNumber }}</div>
+                  <div class="text-[9px] text-gray-500 mt-1">Reg: {{ user.registrationDate | date:'mediumDate' }}</div>
                 </td>
-                <td class="p-4">
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2"
+                <td class="p-3">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2"
                     [ngClass]="{
                       'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': user.status === 'Active',
                       'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': user.status === 'Inactive',
@@ -540,11 +534,11 @@
 
 <!-- Turf Bookings Modal -->
 <div *ngIf="isTurfBookingsModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-2xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
+  <div class="bg-[var(--bg-card)] max-w-4xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
     <div class="flex justify-between items-start mb-4">
       <div>
-        <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedTurfForBookings()?.name }} Bookings</h3>
-        <p class="text-xs text-[var(--text-secondary)]"><i class="fa-solid fa-location-dot mr-1"></i> {{ selectedTurfForBookings()?.location }} | Total: {{ selectedTurfForBookings()?.totalBookings }}</p>
+        <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedTurfForBookings()?.name }} Bookings Schedule</h3>
+        <p class="text-xs text-[var(--text-secondary)]"><i class="fa-solid fa-location-dot mr-1"></i> {{ selectedTurfForBookings()?.location }}</p>
       </div>
       <button (click)="closeTurfBookingsModal()" class="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[var(--text-primary)] hover:text-red-500 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -554,12 +548,12 @@
     </div>
 
     <!-- Search and Filter Bar -->
-    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+    <div class="flex flex-col md:flex-row gap-3 mb-4">
       <input type="text" [(ngModel)]="turfBookingSearchQuery" placeholder="Search user name or email..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
-      <select [(ngModel)]="turfBookingFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-        <option value="All" class="bg-[var(--bg-card)]">All Time</option>
-        <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Bookings</option>
-        <option value="Past" class="bg-[var(--bg-card)]">Past Bookings</option>
+      <select [(ngModel)]="turfBookingDateFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+        <option value="All" class="bg-[var(--bg-card)]">All Dates</option>
+        <option value="Today" class="bg-[var(--bg-card)]">Today Only</option>
+        <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Dates</option>
       </select>
       <select [(ngModel)]="turfBookingSortOrder" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
         <option value="Latest" class="bg-[var(--bg-card)]">Latest First</option>
@@ -567,35 +561,55 @@
       </select>
     </div>
     
-    <div class="overflow-y-auto flex-1 pr-2 space-y-4" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
-      <div *ngIf="turfBookingsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        Loading...
+    <div class="overflow-y-auto flex-1 pr-2 space-y-2" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
+      <div *ngIf="turfSlotsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+        Loading schedule...
       </div>
-      <div *ngIf="turfBookingsList().length > 0 && filteredTurfBookings().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        No booking history found matching your criteria.
+      <div *ngIf="turfSlotsList().length > 0 && turfSchedule().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+        No schedule found for the selected criteria.
       </div>
       
-      <div *ngFor="let booking of filteredTurfBookings()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4 transition-transform hover:scale-[1.01]">
-        <div>
-          <h4 class="font-bold text-[var(--text-primary)]">{{ booking.userName }}</h4>
-          <p class="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-envelope"></i> {{ booking.userEmail }}
-          </p>
-          <div class="text-xs text-[var(--text-primary)] mt-3 flex items-center gap-2">
-            <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 whitespace-nowrap">
-              <i class="fa-regular fa-clock mr-1"></i> {{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}
-            </span>
-            <span class="bg-purple-500/10 text-purple-400 px-2 py-1 rounded border border-purple-500/20 whitespace-nowrap ml-2">
-              {{ booking.bookingDate | date:'mediumDate' }}
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-end text-right">
-          <span class="text-sm font-bold text-emerald-400">₹{{ booking.price }}</span>
-          <span class="text-[10px] text-[var(--text-secondary)] mt-1 whitespace-nowrap uppercase tracking-wider font-bold">
-            Status: <span [ngClass]="booking.status === 'Cancelled' ? 'text-red-400' : 'text-emerald-400'">{{ booking.status || 'Active' }}</span>
-          </span>
-        </div>
+      <div class="w-full overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+          <thead>
+            <tr class="bg-black/30 dark:bg-white/5 text-[var(--text-secondary)] text-xs uppercase tracking-wider border-b border-[var(--glass-border)]">
+              <th class="p-3 font-semibold w-[150px]">Time</th>
+              <th class="p-3 font-semibold w-[120px]">Date</th>
+              <th class="p-3 font-semibold">User Details</th>
+              <th class="p-3 font-semibold text-center w-[100px]">Price</th>
+              <th class="p-3 font-semibold text-right w-[120px]">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--glass-border)] bg-black/5 dark:bg-black/20">
+            <tr *ngFor="let row of turfSchedule()" class="hover:bg-black/10 dark:hover:bg-white/5 transition-colors" [ngClass]="{'opacity-60': !row.isBooked}">
+              <td class="p-3 align-top">
+                <span class="text-sm font-bold text-blue-400 whitespace-nowrap">{{ row.startTime | slice:0:5 }} to {{ row.endTime | slice:0:5 }}</span>
+              </td>
+              <td class="p-3 align-top">
+                <span class="text-xs text-[var(--text-primary)] font-medium">{{ row.date | date:'dd-MM-yyyy' }}</span>
+              </td>
+              <td class="p-3 align-top">
+                <ng-container *ngIf="row.isBooked">
+                  <div class="font-bold text-sm text-[var(--text-primary)]">{{ row.userName }}</div>
+                  <div class="text-xs text-[var(--text-secondary)] mt-1">{{ row.userEmail }}</div>
+                  <div class="text-[10px] text-[var(--text-secondary)] mt-0.5">{{ row.userPhone }}</div>
+                </ng-container>
+                <ng-container *ngIf="!row.isBooked">
+                  <div class="text-sm font-medium text-gray-500 italic">{{ row.userName }}</div>
+                </ng-container>
+              </td>
+              <td class="p-3 align-top text-center">
+                <span class="text-sm font-bold" [ngClass]="row.isBooked ? 'text-emerald-400' : 'text-gray-500'">{{ row.isBooked ? '₹' + row.price : '-' }}</span>
+              </td>
+              <td class="p-3 align-top text-right">
+                <span *ngIf="row.isBooked" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  {{ row.status }}
+                </span>
+                <span *ngIf="!row.isBooked" class="text-gray-500 text-sm font-medium">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
