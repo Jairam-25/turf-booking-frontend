@@ -21,6 +21,7 @@
     <aside class="dashboard-sidebar glass">
       <nav class="sidebar-nav">
         <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+        <button class="sidebar-link" [class.active]="activeTab() === 'users'" (click)="setTab('users')">User Management</button>
         <button class="sidebar-link flex justify-between items-center w-full" [class.active]="activeTab() === 'verifications'" (click)="setTab('verifications')">
           <span>Owner Verifications</span>
           <span *ngIf="superadminStateService.pendingVerificationsCount() > 0" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-2">
@@ -33,15 +34,32 @@
     <main class="dashboard-content text-white">
       <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
         <h2 class="section-title">System Metrics</h2>
+        
+        <!-- Top Metrics Row -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
           <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #3b82f6;">
             <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Users</span>
             <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</h3>
           </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #10b981;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Active Users</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.activeUsers }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #f59e0b;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Inactive Users</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.inactiveUsers }}</h3>
+          </div>
+          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
+            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Blocked Users</span>
+            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.blockedUsers }}</h3>
+          </div>
           <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #a855f7;">
             <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Owners</span>
             <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</h3>
           </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
             <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Revenue</span>
             <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ stats.revenue | number }}</h3>
@@ -101,6 +119,91 @@
           <div class="w-full md:w-[350px] h-[350px] relative flex justify-center items-center">
             <canvas id="radialChart"></canvas>
           </div>
+        </div>
+      </div>
+
+      <!-- Users Management Tab -->
+      <div *ngIf="activeTab() === 'users'" class="tab-content fade-in space-y-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <h2 class="section-title text-2xl font-bold m-0">User Management</h2>
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <input type="text" [(ngModel)]="userSearchQuery" placeholder="Search name, email, phone..." class="bg-black/20 border border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow" />
+            
+            <select [(ngModel)]="userStatusFilter" class="bg-black/20 border border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+              <option value="All">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-[var(--glass-border)]">
+          <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr class="bg-black/30 text-[var(--text-secondary)] text-xs uppercase tracking-wider">
+                <th class="p-4 font-semibold">User Details</th>
+                <th class="p-4 font-semibold">Activity & Status</th>
+                <th class="p-4 font-semibold">Booking Stats</th>
+                <th class="p-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--glass-border)] bg-black/10">
+              <tr *ngFor="let user of filteredUsers()" class="hover:bg-black/20 transition-colors">
+                <td class="p-4">
+                  <div class="font-bold text-[var(--text-primary)]">{{ user.name }}</div>
+                  <div class="text-xs text-[var(--text-secondary)] mt-1">{{ user.email }}</div>
+                  <div class="text-xs text-[var(--text-secondary)]">{{ user.phoneNumber }}</div>
+                  <div class="text-[10px] text-gray-500 mt-1">Reg: {{ user.registrationDate | date:'mediumDate' }}</div>
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2"
+                    [ngClass]="{
+                      'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': user.status === 'Active',
+                      'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': user.status === 'Inactive',
+                      'bg-red-500/10 text-red-400 border border-red-500/20': user.status === 'Blocked'
+                    }">
+                    <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{'bg-emerald-400': user.status === 'Active', 'bg-yellow-400': user.status === 'Inactive', 'bg-red-400': user.status === 'Blocked'}"></span>
+                    {{ user.status }}
+                  </span>
+                  <div class="text-xs text-[var(--text-secondary)]">
+                    Last Active:<br/>
+                    <span class="text-[var(--text-primary)]">{{ user.lastActive ? (user.lastActive | date:'short') : 'Never' }}</span>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div class="text-sm"><span class="text-[var(--text-secondary)]">Total:</span> <span class="font-bold text-[var(--text-primary)]">{{ user.totalBookings }}</span></div>
+                  <div class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-[150px]" *ngIf="user.favoriteTurf">
+                    Fav: {{ user.favoriteTurf }}
+                  </div>
+                  <div class="text-[10px] text-gray-500 mt-1" *ngIf="user.latestBookingDate">
+                    Last: {{ user.latestBookingDate | date:'mediumDate' }}
+                  </div>
+                </td>
+                <td class="p-4 text-right">
+                  <div class="flex flex-col gap-2 items-end">
+                    <button *ngIf="user.status !== 'Blocked'" (click)="updateUserStatus(user.id, 'Blocked')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                      Block User
+                    </button>
+                    <button *ngIf="user.status === 'Blocked'" (click)="updateUserStatus(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                      Unblock
+                    </button>
+                    <button *ngIf="user.status === 'Active'" (click)="updateUserStatus(user.id, 'Inactive')" class="px-3 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                      Mark Inactive
+                    </button>
+                    <button *ngIf="user.status === 'Inactive'" (click)="updateUserStatus(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                      Mark Active
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="filteredUsers().length === 0">
+                <td colspan="4" class="p-8 text-center text-[var(--text-secondary)] font-semibold">
+                  No users found matching your criteria.
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

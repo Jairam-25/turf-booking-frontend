@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { SuperadminStateService } from '../../core/services/superadmin-state.service';
 import { Chart, registerables } from 'chart.js';
 import { MagicParticlesComponent } from '../../shared/components/magic-ui/magic-particles/magic-particles.component';
+import { environment } from '../../../environments/environment';
 
 Chart.register(...registerables);
 
@@ -30,11 +31,38 @@ export class SuperadminDashboardComponent implements OnInit {
     owners: 0,
     turfs: 0,
     bookings: 0,
-    revenue: 0
+    revenue: 0,
+    activeUsers: 0,
+    inactiveUsers: 0,
+    blockedUsers: 0
   };
 
   verifications = signal<any[]>([]);
   radialChartInstance: any = null;
+
+  // Users State
+  usersList = signal<any[]>([]);
+  userSearchQuery = signal<string>('');
+  userStatusFilter = signal<string>('All');
+  
+  filteredUsers = computed(() => {
+    let users = this.usersList();
+    
+    if (this.userStatusFilter() !== 'All') {
+      users = users.filter(u => u.status === this.userStatusFilter());
+    }
+    
+    const query = this.userSearchQuery().toLowerCase().trim();
+    if (query) {
+      users = users.filter(u => 
+        (u.name && u.name.toLowerCase().includes(query)) ||
+        (u.email && u.email.toLowerCase().includes(query)) ||
+        (u.phoneNumber && u.phoneNumber.includes(query))
+      );
+    }
+    
+    return users;
+  });
 
   // Rejection modal state
   isRejectionModalOpen = signal<boolean>(false);
@@ -48,13 +76,15 @@ export class SuperadminDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadVerifications();
+    this.loadUsers();
   }
 
   loadStats() {
-    this.http.get<any>('https://turf-booking-backend-fixl.onrender.com/api/v1/SuperAdmin/dashboard-metrics').subscribe({
+    this.http.get<any>(`${environment.apiUrl}/SuperAdmin/dashboard-metrics`).subscribe({
       next: (res) => {
         const data = res.data || res.Data || res.value || res.Value || res;
         this.stats = {
+          ...this.stats,
           users: data.users || data.Users || 0,
           owners: data.owners || data.Owners || 0,
           turfs: data.turfs || data.Turfs || 0,
@@ -66,6 +96,31 @@ export class SuperadminDashboardComponent implements OnInit {
         }
       },
       error: () => this.notificationService.error('Failed to load system metrics')
+    });
+  }
+
+  loadUsers() {
+    this.http.get<any>(`${environment.apiUrl}/SuperAdmin/users`).subscribe({
+      next: (res) => {
+        const data = res.data || res.Data || res;
+        this.usersList.set(data || []);
+        
+        // Update user stats
+        this.stats.activeUsers = data.filter((u: any) => u.status === 'Active').length;
+        this.stats.inactiveUsers = data.filter((u: any) => u.status === 'Inactive').length;
+        this.stats.blockedUsers = data.filter((u: any) => u.status === 'Blocked').length;
+      },
+      error: () => this.notificationService.error('Failed to load users')
+    });
+  }
+
+  updateUserStatus(userId: number, newStatus: string) {
+    this.http.post<any>(`${environment.apiUrl}/SuperAdmin/users/${userId}/status`, { status: newStatus }).subscribe({
+      next: () => {
+        this.notificationService.success(`User marked as ${newStatus}`);
+        this.loadUsers();
+      },
+      error: (err) => this.notificationService.error(err.error?.Message || 'Failed to update user status')
     });
   }
 
