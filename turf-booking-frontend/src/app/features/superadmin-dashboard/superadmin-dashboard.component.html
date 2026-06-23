@@ -172,7 +172,10 @@
                   </div>
                 </td>
                 <td class="p-4">
-                  <div class="text-sm"><span class="text-[var(--text-secondary)]">Total:</span> <span class="font-bold text-[var(--text-primary)]">{{ user.totalBookings }}</span></div>
+                  <div class="text-sm cursor-pointer hover:text-blue-400 group inline-block" (click)="viewUserBookings(user)">
+                    <span class="text-[var(--text-secondary)] transition-colors group-hover:text-blue-400">Total:</span> 
+                    <span class="font-bold text-[var(--text-primary)] underline decoration-dashed decoration-blue-500/50 underline-offset-4 group-hover:text-blue-400 transition-colors">{{ user.totalBookings }}</span>
+                  </div>
                   <div class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-[150px]" *ngIf="user.favoriteTurf">
                     Fav: {{ user.favoriteTurf }}
                   </div>
@@ -182,16 +185,16 @@
                 </td>
                 <td class="p-4 text-right">
                   <div class="flex flex-col gap-2 items-end">
-                    <button *ngIf="user.status !== 'Blocked'" (click)="updateUserStatus(user.id, 'Blocked')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                    <button *ngIf="user.status !== 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Blocked')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
                       Block User
                     </button>
-                    <button *ngIf="user.status === 'Blocked'" (click)="updateUserStatus(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                    <button *ngIf="user.status === 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
                       Unblock
                     </button>
-                    <button *ngIf="user.status === 'Active'" (click)="updateUserStatus(user.id, 'Inactive')" class="px-3 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                    <button *ngIf="user.status === 'Active'" (click)="updateUserStatusPrompt(user.id, 'Inactive')" class="px-3 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
                       Mark Inactive
                     </button>
-                    <button *ngIf="user.status === 'Inactive'" (click)="updateUserStatus(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-24">
+                    <button *ngIf="user.status === 'Inactive'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
                       Mark Active
                     </button>
                   </div>
@@ -401,6 +404,64 @@
       <button (click)="submitEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold text-white transition-colors">
         Save Changes
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- User Status Update Reason Modal -->
+<div *ngIf="isUserStatusModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+  <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
+    <h3 class="text-lg font-bold text-[var(--text-primary)]">Update User Status</h3>
+    <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Please provide a reason for updating the user's status to <strong>{{ selectedUserStatus() }}</strong>. This reason will be emailed directly to the user and sent via push notification.</p>
+    
+    <textarea [(ngModel)]="userStatusReason" rows="3" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder-[var(--text-secondary)]" placeholder="e.g. Violation of community guidelines..."></textarea>
+    
+    <div class="flex justify-end gap-3 pt-2">
+      <button (click)="closeUserStatusModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
+        Cancel
+      </button>
+      <button (click)="submitUserStatusUpdate()" class="px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors" [ngClass]="selectedUserStatus() === 'Blocked' ? 'bg-red-600 hover:bg-red-500' : 'bg-yellow-600 hover:bg-yellow-500'">
+        Submit & Notify User
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- User Bookings Modal -->
+<div *ngIf="isUserBookingsModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+  <div class="bg-[var(--bg-card)] max-w-2xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedUserForBookings()?.name }}'s Bookings</h3>
+        <p class="text-xs text-[var(--text-secondary)]">{{ selectedUserForBookings()?.email }} | Total: {{ selectedUserForBookings()?.totalBookings }}</p>
+      </div>
+      <button (click)="closeUserBookingsModal()" class="text-[var(--text-secondary)] hover:text-red-400 p-2 transition-colors">
+        <i class="fa-solid fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <div class="overflow-y-auto flex-1 pr-2 space-y-4" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
+      <div *ngIf="userBookingsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+        No booking history found or loading...
+      </div>
+      
+      <div *ngFor="let booking of userBookingsList()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-[var(--text-primary)]">{{ booking.turfName }}</h4>
+          <p class="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-location-dot"></i> {{ booking.location }}
+          </p>
+          <div class="text-xs text-[var(--text-primary)] mt-3 flex items-center gap-2">
+            <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 whitespace-nowrap">
+              <i class="fa-regular fa-clock mr-1"></i> {{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+        <div class="flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-end text-right">
+          <span class="text-sm font-bold text-emerald-400">₹{{ booking.price }}</span>
+          <span class="text-[10px] text-[var(--text-secondary)] mt-1 whitespace-nowrap">Booked on: <br class="hidden sm:block"/>{{ booking.bookingDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

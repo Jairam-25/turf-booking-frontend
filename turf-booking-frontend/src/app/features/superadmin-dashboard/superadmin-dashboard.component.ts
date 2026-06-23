@@ -114,14 +114,74 @@ export class SuperadminDashboardComponent implements OnInit {
     });
   }
 
-  updateUserStatus(userId: number, newStatus: string) {
-    this.http.post<any>(`${environment.apiUrl}/SuperAdmin/users/${userId}/status`, { status: newStatus }).subscribe({
+  // User Status Modal
+  isUserStatusModalOpen = signal<boolean>(false);
+  selectedUserIdForStatus = signal<number | null>(null);
+  selectedUserStatus = signal<string>('');
+  userStatusReason = '';
+
+  // User Bookings Modal
+  isUserBookingsModalOpen = signal<boolean>(false);
+  selectedUserForBookings = signal<any>(null);
+  userBookingsList = signal<any[]>([]);
+
+  updateUserStatusPrompt(userId: number, newStatus: string) {
+    if (newStatus === 'Active') {
+      // For active, we might not need a reason, just activate immediately
+      this.updateUserStatus(userId, newStatus, '');
+    } else {
+      this.selectedUserIdForStatus.set(userId);
+      this.selectedUserStatus.set(newStatus);
+      this.userStatusReason = '';
+      this.isUserStatusModalOpen.set(true);
+    }
+  }
+
+  closeUserStatusModal() {
+    this.isUserStatusModalOpen.set(false);
+    this.selectedUserIdForStatus.set(null);
+    this.selectedUserStatus.set('');
+  }
+
+  submitUserStatusUpdate() {
+    if (!this.userStatusReason.trim()) {
+      this.notificationService.error('Please enter a reason.');
+      return;
+    }
+    const userId = this.selectedUserIdForStatus();
+    if (userId) {
+      this.updateUserStatus(userId, this.selectedUserStatus(), this.userStatusReason);
+      this.closeUserStatusModal();
+    }
+  }
+
+  updateUserStatus(userId: number, newStatus: string, reason: string = '') {
+    this.http.post<any>(`${environment.apiUrl}/SuperAdmin/users/${userId}/status`, { status: newStatus, reason: reason }).subscribe({
       next: () => {
         this.notificationService.success(`User marked as ${newStatus}`);
         this.loadUsers();
       },
       error: (err) => this.notificationService.error(err.error?.Message || 'Failed to update user status')
     });
+  }
+
+  viewUserBookings(user: any) {
+    this.selectedUserForBookings.set(user);
+    this.isUserBookingsModalOpen.set(true);
+    this.userBookingsList.set([]); // Clear previous
+    
+    this.http.get<any>(`${environment.apiUrl}/SuperAdmin/users/${user.id}/bookings`).subscribe({
+      next: (res) => {
+        const data = res.data || res.Data || res.value || res.Value || res;
+        this.userBookingsList.set(data || []);
+      },
+      error: () => this.notificationService.error('Failed to load user bookings')
+    });
+  }
+
+  closeUserBookingsModal() {
+    this.isUserBookingsModalOpen.set(false);
+    this.selectedUserForBookings.set(null);
   }
 
 
