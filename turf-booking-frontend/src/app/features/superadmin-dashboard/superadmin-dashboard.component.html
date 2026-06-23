@@ -562,14 +562,17 @@
     </div>
     
     <div class="overflow-y-auto flex-1 pr-2 space-y-2" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
-      <div *ngIf="turfSlotsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+      <div *ngIf="isTurfBookingsLoading()" class="text-center py-8 text-[var(--text-secondary)] italic">
         Loading schedule...
       </div>
-      <div *ngIf="turfSlotsList().length > 0 && turfSchedule().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+      <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
+        This turf currently has no slots assigned to it.
+      </div>
+      <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length > 0 && turfSchedule().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
         No schedule found for the selected criteria.
       </div>
       
-      <div class="w-full overflow-x-auto">
+      <div class="w-full overflow-x-auto" *ngIf="!isTurfBookingsLoading() && turfSchedule().length > 0">
         <table class="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr class="bg-black/30 dark:bg-white/5 text-[var(--text-secondary)] text-xs uppercase tracking-wider border-b border-[var(--glass-border)]">

@@ -113,6 +113,7 @@ export class SuperadminDashboardComponent implements OnInit {
   viewTurfBookings(turf: any) {
     this.selectedTurfForBookings.set(turf);
     this.isTurfBookingsModalOpen.set(true);
+    this.isTurfBookingsLoading.set(true);
     this.turfBookingsList.set([]); // Clear previous
     this.turfSlotsList.set([]);
     this.turfBookingSearchQuery.set('');
@@ -126,8 +127,12 @@ export class SuperadminDashboardComponent implements OnInit {
           this.turfSlotsList.set(data.slots || []);
           this.turfBookingsList.set(data.bookings || []);
         }
+        this.isTurfBookingsLoading.set(false);
       },
-      error: () => this.notificationService.error('Failed to load turf bookings')
+      error: () => {
+        this.notificationService.error('Failed to load turf bookings');
+        this.isTurfBookingsLoading.set(false);
+      }
     });
   }
 
@@ -198,6 +203,7 @@ export class SuperadminDashboardComponent implements OnInit {
   // Turfs List & Turf Bookings
   turfsList = signal<any[]>([]);
   isTurfBookingsModalOpen = signal<boolean>(false);
+  isTurfBookingsLoading = signal<boolean>(false);
   selectedTurfForBookings = signal<any>(null);
   turfBookingsList = signal<any[]>([]);
   turfSlotsList = signal<any[]>([]);
