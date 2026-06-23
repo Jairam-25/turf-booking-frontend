@@ -215,22 +215,31 @@ export class SuperadminDashboardComponent implements OnInit {
     const slots = this.turfSlotsList();
     const bookings = this.turfBookingsList();
     
+    // We want to display all slots for the next 7 days (or any dates that have bookings).
     const datesSet = new Set<string>();
+    
+    // 1. Add next 7 days to the set by default so SuperAdmin can see future empty slots
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    for (let i = 0; i < 7; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+      datesSet.add(futureDate.toDateString());
+    }
+
+    // 2. Add any other dates that actually have bookings (past or future > 7 days)
     bookings.forEach(b => {
       if (b.bookingDate) datesSet.add(new Date(b.bookingDate).toDateString());
     });
-    datesSet.add(new Date().toDateString()); // Always show today
 
     let groupedSchedule: { date: Date, slots: any[] }[] = [];
-    const now = new Date();
-    now.setHours(0,0,0,0);
 
     Array.from(datesSet).forEach(dateStr => {
       const d = new Date(dateStr);
       
       // Date filtering
-      if (this.turfBookingDateFilter() === 'Today' && d.toDateString() !== now.toDateString()) return;
-      if (this.turfBookingDateFilter() === 'Upcoming' && d < now) return;
+      if (this.turfBookingDateFilter() === 'Today' && d.toDateString() !== today.toDateString()) return;
+      if (this.turfBookingDateFilter() === 'Upcoming' && d < today) return;
 
       let dailySlots: any[] = [];
       slots.forEach(slot => {
