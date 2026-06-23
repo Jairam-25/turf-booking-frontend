@@ -242,7 +242,11 @@ export class SuperadminDashboardComponent implements OnInit {
       if (this.turfBookingDateFilter() === 'Upcoming' && d < today) return;
 
       let dailySlots: any[] = [];
-      slots.forEach(slot => {
+      
+      // Deduplicate slots by startTime just in case the backend returns duplicates
+      const uniqueSlots = Array.from(new Map(slots.map(s => [s.startTime, s])).values());
+
+      uniqueSlots.forEach(slot => {
         const booking = bookings.find(b => b.slotId === slot.id && new Date(b.bookingDate).toDateString() === dateStr);
         dailySlots.push({
           startTime: slot.startTime,
@@ -289,9 +293,11 @@ export class SuperadminDashboardComponent implements OnInit {
       }
     });
 
-    // Sort dates
+    // Sort dates - default to Ascending so Today is at the top
     groupedSchedule.sort((a, b) => {
-      return this.turfBookingSortOrder() === 'Latest' ? b.date.getTime() - a.date.getTime() : a.date.getTime() - b.date.getTime();
+      // 'Latest' now means chronological order (Today -> Tomorrow)
+      // 'Oldest' means reverse chronological (Next week -> Today)
+      return this.turfBookingSortOrder() === 'Latest' ? a.date.getTime() - b.date.getTime() : b.date.getTime() - a.date.getTime();
     });
 
     return groupedSchedule;
