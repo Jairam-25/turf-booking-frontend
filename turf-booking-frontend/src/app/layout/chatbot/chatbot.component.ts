@@ -197,8 +197,8 @@ interface ChatMessage {
  styles: [`
  .chatbot-wrapper {
  position: fixed;
- bottom: 2rem;
- right: 2rem;
+ bottom: calc(64px + env(safe-area-inset-bottom) + 1rem);
+ right: 1.5rem;
  z-index: 1001;
  font-family: 'Manrope', sans-serif;
  }
