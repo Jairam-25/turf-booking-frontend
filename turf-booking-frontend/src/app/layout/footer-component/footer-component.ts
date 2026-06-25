@@ -5,15 +5,15 @@ import { RouterModule } from '@angular/router';
 import { AuthStore } from '../../core/services/auth.store';
 
 @Component({
-  selector: 'app-footer-component',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-  ],
-  templateUrl: './footer-component.html',
-  styleUrl: './footer-component.css',
+ selector: 'app-footer-component',
+ standalone: true,
+ imports: [
+ CommonModule,
+ RouterModule,
+ ],
+ templateUrl: './footer-component.html',
+ styleUrl: './footer-component.css',
 })
 export class FooterComponent {
-  constructor(public authStore: AuthStore) {}
+ constructor(public authStore: AuthStore) {}
 }

@@ -14,119 +14,137 @@ import { environment } from '../environments/environment';
 import { NotificationService } from './core/services/notification.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    NavbarComponent,
-    ToastComponent,
-    FooterComponent,
-    ChatbotComponent,
-    BottomNavComponent,
-  ],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+ selector: 'app-root',
+ standalone: true,
+ imports: [
+ RouterOutlet,
+ NavbarComponent,
+ ToastComponent,
+ FooterComponent,
+ ChatbotComponent,
+ BottomNavComponent,
+ ],
+ templateUrl: './app.html',
+ styleUrl: './app.css'
 })
 export class App implements OnInit {
-  hideNavbar = signal(false);
-  hideFooter = signal(false);
-  hideBottomNav = signal(false);
-  isRouting = signal(false);
-  routingText = signal('Loading page...');
+ hideNavbar = signal(false);
+ hideFooter = signal(false);
+ hideBottomNav = signal(false);
+ isRouting = signal(false);
+ routingText = signal('Loading page...');
 
-  constructor(
-    private router: Router,
-    private themeService: ThemeService,
-    private authStore: AuthStore,
-    private authRepo: AuthRepository,
-    private http: HttpClient,
-    private notificationService: NotificationService
-  ) {}
+ constructor(
+ private router: Router,
+ private themeService: ThemeService,
+ private authStore: AuthStore,
+ private authRepo: AuthRepository,
+ private http: HttpClient,
+ private notificationService: NotificationService
+ ) {}
 
-  ngOnInit() {
-    this.themeService.init();
-    this.updateVisibility(this.router.url);
+ ngOnInit() {
+ this.themeService.init();
+ this.updateVisibility(this.router.url);
 
-    // Silent refresh on app init
-    const token = this.authStore.token();
-    const refreshToken = this.authStore.refreshToken();
+ // Silent refresh on app init
+ const token = this.authStore.token();
+ const refreshToken = this.authStore.refreshToken();
+ 
+ import('@capacitor/core').then(({ Capacitor }) => {
+ const isNative = Capacitor.isNativePlatform();
+ 
+ if (isNative) {
+ document.body.classList.add('is-mobile-app');
+ // Force Mobile Entry Flow
+ if (token) {
+ if (this.router.url === '/home' || this.router.url === '/') {
+ this.router.navigate(['/dashboard']);
+ }
+ } else {
+ if (!this.router.url.startsWith('/auth')) {
+ this.router.navigate(['/auth/login']);
+ }
+ }
+ }
+ });
 
-    if (token && refreshToken && this.authStore.isTokenExpired()) {
-      this.authRepo.refreshToken({ token, refreshToken }).subscribe({
-        next: (response) => {
-          this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
-        },
-        error: () => {
-          this.authStore.clearSession();
-          this.router.navigate(['/auth/login']);
-        }
-      });
-    }
+ if (token && refreshToken && this.authStore.isTokenExpired()) {
+ this.authRepo.refreshToken({ token, refreshToken }).subscribe({
+ next: (response) => {
+ this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
+ },
+ error: () => {
+ this.authStore.clearSession();
+ this.router.navigate(['/auth/login']);
+ }
+ });
+ }
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        let text = 'Loading...';
-        const url = event.url.split('?')[0];
-        if (url.includes('/dashboard')) text = 'Loading Book Turf...';
-        else if (url.includes('/offers')) text = 'Loading Promo Offers...';
-        else if (url.includes('/leaderboard')) text = 'Loading Community...';
-        else if (url.includes('/liked-turfs')) text = 'Loading Liked Turfs...';
-        else if (url.includes('/bookings')) text = 'Loading Bookings...';
-        else if (url.includes('/profile')) text = 'Loading Profile...';
-        else if (url.includes('/reviews')) text = 'Loading Reviews...';
-        else if (url.includes('/support')) text = 'Loading Support...';
-        else text = 'Loading page...';
-        
-        this.routingText.set(text);
-        this.isRouting.set(true);
-      } else if (event instanceof RouteConfigLoadStart) {
-        this.isRouting.set(true);
-      } else if (
-        event instanceof RouteConfigLoadEnd ||
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
-        this.isRouting.set(false);
-      }
+ this.router.events.subscribe(event => {
+ if (event instanceof NavigationStart) {
+ let text = 'Loading...';
+ const url = event.url.split('?')[0];
+ if (url.includes('/dashboard')) text = 'Loading Book Turf...';
+ else if (url.includes('/offers')) text = 'Loading Promo Offers...';
+ else if (url.includes('/leaderboard')) text = 'Loading Community...';
+ else if (url.includes('/liked-turfs')) text = 'Loading Liked Turfs...';
+ else if (url.includes('/bookings')) text = 'Loading Bookings...';
+ else if (url.includes('/profile')) text = 'Loading Profile...';
+ else if (url.includes('/reviews')) text = 'Loading Reviews...';
+ else if (url.includes('/support')) text = 'Loading Support...';
+ else text = 'Loading page...';
+ 
+ this.routingText.set(text);
+ this.isRouting.set(true);
+ } else if (event instanceof RouteConfigLoadStart) {
+ this.isRouting.set(true);
+ } else if (
+ event instanceof RouteConfigLoadEnd ||
+ event instanceof NavigationEnd ||
+ event instanceof NavigationCancel ||
+ event instanceof NavigationError
+ ) {
+ this.isRouting.set(false);
+ }
 
-      if (event instanceof NavigationEnd) {
-        this.updateVisibility(event.urlAfterRedirects);
-      }
-    });
+ if (event instanceof NavigationEnd) {
+ this.updateVisibility(event.urlAfterRedirects);
+ }
+ });
 
-    // Render Cold-Start UX: Health check on app init
-    const healthCheckStart = Date.now();
-    let toastShown = false;
+ // Render Cold-Start UX: Health check on app init
+ const healthCheckStart = Date.now();
+ let toastShown = false;
 
-    // Set a timeout to show the toast if the server takes more than 5 seconds
-    const timeoutId = setTimeout(() => {
-      toastShown = true;
-      this.notificationService.info('Server waking up... Please wait a moment (Render free tier cold-start).');
-    }, 5000);
+ // Set a timeout to show the toast if the server takes more than 5 seconds
+ const timeoutId = setTimeout(() => {
+ toastShown = true;
+ this.notificationService.info('Server waking up... Please wait a moment (Render free tier cold-start).');
+ }, 5000);
 
-    // Call the backend API (e.g. turfs endpoint) to wake it up
-    this.http.get(`${environment.apiUrl}/turf`).subscribe({
-      next: () => {
-        clearTimeout(timeoutId);
-        if (toastShown) {
-          this.notificationService.success('Server is awake and ready!');
-        }
-      },
-      error: () => {
-        clearTimeout(timeoutId);
-        // If it fails, the global error handler or interceptor might catch it, or it's just down.
-      }
-    });
-  }
+ // Call the backend API (e.g. turfs endpoint) to wake it up
+ this.http.get(`${environment.apiUrl}/turf`).subscribe({
+ next: () => {
+ clearTimeout(timeoutId);
+ if (toastShown) {
+ this.notificationService.success('Server is awake and ready!');
+ }
+ },
+ error: () => {
+ clearTimeout(timeoutId);
+ // If it fails, the global error handler or interceptor might catch it, or it's just down.
+ }
+ });
+ }
 
-  private updateVisibility(url: string) {
-    const cleanUrl = url.split('?')[0];
-    const isAuth = cleanUrl.startsWith('/auth');
+ private updateVisibility(url: string) {
+ const cleanUrl = url.split('?')[0];
+ const isAuth = cleanUrl.startsWith('/auth');
 
-    this.hideNavbar.set(isAuth);
-    this.hideBottomNav.set(isAuth);
-    // Hide footer on auth pages, payment, and possibly others if needed
-    this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment'));
-  }
+ this.hideNavbar.set(isAuth);
+ this.hideBottomNav.set(isAuth);
+ // Hide footer on auth pages, payment, and possibly others if needed
+ this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment'));
+ }
 }

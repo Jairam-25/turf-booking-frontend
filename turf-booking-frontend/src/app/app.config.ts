@@ -22,19 +22,19 @@ import { ReviewRepositoryImpl } from './data/repositories/review.repository.impl
 
 export const appConfig: ApplicationConfig = {
 
-  providers: [
-    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }), withHashLocation()),
-    provideHttpClient(
-      withInterceptors([authInterceptor, unwrapResponseInterceptor, errorHandlingInterceptor])
-    ),
-    // Firebase initialization
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    // Repository bindings
-    { provide: AuthRepository, useClass: AuthRepositoryImpl },
-    { provide: TurfRepository, useClass: TurfRepositoryImpl },
-    { provide: BookingRepository, useClass: BookingRepositoryImpl },
-    { provide: ReviewRepository, useClass: ReviewRepositoryImpl }
-  ]
+ providers: [
+ provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }), withHashLocation()),
+ provideHttpClient(
+ withInterceptors([authInterceptor, unwrapResponseInterceptor, errorHandlingInterceptor])
+ ),
+ // Firebase initialization
+ provideFirebaseApp(() => initializeApp(environment.firebase)),
+ provideAuth(() => getAuth()),
+ // Repository bindings
+ { provide: AuthRepository, useClass: AuthRepositoryImpl },
+ { provide: TurfRepository, useClass: TurfRepositoryImpl },
+ { provide: BookingRepository, useClass: BookingRepositoryImpl },
+ { provide: ReviewRepository, useClass: ReviewRepositoryImpl }
+ ]
 
 };

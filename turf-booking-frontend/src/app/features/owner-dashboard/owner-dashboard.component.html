@@ -1,553 +1,553 @@
 <!-- Global Animated Circular Transition Overlay (Registered Owners Only) -->
 <div class="goal-overlay" [class.active]="isOverlayActive()">
-  <div class="transition-content text-center">
-    <span class="overlay-label block">Owner Workspace</span>
-    <span class="overlay-brand block truncate max-w-[90vw]">{{ turfName() !== 'Loading...' && turfName() !== 'Unassigned Turf' ? turfName() : 'TurfXpert' }}</span>
-  </div>
+ <div class="transition-content text-center">
+ <span class="overlay-label block">Owner Workspace</span>
+ <span class="overlay-brand block truncate max-w-[90vw]">{{ turfName() !== 'Loading...' && turfName() !== 'Unassigned Turf' ? turfName() : 'TurfXpert' }}</span>
+ </div>
 </div>
 
 <div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
-  <!-- Magic Particles Background -->
-  <app-magic-particles [quantity]="80" [color]="'#7b39fc'"></app-magic-particles>
+ <!-- Magic Particles Background -->
+ <app-magic-particles [quantity]="80" [color]="'#7b39fc'"></app-magic-particles>
 
-  <div class="dashboard-header glass relative z-[50]">
-    <div class="header-left">
-      <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)] flex items-center gap-3">
-        Owner Dashboard
-      </h1>
-      <div class="mt-2 flex items-center gap-3 flex-wrap">
-        <p class="text-[var(--text-secondary)] m-0">Managing: </p>
-        
-        <ng-container *ngIf="ownedTurfs().length > 1; else singleTurf">
-          <div class="relative z-50">
-            <button (click)="toggleDropdown()" class="flex items-center gap-2 bg-[#13151a]/80 backdrop-blur-md border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#7b39fc] transition-all shadow-lg">
-              <i class="fa-solid fa-location-dot text-[#7b39fc] text-sm"></i>
-              <span class="font-medium truncate max-w-[200px]">{{ turfName() }}</span>
-              <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="ml-1 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
-                {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
-              </span>
-              <i class="fa-solid fa-chevron-down text-slate-400 text-xs ml-2 transition-transform duration-200" [class.rotate-180]="isDropdownOpen()"></i>
-            </button>
-            
-            <div *ngIf="isDropdownOpen()" class="absolute top-full left-0 mt-2 w-full min-w-[260px] bg-[#1a1c23] border border-white/10 rounded-xl shadow-2xl py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-              <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-white/5 mb-1">Your Turfs</div>
-              <button *ngFor="let t of ownedTurfs()" 
-                      (click)="switchTurfModel(t.Id || t.id)"
-                      class="w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between relative group"
-                      [ngClass]="(t.Id || t.id) === turfId() ? 'text-white bg-white/5' : 'text-slate-300 hover:bg-white/5 hover:text-white'">
-                
-                <div class="flex items-center gap-3">
-                  <!-- Active indicator bar -->
-                  <div *ngIf="(t.Id || t.id) === turfId()" class="absolute left-0 top-0 bottom-0 w-1 bg-[#7b39fc] rounded-r-md"></div>
-                  
-                  <div class="w-2 h-2 rounded-full transition-colors shrink-0" [ngClass]="(t.Id || t.id) === turfId() ? 'bg-[#7b39fc] shadow-[0_0_8px_#7b39fc]' : 'bg-slate-600 group-hover:bg-slate-400'"></div>
-                  <span class="truncate font-medium max-w-[130px]">{{ t.Name || t.name }}</span>
-                </div>
+ <div class="dashboard-header glass relative z-[50]">
+ <div class="header-left">
+ <h1 class="font-instrument-serif text-3xl text-[var(--text-primary)] flex items-center gap-3">
+ Owner Dashboard
+ </h1>
+ <div class="mt-2 flex items-center gap-3 flex-wrap">
+ <p class="text-[var(--text-secondary)] m-0">Managing: </p>
+ 
+ <ng-container *ngIf="ownedTurfs().length > 1; else singleTurf">
+ <div class="relative z-50">
+ <button (click)="toggleDropdown()" class="flex items-center gap-2 bg-[#13151a]/80 backdrop-blur-md border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#7b39fc] transition-all shadow-lg">
+ <i class="fa-solid fa-location-dot text-[#7b39fc] text-sm"></i>
+ <span class="font-medium truncate max-w-[200px]">{{ turfName() }}</span>
+ <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="ml-1 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+ {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
+ </span>
+ <i class="fa-solid fa-chevron-down text-slate-400 text-xs ml-2 transition-transform duration-200" [class.rotate-180]="isDropdownOpen()"></i>
+ </button>
+ 
+ <div *ngIf="isDropdownOpen()" class="absolute top-full left-0 mt-2 w-full min-w-[260px] bg-[#1a1c23] border border-white/10 rounded-xl shadow-2xl py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+ <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-white/5 mb-1">Your Turfs</div>
+ <button *ngFor="let t of ownedTurfs()" 
+ (click)="switchTurfModel(t.Id || t.id)"
+ class="w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between relative group"
+ [ngClass]="(t.Id || t.id) === turfId() ? 'text-white bg-white/5' : 'text-slate-300 hover:bg-white/5 hover:text-white'">
+ 
+ <div class="flex items-center gap-3">
+ <!-- Active indicator bar -->
+ <div *ngIf="(t.Id || t.id) === turfId()" class="absolute left-0 top-0 bottom-0 w-1 bg-[#7b39fc] rounded-r-md"></div>
+ 
+ <div class="w-2 h-2 rounded-full transition-colors shrink-0" [ngClass]="(t.Id || t.id) === turfId() ? 'bg-[#7b39fc] shadow-[0_0_8px_#7b39fc]' : 'bg-slate-600 group-hover:bg-slate-400'"></div>
+ <span class="truncate font-medium max-w-[130px]">{{ t.Name || t.name }}</span>
+ </div>
 
-                <span *ngIf="(t.Status || t.status) && (t.Status || t.status) !== 'Approved'" class="ml-2 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap shrink-0">
-                  {{ (t.Status || t.status) === 'Pending Verification' ? 'Pending' : (t.Status || t.status) }}
-                </span>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Invisible backdrop to close dropdown when clicking outside -->
-          <div *ngIf="isDropdownOpen()" class="fixed inset-0 z-40 cursor-default" (click)="isDropdownOpen.set(false)"></div>
-        </ng-container>
-        
-        <ng-template #singleTurf>
-          <div class="flex items-center gap-2">
-            <strong class="text-white">{{ turfName() }}</strong>
-            <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
-              {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
-            </span>
-          </div>
-        </ng-template>
-        
-        <button class="text-xs px-3 py-1.5 ml-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md transition-colors border border-slate-700 font-medium whitespace-nowrap" 
-                routerLink="/become-owner" 
-                [queryParams]="{ action: 'add-turf' }">
-          <i class="fa-solid fa-plus mr-1"></i> Add Turf
-        </button>
-      </div>
-    </div>
-    <div class="header-right">
-      <button class="btn-premium btn-uniform" (click)="exportReport()">Export Report</button>
-    </div>
-  </div>
+ <span *ngIf="(t.Status || t.status) && (t.Status || t.status) !== 'Approved'" class="ml-2 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap shrink-0">
+ {{ (t.Status || t.status) === 'Pending Verification' ? 'Pending' : (t.Status || t.status) }}
+ </span>
+ </button>
+ </div>
+ </div>
+ 
+ <!-- Invisible backdrop to close dropdown when clicking outside -->
+ <div *ngIf="isDropdownOpen()" class="fixed inset-0 z-40 cursor-default" (click)="isDropdownOpen.set(false)"></div>
+ </ng-container>
+ 
+ <ng-template #singleTurf>
+ <div class="flex items-center gap-2">
+ <strong class="text-white">{{ turfName() }}</strong>
+ <span *ngIf="verificationStatus() && verificationStatus() !== 'Approved'" class="px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+ {{ verificationStatus() === 'Pending Verification' ? 'Pending' : verificationStatus() }}
+ </span>
+ </div>
+ </ng-template>
+ 
+ <button class="text-xs px-3 py-1.5 ml-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md transition-colors border border-slate-700 font-medium whitespace-nowrap" 
+ routerLink="/become-owner" 
+ [queryParams]="{ action: 'add-turf' }">
+ <i class="fa-solid fa-plus mr-1"></i> Add Turf
+ </button>
+ </div>
+ </div>
+ <div class="header-right">
+ <button class="btn-premium btn-uniform" (click)="exportReport()">Export Report</button>
+ </div>
+ </div>
 
-  <div class="dashboard-layout relative z-10">
-    <aside class="dashboard-sidebar glass relative">
-      <nav class="sidebar-nav overflow-x-auto relative z-10">
-        <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
-        <button class="sidebar-link" [class.active]="activeTab() === 'bookings'" (click)="setTab('bookings')">Recent Bookings</button>
-        <button class="sidebar-link" [class.active]="activeTab() === 'offline'" (click)="setTab('offline')">Offline Booking</button>
-        <button class="sidebar-link" [class.active]="activeTab() === 'settings'" (click)="setTab('settings')">Settings</button>
-        <div class="my-2 border-t border-[rgba(150,150,150,0.1)] w-full hidden md:block"></div>
-        <button class="sidebar-link" style="color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: space-between;" routerLink="/become-owner" [queryParams]="{ action: 'add-turf' }">
-          Add Another Turf <span class="text-lg leading-none">+</span>
-        </button>
-        <button class="sidebar-link logout-sidebar-btn" (click)="openLogoutModal()">Logout</button>
-      </nav>
-      <!-- Scroll indicator > -->
-      <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-end pr-2 bg-gradient-to-l from-[rgba(15,23,42,0.9)] to-transparent pointer-events-none lg:hidden z-20 rounded-r-2xl">
-        <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-      </div>
-    </aside>
+ <div class="dashboard-layout relative z-10">
+ <aside class="dashboard-sidebar glass relative">
+ <nav class="sidebar-nav overflow-x-auto relative z-10">
+ <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+ <button class="sidebar-link" [class.active]="activeTab() === 'bookings'" (click)="setTab('bookings')">Recent Bookings</button>
+ <button class="sidebar-link" [class.active]="activeTab() === 'offline'" (click)="setTab('offline')">Offline Booking</button>
+ <button class="sidebar-link" [class.active]="activeTab() === 'settings'" (click)="setTab('settings')">Settings</button>
+ <div class="my-2 border-t border-[rgba(150,150,150,0.1)] w-full hidden"></div>
+ <button class="sidebar-link" style="color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: space-between;" routerLink="/become-owner" [queryParams]="{ action: 'add-turf' }">
+ Add Another Turf <span class="text-lg leading-none">+</span>
+ </button>
+ <button class="sidebar-link logout-sidebar-btn" (click)="openLogoutModal()">Logout</button>
+ </nav>
+ <!-- Scroll indicator > -->
+ <div class="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-end pr-2 bg-gradient-to-l from-[rgba(15,23,42,0.9)] to-transparent pointer-events-none z-20 rounded-r-2xl">
+ <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+ </div>
+ </aside>
 
-    <main class="dashboard-content">
-      <ng-container *ngIf="!verificationStatus() || verificationStatus() === 'Approved'; else pendingVerification">
-        <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in w-full h-full">
-          <!-- Top Stats Row -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Customers</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.totalCustomers }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Benefit</span>
-            <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ analyticsStats.monthlyRevenue | number }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Costs</span>
-            <h3 class="text-2xl font-bold" style="color: #ef4444">₹{{ analyticsStats.monthlyCosts | number }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Pending Bookings</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.pendingBookings }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Due Today</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.dueToday }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Unassigned</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.unassigned }}</h3>
-          </div>
-        </div>
+ <main class="dashboard-content">
+ <ng-container *ngIf="!verificationStatus() || verificationStatus() === 'Approved'; else pendingVerification">
+ <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in w-full h-full">
+ <!-- Top Stats Row -->
+ <div class="grid grid-cols-2 gap-4 mb-6">
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Customers</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.totalCustomers }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Benefit</span>
+ <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ analyticsStats.monthlyRevenue | number }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Monthly Costs</span>
+ <h3 class="text-2xl font-bold" style="color: #ef4444">₹{{ analyticsStats.monthlyCosts | number }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Pending Bookings</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.pendingBookings }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Due Today</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.dueToday }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Unassigned</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ analyticsStats.unassigned }}</h3>
+ </div>
+ </div>
 
-        <!-- Main Chart Row -->
-        <div class="glass p-4 rounded-lg mb-6 w-full shadow-sm">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold" style="color: var(--text-primary)">Booking Stats (Online vs Offline)</h3>
-            <div class="flex gap-4">
-              <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
-                <span class="w-3 h-3 rounded-full" style="background: #7b39fc"></span> Online (Total)
-              </div>
-              <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
-                <span class="w-3 h-3 rounded-full" style="background: #22c55e"></span> Offline (Total)
-              </div>
-            </div>
-          </div>
-          <div class="h-[300px] w-full relative">
-            <canvas id="mainChart"></canvas>
-          </div>
-        </div>
+ <!-- Main Chart Row -->
+ <div class="glass p-4 rounded-lg mb-6 w-full shadow-sm">
+ <div class="flex justify-between items-center mb-4">
+ <h3 class="font-bold" style="color: var(--text-primary)">Booking Stats (Online vs Offline)</h3>
+ <div class="flex gap-4">
+ <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
+ <span class="w-3 h-3 rounded-full" style="background: #7b39fc"></span> Online (Total)
+ </div>
+ <div class="flex items-center gap-2 px-3 py-1 rounded-md text-sm" style="color: var(--text-primary); background: var(--surface-color)">
+ <span class="w-3 h-3 rounded-full" style="background: #22c55e"></span> Offline (Total)
+ </div>
+ </div>
+ </div>
+ <div class="h-[300px] w-full relative">
+ <canvas id="mainChart"></canvas>
+ </div>
+ </div>
 
-        <!-- Bottom 3 Charts Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-          <!-- Traffic Analysis -->
-          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
-            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Traffic Analysis</h3>
-            <div class="h-[200px] w-full relative flex-grow">
-              <canvas id="trafficChart"></canvas>
-            </div>
-          </div>
-          
-          <!-- Utilization / Handling Time -->
-          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
-            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Average Utilization Hours</h3>
-            <div class="h-[200px] w-full relative flex-grow">
-              <canvas id="utilizationChart"></canvas>
-            </div>
-          </div>
+ <!-- Bottom 3 Charts Row -->
+ <div class="grid grid-cols-1 gap-6 w-full">
+ <!-- Traffic Analysis -->
+ <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+ <h3 class="font-bold mb-4" style="color: var(--text-primary)">Traffic Analysis</h3>
+ <div class="h-[200px] w-full relative flex-grow">
+ <canvas id="trafficChart"></canvas>
+ </div>
+ </div>
+ 
+ <!-- Utilization / Handling Time -->
+ <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+ <h3 class="font-bold mb-4" style="color: var(--text-primary)">Average Utilization Hours</h3>
+ <div class="h-[200px] w-full relative flex-grow">
+ <canvas id="utilizationChart"></canvas>
+ </div>
+ </div>
 
-          <!-- Happiness Ratings -->
-          <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
-            <h3 class="font-bold mb-4" style="color: var(--text-primary)">Customer Happiness</h3>
-            <div class="h-[200px] w-full relative flex-grow">
-              <canvas id="ratingChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+ <!-- Happiness Ratings -->
+ <div class="glass p-4 rounded-lg flex flex-col shadow-sm">
+ <h3 class="font-bold mb-4" style="color: var(--text-primary)">Customer Happiness</h3>
+ <div class="h-[200px] w-full relative flex-grow">
+ <canvas id="ratingChart"></canvas>
+ </div>
+ </div>
+ </div>
+ </div>
 
-      <div *ngIf="activeTab() === 'bookings'" class="tab-content fade-in">
-        <h2 class="section-title">Recent Bookings</h2>
-        <div class="table-container glass overflow-x-auto relative">
-          <!-- Scroll indicator > -->
-          <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-end pr-2 bg-gradient-to-l from-[var(--surface-color)] to-transparent pointer-events-none md:hidden z-20">
-            <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-          </div>
-          <table class="data-table w-full text-left relative z-10">
-            <thead>
-              <tr>
-                <th>ID</th><th>User</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let b of recentBookings">
-                <td class="font-bold text-[var(--primary)]">#{{ b.Id || b.id }}</td>
-                <td>{{ b.User || b.user }}</td>
-                <td>{{ b.Date || b.date }}</td>
-                <td>{{ b.Time || b.time }}</td>
-                <td>₹{{ b.Amount || b.amount }}</td>
-                <td><span class="status-badge" [class.status-confirmed]="(b.Status || b.status) === 'Confirmed'" [class.status-pending]="(b.Status || b.status) === 'Pending'" [class.status-cancelled]="(b.Status || b.status) === 'Cancelled'">{{ b.Status || b.status }}</span></td>
-                <td>
-                  <div class="flex gap-2 items-center">
-                    <button *ngIf="(b.Status || b.status) === 'Pending'" class="action-btn approve-btn" (click)="approveBooking(b.Id || b.id)">Approve</button>
-                    <button *ngIf="(b.Status || b.status) === 'Pending' || (b.Status || b.status) === 'Confirmed'" class="action-btn cancel-btn" (click)="openCancelModal(b.Id || b.id)">Cancel</button>
-                    <span *ngIf="(b.Status || b.status) === 'Cancelled'" class="status-badge status-cancelled border border-red-500/20" style="padding: 6px 12px; font-size: 0.75rem;">Cancelled</span>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngIf="recentBookings.length === 0">
-                <td colspan="7" class="text-center py-4 text-[var(--text-secondary)]">No recent bookings found.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+ <div *ngIf="activeTab() === 'bookings'" class="tab-content fade-in">
+ <h2 class="section-title">Recent Bookings</h2>
+ <div class="table-container glass overflow-x-auto relative">
+ <!-- Scroll indicator > -->
+ <div class="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-end pr-2 bg-gradient-to-l from-[var(--surface-color)] to-transparent pointer-events-none z-20">
+ <svg class="w-5 h-5 text-[var(--text-secondary)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+ </div>
+ <table class="data-table w-full text-left relative z-10">
+ <thead>
+ <tr>
+ <th>ID</th><th>User</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th>Actions</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr *ngFor="let b of recentBookings">
+ <td class="font-bold text-[var(--primary)]">#{{ b.Id || b.id }}</td>
+ <td>{{ b.User || b.user }}</td>
+ <td>{{ b.Date || b.date }}</td>
+ <td>{{ b.Time || b.time }}</td>
+ <td>₹{{ b.Amount || b.amount }}</td>
+ <td><span class="status-badge" [class.status-confirmed]="(b.Status || b.status) === 'Confirmed'" [class.status-pending]="(b.Status || b.status) === 'Pending'" [class.status-cancelled]="(b.Status || b.status) === 'Cancelled'">{{ b.Status || b.status }}</span></td>
+ <td>
+ <div class="flex gap-2 items-center">
+ <button *ngIf="(b.Status || b.status) === 'Pending'" class="action-btn approve-btn" (click)="approveBooking(b.Id || b.id)">Approve</button>
+ <button *ngIf="(b.Status || b.status) === 'Pending' || (b.Status || b.status) === 'Confirmed'" class="action-btn cancel-btn" (click)="openCancelModal(b.Id || b.id)">Cancel</button>
+ <span *ngIf="(b.Status || b.status) === 'Cancelled'" class="status-badge status-cancelled border border-red-500/20" style="padding: 6px 12px; font-size: 0.75rem;">Cancelled</span>
+ </div>
+ </td>
+ </tr>
+ <tr *ngIf="recentBookings.length === 0">
+ <td colspan="7" class="text-center py-4 text-[var(--text-secondary)]">No recent bookings found.</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-      <div *ngIf="activeTab() === 'offline'" class="tab-content fade-in w-full">
-        <div class="flex flex-col mb-6 gap-4 w-full">
-          <div class="flex items-center justify-between">
-            <h2 class="section-title mb-0 border-none pb-0">Offline Booking</h2>
-            <button class="btn-premium px-4 py-2 text-sm h-[40px]" (click)="loadAvailableSlots()">Refresh Data</button>
-          </div>
-          
-          <div class="flex flex-wrap items-center gap-3 w-full bg-[var(--surface-color)] p-4 rounded-xl border border-[rgba(150,150,150,0.1)] shadow-sm">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Date:</span>
-              <input type="date" [(ngModel)]="selectedDate" [min]="todayDate" class="form-control m-0 border border-[rgba(150,150,150,0.2)] rounded-lg py-1.5 px-3 text-sm bg-transparent text-[var(--text-primary)]" style="color-scheme: var(--color-scheme, dark);" />
-            </div>
+ <div *ngIf="activeTab() === 'offline'" class="tab-content fade-in w-full">
+ <div class="flex flex-col mb-6 gap-4 w-full">
+ <div class="flex items-center justify-between">
+ <h2 class="section-title mb-0 border-none pb-0">Offline Booking</h2>
+ <button class="btn-premium px-4 py-2 text-sm h-[40px]" (click)="loadAvailableSlots()">Refresh Data</button>
+ </div>
+ 
+ <div class="flex flex-wrap items-center gap-3 w-full bg-[var(--surface-color)] p-4 rounded-xl border border-[rgba(150,150,150,0.1)] shadow-sm">
+ <div class="flex items-center gap-2">
+ <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Date:</span>
+ <input type="date" [(ngModel)]="selectedDate" [min]="todayDate" class="form-control m-0 border border-[rgba(150,150,150,0.2)] rounded-lg py-1.5 px-3 text-sm bg-transparent text-[var(--text-primary)]" style="color-scheme: var(--color-scheme, dark);" />
+ </div>
 
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Status:</span>
-              <div class="relative z-40">
-                <button (click)="isStatusDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[150px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
-                  <span class="font-medium truncate">{{ statusFilter() === 'all' ? 'All Slots' : (statusFilter() === 'available' ? 'Available' : (statusFilter() === 'booked' ? 'Booked' : 'Unavailable / Past')) }}</span>
-                  <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isStatusDropdownOpen()"></i>
-                </button>
-                <div *ngIf="isStatusDropdownOpen()" class="absolute top-full left-0 mt-1 w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                  <button (click)="setStatusFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Slots</button>
-                  <button (click)="setStatusFilter('available')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'available' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Available</button>
-                  <button (click)="setStatusFilter('booked')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'booked' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Booked</button>
-                  <button (click)="setStatusFilter('unavailable')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'unavailable' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Unavailable / Past</button>
-                </div>
-              </div>
-              <div *ngIf="isStatusDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isStatusDropdownOpen.set(false)"></div>
-            </div>
+ <div class="flex items-center gap-2">
+ <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Status:</span>
+ <div class="relative z-40">
+ <button (click)="isStatusDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[150px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
+ <span class="font-medium truncate">{{ statusFilter() === 'all' ? 'All Slots' : (statusFilter() === 'available' ? 'Available' : (statusFilter() === 'booked' ? 'Booked' : 'Unavailable / Past')) }}</span>
+ <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isStatusDropdownOpen()"></i>
+ </button>
+ <div *ngIf="isStatusDropdownOpen()" class="absolute top-full left-0 mt-1 w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+ <button (click)="setStatusFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Slots</button>
+ <button (click)="setStatusFilter('available')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'available' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Available</button>
+ <button (click)="setStatusFilter('booked')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'booked' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Booked</button>
+ <button (click)="setStatusFilter('unavailable')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="statusFilter() === 'unavailable' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Unavailable / Past</button>
+ </div>
+ </div>
+ <div *ngIf="isStatusDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isStatusDropdownOpen.set(false)"></div>
+ </div>
 
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Time:</span>
-              <div class="relative z-40">
-                <button (click)="isTimeDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[210px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
-                  <span class="font-medium truncate">{{ timeFilter() === 'all' ? 'All Times' : (timeFilter() === 'day' ? 'Morning (6 AM - 12 PM)' : (timeFilter() === 'afternoon' ? 'Afternoon (12 PM - 5 PM)' : 'Evening (5 PM onwards)')) }}</span>
-                  <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isTimeDropdownOpen()"></i>
-                </button>
-                <div *ngIf="isTimeDropdownOpen()" class="absolute top-full left-0 mt-1 min-w-[210px] w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                  <button (click)="setTimeFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Times</button>
-                  <button (click)="setTimeFilter('day')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'day' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Morning (6 AM - 12 PM)</button>
-                  <button (click)="setTimeFilter('afternoon')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'afternoon' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Afternoon (12 PM - 5 PM)</button>
-                  <button (click)="setTimeFilter('night')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'night' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Evening (5 PM onwards)</button>
-                </div>
-              </div>
-              <div *ngIf="isTimeDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isTimeDropdownOpen.set(false)"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="glass p-6 rounded-lg w-full shadow-sm mb-6">
-          <div *ngIf="filteredSlots.length === 0" class="text-center py-8">
-            <p class="text-[var(--text-secondary)] text-lg">No available slots found for {{ selectedDate | date:'mediumDate' }}.</p>
-          </div>
+ <div class="flex items-center gap-2">
+ <span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Time:</span>
+ <div class="relative z-40">
+ <button (click)="isTimeDropdownOpen.update(v => !v)" class="flex items-center justify-between min-w-[210px] bg-[#13151a]/80 border border-white/10 hover:border-[#7b39fc]/50 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#7b39fc] transition-all shadow-sm">
+ <span class="font-medium truncate">{{ timeFilter() === 'all' ? 'All Times' : (timeFilter() === 'day' ? 'Morning (6 AM - 12 PM)' : (timeFilter() === 'afternoon' ? 'Afternoon (12 PM - 5 PM)' : 'Evening (5 PM onwards)')) }}</span>
+ <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 transition-transform duration-200" [class.rotate-180]="isTimeDropdownOpen()"></i>
+ </button>
+ <div *ngIf="isTimeDropdownOpen()" class="absolute top-full left-0 mt-1 min-w-[210px] w-full bg-[#1a1c23] border border-white/10 rounded-lg shadow-xl py-1 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+ <button (click)="setTimeFilter('all')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'all' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">All Times</button>
+ <button (click)="setTimeFilter('day')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'day' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Morning (6 AM - 12 PM)</button>
+ <button (click)="setTimeFilter('afternoon')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'afternoon' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Afternoon (12 PM - 5 PM)</button>
+ <button (click)="setTimeFilter('night')" class="w-full text-left px-3 py-2 text-sm transition-colors" [ngClass]="timeFilter() === 'night' ? 'bg-[#7b39fc]/20 text-white border-l-2 border-[#7b39fc]' : 'text-slate-300 hover:bg-white/5 hover:text-white border-l-2 border-transparent'">Evening (5 PM onwards)</button>
+ </div>
+ </div>
+ <div *ngIf="isTimeDropdownOpen()" class="fixed inset-0 z-30 cursor-default" (click)="isTimeDropdownOpen.set(false)"></div>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="glass p-6 rounded-lg w-full shadow-sm mb-6">
+ <div *ngIf="filteredSlots.length === 0" class="text-center py-4">
+ <p class="text-[var(--text-secondary)] text-lg">No available slots found for {{ selectedDate | date:'mediumDate' }}.</p>
+ </div>
 
-          <div *ngIf="filteredSlots.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            <div *ngFor="let slot of filteredSlots" 
-                 class="relative overflow-hidden p-5 rounded-2xl border transition-all duration-300 flex flex-col gap-4 group"
-                 [ngClass]="{
-                   'bg-[var(--surface-color)] border-[rgba(150,150,150,0.15)] hover:border-[#7b39fc]/40 hover:shadow-[0_8px_24px_rgba(123,57,252,0.15)] hover:-translate-y-1': !(slot.IsBooked || slot.isBooked) && !isSlotPast(slot),
-                   'bg-gray-100 dark:bg-gray-900/40 border-gray-200 dark:border-gray-800 opacity-60': isSlotPast(slot) && !(slot.IsBooked || slot.isBooked),
-                   'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30': (slot.IsBooked || slot.isBooked)
-                 }">
-                 
-              <!-- Status Badge overlay -->
-              <div class="absolute top-0 right-0">
-                <div *ngIf="(slot.IsBooked || slot.isBooked)" class="bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
-                  Booked
-                </div>
-                <div *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" class="bg-gray-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
-                  Past
-                </div>
-                <div *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" class="bg-green-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
-                  Available
-                </div>
-              </div>
+ <div *ngIf="filteredSlots.length > 0" class="grid grid-cols-1 gap-5">
+ <div *ngFor="let slot of filteredSlots" 
+ class="relative overflow-hidden p-5 rounded-2xl border transition-all duration-300 flex flex-col gap-4 group"
+ [ngClass]="{
+ 'bg-[var(--surface-color)] border-[rgba(150,150,150,0.15)] hover:border-[#7b39fc]/40 hover:shadow-[0_8px_24px_rgba(123,57,252,0.15)] hover:-translate-y-1': !(slot.IsBooked || slot.isBooked) && !isSlotPast(slot),
+ 'bg-gray-100 dark:bg-gray-900/40 border-gray-200 dark:border-gray-800 opacity-60': isSlotPast(slot) && !(slot.IsBooked || slot.isBooked),
+ 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30': (slot.IsBooked || slot.isBooked)
+ }">
+ 
+ <!-- Status Badge overlay -->
+ <div class="absolute top-0 right-0">
+ <div *ngIf="(slot.IsBooked || slot.isBooked)" class="bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
+ Booked
+ </div>
+ <div *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" class="bg-gray-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
+ Past
+ </div>
+ <div *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" class="bg-green-500 text-white text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-bl-xl shadow-sm">
+ Available
+ </div>
+ </div>
 
-              <div class="flex flex-col items-center justify-center pt-2 pb-1">
-                <span class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Time Slot</span>
-                <span class="font-instrument-serif text-2xl font-bold tracking-tight" style="color: var(--text-primary)">
-                  {{ (slot.StartTime || slot.startTime) | date:'h:mm a' }}
-                </span>
-                <span class="text-sm font-medium mt-1" style="color: var(--text-secondary)">
-                  to {{ (slot.EndTime || slot.endTime) | date:'h:mm a' }}
-                </span>
-              </div>
-              
-              <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-[rgba(150,150,150,0.2)] to-transparent"></div>
+ <div class="flex flex-col items-center justify-center pt-2 pb-1">
+ <span class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Time Slot</span>
+ <span class="font-instrument-serif text-2xl font-bold tracking-tight" style="color: var(--text-primary)">
+ {{ (slot.StartTime || slot.startTime) | date:'h:mm a' }}
+ </span>
+ <span class="text-sm font-medium mt-1" style="color: var(--text-secondary)">
+ to {{ (slot.EndTime || slot.endTime) | date:'h:mm a' }}
+ </span>
+ </div>
+ 
+ <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-[rgba(150,150,150,0.2)] to-transparent"></div>
 
-              <button *ngIf="(slot.IsBooked || slot.isBooked)" 
-                      class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 cursor-not-allowed flex items-center justify-center gap-2" disabled title="Bookings">
-                <svg  class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
-                Slot Booked
-              </button>
-              
-              <button *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" 
-                      class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed flex items-center justify-center gap-2" disabled title="Bookings">
-                <svg  class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Unavailable
-              </button>
-              
-              <button *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" 
-                      class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 transform active:scale-95 group-hover:bg-gradient-to-r group-hover:from-[#8b4ffc] group-hover:to-[#6b34d3] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none" 
-                      (click)="bookOffline(slot.SlotId || slot.slotId)"
-                      [disabled]="isBookingSlotId() === (slot.SlotId || slot.slotId)"
-                      title="Bookings">
-                <ng-container *ngIf="isBookingSlotId() !== (slot.SlotId || slot.slotId)">
-                  <svg  class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  Manual Entry
-                </ng-container>
-                <ng-container *ngIf="isBookingSlotId() === (slot.SlotId || slot.slotId)">
-                  <span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                  Booking...
-                </ng-container>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+ <button *ngIf="(slot.IsBooked || slot.isBooked)" 
+ class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 cursor-not-allowed flex items-center justify-center gap-2" disabled title="Bookings">
+ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
+ Slot Booked
+ </button>
+ 
+ <button *ngIf="!(slot.IsBooked || slot.isBooked) && isSlotPast(slot)" 
+ class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed flex items-center justify-center gap-2" disabled title="Bookings">
+ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+ Unavailable
+ </button>
+ 
+ <button *ngIf="!(slot.IsBooked || slot.isBooked) && !isSlotPast(slot)" 
+ class="w-full mt-auto py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 transform active:scale-95 group-hover:bg-gradient-to-r group-hover:from-[#8b4ffc] group-hover:to-[#6b34d3] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none" 
+ (click)="bookOffline(slot.SlotId || slot.slotId)"
+ [disabled]="isBookingSlotId() === (slot.SlotId || slot.slotId)"
+ title="Bookings">
+ <ng-container *ngIf="isBookingSlotId() !== (slot.SlotId || slot.slotId)">
+ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+ Manual Entry
+ </ng-container>
+ <ng-container *ngIf="isBookingSlotId() === (slot.SlotId || slot.slotId)">
+ <span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+ Booking...
+ </ng-container>
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
 
-      <div *ngIf="activeTab() === 'settings'" class="tab-content fade-in">
-        <h2 class="section-title">Turf Settings</h2>
-        <div class="glass p-6 rounded-lg">
-          <form [formGroup]="settingsForm" class="flex flex-col gap-4" (ngSubmit)="saveSettings()">
-            <div class="form-group">
-              <label>Turf Name</label>
-              <input type="text" formControlName="turfName" class="form-control" />
-            </div>
-            <div class="form-group">
-              <label>Base Price Per Hour (₹)</label>
-              <input type="number" formControlName="pricePerHour" class="form-control" />
-            </div>
-            
-            <h3 class="mt-4 mb-2 font-bold text-lg" style="color: var(--text-primary)">Custom Pricing (Optional)</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div class="form-group mb-0">
-                <label>Day Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">6 AM - 12 PM</span></label>
-                <input type="number" formControlName="dayTimePrice" class="form-control" placeholder="Default: Base * 0.75" />
-              </div>
-              <div class="form-group mb-0">
-                <label>Afternoon Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">12 PM - 5 PM</span></label>
-                <input type="number" formControlName="afternoonPrice" class="form-control" placeholder="Default: Base * 1.0" />
-              </div>
-              <div class="form-group mb-0">
-                <label>Night Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">5 PM - Midnight</span></label>
-                <input type="number" formControlName="nightTimePrice" class="form-control" placeholder="Default: Base * 1.125" />
-              </div>
-            </div>
+ <div *ngIf="activeTab() === 'settings'" class="tab-content fade-in">
+ <h2 class="section-title">Turf Settings</h2>
+ <div class="glass p-6 rounded-lg">
+ <form [formGroup]="settingsForm" class="flex flex-col gap-4" (ngSubmit)="saveSettings()">
+ <div class="form-group">
+ <label>Turf Name</label>
+ <input type="text" formControlName="turfName" class="form-control" />
+ </div>
+ <div class="form-group">
+ <label>Base Price Per Hour (₹)</label>
+ <input type="number" formControlName="pricePerHour" class="form-control" />
+ </div>
+ 
+ <h3 class="mt-4 mb-2 font-bold text-lg" style="color: var(--text-primary)">Custom Pricing (Optional)</h3>
+ <div class="grid grid-cols-1 gap-6">
+ <div class="form-group mb-0">
+ <label>Day Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">6 AM - 12 PM</span></label>
+ <input type="number" formControlName="dayTimePrice" class="form-control" placeholder="Default: Base * 0.75" />
+ </div>
+ <div class="form-group mb-0">
+ <label>Afternoon Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">12 PM - 5 PM</span></label>
+ <input type="number" formControlName="afternoonPrice" class="form-control" placeholder="Default: Base * 1.0" />
+ </div>
+ <div class="form-group mb-0">
+ <label>Night Time Price (₹) <br/><span class="text-xs font-normal" style="color: var(--text-secondary)">5 PM - Midnight</span></label>
+ <input type="number" formControlName="nightTimePrice" class="form-control" placeholder="Default: Base * 1.125" />
+ </div>
+ </div>
 
-            <h3 class="mt-6 mb-2 font-bold text-lg" style="color: var(--text-primary)">Turf Image</h3>
-            <div class="flex flex-col md:flex-row gap-6 items-start border border-[rgba(150,150,150,0.2)] rounded-xl p-4 bg-[var(--surface-color)]">
-              <div class="relative w-full max-w-[300px] h-[200px] rounded-lg overflow-hidden border border-[rgba(150,150,150,0.1)] bg-black/10 flex-shrink-0">
-                <img *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" [src]="(imageUrl()!.startsWith('http') || imageUrl()!.startsWith('data:')) ? imageUrl() : 'https://turf-booking-backend-fixl.onrender.com' + imageUrl()" alt="Turf Preview" class="w-full h-full object-cover" />
-                <div *ngIf="!imageUrl() || imageUrl() === 'CLEAR'" class="w-full h-full flex flex-col items-center justify-center text-[var(--text-secondary)]" title="Action">
-                  <svg  class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  <span class="text-sm font-medium">No Image Uploaded</span>
-                </div>
-                
-                <!-- Loading Overlay -->
-                <div *ngIf="isUploadingImage()" class="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-                  <div class="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                </div>
-              </div>
-              
-              <div class="flex flex-col gap-3 w-full">
-                <p class="text-sm text-[var(--text-secondary)]">Upload a high-quality image of your turf to attract more customers. Recommended size: 800x600 pixels or larger.</p>
-                
-                <div class="flex flex-wrap gap-3 mt-2">
-                  <label class="btn-primary cursor-pointer px-5 py-2.5 rounded-lg text-sm font-semibold inline-flex items-center gap-2 hover:shadow-lg transition-all" [class.opacity-50]="isUploadingImage()">
-                    <svg  class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <h3 class="mt-6 mb-2 font-bold text-lg" style="color: var(--text-primary)">Turf Image</h3>
+ <div class="flex flex-col gap-6 items-start border border-[rgba(150,150,150,0.2)] rounded-xl p-4 bg-[var(--surface-color)]">
+ <div class="relative w-full max-w-[300px] h-[200px] rounded-lg overflow-hidden border border-[rgba(150,150,150,0.1)] bg-black/10 flex-shrink-0">
+ <img *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" [src]="(imageUrl()!.startsWith('http') || imageUrl()!.startsWith('data:')) ? imageUrl() : 'https://turf-booking-backend-fixl.onrender.com' + imageUrl()" alt="Turf Preview" class="w-full h-full object-cover" />
+ <div *ngIf="!imageUrl() || imageUrl() === 'CLEAR'" class="w-full h-full flex flex-col items-center justify-center text-[var(--text-secondary)]" title="Action">
+ <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+ <span class="text-sm font-medium">No Image Uploaded</span>
+ </div>
+ 
+ <!-- Loading Overlay -->
+ <div *ngIf="isUploadingImage()" class="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+ <div class="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+ </div>
+ </div>
+ 
+ <div class="flex flex-col gap-3 w-full">
+ <p class="text-sm text-[var(--text-secondary)]">Upload a high-quality image of your turf to attract more customers. Recommended size: 800x600 pixels or larger.</p>
+ 
+ <div class="flex flex-wrap gap-3 mt-2">
+ <label class="btn-primary cursor-pointer px-5 py-2.5 rounded-lg text-sm font-semibold inline-flex items-center gap-2 hover:shadow-lg transition-all" [class.opacity-50]="isUploadingImage()">
+ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <title>Action</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span *ngIf="!isUploadingImage()">Upload New Image</span>
-                    <span *ngIf="isUploadingImage()">Uploading...</span>
-                    <input type="file" class="hidden" accept="image/*" (change)="onImageSelected($event)" [disabled]="isUploadingImage()" />
-                  </label>
-                  
-                  <button type="button" *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" (click)="clearImage()" [disabled]="isUploadingImage()" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20 transition-all">
-                    Clear Image
-                  </button>
-                </div>
-                <p *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" class="text-xs text-yellow-500 mt-2">
-                  <span class="font-bold">Note:</span> Remember to click "Save Changes" below to apply this image.
-                </p>
-              </div>
-            </div>
+ <span *ngIf="!isUploadingImage()">Upload New Image</span>
+ <span *ngIf="isUploadingImage()">Uploading...</span>
+ <input type="file" class="hidden" accept="image/*" (change)="onImageSelected($event)" [disabled]="isUploadingImage()" />
+ </label>
+ 
+ <button type="button" *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" (click)="clearImage()" [disabled]="isUploadingImage()" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20 transition-all">
+ Clear Image
+ </button>
+ </div>
+ <p *ngIf="imageUrl() && imageUrl() !== 'CLEAR'" class="text-xs text-yellow-500 mt-2">
+ <span class="font-bold">Note:</span> Remember to click"Save Changes" below to apply this image.
+ </p>
+ </div>
+ </div>
 
-            <div class="flex items-center gap-3 mt-6 mb-4 p-4 rounded-lg border border-[rgba(150,150,150,0.2)] bg-[var(--surface-color)]">
-              <input type="checkbox" formControlName="isActive" id="isActive" class="w-5 h-5 rounded cursor-pointer accent-[#7b39fc]" />
-              <label for="isActive" class="cursor-pointer font-medium m-0" style="color: var(--text-primary)">Currently Active / Available to Book</label>
-            </div>
-            <div class="mt-4 flex justify-end">
-              <button type="submit" [disabled]="isSavingSettings()" class="btn-premium px-8 py-3 font-bold text-base shadow-md flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed">
-                <ng-container *ngIf="!isSavingSettings()">Save Changes</ng-container>
-                <ng-container *ngIf="isSavingSettings()">
-                  <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                  Saving...
-                </ng-container>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      </ng-container>
+ <div class="flex items-center gap-3 mt-6 mb-4 p-4 rounded-lg border border-[rgba(150,150,150,0.2)] bg-[var(--surface-color)]">
+ <input type="checkbox" formControlName="isActive" id="isActive" class="w-5 h-5 rounded cursor-pointer accent-[#7b39fc]" />
+ <label for="isActive" class="cursor-pointer font-medium m-0" style="color: var(--text-primary)">Currently Active / Available to Book</label>
+ </div>
+ <div class="mt-4 flex justify-end">
+ <button type="submit" [disabled]="isSavingSettings()" class="btn-premium px-4 py-3 font-bold text-base shadow-md flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed">
+ <ng-container *ngIf="!isSavingSettings()">Save Changes</ng-container>
+ <ng-container *ngIf="isSavingSettings()">
+ <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+ Saving...
+ </ng-container>
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
+ </ng-container>
 
-      <ng-template #pendingVerification>
-        <div class="glass w-full h-full flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-[rgba(150,150,150,0.1)] relative overflow-hidden" style="min-height: 60vh;">
-          <div class="absolute inset-0 bg-amber-500/5 z-0"></div>
-          
-          <div class="relative z-10 w-24 h-24 rounded-full bg-amber-500/10 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
-            <i class="fa-solid fa-hourglass-half text-4xl text-amber-500 animate-pulse"></i>
-          </div>
-          
-          <h2 class="relative z-10 text-3xl font-bold mb-4" style="color: var(--text-primary)">Pending Verification</h2>
-          
-          <p class="relative z-10 max-w-md mx-auto text-lg leading-relaxed" style="color: var(--text-secondary)">
-            This turf is currently under review by our administration team. You will gain full access to charts, settings, and offline bookings once it is approved.
-          </p>
-          
-          <div class="relative z-10 mt-8 px-6 py-3 bg-amber-500/10 border border-amber-500/20 rounded-xl inline-flex items-center gap-3">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-            </span>
-            <span class="text-amber-400 font-medium tracking-wide uppercase text-sm">Waiting for SuperAdmin Approval</span>
-          </div>
-        </div>
-      </ng-template>
-    </main>
-  </div>
+ <ng-template #pendingVerification>
+ <div class="glass w-full h-full flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-[rgba(150,150,150,0.1)] relative overflow-hidden" style="min-height: 60vh;">
+ <div class="absolute inset-0 bg-amber-500/5 z-0"></div>
+ 
+ <div class="relative z-10 w-24 h-24 rounded-full bg-amber-500/10 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+ <i class="fa-solid fa-hourglass-half text-4xl text-amber-500 animate-pulse"></i>
+ </div>
+ 
+ <h2 class="relative z-10 text-3xl font-bold mb-4" style="color: var(--text-primary)">Pending Verification</h2>
+ 
+ <p class="relative z-10 max-w-md mx-auto text-lg leading-relaxed" style="color: var(--text-secondary)">
+ This turf is currently under review by our administration team. You will gain full access to charts, settings, and offline bookings once it is approved.
+ </p>
+ 
+ <div class="relative z-10 mt-4 px-6 py-3 bg-amber-500/10 border border-amber-500/20 rounded-xl inline-flex items-center gap-3">
+ <span class="relative flex h-3 w-3">
+ <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+ <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+ </span>
+ <span class="text-amber-400 font-medium tracking-wide uppercase text-sm">Waiting for SuperAdmin Approval</span>
+ </div>
+ </div>
+ </ng-template>
+ </main>
+ </div>
 </div>
 
 <!-- Premium Logout Verification Modal -->
 <div *ngIf="isLogoutModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-  <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-700 fade-in text-white space-y-4 shadow-2xl">
-    <div class="text-center pb-2">
-      <h3 class="text-xl font-bold text-slate-200">Owner Session Logout</h3>
-      <p class="text-xs text-slate-400 mt-1">Verification required to securely exit owner session</p>
-    </div>
+ <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-700 fade-in text-white space-y-4 shadow-2xl">
+ <div class="text-center pb-2">
+ <h3 class="text-xl font-bold text-slate-200">Owner Session Logout</h3>
+ <p class="text-xs text-slate-400 mt-1">Verification required to securely exit owner session</p>
+ </div>
 
-    <!-- Remaining Days Info -->
-    <div class="bg-indigo-600/10 border border-indigo-500/20 p-4 rounded-xl flex items-center justify-between">
-      <div>
-        <span class="block text-xs text-slate-400 uppercase tracking-wider font-semibold">Remaining Partnership</span>
-        <span class="text-lg font-bold text-indigo-400">{{ remainingDays() }} Days Left</span>
-      </div>
-      <div class="text-xs text-right text-slate-400">
-        Subscription validity:<br/>365 Days
-      </div>
-    </div>
+ <!-- Remaining Days Info -->
+ <div class="bg-indigo-600/10 border border-indigo-500/20 p-4 rounded-xl flex items-center justify-between">
+ <div>
+ <span class="block text-xs text-slate-400 uppercase tracking-wider font-semibold">Remaining Partnership</span>
+ <span class="text-lg font-bold text-indigo-400">{{ remainingDays() }} Days Left</span>
+ </div>
+ <div class="text-xs text-right text-slate-400">
+ Subscription validity:<br/>365 Days
+ </div>
+ </div>
 
-    <!-- Terms & Conditions Box -->
-    <div class="space-y-1.5">
-      <label class="text-xs font-bold text-slate-400">Terms & Conditions of Partnership</label>
-      <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 h-32 overflow-y-auto text-xs text-slate-300 space-y-2 leading-relaxed scrollbar-thin">
-        <p>1. <strong>Session Security:</strong> Logging out terminates the active session. Offline bookings and slot configuration settings will remain active.</p>
-        <p>2. <strong>Data Retention:</strong> All user analytics, booking history, and billing records will remain securely stored on the server.</p>
-        <p>3. <strong>Partnership Agreement:</strong> The owner agrees to maintain updated turf information and pricing rules to prevent pricing conflicts.</p>
-        <p>4. <strong>FCM Notifications:</strong> If notifications are disabled, you may miss real-time booking updates and approvals.</p>
-      </div>
-    </div>
+ <!-- Terms & Conditions Box -->
+ <div class="space-y-1.5">
+ <label class="text-xs font-bold text-slate-400">Terms & Conditions of Partnership</label>
+ <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 h-32 overflow-y-auto text-xs text-slate-300 space-y-2 leading-relaxed scrollbar-thin">
+ <p>1. <strong>Session Security:</strong> Logging out terminates the active session. Offline bookings and slot configuration settings will remain active.</p>
+ <p>2. <strong>Data Retention:</strong> All user analytics, booking history, and billing records will remain securely stored on the server.</p>
+ <p>3. <strong>Partnership Agreement:</strong> The owner agrees to maintain updated turf information and pricing rules to prevent pricing conflicts.</p>
+ <p>4. <strong>FCM Notifications:</strong> If notifications are disabled, you may miss real-time booking updates and approvals.</p>
+ </div>
+ </div>
 
-    <!-- OTP Sending Status / Input -->
-    <div class="space-y-3 pt-2">
-      <div *ngIf="!otpSent()" class="space-y-2">
-        <p class="text-xs text-slate-400 text-center leading-relaxed">A 6-digit one-time passcode (OTP) will be dispatched to your registered email address to verify this logout request.</p>
-        <button (click)="sendLogoutOtp()" [disabled]="isSendingOtp()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 text-white rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2">
-          <span *ngIf="isSendingOtp()" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
-          {{ isSendingOtp() ? 'Sending OTP...' : 'Send Verification OTP' }}
-        </button>
-      </div>
+ <!-- OTP Sending Status / Input -->
+ <div class="space-y-3 pt-2">
+ <div *ngIf="!otpSent()" class="space-y-2">
+ <p class="text-xs text-slate-400 text-center leading-relaxed">A 6-digit one-time passcode (OTP) will be dispatched to your registered email address to verify this logout request.</p>
+ <button (click)="sendLogoutOtp()" [disabled]="isSendingOtp()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 text-white rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2">
+ <span *ngIf="isSendingOtp()" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+ {{ isSendingOtp() ? 'Sending OTP...' : 'Send Verification OTP' }}
+ </button>
+ </div>
 
-      <div *ngIf="otpSent()" class="space-y-3">
-        <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg text-center">
-          <p class="text-xs text-emerald-400 font-semibold">OTP sent to: {{ maskedEmail() }}</p>
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 font-semibold mb-1 block">Enter 6-Digit OTP</label>
-          <input [(ngModel)]="logoutOtpCode" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 text-center text-lg tracking-widest font-mono outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20" placeholder="000000" maxlength="6" />
-        </div>
-        
-        <div class="flex gap-2">
-          <button (click)="resendOtp()" [disabled]="isSendingOtp()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 disabled:bg-slate-900 rounded-lg text-xs font-semibold text-slate-300 transition-colors">
-            Resend OTP
-          </button>
-          <button (click)="verifyAndLogout()" [disabled]="isVerifyingOtp()" class="flex-1 py-2 bg-red-600 hover:bg-red-500 disabled:bg-red-800 rounded-lg text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5">
-            <span *ngIf="isVerifyingOtp()" class="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent"></span>
-            Verify & Logout
-          </button>
-        </div>
-      </div>
-    </div>
+ <div *ngIf="otpSent()" class="space-y-3">
+ <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg text-center">
+ <p class="text-xs text-emerald-400 font-semibold">OTP sent to: {{ maskedEmail() }}</p>
+ </div>
+ <div>
+ <label class="text-xs text-slate-400 font-semibold mb-1 block">Enter 6-Digit OTP</label>
+ <input [(ngModel)]="logoutOtpCode" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg p-2.5 text-center text-lg tracking-widest font-mono outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20" placeholder="000000" maxlength="6" />
+ </div>
+ 
+ <div class="flex gap-2">
+ <button (click)="resendOtp()" [disabled]="isSendingOtp()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 disabled:bg-slate-900 rounded-lg text-xs font-semibold text-slate-300 transition-colors">
+ Resend OTP
+ </button>
+ <button (click)="verifyAndLogout()" [disabled]="isVerifyingOtp()" class="flex-1 py-2 bg-red-600 hover:bg-red-500 disabled:bg-red-800 rounded-lg text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5">
+ <span *ngIf="isVerifyingOtp()" class="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent"></span>
+ Verify & Logout
+ </button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Close Modal Option -->
-    <div class="text-center pt-2">
-      <button (click)="closeLogoutModal()" class="text-xs text-slate-500 hover:text-slate-400 font-semibold underline">
-        Cancel Logout
-      </button>
-    </div>
-  </div>
+ <!-- Close Modal Option -->
+ <div class="text-center pt-2">
+ <button (click)="closeLogoutModal()" class="text-xs text-slate-500 hover:text-slate-400 font-semibold underline">
+ Cancel Logout
+ </button>
+ </div>
+ </div>
 </div>
 
 <!-- Cancellation Modal (Matches My Bookings style) -->
 <div class="modal-overlay" *ngIf="isCancelModalOpen()">
-  <div class="modal-content glass">
-    <h3>Cancel Booking</h3>
-    <p>Please provide a reason for cancelling this booking. This will be sent to the customer's email.</p>
-    <textarea 
-      [(ngModel)]="cancelReason" 
-      placeholder="e.g., Turf maintenance, Double booking, Weather conditions..." 
-      rows="4"
-      class="form-control"
-      style="width: 100%; border-radius: 12px; background: var(--input-bg); color: var(--input-color); border: 1px solid var(--input-border); padding: 1rem; resize: vertical;">
-    </textarea>
-    <div class="modal-actions">
-      <button class="btn-secondary btn-uniform" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
-      <button class="btn-cancel-confirm btn-uniform" (click)="confirmCancel()" [disabled]="isCancelling()">
-        <span *ngIf="!isCancelling()">Confirm Cancel</span>
-        <span *ngIf="isCancelling()" class="w-4 h-4 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin"></span>
-      </button>
-    </div>
-  </div>
+ <div class="modal-content glass">
+ <h3>Cancel Booking</h3>
+ <p>Please provide a reason for cancelling this booking. This will be sent to the customer's email.</p>
+ <textarea 
+ [(ngModel)]="cancelReason" 
+ placeholder="e.g., Turf maintenance, Double booking, Weather conditions..." 
+ rows="4"
+ class="form-control"
+ style="width: 100%; border-radius: 12px; background: var(--input-bg); color: var(--input-color); border: 1px solid var(--input-border); padding: 1rem; resize: vertical;">
+ </textarea>
+ <div class="modal-actions">
+ <button class="btn-secondary btn-uniform" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
+ <button class="btn-cancel-confirm btn-uniform" (click)="confirmCancel()" [disabled]="isCancelling()">
+ <span *ngIf="!isCancelling()">Confirm Cancel</span>
+ <span *ngIf="isCancelling()" class="w-4 h-4 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin"></span>
+ </button>
+ </div>
+ </div>
 </div>
 
 <style>
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    animation: fadeIn 0.3s ease;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+ .modal-overlay {
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: rgba(0, 0, 0, 0.5);
+ backdrop-filter: blur(4px);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ z-index: 2000;
+ animation: fadeIn 0.3s ease;
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; }
+ to { opacity: 1; }
+ }
 </style>

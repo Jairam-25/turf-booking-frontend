@@ -1,629 +1,629 @@
 <!-- Global Animated Circular Transition Overlay (Super Admin Red) -->
 <div class="goal-overlay" [class.active]="isOverlayActive()" style="background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%); z-index: 10000;">
-  <div class="transition-content text-center">
-    <span class="overlay-label block" style="color: rgba(255,255,255,0.9)">Welcome Back</span>
-    <span class="overlay-brand block truncate max-w-[90vw]" style="color: white;">Super Admin</span>
-  </div>
+ <div class="transition-content text-center">
+ <span class="overlay-label block" style="color: rgba(255,255,255,0.9)">Welcome Back</span>
+ <span class="overlay-brand block truncate max-w-[90vw]" style="color: white;">Super Admin</span>
+ </div>
 </div>
 
 <div class="owner-dashboard-page container-fluid spacing-vertical-24 fade-in relative">
-  <!-- Magic Particles Background -->
-  <app-magic-particles [quantity]="80" [color]="'#ef4444'"></app-magic-particles>
+ <!-- Magic Particles Background -->
+ <app-magic-particles [quantity]="80" [color]="'#ef4444'"></app-magic-particles>
 
-  <div class="dashboard-header glass relative z-[50]">
-    <div class="header-left">
-      <h1 class="font-instrument-serif text-3xl md:text-4xl text-[var(--text-primary)]">SuperAdmin Portal</h1>
-      <p class="text-[var(--text-secondary)] mt-1">Full System Overview</p>
-    </div>
-  </div>
+ <div class="dashboard-header glass relative z-[50]">
+ <div class="header-left">
+ <h1 class="font-instrument-serif text-3xl text-[var(--text-primary)]">SuperAdmin Portal</h1>
+ <p class="text-[var(--text-secondary)] mt-1">Full System Overview</p>
+ </div>
+ </div>
 
-  <div class="dashboard-layout relative z-10">
-    <aside class="dashboard-sidebar glass">
-      <nav class="sidebar-nav">
-        <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
-        <button class="sidebar-link" [class.active]="activeTab() === 'users'" (click)="setTab('users')">User Management</button>
-        <button class="sidebar-link flex justify-between items-center w-full" [class.active]="activeTab() === 'verifications'" (click)="setTab('verifications')">
-          <span>Owner Verifications</span>
-          <span *ngIf="superadminStateService.pendingVerificationsCount() > 0" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-2">
-            {{ superadminStateService.pendingVerificationsCount() }}
-          </span>
-        </button>
-      </nav>
-    </aside>
+ <div class="dashboard-layout relative z-10">
+ <aside class="dashboard-sidebar glass">
+ <nav class="sidebar-nav">
+ <button class="sidebar-link" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+ <button class="sidebar-link" [class.active]="activeTab() === 'users'" (click)="setTab('users')">User Management</button>
+ <button class="sidebar-link flex justify-between items-center w-full" [class.active]="activeTab() === 'verifications'" (click)="setTab('verifications')">
+ <span>Owner Verifications</span>
+ <span *ngIf="superadminStateService.pendingVerificationsCount() > 0" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-2">
+ {{ superadminStateService.pendingVerificationsCount() }}
+ </span>
+ </button>
+ </nav>
+ </aside>
 
-    <main class="dashboard-content text-white">
-      <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
-        <h2 class="section-title">System Metrics</h2>
-        
-        <!-- Top Metrics Row -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #3b82f6;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Users</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #10b981;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Active Users</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.activeUsers }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #f59e0b;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Inactive Users</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.inactiveUsers }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Blocked Users</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.blockedUsers }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #a855f7;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Owners</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</h3>
-          </div>
-        </div>
+ <main class="dashboard-content text-white">
+ <div *ngIf="activeTab() === 'overview'" class="tab-content fade-in">
+ <h2 class="section-title">System Metrics</h2>
+ 
+ <!-- Top Metrics Row -->
+ <div class="grid grid-cols-2 gap-4 mb-6">
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #3b82f6;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Users</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #10b981;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Active Users</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.activeUsers }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #f59e0b;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Inactive Users</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.inactiveUsers }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #ef4444;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Blocked Users</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.blockedUsers }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #a855f7;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Owners</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</h3>
+ </div>
+ </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Revenue</span>
-            <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ stats.revenue | number }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Turfs</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</h3>
-          </div>
-          <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
-            <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Bookings</span>
-            <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.bookings }}</h3>
-          </div>
-        </div>
+ <div class="grid grid-cols-2 gap-4 mb-6">
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm" style="border-bottom: 3px solid #22c55e;">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Revenue</span>
+ <h3 class="text-2xl font-bold" style="color: #22c55e">₹{{ stats.revenue | number }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Turfs</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</h3>
+ </div>
+ <div class="glass p-4 rounded-lg flex flex-col justify-center text-center shadow-sm">
+ <span class="text-xs uppercase tracking-wider mb-1" style="color: var(--text-secondary)">Total Bookings</span>
+ <h3 class="text-2xl font-bold" style="color: var(--text-primary)">{{ stats.bookings }}</h3>
+ </div>
+ </div>
 
-        <!-- All Turfs Box-Wise Section -->
-        <div class="mt-8">
-          <h3 class="text-xl font-bold text-[var(--text-primary)] mb-4">All Registered Turfs</h3>
-          
-          <div *ngIf="turfsList().length === 0" class="glass p-8 rounded-[1.5rem] text-center text-[var(--text-secondary)] font-semibold shadow-md">
-            No turfs registered yet.
-          </div>
-          
-          <div *ngIf="turfsList().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div *ngFor="let turf of turfsList()" 
-                 (click)="viewTurfBookings(turf)"
-                 class="glass p-5 rounded-2xl cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all duration-300 border border-[rgba(150,150,150,0.1)] group flex flex-col justify-between">
-              <div>
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="font-bold text-lg text-[var(--text-primary)]">{{ turf.name }}</h4>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                    [ngClass]="{
-                      'bg-emerald-500/10 text-emerald-400': turf.status === 'Approved',
-                      'bg-yellow-500/10 text-yellow-400': turf.status === 'Pending Verification' || turf.status === 'Under Review',
-                      'bg-red-500/10 text-red-400': turf.status === 'Rejected'
-                    }">
-                    {{ turf.status === 'Approved' ? 'Active' : turf.status }}
-                  </span>
-                </div>
-                <p class="text-xs text-[var(--text-secondary)] mb-4 flex items-start gap-1.5 line-clamp-2">
-                  <i class="fa-solid fa-location-dot mt-0.5"></i> {{ turf.location }}
-                </p>
-                <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg mb-4">
-                  <div class="text-xs text-[var(--text-secondary)] mb-1">Owner: <span class="text-[var(--text-primary)] font-medium">{{ turf.ownerName }}</span></div>
-                  <div class="text-xs text-[var(--text-secondary)] truncate">{{ turf.ownerEmail }}</div>
-                </div>
-              </div>
-              <div class="flex justify-between items-end mt-2 pt-3 border-t border-[var(--glass-border)]">
-                <div>
-                  <div class="text-xs text-[var(--text-secondary)]">Price</div>
-                  <div class="font-bold text-emerald-400">₹{{ turf.price }}/hr</div>
-                </div>
-                <div class="text-right">
-                  <div class="text-xs text-[var(--text-secondary)]">Total Bookings</div>
-                  <div class="font-bold text-blue-400 text-lg group-hover:text-blue-300 transition-colors">{{ turf.totalBookings }} <i class="fa-solid fa-arrow-right text-[10px] ml-1 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all"></i></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+ <!-- All Turfs Box-Wise Section -->
+ <div class="mt-4">
+ <h3 class="text-xl font-bold text-[var(--text-primary)] mb-4">All Registered Turfs</h3>
+ 
+ <div *ngIf="turfsList().length === 0" class="glass p-4 rounded-[1.5rem] text-center text-[var(--text-secondary)] font-semibold shadow-md">
+ No turfs registered yet.
+ </div>
+ 
+ <div *ngIf="turfsList().length > 0" class="grid grid-cols-1 gap-6">
+ <div *ngFor="let turf of turfsList()" 
+ (click)="viewTurfBookings(turf)"
+ class="glass p-5 rounded-2xl cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all duration-300 border border-[rgba(150,150,150,0.1)] group flex flex-col justify-between">
+ <div>
+ <div class="flex justify-between items-start mb-3">
+ <h4 class="font-bold text-lg text-[var(--text-primary)]">{{ turf.name }}</h4>
+ <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+ [ngClass]="{
+ 'bg-emerald-500/10 text-emerald-400': turf.status === 'Approved',
+ 'bg-yellow-500/10 text-yellow-400': turf.status === 'Pending Verification' || turf.status === 'Under Review',
+ 'bg-red-500/10 text-red-400': turf.status === 'Rejected'
+ }">
+ {{ turf.status === 'Approved' ? 'Active' : turf.status }}
+ </span>
+ </div>
+ <p class="text-xs text-[var(--text-secondary)] mb-4 flex items-start gap-1.5 line-clamp-2">
+ <i class="fa-solid fa-location-dot mt-0.5"></i> {{ turf.location }}
+ </p>
+ <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg mb-4">
+ <div class="text-xs text-[var(--text-secondary)] mb-1">Owner: <span class="text-[var(--text-primary)] font-medium">{{ turf.ownerName }}</span></div>
+ <div class="text-xs text-[var(--text-secondary)] truncate">{{ turf.ownerEmail }}</div>
+ </div>
+ </div>
+ <div class="flex justify-between items-end mt-2 pt-3 border-t border-[var(--glass-border)]">
+ <div>
+ <div class="text-xs text-[var(--text-secondary)]">Price</div>
+ <div class="font-bold text-emerald-400">₹{{ turf.price }}/hr</div>
+ </div>
+ <div class="text-right">
+ <div class="text-xs text-[var(--text-secondary)]">Total Bookings</div>
+ <div class="font-bold text-blue-400 text-lg group-hover:text-blue-300 transition-colors">{{ turf.totalBookings }} <i class="fa-solid fa-arrow-right text-[10px] ml-1 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all"></i></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- System Capacity Radial Chart Card -->
-        <div class="glass p-8 rounded-[1.5rem] mt-8 flex flex-col md:flex-row items-center gap-8 shadow-md border border-[rgba(150,150,150,0.1)] animate-fade-in-up">
-          <div class="flex-1 flex flex-col justify-center px-4">
-            <h3 class="font-bold text-xl mb-1" style="color: var(--text-primary)">System Capacity Overview</h3>
-            <p class="text-sm mb-8" style="color: var(--text-secondary)">Current vs Maximum Target Capacity</p>
-            
-            <div class="flex flex-col gap-6">
-              <div>
-                <div class="flex items-baseline gap-1">
-                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</span>
-                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/2000</span>
-                </div>
-                <div class="flex items-center gap-2 mt-1">
-                  <div class="w-3 h-3 rounded-[3px]" style="background: #a855f7;"></div>
-                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Users</span>
-                </div>
-              </div>
+ <!-- System Capacity Radial Chart Card -->
+ <div class="glass p-4 rounded-[1.5rem] mt-4 flex flex-col items-center gap-4 shadow-md border border-[rgba(150,150,150,0.1)] animate-fade-in-up">
+ <div class="flex-1 flex flex-col justify-center px-4">
+ <h3 class="font-bold text-xl mb-1" style="color: var(--text-primary)">System Capacity Overview</h3>
+ <p class="text-sm mb-4" style="color: var(--text-secondary)">Current vs Maximum Target Capacity</p>
+ 
+ <div class="flex flex-col gap-6">
+ <div>
+ <div class="flex items-baseline gap-1">
+ <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.users }}</span>
+ <span class="text-lg font-medium" style="color: var(--text-secondary)">/2000</span>
+ </div>
+ <div class="flex items-center gap-2 mt-1">
+ <div class="w-3 h-3 rounded-[3px]" style="background: #a855f7;"></div>
+ <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Users</span>
+ </div>
+ </div>
 
-              <div>
-                <div class="flex items-baseline gap-1">
-                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</span>
-                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/100</span>
-                </div>
-                <div class="flex items-center gap-2 mt-1">
-                  <div class="w-3 h-3 rounded-[3px]" style="background: #ec4899;"></div>
-                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Turfs</span>
-                </div>
-              </div>
+ <div>
+ <div class="flex items-baseline gap-1">
+ <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.turfs }}</span>
+ <span class="text-lg font-medium" style="color: var(--text-secondary)">/100</span>
+ </div>
+ <div class="flex items-center gap-2 mt-1">
+ <div class="w-3 h-3 rounded-[3px]" style="background: #ec4899;"></div>
+ <span class="text-sm font-medium" style="color: var(--text-secondary)">Active Turfs</span>
+ </div>
+ </div>
 
-              <div>
-                <div class="flex items-baseline gap-1">
-                  <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</span>
-                  <span class="text-lg font-medium" style="color: var(--text-secondary)">/50</span>
-                </div>
-                <div class="flex items-center gap-2 mt-1">
-                  <div class="w-3 h-3 rounded-[3px]" style="background: #eab308;"></div>
-                  <span class="text-sm font-medium" style="color: var(--text-secondary)">Registered Owners</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="w-full md:w-[350px] h-[350px] relative flex justify-center items-center">
-            <canvas id="radialChart"></canvas>
-          </div>
-        </div>
-      </div>
+ <div>
+ <div class="flex items-baseline gap-1">
+ <span class="text-3xl font-bold" style="color: var(--text-primary)">{{ stats.owners }}</span>
+ <span class="text-lg font-medium" style="color: var(--text-secondary)">/50</span>
+ </div>
+ <div class="flex items-center gap-2 mt-1">
+ <div class="w-3 h-3 rounded-[3px]" style="background: #eab308;"></div>
+ <span class="text-sm font-medium" style="color: var(--text-secondary)">Registered Owners</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="w-full ] h-[350px] relative flex justify-center items-center">
+ <canvas id="radialChart"></canvas>
+ </div>
+ </div>
+ </div>
 
-      <!-- Users Management Tab -->
-      <div *ngIf="activeTab() === 'users'" class="tab-content fade-in space-y-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <h2 class="section-title text-2xl font-bold m-0">User Management</h2>
-          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <input type="text" [(ngModel)]="userSearchQuery" placeholder="Search name, email, phone..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
-            
-            <select [(ngModel)]="userStatusFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-              <option value="All" class="bg-[var(--bg-card)]">All Status</option>
-              <option value="Active" class="bg-[var(--bg-card)]">Active</option>
-              <option value="Inactive" class="bg-[var(--bg-card)]">Inactive</option>
-              <option value="Blocked" class="bg-[var(--bg-card)]">Blocked</option>
-            </select>
-          </div>
-        </div>
+ <!-- Users Management Tab -->
+ <div *ngIf="activeTab() === 'users'" class="tab-content fade-in space-y-6">
+ <div class="flex flex-col justify-between items-start gap-4">
+ <h2 class="section-title text-2xl font-bold m-0">User Management</h2>
+ <div class="flex flex-wrap items-center gap-3 w-full">
+ <input type="text" [(ngModel)]="userSearchQuery" placeholder="Search name, email, phone..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
+ 
+ <select [(ngModel)]="userStatusFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+ <option value="All" class="bg-[var(--bg-card)]">All Status</option>
+ <option value="Active" class="bg-[var(--bg-card)]">Active</option>
+ <option value="Inactive" class="bg-[var(--bg-card)]">Inactive</option>
+ <option value="Blocked" class="bg-[var(--bg-card)]">Blocked</option>
+ </select>
+ </div>
+ </div>
 
-        <div class="overflow-x-auto rounded-xl border border-[var(--glass-border)]">
-          <table class="w-full text-left border-collapse min-w-[800px]">
-            <thead>
-              <tr class="bg-black/30 text-[var(--text-secondary)] text-xs uppercase tracking-wider">
-                <th class="p-3 font-semibold">User Details</th>
-                <th class="p-3 font-semibold">Activity & Status</th>
-                <th class="p-3 font-semibold">Booking Stats</th>
-                <th class="p-3 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-[var(--glass-border)] bg-black/10">
-              <tr *ngFor="let user of filteredUsers()" class="hover:bg-black/20 transition-colors">
-                <td class="p-3">
-                  <div class="font-bold text-[var(--text-primary)] text-sm">{{ user.name }}</div>
-                  <div class="text-[11px] text-[var(--text-secondary)] mt-0.5">{{ user.email }}</div>
-                  <div class="text-[11px] text-[var(--text-secondary)]">{{ user.phoneNumber }}</div>
-                  <div class="text-[9px] text-gray-500 mt-1">Reg: {{ user.registrationDate | date:'mediumDate' }}</div>
-                </td>
-                <td class="p-3">
-                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2"
-                    [ngClass]="{
-                      'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': user.status === 'Active',
-                      'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': user.status === 'Inactive',
-                      'bg-red-500/10 text-red-400 border border-red-500/20': user.status === 'Blocked'
-                    }">
-                    <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{'bg-emerald-400': user.status === 'Active', 'bg-yellow-400': user.status === 'Inactive', 'bg-red-400': user.status === 'Blocked'}"></span>
-                    {{ user.status }}
-                  </span>
-                  <div class="text-xs text-[var(--text-secondary)]">
-                    Last Active:<br/>
-                    <span class="text-[var(--text-primary)]">{{ user.lastActive ? (user.lastActive | date:'short') : 'Never' }}</span>
-                  </div>
-                </td>
-                <td class="p-4">
-                  <div class="text-sm cursor-pointer group flex items-center gap-1.5 transition-all w-fit" (click)="viewUserBookings(user)">
-                    <span class="text-[var(--text-secondary)] transition-colors group-hover:text-blue-400">Total :</span> 
-                    <span class="font-bold text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">{{ user.totalBookings }}</span>
-                    <i class="fa-solid fa-arrow-right text-[10px] text-[var(--text-secondary)] opacity-0 -translate-x-2 group-hover:text-blue-400 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out"></i>
-                  </div>
-                  <div class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-[150px]" *ngIf="user.favoriteTurf">
-                    Fav: {{ user.favoriteTurf }}
-                  </div>
-                  <div class="text-[10px] text-gray-500 mt-1" *ngIf="user.latestBookingDate">
-                    Last: {{ user.latestBookingDate | date:'mediumDate' }}
-                  </div>
-                </td>
-                <td class="p-4 text-right">
-                  <div class="flex flex-col gap-2 items-end">
-                    <button *ngIf="user.status !== 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Blocked')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
-                      Block User
-                    </button>
-                    <button *ngIf="user.status === 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
-                      Unblock
-                    </button>
-                    <button *ngIf="user.status === 'Active'" (click)="updateUserStatusPrompt(user.id, 'Inactive')" class="px-3 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
-                      Mark Inactive
-                    </button>
-                    <button *ngIf="user.status === 'Inactive'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
-                      Mark Active
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngIf="filteredUsers().length === 0">
-                <td colspan="4" class="p-8 text-center text-[var(--text-secondary)] font-semibold">
-                  No users found matching your criteria.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+ <div class="overflow-x-auto rounded-xl border border-[var(--glass-border)]">
+ <table class="w-full text-left border-collapse min-w-[800px]">
+ <thead>
+ <tr class="bg-black/30 text-[var(--text-secondary)] text-xs uppercase tracking-wider">
+ <th class="p-3 font-semibold">User Details</th>
+ <th class="p-3 font-semibold">Activity & Status</th>
+ <th class="p-3 font-semibold">Booking Stats</th>
+ <th class="p-3 font-semibold text-right">Actions</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-[var(--glass-border)] bg-black/10">
+ <tr *ngFor="let user of filteredUsers()" class="hover:bg-black/20 transition-colors">
+ <td class="p-3">
+ <div class="font-bold text-[var(--text-primary)] text-sm">{{ user.name }}</div>
+ <div class="text-[11px] text-[var(--text-secondary)] mt-0.5">{{ user.email }}</div>
+ <div class="text-[11px] text-[var(--text-secondary)]">{{ user.phoneNumber }}</div>
+ <div class="text-[9px] text-gray-500 mt-1">Reg: {{ user.registrationDate | date:'mediumDate' }}</div>
+ </td>
+ <td class="p-3">
+ <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2"
+ [ngClass]="{
+ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': user.status === 'Active',
+ 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': user.status === 'Inactive',
+ 'bg-red-500/10 text-red-400 border border-red-500/20': user.status === 'Blocked'
+ }">
+ <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{'bg-emerald-400': user.status === 'Active', 'bg-yellow-400': user.status === 'Inactive', 'bg-red-400': user.status === 'Blocked'}"></span>
+ {{ user.status }}
+ </span>
+ <div class="text-xs text-[var(--text-secondary)]">
+ Last Active:<br/>
+ <span class="text-[var(--text-primary)]">{{ user.lastActive ? (user.lastActive | date:'short') : 'Never' }}</span>
+ </div>
+ </td>
+ <td class="p-4">
+ <div class="text-sm cursor-pointer group flex items-center gap-1.5 transition-all w-fit" (click)="viewUserBookings(user)">
+ <span class="text-[var(--text-secondary)] transition-colors group-hover:text-blue-400">Total :</span> 
+ <span class="font-bold text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">{{ user.totalBookings }}</span>
+ <i class="fa-solid fa-arrow-right text-[10px] text-[var(--text-secondary)] opacity-0 -translate-x-2 group-hover:text-blue-400 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out"></i>
+ </div>
+ <div class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-[150px]" *ngIf="user.favoriteTurf">
+ Fav: {{ user.favoriteTurf }}
+ </div>
+ <div class="text-[10px] text-gray-500 mt-1" *ngIf="user.latestBookingDate">
+ Last: {{ user.latestBookingDate | date:'mediumDate' }}
+ </div>
+ </td>
+ <td class="p-4 text-right">
+ <div class="flex flex-col gap-2 items-end">
+ <button *ngIf="user.status !== 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Blocked')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
+ Block User
+ </button>
+ <button *ngIf="user.status === 'Blocked'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
+ Unblock
+ </button>
+ <button *ngIf="user.status === 'Active'" (click)="updateUserStatusPrompt(user.id, 'Inactive')" class="px-3 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
+ Mark Inactive
+ </button>
+ <button *ngIf="user.status === 'Inactive'" (click)="updateUserStatusPrompt(user.id, 'Active')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold transition-colors w-28 whitespace-nowrap">
+ Mark Active
+ </button>
+ </div>
+ </td>
+ </tr>
+ <tr *ngIf="filteredUsers().length === 0">
+ <td colspan="4" class="p-4 text-center text-[var(--text-secondary)] font-semibold">
+ No users found matching your criteria.
+ </td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-      <!-- New Verifications Tab -->
-      <div *ngIf="activeTab() === 'verifications'" class="tab-content fade-in space-y-6">
-        <h2 class="section-title text-2xl font-bold">Owner & Turf Verification Requests</h2>
+ <!-- New Verifications Tab -->
+ <div *ngIf="activeTab() === 'verifications'" class="tab-content fade-in space-y-6">
+ <h2 class="section-title text-2xl font-bold">Owner & Turf Verification Requests</h2>
 
-        <div class="space-y-6">
-          <div *ngFor="let ver of verifications()" class="glass p-6 rounded-2xl border border-slate-800/80 space-y-4">
-            <div class="flex flex-wrap justify-between items-center gap-4 pb-4 border-b border-slate-800 cursor-pointer hover:bg-white/5 transition-colors p-2 -mx-2 rounded-lg" (click)="toggleExpandedOwner(ver.ownerId)">
-              <div>
-                <h3 class="text-xl font-bold" style="color: var(--text-primary);">{{ ver.fullName }} <span class="text-sm font-normal ml-2" style="color: var(--text-secondary);">({{ ver.turfs?.length || 0 }} turfs)</span></h3>
-                <p class="text-xs mt-1" style="color: var(--text-secondary);">UserId: {{ ver.userId }} | Email: {{ ver.email }} | Mob: {{ ver.mobileNumber }}</p>
-                <p class="text-xs" style="color: var(--text-secondary);">Address: {{ ver.address }}</p>
-              </div>
-              <div class="flex items-center gap-4">
-                <div class="flex flex-col items-end gap-2">
-                  <!-- Owner General Status -->
-                  <span class="status-badge px-3 py-1 rounded-full text-xs font-semibold" 
-                        [ngClass]="{
-                          'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': ver.status === 'Approved',
-                          'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': ver.status === 'Pending Verification' || ver.status === 'Under Review',
-                          'bg-red-500/10 text-red-400 border border-red-500/20': ver.status === 'Rejected'
-                        }">
-                    Owner Status: {{ ver.status }}
-                  </span>
-                  
-                  <!-- Turf Counts -->
-                  <div class="flex gap-2">
-                    <span *ngIf="ver.activeTurfsCount > 0" class="status-badge px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
-                      {{ ver.activeTurfsCount }} Active Turf{{ ver.activeTurfsCount > 1 ? 's' : '' }}
-                    </span>
-                    <span *ngIf="ver.pendingTurfsCount > 0" class="status-badge px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 uppercase tracking-wider">
-                      {{ ver.pendingTurfsCount }} Pending
-                    </span>
-                  </div>
-                </div>
-                <i class="fa-solid fa-chevron-down transition-transform duration-300" style="color: var(--text-secondary);" [class.rotate-180]="expandedOwnerId() === ver.ownerId"></i>
-              </div>
-            </div>
+ <div class="space-y-6">
+ <div *ngFor="let ver of verifications()" class="glass p-6 rounded-2xl border border-slate-800/80 space-y-4">
+ <div class="flex flex-wrap justify-between items-center gap-4 pb-4 border-b border-slate-800 cursor-pointer hover:bg-white/5 transition-colors p-2 -mx-2 rounded-lg" (click)="toggleExpandedOwner(ver.ownerId)">
+ <div>
+ <h3 class="text-xl font-bold" style="color: var(--text-primary);">{{ ver.fullName }} <span class="text-sm font-normal ml-2" style="color: var(--text-secondary);">({{ ver.turfs?.length || 0 }} turfs)</span></h3>
+ <p class="text-xs mt-1" style="color: var(--text-secondary);">UserId: {{ ver.userId }} | Email: {{ ver.email }} | Mob: {{ ver.mobileNumber }}</p>
+ <p class="text-xs" style="color: var(--text-secondary);">Address: {{ ver.address }}</p>
+ </div>
+ <div class="flex items-center gap-4">
+ <div class="flex flex-col items-end gap-2">
+ <!-- Owner General Status -->
+ <span class="status-badge px-3 py-1 rounded-full text-xs font-semibold" 
+ [ngClass]="{
+ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': ver.status === 'Approved',
+ 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': ver.status === 'Pending Verification' || ver.status === 'Under Review',
+ 'bg-red-500/10 text-red-400 border border-red-500/20': ver.status === 'Rejected'
+ }">
+ Owner Status: {{ ver.status }}
+ </span>
+ 
+ <!-- Turf Counts -->
+ <div class="flex gap-2">
+ <span *ngIf="ver.activeTurfsCount > 0" class="status-badge px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
+ {{ ver.activeTurfsCount }} Active Turf{{ ver.activeTurfsCount > 1 ? 's' : '' }}
+ </span>
+ <span *ngIf="ver.pendingTurfsCount > 0" class="status-badge px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 uppercase tracking-wider">
+ {{ ver.pendingTurfsCount }} Pending
+ </span>
+ </div>
+ </div>
+ <i class="fa-solid fa-chevron-down transition-transform duration-300" style="color: var(--text-secondary);" [class.rotate-180]="expandedOwnerId() === ver.ownerId"></i>
+ </div>
+ </div>
 
-            <!-- Turfs List (Expanded) -->
-            <div *ngIf="expandedOwnerId() === ver.ownerId" class="space-y-6 animate-in slide-in-from-top-2 duration-300 pt-2">
-               <div *ngIf="!ver.turfs || ver.turfs.length === 0" class="text-sm italic py-2" style="color: var(--text-secondary);">
-                 Payment cleared, but turf details and documents package not yet submitted.
-               </div>
-               
-               <div *ngFor="let turf of ver.turfs; let i = index" class="border rounded-xl p-5" style="border-color: var(--border-color); background: var(--bg-card);">
-                  <div class="flex justify-between items-center mb-4 border-b pb-3" style="border-color: var(--border-color);">
-                     <h4 class="font-bold text-lg" style="color: var(--text-primary);">Turf {{ i + 1 }}: {{ turf.turfName }}</h4>
-                     <span class="status-badge px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" 
-                           [ngClass]="{
-                             'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': turf.verificationStatus === 'Approved',
-                             'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': turf.verificationStatus === 'Pending Verification' || turf.verificationStatus === 'Under Review',
-                             'bg-red-500/10 text-red-400 border border-red-500/20': turf.verificationStatus === 'Rejected'
-                           }">
-                       {{ turf.verificationStatus }}
-                     </span>
-                  </div>
+ <!-- Turfs List (Expanded) -->
+ <div *ngIf="expandedOwnerId() === ver.ownerId" class="space-y-6 animate-in slide-in-from-top-2 duration-300 pt-2">
+ <div *ngIf="!ver.turfs || ver.turfs.length === 0" class="text-sm italic py-2" style="color: var(--text-secondary);">
+ Payment cleared, but turf details and documents package not yet submitted.
+ </div>
+ 
+ <div *ngFor="let turf of ver.turfs; let i = index" class="border rounded-xl p-5" style="border-color: var(--border-color); background: var(--bg-card);">
+ <div class="flex justify-between items-center mb-4 border-b pb-3" style="border-color: var(--border-color);">
+ <h4 class="font-bold text-lg" style="color: var(--text-primary);">Turf {{ i + 1 }}: {{ turf.turfName }}</h4>
+ <span class="status-badge px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" 
+ [ngClass]="{
+ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': turf.verificationStatus === 'Approved',
+ 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20': turf.verificationStatus === 'Pending Verification' || turf.verificationStatus === 'Under Review',
+ 'bg-red-500/10 text-red-400 border border-red-500/20': turf.verificationStatus === 'Rejected'
+ }">
+ {{ turf.verificationStatus }}
+ </span>
+ </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2.5">
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Type:</strong> {{ turf.turfType }}</p>
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Location Contact:</strong> {{ turf.contactNumber }}</p>
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Pincode / State:</strong> {{ turf.pincode }} ({{ turf.state }}, {{ turf.city }})</p>
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Full Address:</strong> {{ turf.address }}</p>
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Coordinates/Map:</strong> <a [href]="turf.googleMapLocation" target="_blank" class="text-blue-400 hover:underline">View Google Maps ↗</a></p>
-                      <p class="text-sm" style="color: var(--text-secondary);"><strong>Description:</strong> {{ turf.description }}</p>
-                    </div>
+ <div class="grid grid-cols-1 gap-6">
+ <div class="space-y-2.5">
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Type:</strong> {{ turf.turfType }}</p>
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Location Contact:</strong> {{ turf.contactNumber }}</p>
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Pincode / State:</strong> {{ turf.pincode }} ({{ turf.state }}, {{ turf.city }})</p>
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Full Address:</strong> {{ turf.address }}</p>
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Coordinates/Map:</strong> <a [href]="turf.googleMapLocation" target="_blank" class="text-blue-400 hover:underline">View Google Maps ↗</a></p>
+ <p class="text-sm" style="color: var(--text-secondary);"><strong>Description:</strong> {{ turf.description }}</p>
+ </div>
 
-                    <!-- Media Preview -->
-                    <div class="space-y-4">
-                      <!-- Documents list -->
-                      <div>
-                        <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Uploaded Documents</h5>
-                        <div class="flex flex-col gap-2">
-                          <a *ngFor="let doc of turf.documents" 
-                             [href]="'https://turf-booking-backend-fixl.onrender.com' + doc.fileUrl" 
-                             target="_blank" 
-                             class="text-xs border p-2.5 rounded-lg flex items-center justify-between text-blue-400 transition-colors"
-                             style="background: var(--bg-color); border-color: var(--border-color);">
-                            <span>{{ doc.documentType }}</span>
-                            <span class="text-[10px] font-bold" style="color: var(--text-secondary);">View File ↗</span>
-                          </a>
-                        </div>
-                      </div>
+ <!-- Media Preview -->
+ <div class="space-y-4">
+ <!-- Documents list -->
+ <div>
+ <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Uploaded Documents</h5>
+ <div class="flex flex-col gap-2">
+ <a *ngFor="let doc of turf.documents" 
+ [href]="'https://turf-booking-backend-fixl.onrender.com' + doc.fileUrl" 
+ target="_blank" 
+ class="text-xs border p-2.5 rounded-lg flex items-center justify-between text-blue-400 transition-colors"
+ style="background: var(--bg-color); border-color: var(--border-color);">
+ <span>{{ doc.documentType }}</span>
+ <span class="text-[10px] font-bold" style="color: var(--text-secondary);">View File ↗</span>
+ </a>
+ </div>
+ </div>
 
-                      <!-- Images list -->
-                      <div>
-                        <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Turf Images</h5>
-                        <div class="flex gap-3 overflow-x-auto pb-2">
-                          <a *ngFor="let img of turf.images" 
-                             [href]="'https://turf-booking-backend-fixl.onrender.com' + img" 
-                             target="_blank" 
-                             class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border"
-                             style="background: var(--bg-color); border-color: var(--border-color);">
-                            <img [src]="'https://turf-booking-backend-fixl.onrender.com' + img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+ <!-- Images list -->
+ <div>
+ <h5 class="text-xs uppercase font-bold mb-2 tracking-wider" style="color: var(--text-secondary);">Turf Images</h5>
+ <div class="flex gap-3 overflow-x-auto pb-2">
+ <a *ngFor="let img of turf.images" 
+ [href]="'https://turf-booking-backend-fixl.onrender.com' + img" 
+ target="_blank" 
+ class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border"
+ style="background: var(--bg-color); border-color: var(--border-color);">
+ <img [src]="'https://turf-booking-backend-fixl.onrender.com' + img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
+ </a>
+ </div>
+ </div>
+ </div>
+ </div>
 
-                  <!-- Action Buttons for this Turf -->
-                  <div *ngIf="turf.verificationStatus === 'Pending Verification' || turf.verificationStatus === 'Under Review'" class="flex justify-end gap-3 pt-4 mt-4 border-t" style="border-color: var(--border-color);">
-                    <button (click)="approveVerification(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors">
-                      Approve & Activate Turf
-                    </button>
-                    <button (click)="openRejectionModal(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
-                      Reject Listing
-                    </button>
-                  </div>
+ <!-- Action Buttons for this Turf -->
+ <div *ngIf="turf.verificationStatus === 'Pending Verification' || turf.verificationStatus === 'Under Review'" class="flex justify-end gap-3 pt-4 mt-4 border-t" style="border-color: var(--border-color);">
+ <button (click)="approveVerification(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors">
+ Approve & Activate Turf
+ </button>
+ <button (click)="openRejectionModal(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
+ Reject Listing
+ </button>
+ </div>
 
-                  <div *ngIf="turf.verificationStatus === 'Approved'" class="flex justify-end gap-3 pt-4 mt-4 border-t" style="border-color: var(--border-color);">
-                    <button (click)="openEditModal(ver)" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-bold transition-colors">
-                      Edit Owner Info
-                    </button>
-                    <button (click)="removeOwner(ver.ownerId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
-                      Remove Owner
-                    </button>
-                  </div>
-                  
-                  <!-- Rejection reason if already rejected -->
-                  <div *ngIf="turf.verificationStatus === 'Rejected'" class="mt-4">
-                    <div *ngIf="ver.rejectionReason" class="bg-red-500/5 border border-red-500/10 text-red-400 p-3 rounded-lg text-xs mb-3">
-                      <strong>Rejection Reason:</strong> "{{ ver.rejectionReason }}"
-                    </div>
-                    <div class="flex justify-end pt-2">
-                      <button (click)="approveVerification(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors">
-                        Approve (Override)
-                      </button>
-                    </div>
-                  </div>
-               </div>
-            </div>
-          </div>
+ <div *ngIf="turf.verificationStatus === 'Approved'" class="flex justify-end gap-3 pt-4 mt-4 border-t" style="border-color: var(--border-color);">
+ <button (click)="openEditModal(ver)" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-bold transition-colors">
+ Edit Owner Info
+ </button>
+ <button (click)="removeOwner(ver.ownerId)" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors">
+ Remove Owner
+ </button>
+ </div>
+ 
+ <!-- Rejection reason if already rejected -->
+ <div *ngIf="turf.verificationStatus === 'Rejected'" class="mt-4">
+ <div *ngIf="ver.rejectionReason" class="bg-red-500/5 border border-red-500/10 text-red-400 p-3 rounded-lg text-xs mb-3">
+ <strong>Rejection Reason:</strong>"{{ ver.rejectionReason }}"
+ </div>
+ <div class="flex justify-end pt-2">
+ <button (click)="approveVerification(ver.ownerId, turf.turfId)" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors">
+ Approve (Override)
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-          <div *ngIf="verifications().length === 0" class="text-center py-12 text-slate-500 font-semibold">
-            No owner verification packages found.
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
+ <div *ngIf="verifications().length === 0" class="text-center py-6 text-slate-500 font-semibold">
+ No owner verification packages found.
+ </div>
+ </div>
+ </div>
+ </main>
+ </div>
 </div>
 
 <!-- Rejection Reason Modal -->
 <div *ngIf="isRejectionModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
-    <h3 class="text-lg font-bold text-[var(--text-primary)]">Reject Verification Application</h3>
-    <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Please provide a clear explanation. The owner will see this statement and can re-upload corrections accordingly.</p>
-    
-    <textarea [(ngModel)]="rejectionReason" rows="4" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 placeholder-[var(--text-secondary)]" placeholder="e.g. Business registration is expired, or ID proof is blurry. Please re-upload."></textarea>
-    
-    <div class="flex justify-end gap-3 pt-2">
-      <button (click)="closeRejectionModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
-        Cancel
-      </button>
-      <button (click)="submitRejection()" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors">
-        Submit Rejection
-      </button>
-    </div>
-  </div>
+ <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
+ <h3 class="text-lg font-bold text-[var(--text-primary)]">Reject Verification Application</h3>
+ <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Please provide a clear explanation. The owner will see this statement and can re-upload corrections accordingly.</p>
+ 
+ <textarea [(ngModel)]="rejectionReason" rows="4" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 placeholder-[var(--text-secondary)]" placeholder="e.g. Business registration is expired, or ID proof is blurry. Please re-upload."></textarea>
+ 
+ <div class="flex justify-end gap-3 pt-2">
+ <button (click)="closeRejectionModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
+ Cancel
+ </button>
+ <button (click)="submitRejection()" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors">
+ Submit Rejection
+ </button>
+ </div>
+ </div>
 </div>
 
 <!-- Edit Owner Modal -->
 <div *ngIf="isEditModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
-    <h3 class="text-lg font-bold text-[var(--text-primary)]">Edit Owner Information</h3>
-    <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Modify owner contact information in the system.</p>
-    
-    <div class="space-y-3">
-      <div>
-        <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Full Name</label>
-        <input [(ngModel)]="editOwnerData.fullName" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
-      </div>
-      <div>
-        <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Mobile Number</label>
-        <input [(ngModel)]="editOwnerData.mobileNumber" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
-      </div>
-      <div>
-        <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Email Address</label>
-        <input [(ngModel)]="editOwnerData.email" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
-      </div>
-      <div>
-        <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Address</label>
-        <input [(ngModel)]="editOwnerData.address" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
-      </div>
-    </div>
-    
-    <div class="flex justify-end gap-3 pt-2">
-      <button (click)="closeEditModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
-        Cancel
-      </button>
-      <button (click)="submitEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold text-white transition-colors">
-        Save Changes
-      </button>
-    </div>
-  </div>
+ <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
+ <h3 class="text-lg font-bold text-[var(--text-primary)]">Edit Owner Information</h3>
+ <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Modify owner contact information in the system.</p>
+ 
+ <div class="space-y-3">
+ <div>
+ <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Full Name</label>
+ <input [(ngModel)]="editOwnerData.fullName" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
+ </div>
+ <div>
+ <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Mobile Number</label>
+ <input [(ngModel)]="editOwnerData.mobileNumber" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
+ </div>
+ <div>
+ <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Email Address</label>
+ <input [(ngModel)]="editOwnerData.email" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
+ </div>
+ <div>
+ <label class="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Address</label>
+ <input [(ngModel)]="editOwnerData.address" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-2.5 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20" />
+ </div>
+ </div>
+ 
+ <div class="flex justify-end gap-3 pt-2">
+ <button (click)="closeEditModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
+ Cancel
+ </button>
+ <button (click)="submitEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold text-white transition-colors">
+ Save Changes
+ </button>
+ </div>
+ </div>
 </div>
 
 <!-- User Status Update Reason Modal -->
 <div *ngIf="isUserStatusModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
-    <h3 class="text-lg font-bold text-[var(--text-primary)]">Update User Status</h3>
-    <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Please provide a reason for updating the user's status to <strong>{{ selectedUserStatus() }}</strong>. This reason will be emailed directly to the user and sent via push notification.</p>
-    
-    <textarea [(ngModel)]="userStatusReason" rows="3" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder-[var(--text-secondary)]" placeholder="e.g. Violation of community guidelines..."></textarea>
-    
-    <div class="flex justify-end gap-3 pt-2">
-      <button (click)="closeUserStatusModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
-        Cancel
-      </button>
-      <button (click)="submitUserStatusUpdate()" class="px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors" [ngClass]="selectedUserStatus() === 'Blocked' ? 'bg-red-600 hover:bg-red-500' : 'bg-yellow-600 hover:bg-yellow-500'">
-        Submit & Notify User
-      </button>
-    </div>
-  </div>
+ <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl">
+ <h3 class="text-lg font-bold text-[var(--text-primary)]">Update User Status</h3>
+ <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Please provide a reason for updating the user's status to <strong>{{ selectedUserStatus() }}</strong>. This reason will be emailed directly to the user and sent via push notification.</p>
+ 
+ <textarea [(ngModel)]="userStatusReason" rows="3" class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder-[var(--text-secondary)]" placeholder="e.g. Violation of community guidelines..."></textarea>
+ 
+ <div class="flex justify-end gap-3 pt-2">
+ <button (click)="closeUserStatusModal()" class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors">
+ Cancel
+ </button>
+ <button (click)="submitUserStatusUpdate()" class="px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors" [ngClass]="selectedUserStatus() === 'Blocked' ? 'bg-red-600 hover:bg-red-500' : 'bg-yellow-600 hover:bg-yellow-500'">
+ Submit & Notify User
+ </button>
+ </div>
+ </div>
 </div>
 
 <!-- User Bookings Modal -->
 <div *ngIf="isUserBookingsModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-2xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
-    <div class="flex justify-between items-start mb-4">
-      <div>
-        <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedUserForBookings()?.name }}'s Bookings</h3>
-        <p class="text-xs text-[var(--text-secondary)]">{{ selectedUserForBookings()?.email }} | Total: {{ selectedUserForBookings()?.totalBookings }}</p>
-      </div>
-      <button (click)="closeUserBookingsModal()" class="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[var(--text-primary)] hover:text-red-500 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+ <div class="bg-[var(--bg-card)] max-w-2xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl max-h-[85vh]">
+ <div class="flex justify-between items-start mb-4">
+ <div>
+ <h3 class="text-lg font-bold text-[var(--text-primary)]">{{ selectedUserForBookings()?.name }}'s Bookings</h3>
+ <p class="text-xs text-[var(--text-secondary)]">{{ selectedUserForBookings()?.email }} | Total: {{ selectedUserForBookings()?.totalBookings }}</p>
+ </div>
+ <button (click)="closeUserBookingsModal()" class="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[var(--text-primary)] hover:text-red-500 rounded-full w-12 h-12 flex items-center justify-center transition-colors">
+ <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+ <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+ </svg>
+ </button>
+ </div>
 
-    <!-- Search and Filter Bar -->
-    <div class="flex flex-col sm:flex-row gap-3 mb-4">
-      <input type="text" [(ngModel)]="bookingSearchQuery" placeholder="Search turf name or location..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
-      <select [(ngModel)]="bookingFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-        <option value="All" class="bg-[var(--bg-card)]">All Time</option>
-        <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Bookings</option>
-        <option value="Past" class="bg-[var(--bg-card)]">Past Bookings</option>
-      </select>
-      <select [(ngModel)]="bookingSortOrder" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-        <option value="Latest" class="bg-[var(--bg-card)]">Latest First</option>
-        <option value="Oldest" class="bg-[var(--bg-card)]">Oldest First</option>
-      </select>
-    </div>
-    
-    <div class="overflow-y-auto flex-1 pr-2 space-y-4" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
-      <div *ngIf="userBookingsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        Loading...
-      </div>
-      <div *ngIf="userBookingsList().length > 0 && filteredUserBookings().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        No booking history found matching your criteria.
-      </div>
-      
-      <div *ngFor="let booking of filteredUserBookings()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4 transition-transform hover:scale-[1.01]">
-        <div>
-          <h4 class="font-bold text-[var(--text-primary)]">{{ booking.turfName }}</h4>
-          <p class="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-location-dot"></i> {{ booking.location }}
-          </p>
-          <div class="text-xs text-[var(--text-primary)] mt-3 flex items-center gap-2">
-            <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 whitespace-nowrap">
-              <i class="fa-regular fa-clock mr-1"></i> {{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-end text-right">
-          <span class="text-sm font-bold text-emerald-400">₹{{ booking.price }}</span>
-          <span class="text-[10px] text-[var(--text-secondary)] mt-1 whitespace-nowrap">Booked on: <br class="hidden sm:block"/>{{ booking.bookingDate | date:'mediumDate' }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
+ <!-- Search and Filter Bar -->
+ <div class="flex flex-col gap-3 mb-4">
+ <input type="text" [(ngModel)]="bookingSearchQuery" placeholder="Search turf name or location..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
+ <select [(ngModel)]="bookingFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+ <option value="All" class="bg-[var(--bg-card)]">All Time</option>
+ <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Bookings</option>
+ <option value="Past" class="bg-[var(--bg-card)]">Past Bookings</option>
+ </select>
+ <select [(ngModel)]="bookingSortOrder" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+ <option value="Latest" class="bg-[var(--bg-card)]">Latest First</option>
+ <option value="Oldest" class="bg-[var(--bg-card)]">Oldest First</option>
+ </select>
+ </div>
+ 
+ <div class="overflow-y-auto flex-1 pr-2 space-y-4" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
+ <div *ngIf="userBookingsList().length === 0" class="text-center py-4 text-[var(--text-secondary)] italic">
+ Loading...
+ </div>
+ <div *ngIf="userBookingsList().length > 0 && filteredUserBookings().length === 0" class="text-center py-4 text-[var(--text-secondary)] italic">
+ No booking history found matching your criteria.
+ </div>
+ 
+ <div *ngFor="let booking of filteredUserBookings()" class="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex flex-col justify-between gap-4 transition-transform hover:scale-[1.01]">
+ <div>
+ <h4 class="font-bold text-[var(--text-primary)]">{{ booking.turfName }}</h4>
+ <p class="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
+ <i class="fa-solid fa-location-dot"></i> {{ booking.location }}
+ </p>
+ <div class="text-xs text-[var(--text-primary)] mt-3 flex items-center gap-2">
+ <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 whitespace-nowrap">
+ <i class="fa-regular fa-clock mr-1"></i> {{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}
+ </span>
+ </div>
+ </div>
+ <div class="flex flex-row justify-between items-center text-right">
+ <span class="text-sm font-bold text-emerald-400">₹{{ booking.price }}</span>
+ <span class="text-[10px] text-[var(--text-secondary)] mt-1 whitespace-nowrap">Booked on: <br class="hidden"/>{{ booking.bookingDate | date:'mediumDate' }}</span>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>
 
 <!-- Turf Bookings Modal -->
 <div *ngIf="isTurfBookingsModalOpen()" class="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div class="bg-[var(--bg-card)] max-w-6xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl h-[95vh] max-h-[95vh]">
-    <div class="flex justify-between items-start mb-4">
-      <div>
-        <h3 class="text-xl font-bold text-[var(--text-primary)]">{{ selectedTurfForBookings()?.name }} Bookings Schedule</h3>
-        <p class="text-sm text-[var(--text-secondary)]"><i class="fa-solid fa-location-dot mr-1"></i> {{ selectedTurfForBookings()?.location }}</p>
-      </div>
-      <button (click)="closeTurfBookingsModal()" class="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[var(--text-primary)] hover:text-red-500 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+ <div class="bg-[var(--bg-card)] max-w-6xl w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in flex flex-col shadow-2xl h-[95vh] max-h-[95vh]">
+ <div class="flex justify-between items-start mb-4">
+ <div>
+ <h3 class="text-xl font-bold text-[var(--text-primary)]">{{ selectedTurfForBookings()?.name }} Bookings Schedule</h3>
+ <p class="text-sm text-[var(--text-secondary)]"><i class="fa-solid fa-location-dot mr-1"></i> {{ selectedTurfForBookings()?.location }}</p>
+ </div>
+ <button (click)="closeTurfBookingsModal()" class="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[var(--text-primary)] hover:text-red-500 rounded-full w-12 h-12 flex items-center justify-center transition-colors">
+ <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+ <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+ </svg>
+ </button>
+ </div>
 
-    <!-- Search and Filter Bar -->
-    <div class="flex flex-col md:flex-row gap-3 mb-4">
-      <input type="text" [(ngModel)]="turfBookingSearchQuery" placeholder="Search user name or email..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
-      <select [(ngModel)]="turfBookingDateFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-        <option value="All" class="bg-[var(--bg-card)]">All Dates</option>
-        <option value="Today" class="bg-[var(--bg-card)]">Today Only</option>
-        <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Dates</option>
-      </select>
-      <select [(ngModel)]="turfBookingSortOrder" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-        <option value="Latest" class="bg-[var(--bg-card)]">Latest First</option>
-        <option value="Oldest" class="bg-[var(--bg-card)]">Oldest First</option>
-      </select>
-    </div>
-    
-    <div class="overflow-y-auto flex-1 pr-2 space-y-2" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
-      <div *ngIf="isTurfBookingsLoading()" class="text-center py-8 text-[var(--text-secondary)] italic">
-        Loading schedule...
-      </div>
-      <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        This turf currently has no slots assigned to it.
-      </div>
-      <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length > 0 && turfSchedule().length === 0" class="text-center py-8 text-[var(--text-secondary)] italic">
-        No schedule found for the selected criteria.
-      </div>
-      
-      <div class="w-full overflow-x-auto" *ngIf="!isTurfBookingsLoading() && turfSchedule().length > 0">
-        <table class="w-full text-left border-collapse min-w-[1000px]">
-          <thead>
-            <tr class="bg-black/30 dark:bg-white/5 text-[var(--text-secondary)] text-sm uppercase tracking-wider border-b border-[var(--glass-border)]">
-              <th class="p-4 font-semibold w-[220px]">Time</th>
-              <th class="p-4 font-semibold w-[150px]">Date</th>
-              <th class="p-4 font-semibold">User Details</th>
-              <th class="p-4 font-semibold text-center w-[150px]">Price</th>
-              <th class="p-4 font-semibold text-right w-[150px]">Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[var(--glass-border)] bg-black/5 dark:bg-black/20">
-            <ng-container *ngFor="let group of turfSchedule()">
-              <!-- Date Header Row -->
-              <tr class="bg-yellow-500/10">
-                <td colspan="5" class="p-4 text-yellow-400 font-bold text-base tracking-wide border-y border-yellow-500/30">
-                  <i class="fa-regular fa-calendar text-yellow-400 mr-2"></i> 
-                  {{ group.date | date:'dd-MM-yyyy EEEE' }}
-                </td>
-              </tr>
-              <!-- Slots Rows -->
-              <tr *ngFor="let row of group.slots" class="hover:bg-black/10 dark:hover:bg-white/5 transition-colors" [ngClass]="{'opacity-60': !row.isBooked}">
-                <td class="p-4 align-top pl-6 border-l-2 border-transparent hover:border-yellow-500 transition-all">
-                  <span class="text-sm font-bold text-blue-400 whitespace-nowrap">{{ row.startTime | date:'shortTime' }} to {{ row.endTime | date:'shortTime' }}</span>
-                </td>
-                <td class="p-4 align-top">
-                  <span class="text-xs text-[var(--text-primary)] font-medium">{{ group.date | date:'dd-MM-yyyy' }}</span>
-                </td>
-                <td class="p-4 align-top">
-                  <ng-container *ngIf="row.isBooked">
-                    <div class="font-bold text-sm text-[var(--text-primary)]">{{ row.userName }}</div>
-                    <div class="text-xs text-[var(--text-secondary)] mt-1">{{ row.userEmail }}</div>
-                    <div class="text-[10px] text-[var(--text-secondary)] mt-0.5">{{ row.userPhone }}</div>
-                  </ng-container>
-                  <ng-container *ngIf="!row.isBooked">
-                    <div class="text-sm font-medium text-gray-500 italic">{{ row.userName }}</div>
-                  </ng-container>
-                </td>
-                <td class="p-4 align-top text-center">
-                  <span class="text-sm font-bold" [ngClass]="row.isBooked ? 'text-emerald-400' : 'text-gray-500'">{{ row.isBooked ? '₹' + row.price : '-' }}</span>
-                </td>
-                <td class="p-4 align-top text-right">
-                  <span *ngIf="row.isBooked" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    {{ row.status }}
-                  </span>
-                  <span *ngIf="!row.isBooked" class="text-gray-500 text-sm font-medium">-</span>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+ <!-- Search and Filter Bar -->
+ <div class="flex flex-col gap-3 mb-4">
+ <input type="text" [(ngModel)]="turfBookingSearchQuery" placeholder="Search user name or email..." class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] flex-grow placeholder:text-[var(--text-secondary)]" />
+ <select [(ngModel)]="turfBookingDateFilter" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+ <option value="All" class="bg-[var(--bg-card)]">All Dates</option>
+ <option value="Today" class="bg-[var(--bg-card)]">Today Only</option>
+ <option value="Upcoming" class="bg-[var(--bg-card)]">Upcoming Dates</option>
+ </select>
+ <select [(ngModel)]="turfBookingSortOrder" class="bg-black/10 dark:bg-[#1f2937] border border-black/20 dark:border-[var(--glass-border)] rounded-full px-4 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+ <option value="Latest" class="bg-[var(--bg-card)]">Latest First</option>
+ <option value="Oldest" class="bg-[var(--bg-card)]">Oldest First</option>
+ </select>
+ </div>
+ 
+ <div class="overflow-y-auto flex-1 pr-2 space-y-2" style="scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;">
+ <div *ngIf="isTurfBookingsLoading()" class="text-center py-4 text-[var(--text-secondary)] italic">
+ Loading schedule...
+ </div>
+ <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length === 0" class="text-center py-4 text-[var(--text-secondary)] italic">
+ This turf currently has no slots assigned to it.
+ </div>
+ <div *ngIf="!isTurfBookingsLoading() && turfSlotsList().length > 0 && turfSchedule().length === 0" class="text-center py-4 text-[var(--text-secondary)] italic">
+ No schedule found for the selected criteria.
+ </div>
+ 
+ <div class="w-full overflow-x-auto" *ngIf="!isTurfBookingsLoading() && turfSchedule().length > 0">
+ <table class="w-full text-left border-collapse min-w-[1000px]">
+ <thead>
+ <tr class="bg-black/30 dark:bg-white/5 text-[var(--text-secondary)] text-sm uppercase tracking-wider border-b border-[var(--glass-border)]">
+ <th class="p-4 font-semibold w-[220px]">Time</th>
+ <th class="p-4 font-semibold w-[150px]">Date</th>
+ <th class="p-4 font-semibold">User Details</th>
+ <th class="p-4 font-semibold text-center w-[150px]">Price</th>
+ <th class="p-4 font-semibold text-right w-[150px]">Status</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-[var(--glass-border)] bg-black/5 dark:bg-black/20">
+ <ng-container *ngFor="let group of turfSchedule()">
+ <!-- Date Header Row -->
+ <tr class="bg-yellow-500/10">
+ <td colspan="5" class="p-4 text-yellow-400 font-bold text-base tracking-wide border-y border-yellow-500/30">
+ <i class="fa-regular fa-calendar text-yellow-400 mr-2"></i> 
+ {{ group.date | date:'dd-MM-yyyy EEEE' }}
+ </td>
+ </tr>
+ <!-- Slots Rows -->
+ <tr *ngFor="let row of group.slots" class="hover:bg-black/10 dark:hover:bg-white/5 transition-colors" [ngClass]="{'opacity-60': !row.isBooked}">
+ <td class="p-4 align-top pl-6 border-l-2 border-transparent hover:border-yellow-500 transition-all">
+ <span class="text-sm font-bold text-blue-400 whitespace-nowrap">{{ row.startTime | date:'shortTime' }} to {{ row.endTime | date:'shortTime' }}</span>
+ </td>
+ <td class="p-4 align-top">
+ <span class="text-xs text-[var(--text-primary)] font-medium">{{ group.date | date:'dd-MM-yyyy' }}</span>
+ </td>
+ <td class="p-4 align-top">
+ <ng-container *ngIf="row.isBooked">
+ <div class="font-bold text-sm text-[var(--text-primary)]">{{ row.userName }}</div>
+ <div class="text-xs text-[var(--text-secondary)] mt-1">{{ row.userEmail }}</div>
+ <div class="text-[10px] text-[var(--text-secondary)] mt-0.5">{{ row.userPhone }}</div>
+ </ng-container>
+ <ng-container *ngIf="!row.isBooked">
+ <div class="text-sm font-medium text-gray-500 italic">{{ row.userName }}</div>
+ </ng-container>
+ </td>
+ <td class="p-4 align-top text-center">
+ <span class="text-sm font-bold" [ngClass]="row.isBooked ? 'text-emerald-400' : 'text-gray-500'">{{ row.isBooked ? '₹' + row.price : '-' }}</span>
+ </td>
+ <td class="p-4 align-top text-right">
+ <span *ngIf="row.isBooked" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+ {{ row.status }}
+ </span>
+ <span *ngIf="!row.isBooked" class="text-gray-500 text-sm font-medium">-</span>
+ </td>
+ </tr>
+ </ng-container>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
 </div>
