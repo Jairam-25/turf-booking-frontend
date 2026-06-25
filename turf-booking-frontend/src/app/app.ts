@@ -31,6 +31,7 @@ export class App implements OnInit {
  hideNavbar = signal(false);
  hideFooter = signal(false);
  hideBottomNav = signal(false);
+  showAppSplash = signal(false);
  isRouting = signal(false);
  routingText = signal('Loading page...');
 
@@ -44,6 +45,17 @@ export class App implements OnInit {
  ) {}
 
  ngOnInit() {
+    import('@capacitor/splash-screen').then(({ SplashScreen }) => {
+      import('@capacitor/core').then(({ Capacitor }) => {
+        if (Capacitor.isNativePlatform()) {
+          this.showAppSplash.set(true);
+          setTimeout(() => {
+            SplashScreen.hide(); // Hide native splash to show our custom web splash
+            setTimeout(() => this.showAppSplash.set(false), 3000); // Run web animation for 3s
+          }, 500); // Wait 500ms before hiding native splash
+        }
+      });
+    });
  this.themeService.init();
  this.updateVisibility(this.router.url);
 
