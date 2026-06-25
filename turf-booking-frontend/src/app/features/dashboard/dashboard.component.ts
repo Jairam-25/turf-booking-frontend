@@ -17,6 +17,13 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  <div class="header-content">
  <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>
  <div class="search-container">
+ <div class="flex justify-between items-center mb-3 px-2">
+ <h2 class="text-white text-lg font-bold">Discover</h2>
+ <a routerLink="/offers" class="bg-[#f59e0b] text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1 hover:scale-105 transition-transform" style="text-decoration: none;">
+ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"></path></svg>
+ Promo Offers
+ </a>
+ </div>
  <div class="search-bar glass">
  
  <!-- Professional Location Select -->
@@ -589,6 +596,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
  gap: 2rem;
  }
+ .turf-grid > app-turf-card { min-width: calc(33.333% - 0.5rem); scroll-snap-align: start; }
 
  .skeleton {
  height: 400px;
@@ -747,7 +755,12 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  .view-btn:last-child { flex: 0 0 auto; padding: 6px 10px; font-size: 0.8rem; }
  
  .turf-grid {
- grid-template-columns: repeat(1, 1fr);
+ display: flex;
+ overflow-x: auto;
+ scroll-snap-type: x mandatory;
+ padding-bottom: 1rem;
+ gap: 0.75rem;
+ /* grid-template-columns: repeat(3, 1fr); */
  gap: 0.75rem;
  }
  
