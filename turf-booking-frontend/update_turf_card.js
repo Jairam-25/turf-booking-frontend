@@ -1,14 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { Turf } from '../../../domain/models/turf.model';
-import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-pixel-image/pixel-image.component';
+const fs = require('fs'); 
+const content = fs.readFileSync('src/app/features/dashboard/ui/turf-card.component.ts', 'utf8'); 
+const start = content.indexOf('template: `') + 11; 
+const end = content.indexOf('export class TurfCardComponent'); 
 
-@Component({
- selector: 'app-turf-card',
- standalone: true,
- imports: [CommonModule, PixelImageComponent],
- template: `
+const newTemplate = `
   <div class="turf-card">
     <div class="card-image-wrapper">
       <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
@@ -43,8 +38,8 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       <button class="btn-book" (click)="onBook()">Book Now</button>
     </div>
   </div>
-  `,
-  styles: [`
+  \`,
+  styles: [\`
     .turf-card {
       background-color: #12172B;
       border-radius: 20px;
@@ -153,70 +148,7 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       transition: opacity 0.2s ease;
     }
     .btn-book:active { opacity: 0.8; }
-  `]
+  \`]
 })
-export class TurfCardComponent implements OnInit {
- @Input({ required: true }) turf!: Turf;
- isLiked = false;
-
- constructor(private router: Router) {}
-
- ngOnInit() {
- this.checkIfLiked();
- }
-
- checkIfLiked() {
- const liked = localStorage.getItem('likedTurfs');
- if (liked) {
- try {
- const parsed = JSON.parse(liked);
- this.isLiked = parsed.some((t: any) => t.id === this.turf.id);
- } catch (e) {}
- }
- }
-
- toggleLike(event: Event) {
- event.stopPropagation();
- this.isLiked = !this.isLiked;
- 
- let likedTurfs = [];
- const likedStr = localStorage.getItem('likedTurfs');
- if (likedStr) {
- try { likedTurfs = JSON.parse(likedStr); } catch (e) {}
- }
-
- if (this.isLiked) {
- // Add to liked
- if (!likedTurfs.some((t: any) => t.id === this.turf.id)) {
- likedTurfs.push({
- id: this.turf.id,
- name: this.turf.name,
- location: this.turf.location,
- imageUrl: this.getImageSrc(),
- pricePerHour: this.turf.pricePerHour,
- rating: this.turf.rating,
- description: this.turf.description
- });
- }
- } else {
- // Remove from liked
- likedTurfs = likedTurfs.filter((t: any) => t.id !== this.turf.id);
- }
- 
- localStorage.setItem('likedTurfs', JSON.stringify(likedTurfs));
- }
-
- getImageSrc(): string {
- return (this.turf?.imageUrl && this.turf.imageUrl.trim() !== '') ? this.turf.imageUrl : '/images/turf_sports_ground.png';
- }
-
- onBook() {
- this.router.navigate(['/dashboard/turf', this.turf.id]);
- }
-
- onImageError(event: any) {
- event.target.src = '/images/turf_sports_ground.png';
- }
-}
-
-
+`; 
+fs.writeFileSync('src/app/features/dashboard/ui/turf-card.component.ts', content.substring(0, start) + newTemplate + content.substring(end), 'utf8');

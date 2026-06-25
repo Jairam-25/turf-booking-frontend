@@ -16,8 +16,8 @@
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Dark Theme variables */
-  --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 100%);
-  --bg-card: #1f2937;
+  --bg-gradient: #0A0E1A;
+  --bg-card: #12172B;
   --border-color: #374151;
   --text-primary: #f9fafb;
   --text-secondary: #9ca3af;
@@ -55,10 +55,10 @@
   --toast-close: #9ca3af;
   --overlay-text: #ffffff;
   --goal-overlay-bg: linear-gradient(135deg, #2b2344 0%, #7b39fc 100%);
-  --input-bg: #111827;
+  --input-bg: #12172B;
   --input-color: #f9fafb;
   --input-border: #374151;
-  --nav-bg: rgba(17, 24, 39, 0.85);
+  --nav-bg: rgba(10, 14, 26, 0.85);
   --glass-bg: rgba(31, 41, 55, 0.6);
   --glass-border: rgba(255, 255, 255, 0.05);
 
