@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Capacitor } from '@capacitor/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthStore } from '../../core/services/auth.store';
 import { ThemeService } from '../../core/services/theme.service';
@@ -15,7 +16,7 @@ import { SuperadminStateService } from '../../core/services/superadmin-state.ser
 })
 export class NavbarComponent implements OnInit {
  isMobileMenuOpen = false;
- isAnnouncementVisible = true;
+ isAnnouncementVisible = !Capacitor.isNativePlatform();
  showLogoutConfirm = false;
  isNotificationsOpen = false;
  profileImageError = false;
@@ -95,3 +96,4 @@ export class NavbarComponent implements OnInit {
  }
  }
 }
+

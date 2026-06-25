@@ -262,7 +262,7 @@ export class TurfCardComponent implements OnInit {
  }
 
  getImageSrc(): string {
- return this.turf?.imageUrl ?? '/images/turf_sports_ground.png';
+ return (this.turf?.imageUrl && this.turf.imageUrl.trim() !== '') ? this.turf.imageUrl : '/images/turf_sports_ground.png';
  }
 
  onBook() {
@@ -273,3 +273,5 @@ export class TurfCardComponent implements OnInit {
  event.target.src = '/images/turf_sports_ground.png';
  }
 }
+
+
