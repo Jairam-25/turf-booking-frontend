@@ -113,7 +113,7 @@ import { filter } from 'rxjs/operators';
  background: var(--primary);
  }
 
- @media (min-width: 0px) {
+ @media (max-width: 768px) {
  .bottom-nav {
  display: block; /* Show on mobile */
  }
