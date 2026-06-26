@@ -215,6 +215,7 @@ export class RegisterFormComponent implements OnInit {
  constructor(private fb: FormBuilder) {
  this.registerForm = this.fb.group({
  name: ['', [Validators.required, Validators.minLength(3)]],
+ city: ['', [Validators.required]],
  email: ['', [Validators.required, Validators.email]],
  countryCode: ['+91'],
  phoneNumber: ['', [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)]],
