@@ -35,7 +35,7 @@
  </a>
 
  <!-- Navigation Links (Center-Left, Desktop Only) -->
- <div class="hidden items-center gap-4 mr-auto ml-6">
+ <div class="hidden md:flex items-center gap-4 mr-auto ml-6">
  <!-- Logged Out Links -->
  <ng-container *ngIf="!isLoggedIn()">
  <a routerLink="/dashboard" routerLinkActive="active-link" class="navbar-link font-medium text-sm transition-colors duration-200 hover:text-[var(--text-primary)] text-[var(--text-secondary)]">Book Turf</a>
@@ -52,7 +52,7 @@
  </div>
 
  <!-- Action Buttons / Profile (Right, Desktop Only) -->
- <div class="hidden items-center gap-4">
+ <div class="hidden md:flex items-center gap-4">
  <!-- Logged Out Buttons -->
  <ng-container *ngIf="!isLoggedIn()">
  <button (click)="navigate('login')" class="btn-nav-outline active:scale-95">
@@ -66,7 +66,7 @@
  <!-- Logged In Profile & Actions -->
  <div *ngIf="isLoggedIn()" class="flex items-center gap-2">
  <!-- Quick Action Icons -->
- <a routerLink="/liked-turfs" class="relative p-2 text-[var(--text-secondary)] hover:text-[#7b39fc] transition-all rounded-full hover:bg-black/5 dark:hover:bg-white/5 hidden items-center justify-center group" aria-label="Liked Turfs" title="Liked Turfs">
+ <a routerLink="/liked-turfs" class="relative p-2 text-[var(--text-secondary)] hover:text-[#7b39fc] transition-all rounded-full hover:bg-black/5 dark:hover:bg-white/5 hidden md:flex items-center justify-center group" aria-label="Liked Turfs" title="Liked Turfs">
  <svg class="w-[22px] h-[22px] transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
  </a>
 
@@ -80,10 +80,10 @@
  </button>
  </div>
 
- <div class="w-px h-5 bg-[var(--border-color)] mx-1 hidden"></div>
+ <div class="w-px h-5 bg-[var(--border-color)] mx-1 hidden md:block"></div>
 
  <!-- Professional User Menu Dropdown -->
- <div class="relative group cursor-pointer hidden items-center">
+ <div class="relative group cursor-pointer hidden md:flex items-center">
  
  <!-- Interactive Pill Trigger -->
  <button class="relative flex items-center gap-3 py-1.5 pl-1.5 pr-4 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] hover:bg-black/5 dark:hover:bg-white/5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7b39fc]/50">
@@ -203,7 +203,7 @@
  </div>
 
  <!-- Action Controls (Mobile/Tablet Only) -->
- <div class="flex items-center gap-2">
+  <div class="flex md:hidden items-center gap-2">
  <ng-container *ngIf="isLoggedIn()">
  <a routerLink="/liked-turfs" class="relative p-2 text-[var(--text-secondary)] hover:text-red-500 transition-colors" title="Liked Turfs">
  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
