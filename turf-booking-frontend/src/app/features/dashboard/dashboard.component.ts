@@ -596,7 +596,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
  gap: 2rem;
  }
- .turf-grid > app-turf-card { min-width: calc(33.333% - 0.5rem); scroll-snap-align: start; }
+ 
 
  .skeleton {
  height: 400px;
