@@ -1,6 +1,19 @@
 
 @if (showAppSplash()) {
-  <div class="custom-splash-screen fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-slate-900" style="background-color: #0f172a;">
+  <div class="custom-splash-screen fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-slate-900 overflow-hidden" style="background-color: #0f172a;">
+    <!-- Animated Bubbles Background -->
+    <div class="bubbles-container absolute inset-0 z-0 pointer-events-none">
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+    
+    <div class="z-10 relative flex flex-col items-center">
     <div class="splash-logo-container relative mb-6">
        <!-- App icon (the one we generated) -->
        <img src="images/app-icon.jpg" alt="Logo" class="w-28 h-28 rounded-3xl shadow-[0_0_30px_rgba(123,57,252,0.4)] animate-float">
@@ -9,6 +22,7 @@
       <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#7b39fc] to-[#38bdf8] tracking-wider">
         TurfXpert
       </h1>
+    </div>
     </div>
   </div>
 }
