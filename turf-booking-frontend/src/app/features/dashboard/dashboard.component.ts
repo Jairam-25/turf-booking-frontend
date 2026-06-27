@@ -314,6 +314,21 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  </div>
  `,
  styles: [`
+  /* Layout Isolation */
+  .mobile-app-layout {
+    display: none;
+  }
+  .desktop-web-layout {
+    display: flex;
+  }
+
+  :host-context(body.is-mobile-app) .mobile-app-layout {
+    display: block !important;
+  }
+  :host-context(body.is-mobile-app) .desktop-web-layout {
+    display: none !important;
+  }
+
  .dashboard-page {
  padding: 2rem 5%;
  max-width: 1400px;
