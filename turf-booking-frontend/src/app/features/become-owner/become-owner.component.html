@@ -1,405 +1,405 @@
-<div class="onboarding-page min-h-screen py-6 px-4 text-[var(--text-primary)] font-manrope">
- <div class="max-w-4xl mx-auto">
- <!-- Main Header -->
- <div class="text-center mb-5">
- <h1 class="font-instrument-serif text-4xl text-[var(--primary)] mb-3 tracking-wide">Become a Turf Partner</h1>
- <p class="text-[var(--text-secondary)] text-lg">Onboard your venue self-service in four simple steps</p>
- </div>
+<div class="onboarding-page min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-[var(--text-primary)] font-manrope">
+  <div class="max-w-4xl mx-auto">
+    <!-- Main Header -->
+    <div class="text-center mb-10">
+      <h1 class="font-instrument-serif text-4xl sm:text-5xl text-[var(--primary)] mb-3 tracking-wide">Become a Turf Partner</h1>
+      <p class="text-[var(--text-secondary)] text-lg">Onboard your venue self-service in four simple steps</p>
+    </div>
 
- <!-- Step Stepper Progress Indicator -->
- <div class="glass rounded-2xl p-6 mb-4 flex justify-between items-center relative overflow-hidden">
- <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
- 
- <div class="flex items-center w-full justify-between relative z-10">
- <!-- Step 1 Indicator -->
- <div class="flex flex-col items-center flex-1">
- <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300"
- [ngClass]="currentStep() >= 1 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
- <span *ngIf="currentStep() > 1">✓</span>
- <span *ngIf="currentStep() === 1">1</span>
- </div>
- <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 1 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Owner Details</span>
- </div>
+    <!-- Step Stepper Progress Indicator -->
+    <div class="glass rounded-2xl p-6 mb-8 flex justify-between items-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
+      
+      <div class="flex items-center w-full justify-between relative z-10">
+        <!-- Step 1 Indicator -->
+        <div class="flex flex-col items-center flex-1">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
+               [ngClass]="currentStep() >= 1 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+            <span *ngIf="currentStep() > 1">✓</span>
+            <span *ngIf="currentStep() === 1">1</span>
+          </div>
+          <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 1 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Owner Details</span>
+        </div>
 
- <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 1}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 1}"></div>
 
- <!-- Step 2 Indicator -->
- <div class="flex flex-col items-center flex-1">
- <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300"
- [ngClass]="currentStep() >= 2 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
- <span *ngIf="currentStep() > 2">✓</span>
- <span *ngIf="currentStep() === 2">2</span>
- </div>
- <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 2 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Registration Fee</span>
- </div>
+        <!-- Step 2 Indicator -->
+        <div class="flex flex-col items-center flex-1">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
+               [ngClass]="currentStep() >= 2 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+            <span *ngIf="currentStep() > 2">✓</span>
+            <span *ngIf="currentStep() === 2">2</span>
+          </div>
+          <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 2 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Registration Fee</span>
+        </div>
 
- <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 2}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 2}"></div>
 
- <!-- Step 3 Indicator -->
- <div class="flex flex-col items-center flex-1">
- <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300"
- [ngClass]="currentStep() >= 3 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
- <span *ngIf="currentStep() > 3">✓</span>
- <span *ngIf="currentStep() === 3">3</span>
- </div>
- <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 3 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Turf Details</span>
- </div>
+        <!-- Step 3 Indicator -->
+        <div class="flex flex-col items-center flex-1">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
+               [ngClass]="currentStep() >= 3 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+            <span *ngIf="currentStep() > 3">✓</span>
+            <span *ngIf="currentStep() === 3">3</span>
+          </div>
+          <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 3 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Turf Details</span>
+        </div>
 
- <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 3}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 3}"></div>
 
- <!-- Step 4 Indicator -->
- <div class="flex flex-col items-center flex-1">
- <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300"
- [ngClass]="currentStep() >= 4 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
- <span *ngIf="onboardingStatus() === 'Approved'">✓</span>
- <span *ngIf="onboardingStatus() !== 'Approved'">4</span>
- </div>
- <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 4 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Verification</span>
- </div>
- </div>
- </div>
+        <!-- Step 4 Indicator -->
+        <div class="flex flex-col items-center flex-1">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
+               [ngClass]="currentStep() >= 4 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+            <span *ngIf="onboardingStatus() === 'Approved'">✓</span>
+            <span *ngIf="onboardingStatus() !== 'Approved'">4</span>
+          </div>
+          <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 4 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Verification</span>
+        </div>
+      </div>
+    </div>
 
- <!-- Step 1: Owner Details & Terms -->
- <div *ngIf="currentStep() === 1" class="glass rounded-2xl p-5 fade-in">
- <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 1: Owner Profile & Terms</h2>
- 
- <form [formGroup]="ownerForm" (ngSubmit)="submitOwnerInfo()" class="space-y-6">
- <div class="grid grid-cols-1 gap-6">
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Full Name</label>
- <input type="text" formControlName="fullName" class="form-input" placeholder="e.g. Rahul Sharma" />
- <div *ngIf="ownerForm.controls.fullName.touched && ownerForm.controls.fullName.invalid" class="text-red-400 text-xs mt-1">
- Full name is required (min 3 characters).
- </div>
- </div>
+    <!-- Step 1: Owner Details & Terms -->
+    <div *ngIf="currentStep() === 1" class="glass rounded-2xl p-5 sm:p-8 fade-in">
+      <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 1: Owner Profile & Terms</h2>
+      
+      <form [formGroup]="ownerForm" (ngSubmit)="submitOwnerInfo()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Full Name</label>
+            <input type="text" formControlName="fullName" class="form-input" placeholder="e.g. Rahul Sharma" />
+            <div *ngIf="ownerForm.controls.fullName.touched && ownerForm.controls.fullName.invalid" class="text-red-400 text-xs mt-1">
+              Full name is required (min 3 characters).
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Mobile Number</label>
- <input type="tel" formControlName="mobileNumber" class="form-input" placeholder="10-digit mobile number" />
- <div *ngIf="ownerForm.controls.mobileNumber.touched && ownerForm.controls.mobileNumber.invalid" class="text-red-400 text-xs mt-1">
- Please enter a valid 10-digit mobile number.
- </div>
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Mobile Number</label>
+            <input type="tel" formControlName="mobileNumber" class="form-input" placeholder="10-digit mobile number" />
+            <div *ngIf="ownerForm.controls.mobileNumber.touched && ownerForm.controls.mobileNumber.invalid" class="text-red-400 text-xs mt-1">
+              Please enter a valid 10-digit mobile number.
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Email Address</label>
- <input type="email" formControlName="email" class="form-input" placeholder="e.g. rahul@example.com" />
- <div *ngIf="ownerForm.controls.email.touched && ownerForm.controls.email.invalid" class="text-red-400 text-xs mt-1">
- Please enter a valid email address.
- </div>
- </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Email Address</label>
+            <input type="email" formControlName="email" class="form-input" placeholder="e.g. rahul@example.com" />
+            <div *ngIf="ownerForm.controls.email.touched && ownerForm.controls.email.invalid" class="text-red-400 text-xs mt-1">
+              Please enter a valid email address.
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Residential/Office Address</label>
- <textarea formControlName="address" rows="3" class="form-input" placeholder="Enter complete address"></textarea>
- <div *ngIf="ownerForm.controls.address.touched && ownerForm.controls.address.invalid" class="text-red-400 text-xs mt-1">
- Address is required.
- </div>
- </div>
- </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Residential/Office Address</label>
+            <textarea formControlName="address" rows="3" class="form-input" placeholder="Enter complete address"></textarea>
+            <div *ngIf="ownerForm.controls.address.touched && ownerForm.controls.address.invalid" class="text-red-400 text-xs mt-1">
+              Address is required.
+            </div>
+          </div>
+        </div>
 
- <!-- Terms and Conditions Scroll Box -->
- <div class="mt-6">
- <label class="form-label text-sm text-[var(--text-secondary)] mb-2 block">Terms & Conditions of Partnership</label>
- <div class="bg-[var(--bg-card)] border border-[var(--input-border)] rounded-xl p-4 h-40 overflow-y-auto text-sm text-[var(--text-secondary)] space-y-3">
- <p><strong>1. Accuracy of Information:</strong> The turf owner guarantees that all metadata, specifications, coordinates, and prices provided are fully genuine and accurate. Fake registrations are strictly prohibited.</p>
- <p><strong>2. Document Validity:</strong> All uploaded proof documents, rental deeds, business licences, and identity proofs must be active, valid, and legally authentic. Any forged documents will lead to legal action and immediate termination.</p>
- <p><strong>3. Platform Rights:</strong> TurfXpert reserves the right to suspend, terminate, or reject any listing or owner profile suspected of fraudulent listings, price gouging, or breach of customer support guidelines.</p>
- <p><strong>4. Fee Non-Refundability:</strong> The ₹1000 partner onboarding fee covers document verification, automated dashboard provisioning, and database registration. This fee is strictly non-refundable.</p>
- </div>
- </div>
+        <!-- Terms and Conditions Scroll Box -->
+        <div class="mt-6">
+          <label class="form-label text-sm text-[var(--text-secondary)] mb-2 block">Terms & Conditions of Partnership</label>
+          <div class="bg-[var(--bg-card)] border border-[var(--input-border)] rounded-xl p-4 h-40 overflow-y-auto text-sm text-[var(--text-secondary)] space-y-3">
+            <p><strong>1. Accuracy of Information:</strong> The turf owner guarantees that all metadata, specifications, coordinates, and prices provided are fully genuine and accurate. Fake registrations are strictly prohibited.</p>
+            <p><strong>2. Document Validity:</strong> All uploaded proof documents, rental deeds, business licences, and identity proofs must be active, valid, and legally authentic. Any forged documents will lead to legal action and immediate termination.</p>
+            <p><strong>3. Platform Rights:</strong> TurfXpert reserves the right to suspend, terminate, or reject any listing or owner profile suspected of fraudulent listings, price gouging, or breach of customer support guidelines.</p>
+            <p><strong>4. Fee Non-Refundability:</strong> The ₹1000 partner onboarding fee covers document verification, automated dashboard provisioning, and database registration. This fee is strictly non-refundable.</p>
+          </div>
+        </div>
 
- <div class="flex items-center gap-3 mt-4">
- <input type="checkbox" formControlName="termsAccepted" id="termsCheck" class="w-5 h-5 rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[#146ef5] focus:ring-0" />
- <label for="termsCheck" class="text-sm text-[var(--text-secondary)] select-none">I accept all the terms and conditions of partnership listed above, as well as the <a routerLink="/terms-of-service" target="_blank" class="text-[var(--primary)] hover:underline">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" class="text-[var(--primary)] hover:underline">Privacy Policy</a>.</label>
- </div>
+        <div class="flex items-center gap-3 mt-4">
+          <input type="checkbox" formControlName="termsAccepted" id="termsCheck" class="w-5 h-5 rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[#146ef5] focus:ring-0" />
+          <label for="termsCheck" class="text-sm text-[var(--text-secondary)] select-none">I accept all the terms and conditions of partnership listed above, as well as the <a routerLink="/terms-of-service" target="_blank" class="text-[var(--primary)] hover:underline">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" class="text-[var(--primary)] hover:underline">Privacy Policy</a>.</label>
+        </div>
 
- <button type="submit" [disabled]="ownerForm.invalid || isSubmitting" class="btn-primary w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 mt-6">
- <span *ngIf="isSubmitting" class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
- {{ isSubmitting ? 'Saving Details...' : 'Save & Proceed' }}
- </button>
- </form>
- </div>
+        <button type="submit" [disabled]="ownerForm.invalid || isSubmitting" class="btn-primary w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 mt-6">
+          <span *ngIf="isSubmitting" class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+          {{ isSubmitting ? 'Saving Details...' : 'Save & Proceed' }}
+        </button>
+      </form>
+    </div>
 
- <!-- Step 2: Payment Gateway Interface -->
- <div *ngIf="currentStep() === 2" class="glass rounded-2xl p-5 fade-in">
- <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 2: Onboarding Fee Payment</h2>
+    <!-- Step 2: Payment Gateway Interface -->
+    <div *ngIf="currentStep() === 2" class="glass rounded-2xl p-5 sm:p-8 fade-in">
+      <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 2: Onboarding Fee Payment</h2>
 
- <div class="bg-[var(--bg-card)] border border-[var(--input-border)] rounded-xl p-6 mb-4">
- <div class="flex justify-between items-center pb-4 border-b border-[var(--input-border)]">
- <div>
- <h3 class="text-lg font-semibold text-[var(--text-primary)]">TurfXpert Seller Account Verification</h3>
- <p class="text-[var(--text-secondary)] text-sm">One-time registration & validation fee</p>
- </div>
- <span class="text-3xl font-extrabold text-[var(--primary)]">₹1000</span>
- </div>
+      <div class="bg-[var(--bg-card)] border border-[var(--input-border)] rounded-xl p-6 mb-8">
+        <div class="flex justify-between items-center pb-4 border-b border-[var(--input-border)]">
+          <div>
+            <h3 class="text-lg font-semibold text-[var(--text-primary)]">TurfXpert Seller Account Verification</h3>
+            <p class="text-[var(--text-secondary)] text-sm">One-time registration & validation fee</p>
+          </div>
+          <span class="text-3xl font-extrabold text-[var(--primary)]">₹1000</span>
+        </div>
 
- <div class="space-y-3 mt-4 text-sm text-[var(--text-secondary)]">
- <div class="flex justify-between">
- <span>Setup & Validation Service</span>
- <span>₹1000.00</span>
- </div>
- <div class="flex justify-between">
- <span>GST (0%)</span>
- <span>₹0.00</span>
- </div>
- <div class="flex justify-between font-bold text-[var(--text-primary)] pt-2 border-t border-[var(--input-border)]/60">
- <span>Total Payable Amount</span>
- <span>₹1000.00</span>
- </div>
- </div>
- </div>
+        <div class="space-y-3 mt-4 text-sm text-[var(--text-secondary)]">
+          <div class="flex justify-between">
+            <span>Setup & Validation Service</span>
+            <span>₹1000.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span>GST (0%)</span>
+            <span>₹0.00</span>
+          </div>
+          <div class="flex justify-between font-bold text-[var(--text-primary)] pt-2 border-t border-[var(--input-border)]/60">
+            <span>Total Payable Amount</span>
+            <span>₹1000.00</span>
+          </div>
+        </div>
+      </div>
 
- <div class="flex flex-col gap-4">
- <!-- Razorpay Primary Button -->
- <button (click)="payWithRazorpay()" [disabled]="isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-transform active:scale-[0.99] shadow-lg shadow-[#146ef5]/20">
- <img src="https://razorpay.com/assets/razorpay-glyph.svg" class="w-6 h-6 object-contain filter invert" alt="Razorpay logo" />
- Pay ₹1000 via Razorpay Secure
- </button>
+      <div class="flex flex-col gap-4">
+        <!-- Razorpay Primary Button -->
+        <button (click)="payWithRazorpay()" [disabled]="isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-transform active:scale-[0.99] shadow-lg shadow-[#146ef5]/20">
+          <img src="https://razorpay.com/assets/razorpay-glyph.svg" class="w-6 h-6 object-contain filter invert" alt="Razorpay logo" />
+          Pay ₹1000 via Razorpay Secure
+        </button>
 
- <!-- Sandbox Simulation for Testing Convenience -->
- <div class="text-center my-2 text-[var(--text-secondary)] font-semibold text-xs">— OR —</div>
+        <!-- Sandbox Simulation for Testing Convenience -->
+        <div class="text-center my-2 text-[var(--text-secondary)] font-semibold text-xs">— OR —</div>
 
- <button (click)="simulatePaymentSuccess()" [disabled]="isSubmitting" class="w-full py-3 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 text-emerald-400 font-bold transition-colors">
- Simulate Payment Success (Sandbox Test)
- </button>
- </div>
- </div>
+        <button (click)="simulatePaymentSuccess()" [disabled]="isSubmitting" class="w-full py-3 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 text-emerald-400 font-bold transition-colors">
+          Simulate Payment Success (Sandbox Test)
+        </button>
+      </div>
+    </div>
 
- <!-- Step 3: Turf Details & Upload Documents -->
- <div *ngIf="currentStep() === 3" class="glass rounded-2xl p-5 fade-in">
- <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 3: Submit Turf Details & Verification Files</h2>
+    <!-- Step 3: Turf Details & Upload Documents -->
+    <div *ngIf="currentStep() === 3" class="glass rounded-2xl p-5 sm:p-8 fade-in">
+      <h2 class="text-2xl font-bold mb-6 text-[var(--text-primary)]">Step 3: Submit Turf Details & Verification Files</h2>
 
- <form [formGroup]="turfForm" (ngSubmit)="submitTurfDetails()" class="space-y-6">
- <div class="grid grid-cols-1 gap-6">
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Turf / Arena Name</label>
- <input type="text" formControlName="turfName" class="form-input" placeholder="e.g. KickOff Arena, JP Nagar" />
- <div *ngIf="turfForm.controls.turfName.touched && turfForm.controls.turfName.invalid" class="text-red-400 text-xs mt-1">
- Turf name is required (min 3 characters).
- </div>
- </div>
+      <form [formGroup]="turfForm" (ngSubmit)="submitTurfDetails()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group md:col-span-2">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Turf / Arena Name</label>
+            <input type="text" formControlName="turfName" class="form-input" placeholder="e.g. KickOff Arena, JP Nagar" />
+            <div *ngIf="turfForm.controls.turfName.touched && turfForm.controls.turfName.invalid" class="text-red-400 text-xs mt-1">
+              Turf name is required (min 3 characters).
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Description & Highlights</label>
- <textarea formControlName="description" rows="4" class="form-input" placeholder="Describe your turf facilities, dimensions, amenities (washrooms, parking, water, etc.)"></textarea>
- <div *ngIf="turfForm.controls.description.touched && turfForm.controls.description.invalid" class="text-red-400 text-xs mt-1">
- Description is required (min 10 characters).
- </div>
- </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Description & Highlights</label>
+            <textarea formControlName="description" rows="4" class="form-input" placeholder="Describe your turf facilities, dimensions, amenities (washrooms, parking, water, etc.)"></textarea>
+            <div *ngIf="turfForm.controls.description.touched && turfForm.controls.description.invalid" class="text-red-400 text-xs mt-1">
+              Description is required (min 10 characters).
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Primary Sport Category</label>
- <select formControlName="turfType" class="form-input bg-[var(--input-bg)]">
- <option value="Football">Football</option>
- <option value="Cricket">Cricket</option>
- <option value="Badminton">Badminton</option>
- <option value="Multi Sports">Multi Sports</option>
- </select>
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Primary Sport Category</label>
+            <select formControlName="turfType" class="form-input bg-[var(--input-bg)]">
+              <option value="Football">Football</option>
+              <option value="Cricket">Cricket</option>
+              <option value="Badminton">Badminton</option>
+              <option value="Multi Sports">Multi Sports</option>
+            </select>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Turf Contact Number</label>
- <input type="tel" formControlName="contactNumber" class="form-input" placeholder="10-digit number for bookings" />
- <div *ngIf="turfForm.controls.contactNumber.touched && turfForm.controls.contactNumber.invalid" class="text-red-400 text-xs mt-1">
- Valid 10-digit mobile number required.
- </div>
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Turf Contact Number</label>
+            <input type="tel" formControlName="contactNumber" class="form-input" placeholder="10-digit number for bookings" />
+            <div *ngIf="turfForm.controls.contactNumber.touched && turfForm.controls.contactNumber.invalid" class="text-red-400 text-xs mt-1">
+              Valid 10-digit mobile number required.
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Street Address</label>
- <input type="text" formControlName="address" class="form-input" placeholder="Road, area details" />
- <div *ngIf="turfForm.controls.address.touched && turfForm.controls.address.invalid" class="text-red-400 text-xs mt-1">
- Address is required.
- </div>
- </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Street Address</label>
+            <input type="text" formControlName="address" class="form-input" placeholder="Road, area details" />
+            <div *ngIf="turfForm.controls.address.touched && turfForm.controls.address.invalid" class="text-red-400 text-xs mt-1">
+              Address is required.
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">City</label>
- <input type="text" formControlName="city" class="form-input" placeholder="e.g. Bangalore" />
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">City</label>
+            <input type="text" formControlName="city" class="form-input" placeholder="e.g. Bangalore" />
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">State</label>
- <input type="text" formControlName="state" class="form-input" placeholder="e.g. Karnataka" />
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">State</label>
+            <input type="text" formControlName="state" class="form-input" placeholder="e.g. Karnataka" />
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Pincode</label>
- <input type="text" formControlName="pincode" class="form-input" placeholder="6-digit pincode" />
- <div *ngIf="turfForm.controls.pincode.touched && turfForm.controls.pincode.invalid" class="text-red-400 text-xs mt-1">
- Valid 6-digit pin code is required.
- </div>
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Pincode</label>
+            <input type="text" formControlName="pincode" class="form-input" placeholder="6-digit pincode" />
+            <div *ngIf="turfForm.controls.pincode.touched && turfForm.controls.pincode.invalid" class="text-red-400 text-xs mt-1">
+              Valid 6-digit pin code is required.
+            </div>
+          </div>
 
- <div class="form-group">
- <label class="form-label text-sm text-[var(--text-secondary)]">Google Map Location Link</label>
- <input type="url" formControlName="googleMapLocation" class="form-input" placeholder="Paste map share URL or coordinates" />
- <div *ngIf="turfForm.controls.googleMapLocation.touched && turfForm.controls.googleMapLocation.invalid" class="text-red-400 text-xs mt-1">
- Map location link is required.
- </div>
- </div>
- </div>
+          <div class="form-group">
+            <label class="form-label text-sm text-[var(--text-secondary)]">Google Map Location Link</label>
+            <input type="url" formControlName="googleMapLocation" class="form-input" placeholder="Paste map share URL or coordinates" />
+            <div *ngIf="turfForm.controls.googleMapLocation.touched && turfForm.controls.googleMapLocation.invalid" class="text-red-400 text-xs mt-1">
+              Map location link is required.
+            </div>
+          </div>
+        </div>
 
- <!-- Turf Images Section -->
- <div class="mt-4 border-t border-[var(--input-border)] pt-6">
- <h3 class="text-lg font-bold mb-2">Turf Photos (Min 3 Images required)</h3>
- <p class="text-[var(--text-secondary)] text-sm mb-4">Please upload clear photos of the entry, court, and seating/washrooms.</p>
- 
- <div class="grid grid-cols-2 gap-4 mb-4">
- <!-- Upload Box -->
- <div class="relative border-2 border-dashed border-[var(--input-border)] hover:border-slate-500 rounded-xl h-28 flex flex-col justify-center items-center cursor-pointer transition-colors bg-[var(--input-bg)]/30 overflow-hidden">
- <input type="file" (change)="onImageSelected($event)" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" [disabled]="isUploadingImage" />
- <span *ngIf="!isUploadingImage" class="text-2xl text-[var(--text-secondary)]">+</span>
- <span *ngIf="!isUploadingImage" class="text-xs text-[var(--text-secondary)]">Add Photo</span>
- <span *ngIf="isUploadingImage" class="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></span>
- </div>
+        <!-- Turf Images Section -->
+        <div class="mt-8 border-t border-[var(--input-border)] pt-6">
+          <h3 class="text-lg font-bold mb-2">Turf Photos (Min 3 Images required)</h3>
+          <p class="text-[var(--text-secondary)] text-sm mb-4">Please upload clear photos of the entry, court, and seating/washrooms.</p>
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+            <!-- Upload Box -->
+            <div class="relative border-2 border-dashed border-[var(--input-border)] hover:border-slate-500 rounded-xl h-28 flex flex-col justify-center items-center cursor-pointer transition-colors bg-[var(--input-bg)]/30 overflow-hidden">
+              <input type="file" (change)="onImageSelected($event)" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" [disabled]="isUploadingImage" />
+              <span *ngIf="!isUploadingImage" class="text-2xl text-[var(--text-secondary)]">+</span>
+              <span *ngIf="!isUploadingImage" class="text-xs text-[var(--text-secondary)]">Add Photo</span>
+              <span *ngIf="isUploadingImage" class="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></span>
+            </div>
 
- <!-- Uploaded Image Previews -->
- <div *ngFor="let img of turfImages(); let i = index" class="relative group rounded-xl h-28 overflow-hidden border border-[var(--input-border)]/60 bg-[var(--input-bg)]">
- <img [src]="(img.startsWith('http') || img.startsWith('data:')) ? img : 'https://turf-booking-backend-fixl.onrender.com' + (img.startsWith('/') ? '' : '/') + img" class="w-full h-full object-cover" alt="Uploaded turf image" />
- <!-- Remove image button overlay -->
- <button type="button" (click)="removeImage(i)" class="absolute top-1.5 right-1.5 bg-red-600 hover:bg-red-500 text-[var(--text-primary)] rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity" title="Close">
- <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
- </button>
- </div>
- </div>
- <span class="text-xs text-[var(--text-secondary)] block" [ngClass]="{'text-red-400': turfImages().length < 3}">
- Uploaded: {{ turfImages().length }} / 3 images
- </span>
- </div>
+            <!-- Uploaded Image Previews -->
+            <div *ngFor="let img of turfImages(); let i = index" class="relative group rounded-xl h-28 overflow-hidden border border-[var(--input-border)]/60 bg-[var(--input-bg)]">
+              <img [src]="(img.startsWith('http') || img.startsWith('data:')) ? img : 'https://turf-booking-backend-fixl.onrender.com' + (img.startsWith('/') ? '' : '/') + img" class="w-full h-full object-cover" alt="Uploaded turf image" />
+              <!-- Remove image button overlay -->
+              <button type="button" (click)="removeImage(i)" class="absolute top-1.5 right-1.5 bg-red-600 hover:bg-red-500 text-[var(--text-primary)] rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity" title="Close">
+                <svg  class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+          </div>
+          <span class="text-xs text-[var(--text-secondary)] block" [ngClass]="{'text-red-400': turfImages().length < 3}">
+            Uploaded: {{ turfImages().length }} / 3 images
+          </span>
+        </div>
 
- <!-- Turf Verification Documents Section -->
- <div class="mt-4 border-t border-[var(--input-border)] pt-6">
- <h3 class="text-lg font-bold mb-2">Required Verification Documents</h3>
- <p class="text-[var(--text-secondary)] text-sm mb-6">Upload active files (JPG, PNG, PDF; Max 10MB each) to prevent rejection.</p>
+        <!-- Turf Verification Documents Section -->
+        <div class="mt-8 border-t border-[var(--input-border)] pt-6">
+          <h3 class="text-lg font-bold mb-2">Required Verification Documents</h3>
+          <p class="text-[var(--text-secondary)] text-sm mb-6">Upload active files (JPG, PNG, PDF; Max 10MB each) to prevent rejection.</p>
 
- <div class="grid grid-cols-1 gap-4">
- <div *ngFor="let doc of requiredDocs; let i = index" class="glass p-4 rounded-xl border border-[var(--input-border)] flex justify-between items-center relative overflow-hidden">
- <div class="absolute inset-0 bg-[var(--input-bg)] opacity-40 pointer-events-none"></div>
- 
- <div class="z-10 pr-4">
- <span class="text-sm font-semibold block text-[var(--text-primary)]">{{ doc.type }}</span>
- <span *ngIf="doc.url" class="text-xs text-[var(--success-color)] mt-1 flex items-center gap-1">
- ✓ Uploaded ({{ doc.url.split('/').pop() }})
- </span>
- <span *ngIf="!doc.url" class="text-xs text-[var(--text-secondary)] mt-1 block">Awaiting file upload</span>
- </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let doc of requiredDocs; let i = index" class="glass p-4 rounded-xl border border-[var(--input-border)] flex justify-between items-center relative overflow-hidden">
+              <div class="absolute inset-0 bg-[var(--input-bg)] opacity-40 pointer-events-none"></div>
+              
+              <div class="z-10 pr-4">
+                <span class="text-sm font-semibold block text-[var(--text-primary)]">{{ doc.type }}</span>
+                <span *ngIf="doc.url" class="text-xs text-[var(--success-color)] mt-1 flex items-center gap-1">
+                  ✓ Uploaded ({{ doc.url.split('/').pop() }})
+                </span>
+                <span *ngIf="!doc.url" class="text-xs text-[var(--text-secondary)] mt-1 block">Awaiting file upload</span>
+              </div>
 
- <div class="z-10 flex-shrink-0">
- <label class="relative cursor-pointer py-1.5 px-3 rounded-lg bg-[var(--input-bg)] hover:bg-[var(--input-border)] border border-[var(--input-border)] text-xs font-bold transition-all block">
- <span *ngIf="doc.uploading" class="w-3.5 h-3.5 border border-[var(--text-secondary)] border-t-[var(--text-primary)] rounded-full animate-spin inline-block mr-1 align-middle"></span>
- {{ doc.url ? 'Change file' : 'Select file' }}
- <input type="file" (change)="onDocSelected($event, i)" accept="image/*,application/pdf" class="hidden" [disabled]="doc.uploading" />
- </label>
- </div>
- </div>
- </div>
- </div>
+              <div class="z-10 flex-shrink-0">
+                <label class="relative cursor-pointer py-1.5 px-3 rounded-lg bg-[var(--input-bg)] hover:bg-[var(--input-border)] border border-[var(--input-border)] text-xs font-bold transition-all block">
+                  <span *ngIf="doc.uploading" class="w-3.5 h-3.5 border border-[var(--text-secondary)] border-t-[var(--text-primary)] rounded-full animate-spin inline-block mr-1 align-middle"></span>
+                  {{ doc.url ? 'Change file' : 'Select file' }}
+                  <input type="file" (change)="onDocSelected($event, i)" accept="image/*,application/pdf" class="hidden" [disabled]="doc.uploading" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
- <button type="submit" [disabled]="turfForm.invalid || isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 text-lg">
- <span *ngIf="isSubmitting" class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
- Submit Verification Package
- </button>
- </form>
- </div>
+        <button type="submit" [disabled]="turfForm.invalid || isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 mt-8 text-lg">
+          <span *ngIf="isSubmitting" class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+          Submit Verification Package
+        </button>
+      </form>
+    </div>
 
- <!-- Step 4: Verification Status Timeline / State -->
- <div *ngIf="currentStep() === 4" class="glass rounded-2xl p-5 fade-in text-center relative overflow-hidden">
- <!-- Background effect based on status -->
- <div class="absolute inset-0 opacity-5 pointer-events-none"
- [ngClass]="{
- 'bg-[var(--accent)]': onboardingStatus() === 'Pending Verification' || onboardingStatus() === 'Under Review',
- 'bg-[var(--success-color)]': onboardingStatus() === 'Approved',
- 'bg-[var(--error-color)]': onboardingStatus() === 'Rejected'
- }"></div>
+    <!-- Step 4: Verification Status Timeline / State -->
+    <div *ngIf="currentStep() === 4" class="glass rounded-2xl p-5 sm:p-8 fade-in text-center relative overflow-hidden">
+      <!-- Background effect based on status -->
+      <div class="absolute inset-0 opacity-5 pointer-events-none"
+           [ngClass]="{
+             'bg-[var(--accent)]': onboardingStatus() === 'Pending Verification' || onboardingStatus() === 'Under Review',
+             'bg-[var(--success-color)]': onboardingStatus() === 'Approved',
+             'bg-[var(--error-color)]': onboardingStatus() === 'Rejected'
+           }"></div>
 
- <!-- Pending Verification State -->
- <div *ngIf="onboardingStatus() === 'Pending Verification' || onboardingStatus() === 'Under Review'" class="space-y-6 py-4">
- <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto animate-pulse text-3xl"
- style="background: rgba(var(--accent-rgb), 0.1); border-color: rgba(var(--accent-rgb), 0.3); color: var(--accent); box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);">
- ⏳
- </div>
- <div>
- <h2 class="text-3xl font-bold mb-2" style="color: var(--accent);">Onboarding Verification In Progress</h2>
- <p class="text-[var(--text-secondary)] max-w-lg mx-auto">
- Our administrators are currently reviewing your property deeds, identity documents, and turf details. This normally takes between 2 to 24 hours.
- </p>
- </div>
+      <!-- Pending Verification State -->
+      <div *ngIf="onboardingStatus() === 'Pending Verification' || onboardingStatus() === 'Under Review'" class="space-y-6 py-8">
+        <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto animate-pulse text-3xl"
+             style="background: rgba(var(--accent-rgb), 0.1); border-color: rgba(var(--accent-rgb), 0.3); color: var(--accent); box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);">
+          ⏳
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--accent);">Onboarding Verification In Progress</h2>
+          <p class="text-[var(--text-secondary)] max-w-lg mx-auto">
+            Our administrators are currently reviewing your property deeds, identity documents, and turf details. This normally takes between 2 to 24 hours.
+          </p>
+        </div>
 
- <!-- Progress Timeline -->
- <div class="max-w-md mx-auto mt-4 border-l border-[var(--input-border)] pl-6 text-left space-y-6 relative">
- <div class="relative">
- <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
- <h4 class="font-bold text-[var(--text-primary)]">Owner Profile Registration</h4>
- <p class="text-xs text-[var(--text-secondary)]">Completed & Verified</p>
- </div>
- <div class="relative">
- <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
- <h4 class="font-bold text-[var(--text-primary)]">₹1000 Payment Processing</h4>
- <p class="text-xs text-[var(--text-secondary)]">Paid successfully</p>
- </div>
- <div class="relative">
- <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
- <h4 class="font-bold text-[var(--text-primary)]">Turf & Documents Package Submission</h4>
- <p class="text-xs text-[var(--text-secondary)]">Metadata and uploaded files stored</p>
- </div>
- <div class="relative">
- <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" 
- [ngStyle]="onboardingStatus() === 'Under Review' ? {'background': 'var(--accent)', 'box-shadow': '0 0 8px rgba(var(--accent-rgb), 0.5)'} : {'background': 'var(--input-border)'}"></div>
- <h4 class="font-bold" [ngStyle]="onboardingStatus() === 'Under Review' ? {'color': 'var(--accent)'} : {'color': 'var(--text-secondary)'}">Administrator Audit</h4>
- <p class="text-xs text-[var(--text-secondary)]">
- {{ onboardingStatus() === 'Under Review' ? 'Under Review (Assigned to officer)' : 'Pending verification review assignment' }}
- </p>
- </div>
- </div>
+        <!-- Progress Timeline -->
+        <div class="max-w-md mx-auto mt-8 border-l border-[var(--input-border)] pl-6 text-left space-y-6 relative">
+          <div class="relative">
+            <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
+            <h4 class="font-bold text-[var(--text-primary)]">Owner Profile Registration</h4>
+            <p class="text-xs text-[var(--text-secondary)]">Completed & Verified</p>
+          </div>
+          <div class="relative">
+            <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
+            <h4 class="font-bold text-[var(--text-primary)]">₹1000 Payment Processing</h4>
+            <p class="text-xs text-[var(--text-secondary)]">Paid successfully</p>
+          </div>
+          <div class="relative">
+            <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" style="background: var(--success-color); box-shadow: 0 0 8px rgba(var(--success-rgb), 0.5);"></div>
+            <h4 class="font-bold text-[var(--text-primary)]">Turf & Documents Package Submission</h4>
+            <p class="text-xs text-[var(--text-secondary)]">Metadata and uploaded files stored</p>
+          </div>
+          <div class="relative">
+            <div class="absolute -left-[30px] top-1 w-3.5 h-3.5 rounded-full" 
+                 [ngStyle]="onboardingStatus() === 'Under Review' ? {'background': 'var(--accent)', 'box-shadow': '0 0 8px rgba(var(--accent-rgb), 0.5)'} : {'background': 'var(--input-border)'}"></div>
+            <h4 class="font-bold" [ngStyle]="onboardingStatus() === 'Under Review' ? {'color': 'var(--accent)'} : {'color': 'var(--text-secondary)'}">Administrator Audit</h4>
+            <p class="text-xs text-[var(--text-secondary)]">
+              {{ onboardingStatus() === 'Under Review' ? 'Under Review (Assigned to officer)' : 'Pending verification review assignment' }}
+            </p>
+          </div>
+        </div>
 
- <button (click)="checkStatus(true)" [disabled]="isCheckingStatus()" class="px-6 py-2.5 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg text-[var(--text-secondary)] font-semibold hover:bg-[var(--input-border)] transition-colors mt-4 flex items-center justify-center gap-2 max-w-xs mx-auto disabled:opacity-50 disabled:cursor-not-allowed">
- <span *ngIf="isCheckingStatus()" class="w-4 h-4 border-2 border-[var(--text-secondary)] border-t-[var(--text-primary)] rounded-full animate-spin inline-block"></span>
- {{ isCheckingStatus() ? 'Checking...' : 'Check Verification Status' }}
- </button>
- </div>
+        <button (click)="checkStatus(true)" [disabled]="isCheckingStatus()" class="px-6 py-2.5 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg text-[var(--text-secondary)] font-semibold hover:bg-[var(--input-border)] transition-colors mt-8 flex items-center justify-center gap-2 max-w-xs mx-auto disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="isCheckingStatus()" class="w-4 h-4 border-2 border-[var(--text-secondary)] border-t-[var(--text-primary)] rounded-full animate-spin inline-block"></span>
+          {{ isCheckingStatus() ? 'Checking...' : 'Check Verification Status' }}
+        </button>
+      </div>
 
- <!-- Rejected State -->
- <div *ngIf="onboardingStatus() === 'Rejected'" class="space-y-6 py-4">
- <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto text-3xl"
- style="background: rgba(var(--error-rgb), 0.1); border-color: rgba(var(--error-rgb), 0.3); color: var(--error-color); box-shadow: 0 0 20px rgba(var(--error-rgb), 0.2);">
- ✕
- </div>
- <div>
- <h2 class="text-3xl font-bold mb-2" style="color: var(--error-color);">Onboarding Request Rejected</h2>
- <p class="text-[var(--text-secondary)] max-w-lg mx-auto mb-4">
- Unfortunately, our administrators rejected your onboarding application due to non-compliant documentation.
- </p>
+      <!-- Rejected State -->
+      <div *ngIf="onboardingStatus() === 'Rejected'" class="space-y-6 py-8">
+        <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto text-3xl"
+             style="background: rgba(var(--error-rgb), 0.1); border-color: rgba(var(--error-rgb), 0.3); color: var(--error-color); box-shadow: 0 0 20px rgba(var(--error-rgb), 0.2);">
+          ✕
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--error-color);">Onboarding Request Rejected</h2>
+          <p class="text-[var(--text-secondary)] max-w-lg mx-auto mb-4">
+            Unfortunately, our administrators rejected your onboarding application due to non-compliant documentation.
+          </p>
 
- <div *ngIf="rejectionReason()" class="border p-4 rounded-xl max-w-md mx-auto text-sm font-semibold"
- style="background: rgba(var(--error-rgb), 0.1); border-color: rgba(var(--error-rgb), 0.2); color: var(--error-color);">
- Rejection Reason:"{{ rejectionReason() }}"
- </div>
- </div>
+          <div *ngIf="rejectionReason()" class="border p-4 rounded-xl max-w-md mx-auto text-sm font-semibold"
+               style="background: rgba(var(--error-rgb), 0.1); border-color: rgba(var(--error-rgb), 0.2); color: var(--error-color);">
+            Rejection Reason: "{{ rejectionReason() }}"
+          </div>
+        </div>
 
- <button (click)="prepareResubmission()" class="btn-primary px-4 py-3 rounded-xl font-bold shadow-lg shadow-[#146ef5]/20 mt-4">
- Modify & Re-submit Documents
- </button>
- </div>
+        <button (click)="prepareResubmission()" class="btn-primary px-8 py-3 rounded-xl font-bold shadow-lg shadow-[#146ef5]/20 mt-4">
+          Modify & Re-submit Documents
+        </button>
+      </div>
 
- <!-- Approved State -->
- <div *ngIf="onboardingStatus() === 'Approved'" class="space-y-6 py-4">
- <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto text-3xl"
- style="background: rgba(var(--success-rgb), 0.1); border-color: rgba(var(--success-rgb), 0.3); color: var(--success-color); box-shadow: 0 0 20px rgba(var(--success-rgb), 0.2);">
- ✓
- </div>
- <div>
- <h2 class="text-3xl font-bold mb-2" style="color: var(--success-color);">Verification Approved!</h2>
- <p class="text-[var(--text-secondary)] max-w-lg mx-auto">
- Your Turf owner profile has been validated. You now have full dashboard access.
- </p>
- </div>
+      <!-- Approved State -->
+      <div *ngIf="onboardingStatus() === 'Approved'" class="space-y-6 py-8">
+        <div class="w-20 h-20 border rounded-full flex items-center justify-center mx-auto text-3xl"
+             style="background: rgba(var(--success-rgb), 0.1); border-color: rgba(var(--success-rgb), 0.3); color: var(--success-color); box-shadow: 0 0 20px rgba(var(--success-rgb), 0.2);">
+          ✓
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--success-color);">Verification Approved!</h2>
+          <p class="text-[var(--text-secondary)] max-w-lg mx-auto">
+            Your Turf owner profile has been validated. You now have full dashboard access.
+          </p>
+        </div>
 
- <div class="animate-pulse text-sm text-[var(--text-secondary)]">
- Redirecting you to the Owner Dashboard now...
- </div>
- </div>
- </div>
- </div>
+        <div class="animate-pulse text-sm text-[var(--text-secondary)]">
+          Redirecting you to the Owner Dashboard now...
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

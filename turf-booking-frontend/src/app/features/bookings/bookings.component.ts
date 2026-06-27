@@ -8,1093 +8,1093 @@ import { Booking } from '../../domain/models/booking.model';
 import { NotificationService } from '../../core/services/notification.service';
 
 export interface GroupedBooking {
- bookingIds: number[];
- turfName: string;
- location: string;
- bookedOn: string;
- startTime: string;
- endTime: string;
- rawSlots: { startTime: string; endTime: string }[];
- pricePerHour: number;
- totalPrice: number;
- durationHours: number;
+  bookingIds: number[];
+  turfName: string;
+  location: string;
+  bookedOn: string;
+  startTime: string;
+  endTime: string;
+  rawSlots: { startTime: string; endTime: string }[];
+  pricePerHour: number;
+  totalPrice: number;
+  durationHours: number;
 }
 
 @Component({
- selector: 'app-bookings',
- standalone: true,
- imports: [CommonModule, FormsModule, RouterModule],
- template: `
- <div class="bookings-container container-fluid spacing-vertical-24 fade-in">
- <!-- Back Button -->
- <div class="navigation-bar">
- <button class="btn-back" routerLink="/dashboard" title="Back">
- <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
- <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
- </svg>
- Back to Book Turf
- </button>
- </div>
+  selector: 'app-bookings',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
+  template: `
+    <div class="bookings-container container-fluid spacing-vertical-24 fade-in">
+      <!-- Back Button -->
+      <div class="navigation-bar">
+        <button class="btn-back" routerLink="/dashboard" title="Back">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Book Turf
+        </button>
+      </div>
 
- <!-- Analytics & Insights -->
- <div class="glass header-card" style="margin-bottom: 2rem;">
- <div class="insights-header">
- <h1>My Insights</h1>
- <p>Personalized analytics based on your booking history</p>
- </div>
- 
- <div class="insights-grid" *ngIf="bookings().length > 0; else noInsights">
- <!-- Most Played Arena -->
- <div class="insight-card">
- <div class="insight-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;" title="Most Played Arena">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
- </div>
- <div class="insight-info">
- <h4>Most Played Arena</h4>
- <h2>{{ mostPlayedArena }}</h2>
- <span class="trend">{{ mostPlayedCount }} Bookings</span>
- </div>
- </div>
- 
- <!-- Preferred Time Slots -->
- <div class="insight-card">
- <div class="insight-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;" title="Preferred Time">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
- </div>
- <div class="insight-info">
- <h4>Preferred Time</h4>
- <h2>{{ preferredTimeSlot }}</h2>
- <span class="trend">Night Owl Badge</span>
- </div>
- </div>
- 
- <!-- Recommended Turf -->
- <div class="insight-card highlight">
- <div class="insight-icon" style="background: rgba(255, 255, 255, 0.2); color: #fff;" title="Recommended Turf">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" /></svg>
- </div>
- <div class="insight-info">
- <h4>Recommended for You</h4>
- <h2>{{ recommendedTurf }}</h2>
- <button class="btn-book-now btn-uniform" routerLink="/dashboard">Book Now</button>
- </div>
- </div>
- </div>
- <ng-template #noInsights>
- <div class="no-insights">Play more matches to unlock your personalized insights!</div>
- </ng-template>
- </div>
+      <!-- Analytics & Insights -->
+      <div class="glass header-card" style="margin-bottom: 2rem;">
+        <div class="insights-header">
+          <h1>My Insights</h1>
+          <p>Personalized analytics based on your booking history</p>
+        </div>
+        
+        <div class="insights-grid" *ngIf="bookings().length > 0; else noInsights">
+           <!-- Most Played Arena -->
+           <div class="insight-card">
+              <div class="insight-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;" title="Most Played Arena">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Most Played Arena</h4>
+                <h2>{{ mostPlayedArena }}</h2>
+                <span class="trend">{{ mostPlayedCount }} Bookings</span>
+              </div>
+           </div>
+           
+           <!-- Preferred Time Slots -->
+           <div class="insight-card">
+              <div class="insight-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;" title="Preferred Time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Preferred Time</h4>
+                <h2>{{ preferredTimeSlot }}</h2>
+                <span class="trend">Night Owl Badge</span>
+              </div>
+           </div>
+           
+           <!-- Recommended Turf -->
+           <div class="insight-card highlight">
+              <div class="insight-icon" style="background: rgba(255, 255, 255, 0.2); color: #fff;" title="Recommended Turf">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" /></svg>
+              </div>
+              <div class="insight-info">
+                <h4>Recommended for You</h4>
+                <h2>{{ recommendedTurf }}</h2>
+                <button class="btn-book-now btn-uniform" routerLink="/dashboard">Book Now</button>
+              </div>
+           </div>
+        </div>
+        <ng-template #noInsights>
+          <div class="no-insights">Play more matches to unlock your personalized insights!</div>
+        </ng-template>
+      </div>
 
- <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
- <h2 style="font-size: 1.5rem; margin: 0; color: var(--text-primary);">My Bookings</h2>
- 
- <div class="tabs-container">
- <button [class.active]="activeTab() === 'today'" (click)="activeTab.set('today')" class="tab-btn">Today's Bookings</button>
- <button [class.active]="activeTab() === 'history'" (click)="activeTab.set('history')" class="tab-btn">Booking History</button>
- </div>
- </div>
+      <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+        <h2 style="font-size: 1.5rem; margin: 0; color: var(--text-primary);">My Bookings</h2>
+        
+        <div class="tabs-container">
+          <button [class.active]="activeTab() === 'today'" (click)="activeTab.set('today')" class="tab-btn">Today's Bookings</button>
+          <button [class.active]="activeTab() === 'history'" (click)="activeTab.set('history')" class="tab-btn">Booking History</button>
+        </div>
+      </div>
 
- <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
- <div 
- *ngFor="let booking of bookings()" 
- class="glass booking-card flex-card-layout"
- >
- <div class="booking-header">
- <div class="turf-info">
- <h3>{{ booking.turfName }}</h3>
- <a 
- [href]="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.turfName + ' ' + booking.location)"
- target="_blank" 
- class="location-link"
- title="Open in Google Maps"
- >
- <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px;">
- <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
- <circle cx="12" cy="10.5" r="2.5" />
- </svg>
- <span>Location View ↗</span>
- </a>
- </div>
- <div class="booking-status">
- <span class="status-badge">Confirmed</span>
- </div>
- </div>
- 
- <div class="booking-body flex-card-body">
- <div class="info-row">
- <span class="label">Date</span>
- <span class="value">{{ formatBookingDate(booking.startTime) }}</span>
- </div>
- <div class="info-row">
- <span class="label">Time</span>
- <span class="value">{{ formatTimeBlocks(booking.rawSlots) }}</span>
- </div>
- <div class="info-row">
- <span class="label">Duration</span>
- <span class="value">{{ booking.durationHours }} Hour{{ booking.durationHours > 1 ? 's' : '' }}</span>
- </div>
- <div class="info-row">
- <span class="label">Price per hour</span>
- <span class="value">
- ₹{{ booking.pricePerHour }} &nbsp;&nbsp;
- <span style="color: var(--primary); font-weight: 700;">{{ booking.durationHours }} hrs ₹{{ booking.totalPrice }}</span>
- </span>
- </div>
- </div>
- 
- <div class="booking-actions">
- <button class="btn-share btn-uniform" (click)="shareBooking(booking)" title="Share">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
- <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
- </svg>
- Share
- </button>
- <button class="btn-cancel btn-uniform" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
- <button class="btn-share btn-uniform" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: 1px solid var(--primary);" (click)="openFeedbackModal(booking)">Rate Turf</button>
- </div>
- </div>
+      <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
+        <div 
+          *ngFor="let booking of bookings()" 
+          class="glass booking-card flex-card-layout"
+        >
+          <div class="booking-header">
+            <div class="turf-info">
+              <h3>{{ booking.turfName }}</h3>
+              <a 
+                [href]="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.turfName + ' ' + booking.location)"
+                target="_blank" 
+                class="location-link"
+                title="Open in Google Maps"
+              >
+                <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25C4.5 6.63 7.858 3.5 12 3.5s7.5 3.13 7.5 7v.5z" />
+                  <circle cx="12" cy="10.5" r="2.5" />
+                </svg>
+                <span>Location View ↗</span>
+              </a>
+            </div>
+            <div class="booking-status">
+              <span class="status-badge">Confirmed</span>
+            </div>
+          </div>
+          
+          <div class="booking-body flex-card-body">
+            <div class="info-row">
+              <span class="label">Date</span>
+              <span class="value">{{ formatBookingDate(booking.startTime) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Time</span>
+              <span class="value">{{ formatTimeBlocks(booking.rawSlots) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Duration</span>
+              <span class="value">{{ booking.durationHours }} Hour{{ booking.durationHours > 1 ? 's' : '' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Price per hour</span>
+              <span class="value">
+                ₹{{ booking.pricePerHour }} &nbsp;&nbsp;
+                <span style="color: var(--primary); font-weight: 700;">{{ booking.durationHours }} hrs ₹{{ booking.totalPrice }}</span>
+              </span>
+            </div>
+          </div>
+          
+          <div class="booking-actions">
+            <button class="btn-share btn-uniform" (click)="shareBooking(booking)" title="Share">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+              </svg>
+              Share
+            </button>
+            <button class="btn-cancel btn-uniform" (click)="openCancelModal(booking.bookingIds)">Cancel Booking</button>
+            <button class="btn-share btn-uniform" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: 1px solid var(--primary);" (click)="openFeedbackModal(booking)">Rate Turf</button>
+          </div>
+        </div>
 
- <div class="empty-state glass" *ngIf="bookings().length === 0">
- <h3>No bookings found</h3>
- <p>You haven't booked any turfs yet. Start playing today!</p>
- <button class="btn-premium btn-uniform" routerLink="/dashboard">Book a Turf</button>
- </div>
- </div>
+        <div class="empty-state glass" *ngIf="bookings().length === 0">
+          <h3>No bookings found</h3>
+          <p>You haven't booked any turfs yet. Start playing today!</p>
+          <button class="btn-premium btn-uniform" routerLink="/dashboard">Book a Turf</button>
+        </div>
+      </div>
 
- <ng-template #loadingTemplate>
- <div class="bookings-list">
- <div class="glass booking-card skeleton" *ngFor="let i of [1,2,3]"></div>
- </div>
- </ng-template>
- </div>
+      <ng-template #loadingTemplate>
+        <div class="bookings-list">
+          <div class="glass booking-card skeleton" *ngFor="let i of [1,2,3]"></div>
+        </div>
+      </ng-template>
+    </div>
 
- <!-- Cancellation Modal -->
- <div class="modal-overlay" *ngIf="isCancelModalOpen()">
- <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4">
- <h3 class="text-xl font-bold text-[#ef4444] m-0">Cancel Booking</h3>
- <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">Please provide a reason for cancelling this booking. This will be sent to your email.</p>
- <textarea 
- [(ngModel)]="cancelReason" 
- placeholder="e.g., Change of plans, Injury, Weather..." 
- rows="4"
- class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#ef4444] focus:ring-1 focus:ring-[#ef4444]/20 placeholder:text-[var(--text-secondary)]/50">
- </textarea>
- <div class="flex justify-end gap-3 pt-2">
- <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
- <button class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center min-w-[130px] disabled:opacity-50 disabled:cursor-not-allowed" (click)="confirmCancel()" [disabled]="isCancelling()">
- <span *ngIf="!isCancelling()">Confirm Cancel</span>
- <span *ngIf="isCancelling()" class="spinner-small"></span>
- </button>
- </div>
- </div>
- </div>
+    <!-- Cancellation Modal -->
+    <div class="modal-overlay" *ngIf="isCancelModalOpen()">
+      <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4">
+        <h3 class="text-xl font-bold text-[#ef4444] m-0">Cancel Booking</h3>
+        <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">Please provide a reason for cancelling this booking. This will be sent to your email.</p>
+        <textarea 
+          [(ngModel)]="cancelReason" 
+          placeholder="e.g., Change of plans, Injury, Weather..." 
+          rows="4"
+          class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#ef4444] focus:ring-1 focus:ring-[#ef4444]/20 placeholder:text-[var(--text-secondary)]/50">
+        </textarea>
+        <div class="flex justify-end gap-3 pt-2">
+          <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeCancelModal()" [disabled]="isCancelling()">Keep Booking</button>
+          <button class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center min-w-[130px] disabled:opacity-50 disabled:cursor-not-allowed" (click)="confirmCancel()" [disabled]="isCancelling()">
+            <span *ngIf="!isCancelling()">Confirm Cancel</span>
+            <span *ngIf="isCancelling()" class="spinner-small"></span>
+          </button>
+        </div>
+      </div>
+    </div>
 
- <!-- Feedback Modal -->
- <div class="modal-overlay" *ngIf="isFeedbackModalOpen()">
- <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4 text-center">
- <h3 class="text-xl font-bold text-[var(--text-primary)] m-0">Rate Your Experience</h3>
- <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">How was your game at <strong>{{ feedbackBooking?.turfName }}</strong>?</p>
- 
- <div class="star-rating" style="display: flex; justify-content: center; gap: 8px; margin: 1.5rem 0;" title="Star Rating">
- <svg *ngFor="let star of [1, 2, 3, 4, 5]" 
- (click)="feedbackRating = star"
- [attr.fill]="star <= feedbackRating ? '#fbbf24' : 'none'"
- viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" 
- 
- style="width: 32px; height: 32px; cursor: pointer; color: #fbbf24; transition: transform 0.2s;">
- <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
- </svg>
- </div>
- 
- <textarea 
- [(ngModel)]="feedbackText" 
- placeholder="Leave a quick review... (Optional)" 
- rows="3"
- class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder:text-[var(--text-secondary)]/50 mb-2">
- </textarea>
- 
- <div class="flex justify-center gap-3 pt-2">
- <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeFeedbackModal()">Skip</button>
- <button class="px-4 py-2 bg-[#7b39fc] hover:bg-[#6b21a8] rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
- </div>
- </div>
- </div>
- `,
- styles: [`
- .bookings-container {
- padding: 2rem;
- max-width: 1200px;
- margin: 0 auto;
- display: flex;
- flex-direction: column;
- gap: 2rem;
- }
- .navigation-bar {
- display: flex;
- align-items: center;
- }
- .btn-back {
- display: inline-flex;
- align-items: center;
- gap: 8px;
- background: transparent;
- border: 1px solid var(--border-color);
- color: var(--text-primary);
- padding: 8px 16px;
- border-radius: 12px;
- cursor: pointer;
- font-weight: 600;
- transition: var(--transition-smooth);
- }
- @media (max-width: 768px) {
- .btn-back {
- padding: 6px 10px;
- font-size: 0.75rem; 
- border-radius: 6px;
- gap: 4px;
- min-height: 32px !important;
- }
- .back-icon, .btn-back svg {
- width: 14px;
- height: 14px;
- }
- }
- .btn-back:hover {
- background: rgba(255,255,255,0.05);
- border-color: var(--primary);
- }
- .back-icon {
- width: 16px;
- height: 16px;
- }
- .header-card {
- padding: 2rem 2.5rem;
- border-radius: 20px;
- display: flex;
- flex-direction: column;
- gap: 0.5rem;
- }
- .header-card h1 {
- font-size: 2.2rem;
- margin: 0;
- background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
- -webkit-background-clip: text;
- -webkit-text-fill-color: transparent;
- }
- .header-card p {
- margin: 0;
- color: var(--text-secondary);
- font-size: 1rem;
- }
- 
- .tabs-container {
- display: flex;
- background: rgba(255, 255, 255, 0.05);
- border-radius: 12px;
- padding: 4px;
- gap: 4px;
- }
- .tab-btn {
- background: transparent;
- border: none;
- color: var(--text-secondary);
- padding: 8px 16px;
- border-radius: 8px;
- cursor: pointer;
- font-weight: 600;
- font-size: 0.9rem;
- transition: var(--transition-smooth);
- }
- .tab-btn:hover {
- color: var(--text-primary);
- }
- .tab-btn.active {
- background: var(--primary);
- color: white;
- box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
- }
- 
- /* Insights Grid */
- .insights-grid {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
- gap: 1.5rem;
- margin-top: 2rem;
- }
- .insight-card {
- background: rgba(255, 255, 255, 0.02);
- border: 1px solid var(--border-color);
- border-radius: 16px;
- padding: 1.5rem;
- display: flex;
- align-items: center;
- gap: 1.25rem;
- transition: var(--transition-smooth);
- }
- .insight-card:hover {
- background: rgba(255, 255, 255, 0.05);
- border-color: rgba(255, 255, 255, 0.1);
- }
- .insight-card.highlight {
- background: linear-gradient(135deg, var(--primary), var(--accent));
- border: none;
- color: white;
- }
- .insight-icon {
- width: 54px;
- height: 54px;
- border-radius: 14px;
- display: flex;
- align-items: center;
- justify-content: center;
- flex-shrink: 0;
- }
- .insight-icon svg {
- width: 28px;
- height: 28px;
- }
- .insight-info {
- display: flex;
- flex-direction: column;
- }
- .insight-info h4 {
- font-size: 0.85rem;
- text-transform: uppercase;
- letter-spacing: 0.05em;
- opacity: 0.7;
- margin-bottom: 0.25rem;
- margin-top: 0;
- }
- .insight-info h2 {
- font-size: 1.15rem;
- font-weight: 700;
- margin-bottom: 0.25rem;
- margin-top: 0;
- }
- .insight-card.highlight .insight-info h4,
- .insight-card.highlight .insight-info h2 {
- color: white;
- }
- .trend {
- font-size: 0.85rem;
- font-weight: 600;
- color: var(--text-secondary);
- }
- .insight-card.highlight .trend {
- color: rgba(255, 255, 255, 0.8);
- }
- .btn-book-now {
- margin-top: 0.5rem;
- background: rgba(255,255,255,0.2);
- color: white;
- border: none;
- padding: 6px 12px;
- border-radius: 8px;
- font-size: 0.85rem;
- font-weight: 700;
- cursor: pointer;
- width: fit-content;
- transition: background 0.2s;
- }
- .btn-book-now:hover {
- background: rgba(255,255,255,0.3);
- }
- .no-insights {
- margin-top: 2rem;
- padding: 1.5rem;
- text-align: center;
- background: rgba(255, 255, 255, 0.02);
- border-radius: 12px;
- color: var(--text-secondary);
- border: 1px dashed var(--border-color);
- }
+    <!-- Feedback Modal -->
+    <div class="modal-overlay" *ngIf="isFeedbackModalOpen()">
+      <div class="bg-[var(--bg-card)] max-w-md w-full p-6 rounded-2xl border border-[var(--border-color)] fade-in space-y-4 shadow-2xl m-4 text-center">
+        <h3 class="text-xl font-bold text-[var(--text-primary)] m-0">Rate Your Experience</h3>
+        <p class="text-[var(--text-secondary)] text-sm leading-relaxed m-0">How was your game at <strong>{{ feedbackBooking?.turfName }}</strong>?</p>
+        
+        <div class="star-rating" style="display: flex; justify-content: center; gap: 8px; margin: 1.5rem 0;" title="Star Rating">
+          <svg *ngFor="let star of [1, 2, 3, 4, 5]" 
+               (click)="feedbackRating = star"
+               [attr.fill]="star <= feedbackRating ? '#fbbf24' : 'none'"
+               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" 
+               
+               style="width: 32px; height: 32px; cursor: pointer; color: #fbbf24; transition: transform 0.2s;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+        </div>
+        
+        <textarea 
+          [(ngModel)]="feedbackText" 
+          placeholder="Leave a quick review... (Optional)" 
+          rows="3"
+          class="w-full bg-black/5 dark:bg-white/5 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg p-3 outline-none focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc]/20 placeholder:text-[var(--text-secondary)]/50 mb-2">
+        </textarea>
+        
+        <div class="flex justify-center gap-3 pt-2">
+          <button class="px-4 py-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-lg text-sm font-bold text-[var(--text-primary)] transition-colors" (click)="closeFeedbackModal()">Skip</button>
+          <button class="px-4 py-2 bg-[#7b39fc] hover:bg-[#6b21a8] rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" (click)="submitFeedback()" [disabled]="feedbackRating === 0">Submit Feedback</button>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .bookings-container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .navigation-bar {
+      display: flex;
+      align-items: center;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    @media (max-width: 768px) {
+      .btn-back {
+        padding: 6px 10px;
+        font-size: 0.75rem; 
+        border-radius: 6px;
+        gap: 4px;
+        min-height: 32px !important;
+      }
+      .back-icon, .btn-back svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--primary);
+    }
+    .back-icon {
+      width: 16px;
+      height: 16px;
+    }
+    .header-card {
+      padding: 2rem 2.5rem;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .header-card h1 {
+      font-size: 2.2rem;
+      margin: 0;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-card p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+    
+    .tabs-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    }
+    
+    /* Insights Grid */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .insight-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: var(--transition-smooth);
+    }
+    .insight-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .insight-card.highlight {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      color: white;
+    }
+    .insight-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .insight-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    .insight-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .insight-info h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
+    }
+    .insight-info h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
+    }
+    .insight-card.highlight .insight-info h4,
+    .insight-card.highlight .insight-info h2 {
+      color: white;
+    }
+    .trend {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .insight-card.highlight .trend {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .btn-book-now {
+      margin-top: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      transition: background 0.2s;
+    }
+    .btn-book-now:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .no-insights {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      border: 1px dashed var(--border-color);
+    }
 
- .bookings-list {
- display: grid;
- grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
- gap: 1.5rem;
- }
+    .bookings-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
 
- .booking-card {
- padding: 1.75rem;
- display: flex;
- flex-direction: column;
- justify-content: space-between;
- gap: 1.5rem;
- border-radius: 20px;
- min-height: 280px;
- transition: var(--transition-smooth);
- }
- .booking-card:hover {
- transform: translateY(-6px);
- border-color: var(--primary);
- box-shadow: var(--shadow-glow-primary);
- }
+    .booking-card {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+      border-radius: 20px;
+      min-height: 280px;
+      transition: var(--transition-smooth);
+    }
+    .booking-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow-primary);
+    }
 
- .booking-header {
- display: flex;
- justify-content: space-between;
- align-items: flex-start;
- gap: 1rem;
- }
- .turf-info {
- display: flex;
- flex-direction: column;
- gap: 0.25rem;
- }
- .turf-info h3 {
- font-size: 1.25rem;
- font-weight: 700;
- color: var(--text-primary);
- margin: 0;
- }
- .location-link {
- color: var(--text-secondary);
- font-size: 0.875rem;
- text-decoration: none;
- display: inline-flex;
- align-items: center;
- gap: 4px;
- transition: var(--transition-smooth);
- }
- .location-link:hover {
- color: var(--primary);
- }
+    .booking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .turf-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .turf-info h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .location-link {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition-smooth);
+    }
+    .location-link:hover {
+      color: var(--primary);
+    }
 
- .status-badge {
- background: rgba(16, 185, 129, 0.1);
- color: var(--success-color);
- padding: 4px 12px;
- border-radius: 12px;
- font-size: 0.75rem;
- font-weight: 700;
- border: 1px solid rgba(16, 185, 129, 0.2);
- white-space: nowrap;
- }
+    .status-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      white-space: nowrap;
+    }
 
- .booking-body {
- display: flex;
- flex-direction: column;
- gap: 0.75rem;
- padding: 1rem 0;
- border-top: 1px solid var(--glass-border);
- border-bottom: 1px solid var(--glass-border);
- }
- .info-row {
- display: flex;
- justify-content: space-between;
- align-items: center;
- }
- .label {
- font-size: 0.75rem;
- color: var(--text-secondary);
- text-transform: uppercase;
- letter-spacing: 0.05em;
- }
- .value {
- font-size: 0.9375rem;
- font-weight: 600;
- color: var(--text-primary);
- }
- .value.price {
- color: var(--primary);
- font-weight: 700;
- font-size: 1.1rem;
- }
+    .booking-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .value {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .value.price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
 
- .booking-actions {
- display: flex;
- flex-wrap: wrap;
- gap: 0.75rem;
- width: 100%;
- }
- .btn-cancel {
- width: 100%;
- background: rgba(239, 68, 68, 0.08);
- color: #ef4444;
- border: 1px solid rgba(239, 68, 68, 0.2);
- padding: 10px;
- border-radius: 12px;
- font-weight: 600;
- cursor: pointer;
- transition: var(--transition-smooth);
- }
- .btn-cancel:hover {
- background: var(--error-color);
- color: #ffffff;
- border-color: var(--error-color);
- }
- .btn-share {
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 6px;
- padding: 10px 18px;
- border-radius: 12px;
- font-weight: 700;
- font-size: 0.9rem;
- cursor: pointer;
- background: transparent;
- border: 1px solid var(--primary);
- color: var(--primary);
- transition: var(--transition-smooth);
- }
- .btn-share svg {
- width: 18px;
- height: 18px;
- }
- .btn-share:hover {
- background: rgba(var(--primary-rgb), 0.1);
- box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
- }
- 
- .empty-state {
- padding: 5rem;
- text-align: center;
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 1.5rem;
- grid-column: 1 / -1;
- }
+    .booking-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .btn-cancel {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .btn-cancel:hover {
+      background: var(--error-color);
+      color: #ffffff;
+      border-color: var(--error-color);
+    }
+    .btn-share {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      transition: var(--transition-smooth);
+    }
+    .btn-share svg {
+      width: 18px;
+      height: 18px;
+    }
+    .btn-share:hover {
+      background: rgba(var(--primary-rgb), 0.1);
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
+    }
+    
+    .empty-state {
+      padding: 5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      grid-column: 1 / -1;
+    }
 
- /* Modal Styles */
- .modal-overlay {
- position: fixed;
- top: 0;
- left: 0;
- right: 0;
- bottom: 0;
- background: rgba(0, 0, 0, 0.5);
- backdrop-filter: blur(4px);
- display: flex;
- align-items: center;
- justify-content: center;
- z-index: 1000;
- animation: fadeIn 0.3s ease;
- }
- .modal-content {
- width: 90%;
- max-width: 400px;
- padding: 2rem;
- display: flex;
- flex-direction: column;
- gap: 1.5rem;
- }
- .modal-content h3 {
- font-size: 1.5rem;
- color: #ef4444;
- margin: 0;
- }
- .modal-content p {
- color: var(--text-secondary);
- font-size: 0.9375rem;
- line-height: 1.5;
- margin: 0;
- }
- .modal-content textarea {
- width: 100%;
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 8px;
- padding: 1rem;
- color: var(--text-primary);
- font-family: inherit;
- resize: vertical;
- }
- .modal-content textarea:focus {
- outline: none;
- border-color: #ef4444;
- }
- .modal-actions {
- display: flex;
- justify-content: flex-end;
- gap: 1rem;
- }
- .btn-secondary {
- background: transparent;
- border: 1px solid var(--glass-border);
- color: var(--text-primary);
- padding: 10px 20px;
- border-radius: 8px;
- cursor: pointer;
- font-weight: 600;
- }
- .btn-secondary:hover:not([disabled]) {
- background: rgba(255, 255, 255, 0.05);
- }
- .btn-cancel-confirm {
- background: #ef4444;
- color: white;
- border: none;
- padding: 10px 20px;
- border-radius: 8px;
- cursor: pointer;
- font-weight: 600;
- transition: background 0.2s ease;
- display: flex;
- align-items: center;
- justify-content: center;
- min-width: 130px;
- }
- .btn-cancel-confirm:hover:not([disabled]) {
- background: #dc2626;
- }
- .btn-cancel-confirm[disabled] {
- opacity: 0.7;
- cursor: not-allowed;
- }
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content {
+      width: 90%;
+      max-width: 400px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .modal-content h3 {
+      font-size: 1.5rem;
+      color: #ef4444;
+      margin: 0;
+    }
+    .modal-content p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .modal-content textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      resize: vertical;
+    }
+    .modal-content textarea:focus {
+      outline: none;
+      border-color: #ef4444;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-secondary:hover:not([disabled]) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .btn-cancel-confirm {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 130px;
+    }
+    .btn-cancel-confirm:hover:not([disabled]) {
+      background: #dc2626;
+    }
+    .btn-cancel-confirm[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
 
- .spinner-small {
- width: 16px;
- height: 16px;
- border: 2px solid rgba(255,255,255,0.3);
- border-radius: 50%;
- border-top-color: #fff;
- animation: spin 1s ease-in-out infinite;
- }
- @keyframes spin {
- to { transform: rotate(360deg); }
- }
- @keyframes fadeIn {
- from { opacity: 0; }
- to { opacity: 1; }
- }
+    .spinner-small {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
- .skeleton {
- height: 280px;
- animation: pulse 1.5s infinite;
- }
- @keyframes pulse {
- 0% { opacity: 0.6; }
- 50% { opacity: 0.3; }
- 100% { opacity: 0.6; }
- }
+    .skeleton {
+      height: 280px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
 
- .empty-state {
- padding: 5rem;
- text-align: center;
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 1.5rem;
- grid-column: 1 / -1;
- }
+    .empty-state {
+      padding: 5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      grid-column: 1 / -1;
+    }
 
- /* Tablet and Mobile Responsiveness */
- @media (max-width: 768px) {
- .bookings-container {
- padding: 1rem;
- gap: 1rem;
- }
- .header-card {
- display: none !important;
- }
- .header-card h1 {
- font-size: 1.5rem;
- }
- .header-card p {
- font-size: 0.85rem;
- }
- .insights-grid {
- display: flex;
- overflow-x: auto;
- scroll-snap-type: x mandatory;
- padding-bottom: 0.5rem;
- gap: 0.75rem;
- margin-top: 1rem;
- }
- .insight-card {
- min-width: 80vw;
- scroll-snap-align: center;
- flex-shrink: 0;
- padding: 1rem;
- gap: 0.75rem;
- }
- .insight-icon {
- width: 36px;
- height: 36px;
- border-radius: 10px;
- }
- .insight-icon svg {
- width: 18px;
- height: 18px;
- }
- .insight-info h4 {
- font-size: 0.75rem;
- }
- .insight-info h2 {
- font-size: 1rem;
- }
- .trend {
- font-size: 0.75rem;
- }
- h2 {
- font-size: 1.25rem !important;
- }
- .tab-btn {
- padding: 6px 10px;
- font-size: 0.8rem;
- }
- .bookings-list {
- grid-template-columns: 1fr;
- gap: 1rem;
- }
- .booking-card {
- padding: 1rem;
- gap: 1rem;
- min-height: auto;
- }
- .turf-info h3 {
- font-size: 1.1rem;
- }
- .location-link {
- font-size: 0.75rem;
- }
- .status-badge {
- font-size: 0.65rem;
- padding: 2px 8px;
- }
- .label {
- font-size: 0.65rem;
- }
- .value {
- font-size: 0.8rem;
- }
- .value.price {
- font-size: 0.9rem;
- }
- .btn-cancel, .btn-share {
- padding: 8px;
- font-size: 0.8rem;
- border-radius: 8px;
- }
- .empty-state {
- padding: 2rem 1rem;
- }
- .empty-state h3 {
- font-size: 1.2rem;
- }
- .empty-state p {
- font-size: 0.85rem;
- }
- }
+    /* Tablet and Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .bookings-container {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      .header-card {
+        display: none !important;
+      }
+      .header-card h1 {
+        font-size: 1.5rem;
+      }
+      .header-card p {
+        font-size: 0.85rem;
+      }
+      .insights-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 0.5rem;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      .insight-card {
+        min-width: 80vw;
+        scroll-snap-align: center;
+        flex-shrink: 0;
+        padding: 1rem;
+        gap: 0.75rem;
+      }
+      .insight-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+      .insight-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .insight-info h4 {
+        font-size: 0.75rem;
+      }
+      .insight-info h2 {
+        font-size: 1rem;
+      }
+      .trend {
+        font-size: 0.75rem;
+      }
+      h2 {
+        font-size: 1.25rem !important;
+      }
+      .tab-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      .bookings-list {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .booking-card {
+        padding: 1rem;
+        gap: 1rem;
+        min-height: auto;
+      }
+      .turf-info h3 {
+        font-size: 1.1rem;
+      }
+      .location-link {
+        font-size: 0.75rem;
+      }
+      .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+      }
+      .label {
+        font-size: 0.65rem;
+      }
+      .value {
+        font-size: 0.8rem;
+      }
+      .value.price {
+        font-size: 0.9rem;
+      }
+      .btn-cancel, .btn-share {
+        padding: 8px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+      }
+      .empty-state {
+        padding: 2rem 1rem;
+      }
+      .empty-state h3 {
+        font-size: 1.2rem;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
+      }
+    }
 
- @media (max-width: 480px) {
- .modal-content {
- padding: 1.25rem;
- }
- .modal-content h3 {
- font-size: 1.25rem;
- }
- .modal-content p {
- font-size: 0.85rem;
- }
- .modal-actions {
- flex-direction: column;
- gap: 0.5rem;
- }
- .modal-actions button {
- width: 100%;
- padding: 8px;
- font-size: 0.85rem;
- }
- }
- `]
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 1.25rem;
+      }
+      .modal-content h3 {
+        font-size: 1.25rem;
+      }
+      .modal-content p {
+        font-size: 0.85rem;
+      }
+      .modal-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .modal-actions button {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.85rem;
+      }
+    }
+  `]
 })
 export class BookingsComponent implements OnInit {
- allBookings = signal<GroupedBooking[]>([]);
- activeTab = signal<'today' | 'history'>('today');
- 
- bookings = computed(() => {
- const all = this.allBookings();
- if (this.activeTab() === 'history') {
- return all;
- } else {
- const today = new Date();
- today.setHours(0, 0, 0, 0);
- return all.filter(b => {
- const bookingDate = new Date(b.startTime);
- bookingDate.setHours(0, 0, 0, 0);
- return bookingDate.getTime() === today.getTime();
- });
- }
- });
+  allBookings = signal<GroupedBooking[]>([]);
+  activeTab = signal<'today' | 'history'>('today');
+  
+  bookings = computed(() => {
+    const all = this.allBookings();
+    if (this.activeTab() === 'history') {
+      return all;
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return all.filter(b => {
+        const bookingDate = new Date(b.startTime);
+        bookingDate.setHours(0, 0, 0, 0);
+        return bookingDate.getTime() === today.getTime();
+      });
+    }
+  });
 
- isLoading = signal(true);
- 
- // Modal state
- isCancelModalOpen = signal(false);
- isCancelling = signal(false);
- bookingsToCancel: number[] = [];
- cancelReason: string = '';
+  isLoading = signal(true);
+  
+  // Modal state
+  isCancelModalOpen = signal(false);
+  isCancelling = signal(false);
+  bookingsToCancel: number[] = [];
+  cancelReason: string = '';
 
- // Analytics state
- mostPlayedArena = 'N/A';
- mostPlayedCount = 0;
- preferredTimeSlot = 'N/A';
- recommendedTurf = 'Green Field Arena';
- 
- // Feedback state
- isFeedbackModalOpen = signal(false);
- feedbackBooking: GroupedBooking | null = null;
- feedbackRating = 0;
- feedbackText = '';
+  // Analytics state
+  mostPlayedArena = 'N/A';
+  mostPlayedCount = 0;
+  preferredTimeSlot = 'N/A';
+  recommendedTurf = 'Green Field Arena';
+  
+  // Feedback state
+  isFeedbackModalOpen = signal(false);
+  feedbackBooking: GroupedBooking | null = null;
+  feedbackRating = 0;
+  feedbackText = '';
 
- constructor(
- private bookingRepository: BookingRepository,
- private notificationService: NotificationService
- ) {}
+  constructor(
+    private bookingRepository: BookingRepository,
+    private notificationService: NotificationService
+  ) {}
 
- ngOnInit() {
- this.loadBookings();
- }
+  ngOnInit() {
+    this.loadBookings();
+  }
 
- loadBookings() {
- this.isLoading.set(true);
- this.bookingRepository.getMyBookings().subscribe({
- next: (data) => {
- const grouped = this.groupBookings(data);
- this.allBookings.set(grouped);
- this.calculateAnalytics(grouped);
- this.isLoading.set(false);
- },
- error: () => {
- this.notificationService.error('Failed to load your bookings.');
- this.isLoading.set(false);
- }
- });
- }
+  loadBookings() {
+    this.isLoading.set(true);
+    this.bookingRepository.getMyBookings().subscribe({
+      next: (data) => {
+        const grouped = this.groupBookings(data);
+        this.allBookings.set(grouped);
+        this.calculateAnalytics(grouped);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.notificationService.error('Failed to load your bookings.');
+        this.isLoading.set(false);
+      }
+    });
+  }
 
- calculateAnalytics(bookings: GroupedBooking[]) {
- if (!bookings || bookings.length === 0) return;
- 
- // 1. Most Played Arena
- const arenaCounts: Record<string, number> = {};
- bookings.forEach(b => {
- arenaCounts[b.turfName] = (arenaCounts[b.turfName] || 0) + b.rawSlots.length;
- });
- 
- let maxArena = 'N/A';
- let maxCount = 0;
- for (const [arena, count] of Object.entries(arenaCounts)) {
- if (count > maxCount) {
- maxCount = count;
- maxArena = arena;
- }
- }
- this.mostPlayedArena = maxArena;
- this.mostPlayedCount = maxCount;
- 
- // 2. Preferred Time Slot
- const timeCounts: Record<string, number> = {};
- bookings.forEach(b => {
- b.rawSlots.forEach(slot => {
- const hour = new Date(slot.startTime).getHours();
- if (hour < 12) timeCounts['Morning (6 AM - 12 PM)'] = (timeCounts['Morning (6 AM - 12 PM)'] || 0) + 1;
- else if (hour < 17) timeCounts['Afternoon (12 PM - 5 PM)'] = (timeCounts['Afternoon (12 PM - 5 PM)'] || 0) + 1;
- else timeCounts['Evening (5 PM - 11 PM)'] = (timeCounts['Evening (5 PM - 11 PM)'] || 0) + 1;
- });
- });
- 
- let maxTime = 'N/A';
- let maxTimeCount = 0;
- for (const [time, count] of Object.entries(timeCounts)) {
- if (count > maxTimeCount) {
- maxTimeCount = count;
- maxTime = time;
- }
- }
- this.preferredTimeSlot = maxTime;
- 
- // 3. Recommended Turf
- const allTurfs = ['Spartan Arena', 'Kickoff Turf', 'Galaxy Sports', 'Green Field Arena', 'Urban Pitch'];
- const unplayedTurfs = allTurfs.filter(t => !arenaCounts[t]);
- if (unplayedTurfs.length > 0) {
- this.recommendedTurf = unplayedTurfs[Math.floor(Math.random() * unplayedTurfs.length)];
- } else {
- this.recommendedTurf = maxArena;
- }
- }
+  calculateAnalytics(bookings: GroupedBooking[]) {
+    if (!bookings || bookings.length === 0) return;
+    
+    // 1. Most Played Arena
+    const arenaCounts: Record<string, number> = {};
+    bookings.forEach(b => {
+      arenaCounts[b.turfName] = (arenaCounts[b.turfName] || 0) + b.rawSlots.length;
+    });
+    
+    let maxArena = 'N/A';
+    let maxCount = 0;
+    for (const [arena, count] of Object.entries(arenaCounts)) {
+      if (count > maxCount) {
+        maxCount = count;
+        maxArena = arena;
+      }
+    }
+    this.mostPlayedArena = maxArena;
+    this.mostPlayedCount = maxCount;
+    
+    // 2. Preferred Time Slot
+    const timeCounts: Record<string, number> = {};
+    bookings.forEach(b => {
+      b.rawSlots.forEach(slot => {
+        const hour = new Date(slot.startTime).getHours();
+        if (hour < 12) timeCounts['Morning (6 AM - 12 PM)'] = (timeCounts['Morning (6 AM - 12 PM)'] || 0) + 1;
+        else if (hour < 17) timeCounts['Afternoon (12 PM - 5 PM)'] = (timeCounts['Afternoon (12 PM - 5 PM)'] || 0) + 1;
+        else timeCounts['Evening (5 PM - 11 PM)'] = (timeCounts['Evening (5 PM - 11 PM)'] || 0) + 1;
+      });
+    });
+    
+    let maxTime = 'N/A';
+    let maxTimeCount = 0;
+    for (const [time, count] of Object.entries(timeCounts)) {
+      if (count > maxTimeCount) {
+        maxTimeCount = count;
+        maxTime = time;
+      }
+    }
+    this.preferredTimeSlot = maxTime;
+    
+    // 3. Recommended Turf
+    const allTurfs = ['Spartan Arena', 'Kickoff Turf', 'Galaxy Sports', 'Green Field Arena', 'Urban Pitch'];
+    const unplayedTurfs = allTurfs.filter(t => !arenaCounts[t]);
+    if (unplayedTurfs.length > 0) {
+      this.recommendedTurf = unplayedTurfs[Math.floor(Math.random() * unplayedTurfs.length)];
+    } else {
+      this.recommendedTurf = maxArena;
+    }
+  }
 
- groupBookings(flatBookings: Booking[]): GroupedBooking[] {
- const groups: GroupedBooking[] = [];
+  groupBookings(flatBookings: Booking[]): GroupedBooking[] {
+    const groups: GroupedBooking[] = [];
 
- // Sort by bookedOn descending first, then by startTime ascending (so consecutive slots are sorted chronologically within the group)
- const sorted = [...flatBookings].sort((a, b) => {
- // Sort bookedOn descending (latest bookings first)
- const bookedOnDiff = new Date(b.bookedOn).getTime() - new Date(a.bookedOn).getTime();
- if (Math.abs(bookedOnDiff) > 60000) {
- return bookedOnDiff;
- }
- // If bookedOn is very close (within 1 min), sort by startTime ascending
- return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
- });
+    // Sort by bookedOn descending first, then by startTime ascending (so consecutive slots are sorted chronologically within the group)
+    const sorted = [...flatBookings].sort((a, b) => {
+      // Sort bookedOn descending (latest bookings first)
+      const bookedOnDiff = new Date(b.bookedOn).getTime() - new Date(a.bookedOn).getTime();
+      if (Math.abs(bookedOnDiff) > 60000) {
+        return bookedOnDiff;
+      }
+      // If bookedOn is very close (within 1 min), sort by startTime ascending
+      return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+    });
 
- for (const booking of sorted) {
- const bookingDateStr = new Date(booking.startTime).toDateString();
- const bookingBookedTime = new Date(booking.bookedOn).getTime();
+    for (const booking of sorted) {
+      const bookingDateStr = new Date(booking.startTime).toDateString();
+      const bookingBookedTime = new Date(booking.bookedOn).getTime();
 
- const existingGroup = groups.find(g => {
- const groupDateStr = new Date(g.startTime).toDateString();
- const groupBookedTime = new Date(g.bookedOn).getTime();
+      const existingGroup = groups.find(g => {
+        const groupDateStr = new Date(g.startTime).toDateString();
+        const groupBookedTime = new Date(g.bookedOn).getTime();
 
- return g.turfName === booking.turfName &&
- groupDateStr === bookingDateStr &&
- Math.abs(groupBookedTime - bookingBookedTime) < 60000; // 60 seconds
- });
+        return g.turfName === booking.turfName &&
+               groupDateStr === bookingDateStr &&
+               Math.abs(groupBookedTime - bookingBookedTime) < 60000; // 60 seconds
+      });
 
- if (existingGroup) {
- existingGroup.bookingIds.push(booking.bookingId);
- existingGroup.totalPrice += booking.price;
- existingGroup.durationHours += 1;
- existingGroup.rawSlots.push({ startTime: booking.startTime, endTime: booking.endTime });
- // Update startTime and endTime to span the whole selection (still kept for backward compatibility)
- if (new Date(booking.startTime).getTime() < new Date(existingGroup.startTime).getTime()) {
- existingGroup.startTime = booking.startTime;
- }
- if (new Date(booking.endTime).getTime() > new Date(existingGroup.endTime).getTime()) {
- existingGroup.endTime = booking.endTime;
- }
- } else {
- groups.push({
- bookingIds: [booking.bookingId],
- turfName: booking.turfName,
- location: booking.location,
- bookedOn: booking.bookedOn,
- startTime: booking.startTime,
- endTime: booking.endTime,
- rawSlots: [{ startTime: booking.startTime, endTime: booking.endTime }],
- pricePerHour: booking.price, // Base hourly rate
- totalPrice: booking.price,
- durationHours: 1
- });
- }
- }
+      if (existingGroup) {
+        existingGroup.bookingIds.push(booking.bookingId);
+        existingGroup.totalPrice += booking.price;
+        existingGroup.durationHours += 1;
+        existingGroup.rawSlots.push({ startTime: booking.startTime, endTime: booking.endTime });
+        // Update startTime and endTime to span the whole selection (still kept for backward compatibility)
+        if (new Date(booking.startTime).getTime() < new Date(existingGroup.startTime).getTime()) {
+          existingGroup.startTime = booking.startTime;
+        }
+        if (new Date(booking.endTime).getTime() > new Date(existingGroup.endTime).getTime()) {
+          existingGroup.endTime = booking.endTime;
+        }
+      } else {
+        groups.push({
+          bookingIds: [booking.bookingId],
+          turfName: booking.turfName,
+          location: booking.location,
+          bookedOn: booking.bookedOn,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          rawSlots: [{ startTime: booking.startTime, endTime: booking.endTime }],
+          pricePerHour: booking.price, // Base hourly rate
+          totalPrice: booking.price,
+          durationHours: 1
+        });
+      }
+    }
 
- return groups;
- }
+    return groups;
+  }
 
- openCancelModal(bookingIds: number[]) {
- this.bookingsToCancel = bookingIds;
- this.cancelReason = '';
- this.isCancelModalOpen.set(true);
- }
+  openCancelModal(bookingIds: number[]) {
+    this.bookingsToCancel = bookingIds;
+    this.cancelReason = '';
+    this.isCancelModalOpen.set(true);
+  }
 
- closeCancelModal() {
- this.isCancelModalOpen.set(false);
- this.bookingsToCancel = [];
- }
+  closeCancelModal() {
+    this.isCancelModalOpen.set(false);
+    this.bookingsToCancel = [];
+  }
 
- confirmCancel() {
- if (this.bookingsToCancel.length === 0) return;
- 
- if (!this.cancelReason.trim()) {
- this.notificationService.error('Please provide a reason for cancellation');
- return;
- }
+  confirmCancel() {
+    if (this.bookingsToCancel.length === 0) return;
+    
+    if (!this.cancelReason.trim()) {
+      this.notificationService.error('Please provide a reason for cancellation');
+      return;
+    }
 
- this.isCancelling.set(true);
+    this.isCancelling.set(true);
 
- const cancelRequests = this.bookingsToCancel.map(id => 
- this.bookingRepository.cancelBooking(id, this.cancelReason)
- );
+    const cancelRequests = this.bookingsToCancel.map(id => 
+      this.bookingRepository.cancelBooking(id, this.cancelReason)
+    );
 
- forkJoin(cancelRequests).subscribe({
- next: () => {
- this.notificationService.success(`Booking cancelled. Reason recorded: ${this.cancelReason}`);
- this.isCancelling.set(false);
- this.closeCancelModal();
- this.loadBookings(); // Refresh the list
- },
- error: () => {
- this.notificationService.error('Failed to cancel the booking. Please try again.');
- this.isCancelling.set(false);
- }
- });
- }
+    forkJoin(cancelRequests).subscribe({
+      next: () => {
+        this.notificationService.success(`Booking cancelled. Reason recorded: ${this.cancelReason}`);
+        this.isCancelling.set(false);
+        this.closeCancelModal();
+        this.loadBookings(); // Refresh the list
+      },
+      error: () => {
+        this.notificationService.error('Failed to cancel the booking. Please try again.');
+        this.isCancelling.set(false);
+      }
+    });
+  }
 
- // Feedback Methods
- openFeedbackModal(booking: GroupedBooking) {
- this.feedbackBooking = booking;
- this.feedbackRating = 0;
- this.feedbackText = '';
- this.isFeedbackModalOpen.set(true);
- }
+  // Feedback Methods
+  openFeedbackModal(booking: GroupedBooking) {
+    this.feedbackBooking = booking;
+    this.feedbackRating = 0;
+    this.feedbackText = '';
+    this.isFeedbackModalOpen.set(true);
+  }
 
- closeFeedbackModal() {
- this.isFeedbackModalOpen.set(false);
- this.feedbackBooking = null;
- }
+  closeFeedbackModal() {
+    this.isFeedbackModalOpen.set(false);
+    this.feedbackBooking = null;
+  }
 
- submitFeedback() {
- // Here you would typically call your backend API to save the review
- this.notificationService.success(`Thank you for rating ${this.feedbackBooking?.turfName} ${this.feedbackRating} stars!`);
- this.closeFeedbackModal();
- }
+  submitFeedback() {
+    // Here you would typically call your backend API to save the review
+    this.notificationService.success(`Thank you for rating ${this.feedbackBooking?.turfName} ${this.feedbackRating} stars!`);
+    this.closeFeedbackModal();
+  }
 
- encodeURIComponent(val: string): string {
- return encodeURIComponent(val);
- }
+  encodeURIComponent(val: string): string {
+    return encodeURIComponent(val);
+  }
 
- formatBookingDate(startTime: string): string {
- const date = new Date(startTime);
- return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
- }
+  formatBookingDate(startTime: string): string {
+    const date = new Date(startTime);
+    return date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' }) + ',';
+  }
 
- formatTimeBlocks(slots: { startTime: string; endTime: string }[]): string {
- if (!slots || slots.length === 0) return '';
+  formatTimeBlocks(slots: { startTime: string; endTime: string }[]): string {
+    if (!slots || slots.length === 0) return '';
 
- // Sort slots by start time
- const sortedSlots = [...slots].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
- 
- const mergedBlocks: { start: Date, end: Date, hours: number }[] = [];
- 
- for (const slot of sortedSlots) {
- const slotStart = new Date(slot.startTime);
- const slotEnd = new Date(slot.endTime);
- 
- const lastBlock = mergedBlocks.length > 0 ? mergedBlocks[mergedBlocks.length - 1] : null;
- 
- if (lastBlock && lastBlock.end.getTime() === slotStart.getTime()) {
- // Contiguous slot, extend the last block
- lastBlock.end = slotEnd;
- lastBlock.hours += 1;
- } else {
- // New block
- mergedBlocks.push({ start: slotStart, end: slotEnd, hours: 1 });
- }
- }
+    // Sort slots by start time
+    const sortedSlots = [...slots].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    
+    const mergedBlocks: { start: Date, end: Date, hours: number }[] = [];
+    
+    for (const slot of sortedSlots) {
+      const slotStart = new Date(slot.startTime);
+      const slotEnd = new Date(slot.endTime);
+      
+      const lastBlock = mergedBlocks.length > 0 ? mergedBlocks[mergedBlocks.length - 1] : null;
+      
+      if (lastBlock && lastBlock.end.getTime() === slotStart.getTime()) {
+        // Contiguous slot, extend the last block
+        lastBlock.end = slotEnd;
+        lastBlock.hours += 1;
+      } else {
+        // New block
+        mergedBlocks.push({ start: slotStart, end: slotEnd, hours: 1 });
+      }
+    }
 
- // Format blocks
- const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
- const parts = mergedBlocks.map(block => {
- let startStr = block.start.toLocaleTimeString([], formatOptions).toUpperCase();
- let endStr = block.end.toLocaleTimeString([], formatOptions).toUpperCase();
- 
- // Clean up":00" for a cleaner look if desired
- startStr = startStr.replace(':00', '');
- endStr = endStr.replace(':00', '');
+    // Format blocks
+    const formatOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const parts = mergedBlocks.map(block => {
+      let startStr = block.start.toLocaleTimeString([], formatOptions).toUpperCase();
+      let endStr = block.end.toLocaleTimeString([], formatOptions).toUpperCase();
+      
+      // Clean up ":00" for a cleaner look if desired
+      startStr = startStr.replace(':00', '');
+      endStr = endStr.replace(':00', '');
 
- if (block.hours === 1) {
- return `${startStr} (1 hr)`;
- } else {
- return `${startStr} to ${endStr} (${block.hours} hr${block.hours > 1 ? 's' : ''})`;
- }
- });
- 
- return parts.join(', ');
- }
+      if (block.hours === 1) {
+        return `${startStr} (1 hr)`;
+      } else {
+        return `${startStr} to ${endStr} (${block.hours} hr${block.hours > 1 ? 's' : ''})`;
+      }
+    });
+    
+    return parts.join(', ');
+  }
 
- shareBooking(booking: GroupedBooking) {
- if (navigator.share) {
- navigator.share({
- title: 'TurfXpert Booking',
- text: `I just booked ${booking.turfName} on TurfXpert for ${this.formatBookingDate(booking.startTime)} at ${this.formatTimeBlocks(booking.rawSlots)}! Care to join me?`,
- url: window.location.origin
- }).catch(err => { /* Share failed */ });
- } else {
- alert('Sharing is not supported on this device/browser.');
- }
- }
+  shareBooking(booking: GroupedBooking) {
+    if (navigator.share) {
+      navigator.share({
+        title: 'TurfXpert Booking',
+        text: `I just booked ${booking.turfName} on TurfXpert for ${this.formatBookingDate(booking.startTime)} at ${this.formatTimeBlocks(booking.rawSlots)}! Care to join me?`,
+        url: window.location.origin
+      }).catch(err => { /* Share failed */ });
+    } else {
+      alert('Sharing is not supported on this device/browser.');
+    }
+  }
 }
