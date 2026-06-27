@@ -12,7 +12,95 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  standalone: true,
  imports: [CommonModule, TurfCardComponent],
  template: `
- <div class="dashboard-page container-fluid spacing-vertical-48 fade-in">
+ <!-- MOBILE APP LAYOUT -->
+ <div class="hidden app:block bg-[#0c0f1a] min-h-screen text-white pb-[100px] font-manrope">
+   <!-- Location & Header -->
+   <div class="px-5 pt-12 pb-4 flex justify-between items-center sticky top-0 bg-[#0c0f1a]/95 backdrop-blur-xl z-50 border-b border-white/5">
+     <div class="flex items-center gap-3">
+       <div class="w-11 h-11 rounded-full bg-slate-800/80 border border-white/10 flex items-center justify-center overflow-hidden">
+         <img src="/images/logo.png" alt="Profile" class="w-full h-full object-cover p-1">
+       </div>
+       <div (click)="toggleLocationSelect()">
+         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Your Location</p>
+         <p class="text-sm font-extrabold flex items-center gap-1.5 text-white">{{ selectedLocation() || 'All Locations' }} <svg class="w-3.5 h-3.5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg></p>
+       </div>
+     </div>
+     <div class="w-11 h-11 rounded-full bg-slate-800/50 border border-white/5 flex items-center justify-center relative">
+       <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+       <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0c0f1a]"></span>
+     </div>
+   </div>
+
+   <!-- Search Bar -->
+   <div class="px-5 mt-2 mb-6">
+     <div class="relative bg-slate-800/50 border border-white/5 rounded-2xl flex items-center p-1 shadow-inner focus-within:border-[var(--primary)]/50 transition-colors">
+       <svg class="w-5 h-5 text-slate-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+       <input class="bg-transparent border-none text-sm font-medium p-3.5 w-full outline-none text-white placeholder-slate-400" placeholder="Search for turfs, arenas..." [value]="searchTerm()" #mobileSearch (input)="onSearch(mobileSearch.value)" />
+       <button class="bg-[var(--primary)] hover:bg-[#8e52ff] p-3 rounded-xl transition-colors shadow-[0_0_15px_rgba(123,57,252,0.4)]" (click)="toggleFilter()">
+         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+       </button>
+     </div>
+   </div>
+
+   <!-- Banner Slider -->
+   <div class="px-5 mb-8">
+     <div class="relative w-full h-36 rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-r from-purple-900 to-indigo-900 flex items-center justify-between px-6 border border-white/10">
+       <div class="z-10 w-2/3">
+         <span class="inline-block px-2 py-1 bg-white/20 backdrop-blur-md rounded-md text-[10px] font-bold uppercase tracking-wider mb-2">Weekend Special</span>
+         <h2 class="text-xl font-bold font-instrument-serif leading-tight">Get 20% off on your first match!</h2>
+       </div>
+       <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-[var(--primary)] opacity-30 rounded-full blur-3xl"></div>
+     </div>
+   </div>
+
+   <!-- Categories -->
+   <div class="px-0 mb-8">
+     <h3 class="text-sm font-extrabold px-5 mb-4 text-slate-100">Play by Sport</h3>
+     <div class="flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x">
+       <div class="flex flex-col items-center gap-2 min-w-[76px] snap-start" *ngFor="let game of gameTypes" (click)="selectGame(game)">
+         <div class="w-[76px] h-[76px] rounded-[1.25rem] bg-slate-800/50 border border-white/5 flex items-center justify-center text-3xl transition-all duration-300"
+              [ngClass]="selectedGame() === game ? 'bg-[var(--primary)] border-[var(--primary)] shadow-[0_0_20px_rgba(123,57,252,0.3)] scale-105' : 'hover:bg-slate-800'">
+           <span *ngIf="game === 'Cricket'">🏏</span>
+           <span *ngIf="game === 'Football'">⚽</span>
+           <span *ngIf="game === 'Badminton'">🏸</span>
+           <span *ngIf="game === 'Tennis'">🎾</span>
+           <span *ngIf="game === 'Volleyball'">🏐</span>
+           <span *ngIf="game === 'Basketball'">🏀</span>
+         </div>
+         <span class="text-[11px] font-bold text-slate-400 transition-colors duration-300"
+               [class.text-white]="selectedGame() === game">{{ game }}</span>
+       </div>
+     </div>
+   </div>
+
+   <!-- Popular Turfs -->
+   <div class="px-5">
+     <div class="flex justify-between items-end mb-5">
+       <h3 class="text-lg font-extrabold text-slate-100">Popular Near You</h3>
+       <span class="text-[11px] text-[var(--primary)] font-bold uppercase tracking-wider">See All</span>
+     </div>
+     
+     <div class="flex flex-col gap-5" *ngIf="!isLoading()">
+       <app-turf-card *ngFor="let turf of turfs()" [turf]="turf"></app-turf-card>
+     </div>
+     <div class="flex flex-col gap-5" *ngIf="isLoading()">
+       <div class="h-[280px] w-full bg-slate-800/50 rounded-[2rem] animate-pulse"></div>
+       <div class="h-[280px] w-full bg-slate-800/50 rounded-[2rem] animate-pulse"></div>
+     </div>
+     
+     <!-- Empty State -->
+     <div class="empty-state text-center py-10" *ngIf="!isLoading() && turfs().length === 0">
+       <div class="w-16 h-16 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-4">
+         <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+       </div>
+       <h3 class="text-lg font-bold text-slate-300">No arenas found</h3>
+       <p class="text-xs text-slate-500 mt-2">Try switching sports or location</p>
+     </div>
+   </div>
+ </div>
+
+ <!-- DESKTOP WEB LAYOUT -->
+ <div class="block app:hidden dashboard-page container-fluid spacing-vertical-48 fade-in">
  <header class="dashboard-header glass">
  <div class="header-content">
  <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>

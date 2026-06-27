@@ -26,5 +26,9 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss/plugin')(function({ addVariant }) {
+      addVariant('app', 'body.is-mobile-app &');
+    })
+  ],
 }
