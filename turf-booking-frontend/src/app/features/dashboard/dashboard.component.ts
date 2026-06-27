@@ -13,7 +13,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  imports: [CommonModule, TurfCardComponent],
  template: `
  <!-- MOBILE APP LAYOUT -->
- <div class="hidden app:block bg-[#0c0f1a] min-h-screen text-white pb-[100px] font-manrope">
+ <div class="mobile-app-layout bg-[#0c0f1a] min-h-screen text-white pb-[100px] font-manrope">
    <!-- Location & Header -->
    <div class="px-5 pt-12 pb-4 flex justify-between items-center sticky top-0 bg-[#0c0f1a]/95 backdrop-blur-xl z-50 border-b border-white/5">
      <div class="flex items-center gap-3">
@@ -100,7 +100,7 @@ import { TurfRepository } from '../../domain/repositories/turf.repository';
  </div>
 
  <!-- DESKTOP WEB LAYOUT -->
- <div class="block app:hidden dashboard-page container-fluid spacing-vertical-48 fade-in">
+ <div class="desktop-web-layout dashboard-page container-fluid spacing-vertical-48 fade-in">
  <header class="dashboard-header glass">
  <div class="header-content">
  <h1>Find Your Perfect <span class="typing-text">{{ displayedWord() }}</span><span class="typing-cursor">|</span></h1>
