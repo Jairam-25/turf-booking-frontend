@@ -28,7 +28,7 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
  </div>
  </div>
 
- <h1 class="animate-fade-in-up animation-delay-100 font-instrument-serif hero-heading text-3xl ] leading-[1.1] tracking-tight max-w-[1000px]">
+ <h1 class="animate-fade-in-up animation-delay-100 font-instrument-serif hero-heading text-3xl leading-[1.1] tracking-tight max-w-[1000px]">
  Book your perfect turf instantly <span class="italic font-normal mx-2 select-none">and</span> play stress-free
  </h1>
 
