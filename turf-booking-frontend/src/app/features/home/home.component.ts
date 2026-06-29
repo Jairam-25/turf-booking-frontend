@@ -5,12 +5,11 @@ import { TurfBackgroundComponent } from '../../shared/components/turf-background
 import { MagicAnimatedBeamComponent } from '../../shared/components/magic-ui/magic-animated-beam/magic-animated-beam.component';
 import { MagicNumberTickerComponent } from '../../shared/components/magic-ui/magic-number-ticker/magic-number-ticker.component';
 import { LottieHeroComponent } from '../../shared/components/magic-ui/lottie-hero/lottie-hero.component';
-import { MagicCardDirective } from '../../shared/directives/magic-card.directive';
 
 @Component({
  selector: 'app-home',
  standalone: true,
- imports: [CommonModule, RouterModule, TurfBackgroundComponent, MagicAnimatedBeamComponent, MagicNumberTickerComponent, LottieHeroComponent, MagicCardDirective],
+ imports: [CommonModule, RouterModule, TurfBackgroundComponent, MagicAnimatedBeamComponent, MagicNumberTickerComponent, LottieHeroComponent],
  template: `
  <div class="hero-page font-inter overflow-x-hidden">
  <!-- Custom realistic animated turf background -->
@@ -28,7 +27,7 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
  </div>
  </div>
 
- <h1 class="animate-fade-in-up animation-delay-100 font-instrument-serif hero-heading text-3xl leading-[1.1] tracking-tight max-w-[1000px]">
+ <h1 class="animate-fade-in-up animation-delay-100 font-instrument-serif hero-heading text-5xl md:text-[96px] leading-[1.1] tracking-tight max-w-[1000px]">
  Book your perfect turf instantly <span class="italic font-normal mx-2 select-none">and</span> play stress-free
  </h1>
 
@@ -49,54 +48,46 @@ import { MagicCardDirective } from '../../shared/directives/magic-card.directive
 
  <!-- How it Works section with Magic Animated Beam -->
  <section class="relative z-10 w-full max-w-4xl mx-auto px-4 py-6 text-center animate-fade-in-up animation-delay-400">
- <h2 class="font-instrument-serif text-3xl mb-4">Instant Booking Flow</h2>
- <div class="magic-card w-full rounded-[1.5rem]">
- <div class="magic-card-inner glass p-4 rounded-[calc(1.5rem-1px)] backdrop-blur-md relative border-none">
- <magic-animated-beam></magic-animated-beam>
- </div>
- </div>
+ <h2 class="font-instrument-serif text-3xl md:text-5xl mb-4 md:mb-8">Instant Booking Flow</h2>
+  <div class="glass p-6 rounded-3xl backdrop-blur-md">
+    <magic-animated-beam></magic-animated-beam>
+  </div>
  </section>
 
- <section class="relative z-10 w-full max-w-6xl mx-auto px-6 py-8">
- <div class="grid grid-cols-1 gap-4">
- <div class="group animate-scroll-fade-in animation-delay-300 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="turfSwiped()">
- <div class="magic-card-inner flex flex-col items-center text-center p-4 rounded-[calc(2rem-2px)]">
- <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
- <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
- </div>
- <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
- <magic-number-ticker [value]="50" [format]="'full'" [swipeDelay]="400">+</magic-number-ticker>
- </h3>
- <h4 class="font-manrope font-semibold text-lg mb-2">Premium Turfs</h4>
- <p class="font-inter text-sm">Top-tier football, cricket, and badminton arenas in your vicinity.</p>
- </div>
- </div>
+ <section class="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 md:py-24">
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+      <div class="group animate-scroll-fade-in animation-delay-300 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 rounded-[2rem]" [class.lifted]="turfSwiped()">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </div>
+        <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
+          <magic-number-ticker [value]="50" [format]="'full'" [swipeDelay]="400">+</magic-number-ticker>
+        </h3>
+        <h4 class="font-manrope font-semibold text-lg mb-2">Premium Turfs</h4>
+        <p class="font-inter text-sm">Top-tier football, cricket, and badminton arenas in your vicinity.</p>
+      </div>
 
- <div class="group animate-scroll-fade-in animation-delay-400 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="playersSwiped()">
- <div class="magic-card-inner flex flex-col items-center text-center p-4 rounded-[calc(2rem-2px)]">
- <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
- <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
- </div>
- <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
- <magic-number-ticker [value]="10000" [format]="'compact'" [swipeDelay]="600"></magic-number-ticker>
- </h3>
- <h4 class="font-manrope font-semibold text-lg mb-2">Join the Community</h4>
- <p class="font-inter text-sm">An active community of sports enthusiasts playing daily.</p>
- </div>
- </div>
+      <div class="group animate-scroll-fade-in animation-delay-400 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 rounded-[2rem]" [class.lifted]="playersSwiped()">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </div>
+        <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
+          <magic-number-ticker [value]="10000" [format]="'compact'" [swipeDelay]="600"></magic-number-ticker>
+        </h3>
+        <h4 class="font-manrope font-semibold text-lg mb-2">Join the Community</h4>
+        <p class="font-inter text-sm">An active community of sports enthusiasts playing daily.</p>
+      </div>
 
- <div class="group animate-scroll-fade-in animation-delay-500 hero-stat-card magic-card hover:border-transparent transition-all duration-300 rounded-[2rem]" [class.lifted]="slotsSwiped()">
- <div class="magic-card-inner flex flex-col items-center text-center p-4 rounded-[calc(2rem-2px)]">
- <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
- <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
- </div>
- <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
- <magic-number-ticker [value]="24" [format]="'full'" [swipeDelay]="800">/7</magic-number-ticker>
- </h3>
- <h4 class="font-manrope font-semibold text-lg mb-2">Book Instantly</h4>
- <p class="font-inter text-sm">Book slots and verify availability instantly, day or night.</p>
- </div>
- </div>
+      <div class="group animate-scroll-fade-in animation-delay-500 hero-stat-card flex flex-col items-center text-center hover:border-[var(--primary)]/50 transition-all duration-300 rounded-[2rem]" [class.lifted]="slotsSwiped()">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-[var(--primary)] mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10" style="background: rgba(var(--primary-rgb), 0.1);" title="Back">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="font-manrope font-bold text-4xl text-[var(--primary)] mb-2">
+          <magic-number-ticker [value]="24" [format]="'full'" [swipeDelay]="800">/7</magic-number-ticker>
+        </h3>
+        <h4 class="font-manrope font-semibold text-lg mb-2">Book Instantly</h4>
+        <p class="font-inter text-sm">Book slots and verify availability instantly, day or night.</p>
+      </div>
  </div>
  </section>
 
