@@ -248,7 +248,16 @@ export class LoginComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       if (params['email'] && !this.initialEmail) this.initialEmail = params['email'];
-      // We removed reading password from queryParams for security
+      
+      // Auto-copy OTP feature from Email Click
+      if (params['copy']) {
+        const otpCode = params['copy'];
+        navigator.clipboard.writeText(otpCode).then(() => {
+          this.notificationService.success('✅ OTP ' + otpCode + ' copied to clipboard!');
+        }).catch(err => {
+          this.notificationService.info('OTP is: ' + otpCode);
+        });
+      }
     });
 
  // Fade out the entry overlay transition after component loads

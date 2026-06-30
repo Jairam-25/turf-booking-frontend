@@ -149,10 +149,20 @@ export class RegisterComponent implements OnInit {
 
  // 2. Read query parameters to pre-fill registration fields (Smart Auth Flow)
  this.route.queryParams.subscribe(params => {
- if (params['email']) this.initialEmail = params['email'];
- if (params['name']) this.initialName = params['name'];
- if (params['phone']) this.initialPhone = params['phone'];
- });
+      if (params['email']) this.initialEmail = params['email'];
+      if (params['name']) this.initialName = params['name'];
+      if (params['phone']) this.initialPhone = params['phone'];
+      
+      // Auto-copy OTP feature from Email Click
+      if (params['copy']) {
+        const otpCode = params['copy'];
+        navigator.clipboard.writeText(otpCode).then(() => {
+          this.notificationService.success('✅ OTP ' + otpCode + ' copied to clipboard!');
+        }).catch(err => {
+          this.notificationService.info('OTP is: ' + otpCode);
+        });
+      }
+    });
 
  // Fade out the entry overlay transition after component loads
  setTimeout(() => {
