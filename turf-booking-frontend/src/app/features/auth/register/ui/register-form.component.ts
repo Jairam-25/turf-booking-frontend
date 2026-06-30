@@ -164,7 +164,11 @@ const STATE_DATA: Record<string, Record<string, string>> = {
 
     <!-- Step 2: OTP Entry -->
     <div *ngIf="currentStep() === 2" class="step-container animate-fade-in-up">
-      <p class="text-sm text-[var(--text-secondary)] mb-4">An OTP has been sent to <strong>{{ emailControl.value }}</strong>. Please enter it below.</p>
+      <p class="text-sm text-[var(--text-secondary)] mb-4">An OTP has been sent to 
+  <strong (click)="copyEmail()" title="Click to copy email" style="cursor: pointer; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+    {{ emailControl.value }}
+    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+  </strong>. Please enter it below.</p>
       <div class="form-group">
         <label>Enter 6-digit OTP</label>
         <input 
