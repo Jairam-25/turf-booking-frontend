@@ -383,18 +383,40 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
 })
 export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   
-  ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges) {
     if (changes['initialEmail'] && changes['initialEmail'].currentValue) {
       this.loginForm.patchValue({ emailOrPhone: changes['initialEmail'].currentValue });
     }
     if (changes['initialPassword'] && changes['initialPassword'].currentValue) {
       this.loginForm.patchValue({ password: changes['initialPassword'].currentValue });
+      this.setModeToPassword();
     }
   }
 
   ngOnInit() {
     if (this.initialEmail) {
       this.loginForm.patchValue({ emailOrPhone: this.initialEmail });
+    }
+    if (this.initialPassword) {
+      this.loginForm.patchValue({ password: this.initialPassword });
+      this.setModeToPassword();
+    }
+  }
+
+  setModeToPassword() {
+    this.isOtpMode = false;
+    this.otpSent = false;
+    this.maskedEmail = '';
+    this.clearInterval();
+    const pw = this.loginForm.get('password');
+    const otp = this.loginForm.get('otpCode');
+    otp?.clearValidators();
+    pw?.setValidators([Validators.required]);
+    pw?.updateValueAndValidity();
+    otp?.updateValueAndValidity();
+    this.loginForm.get('emailOrPhone')?.updateValueAndValidity();
+  }
+);
     }
     if (this.initialPassword) {
       this.loginForm.patchValue({ password: this.initialPassword });
