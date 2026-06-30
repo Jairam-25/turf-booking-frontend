@@ -345,6 +345,17 @@ export class RegisterFormComponent implements OnInit {
   availableStates = Object.keys(STATE_DATA);
   availableDistricts: string[] = [];
 
+  
+  copyEmail() {
+    const ctrl = this.loginForm ? this.loginForm.get('emailOrPhone') : this.emailControl;
+    const email = ctrl?.value;
+    if (email) {
+      navigator.clipboard.writeText(email).then(() => {
+        this.notificationService.success('Email copied to clipboard!');
+      });
+    }
+  }
+
   constructor() {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],

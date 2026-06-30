@@ -52,14 +52,6 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
             (blur)="trimField('password')"
           >
           <button type="button" class="eye-btn" (click)="
-  copyEmail() {
-    const email = this.loginForm.get('emailOrPhone')?.value;
-    if (email) {
-      navigator.clipboard.writeText(email).then(() => {
-        this.notificationService.success('Email copied to clipboard!');
-      });
-    }
-  }
 
   togglePasswordVisibility()" tabindex="-1">
             <svg *ngIf="!showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -451,6 +443,17 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
 
   togglePasswordVisibility() {
     this.showPassword.update(v => !v);
+  }
+
+  
+  copyEmail() {
+    const ctrl = this.loginForm ? this.loginForm.get('emailOrPhone') : this.emailControl;
+    const email = ctrl?.value;
+    if (email) {
+      navigator.clipboard.writeText(email).then(() => {
+        this.notificationService.success('Email copied to clipboard!');
+      });
+    }
   }
 
   constructor(
