@@ -242,6 +242,11 @@ export class LoginComponent implements OnInit {
  const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
  this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
 
+    this.route.queryParams.subscribe(params => {
+      if (params['email']) this.initialEmail = params['email'];
+      if (params['password']) this.initialPassword = params['password'];
+    });
+
  // Fade out the entry overlay transition after component loads
  setTimeout(() => {
  this.isOverlayActive.set(false);
