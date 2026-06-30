@@ -8,49 +8,49 @@
 
     <!-- Step Stepper Progress Indicator -->
     <div class="glass rounded-2xl p-6 mb-8 flex justify-between items-center relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 pointer-events-none"></div>
       
       <div class="flex items-center w-full justify-between relative z-10">
         <!-- Step 1 Indicator -->
         <div class="flex flex-col items-center flex-1">
           <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
-               [ngClass]="currentStep() >= 1 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+               [ngClass]="currentStep() >= 1 ? 'bg-[#7b39fc] text-white shadow-[0_0_15px_rgba(123,57,252,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
             <span *ngIf="currentStep() > 1">✓</span>
             <span *ngIf="currentStep() === 1">1</span>
           </div>
           <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 1 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Owner Details</span>
         </div>
 
-        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 1}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#7b39fc]': currentStep() > 1}"></div>
 
         <!-- Step 2 Indicator -->
         <div class="flex flex-col items-center flex-1">
           <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
-               [ngClass]="currentStep() >= 2 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+               [ngClass]="currentStep() >= 2 ? 'bg-[#7b39fc] text-white shadow-[0_0_15px_rgba(123,57,252,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
             <span *ngIf="currentStep() > 2">✓</span>
             <span *ngIf="currentStep() === 2">2</span>
           </div>
           <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 2 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Registration Fee</span>
         </div>
 
-        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 2}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#7b39fc]': currentStep() > 2}"></div>
 
         <!-- Step 3 Indicator -->
         <div class="flex flex-col items-center flex-1">
           <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
-               [ngClass]="currentStep() >= 3 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+               [ngClass]="currentStep() >= 3 ? 'bg-[#7b39fc] text-white shadow-[0_0_15px_rgba(123,57,252,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
             <span *ngIf="currentStep() > 3">✓</span>
             <span *ngIf="currentStep() === 3">3</span>
           </div>
           <span class="text-xs mt-2 font-medium" [ngClass]="currentStep() >= 3 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'">Turf Details</span>
         </div>
 
-        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#146ef5]': currentStep() > 3}"></div>
+        <div class="h-0.5 bg-[var(--input-border)] flex-1 mx-2" [ngClass]="{'bg-[#7b39fc]': currentStep() > 3}"></div>
 
         <!-- Step 4 Indicator -->
         <div class="flex flex-col items-center flex-1">
           <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300"
-               [ngClass]="currentStep() >= 4 ? 'bg-[#146ef5] text-white shadow-[0_0_15px_rgba(20,110,245,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
+               [ngClass]="currentStep() >= 4 ? 'bg-[#7b39fc] text-white shadow-[0_0_15px_rgba(123,57,252,0.5)]' : 'bg-[var(--input-border)] text-[var(--text-secondary)]'">
             <span *ngIf="onboardingStatus() === 'Approved'">✓</span>
             <span *ngIf="onboardingStatus() !== 'Approved'">4</span>
           </div>
@@ -110,7 +110,7 @@
         </div>
 
         <div class="flex items-center gap-3 mt-4">
-          <input type="checkbox" formControlName="termsAccepted" id="termsCheck" class="w-5 h-5 rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[#146ef5] focus:ring-0" />
+          <input type="checkbox" formControlName="termsAccepted" id="termsCheck" class="w-5 h-5 rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[#7b39fc] focus:ring-0" />
           <label for="termsCheck" class="text-sm text-[var(--text-secondary)] select-none">I accept all the terms and conditions of partnership listed above, as well as the <a routerLink="/terms-of-service" target="_blank" class="text-[var(--primary)] hover:underline">Terms of Service</a> and <a routerLink="/privacy-policy" target="_blank" class="text-[var(--primary)] hover:underline">Privacy Policy</a>.</label>
         </div>
 
@@ -152,7 +152,7 @@
 
       <div class="flex flex-col gap-4">
         <!-- Razorpay Primary Button -->
-        <button (click)="payWithRazorpay()" [disabled]="isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-transform active:scale-[0.99] shadow-lg shadow-[#146ef5]/20">
+        <button (click)="payWithRazorpay()" [disabled]="isSubmitting" class="btn-primary w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-transform active:scale-[0.99] shadow-lg shadow-[#7b39fc]/20">
           <img src="https://razorpay.com/assets/razorpay-glyph.svg" class="w-6 h-6 object-contain filter invert" alt="Razorpay logo" />
           Pay ₹1000 via Razorpay Secure
         </button>
@@ -378,7 +378,7 @@
           </div>
         </div>
 
-        <button (click)="prepareResubmission()" class="btn-primary px-8 py-3 rounded-xl font-bold shadow-lg shadow-[#146ef5]/20 mt-4">
+        <button (click)="prepareResubmission()" class="btn-primary px-8 py-3 rounded-xl font-bold shadow-lg shadow-[#7b39fc]/20 mt-4">
           Modify & Re-submit Documents
         </button>
       </div>

@@ -267,7 +267,7 @@ export class LoginComponent implements OnInit {
  setTimeout(() => {
  this.authStore.setSession(credentials.user, credentials.auth.token, credentials.auth.refreshToken);
  this.notificationService.success('Logged in successfully!');
- const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+ const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
  this.router.navigateByUrl(returnUrl);
  this.isLoading.set(false);
  }, 1500);
@@ -294,7 +294,7 @@ export class LoginComponent implements OnInit {
  setTimeout(() => {
  this.authStore.setSession(response.user, response.auth.token, response.auth.refreshToken);
  this.notificationService.success('Logged in successfully!');
- const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+ const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
  this.router.navigateByUrl(returnUrl);
  this.isLoading.set(false);
  }, 1500);

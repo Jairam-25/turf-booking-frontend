@@ -35,7 +35,18 @@ export class AuthRepositoryImpl implements AuthRepository {
  return this.http.post<string>(`${this.apiUrl}/reset-password`, data);
  }
 
- sendOtp(emailOrPhone: string): Observable<string> {
+ 
+  sendRegistrationOtp(emailOrPhone: string): Observable<string> {
+    return this.http.post<any>(`${this.apiUrl}/send-registration-otp`, { emailOrPhone })
+      .pipe(map(res => res.data));
+  }
+
+  verifyRegistrationOtp(emailOrPhone: string, otpCode: string): Observable<boolean> {
+    return this.http.post<any>(`${this.apiUrl}/verify-registration-otp`, { emailOrPhone, otpCode })
+      .pipe(map(res => res.data));
+  }
+
+  sendOtp(emailOrPhone: string): Observable<string> {
  return this.http.post<string>(`${this.apiUrl}/send-otp`, { emailOrPhone });
  }
 

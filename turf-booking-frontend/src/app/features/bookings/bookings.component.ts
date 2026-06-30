@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -28,11 +28,11 @@ export interface GroupedBooking {
     <div class="bookings-container container-fluid spacing-vertical-24 fade-in">
       <!-- Back Button -->
       <div class="navigation-bar">
-        <button class="btn-back" routerLink="/dashboard" title="Back">
+        <button class="btn-back" (click)="goBack()" title="Back">
           <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back to Book Turf
+          Go Back
         </button>
       </div>
 
@@ -411,19 +411,17 @@ export interface GroupedBooking {
 
     .bookings-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
     }
 
     .booking-card {
-      padding: 1.75rem;
+      padding: 1rem;
+      border-radius: 20px;
+      min-height: 250px;
+      transition: var(--transition-smooth);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 1.5rem;
-      border-radius: 20px;
-      min-height: 280px;
-      transition: var(--transition-smooth);
     }
     .booking-card:hover {
       transform: translateY(-6px);
@@ -803,6 +801,12 @@ export interface GroupedBooking {
   `]
 })
 export class BookingsComponent implements OnInit {
+  private location = inject(Location);
+
+  goBack() {
+    this.location.back();
+  }
+
   allBookings = signal<GroupedBooking[]>([]);
   activeTab = signal<'today' | 'history'>('today');
   

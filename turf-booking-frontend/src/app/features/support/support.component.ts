@@ -1,5 +1,5 @@
-import { Component, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed , inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -1035,6 +1035,12 @@ interface ChatMessage {
   `]
 })
 export class SupportComponent {
+  private location = inject(Location);
+
+  goBack() {
+    this.location.back();
+  }
+
   searchQuery = '';
   selectedCategory = signal<string>('all');
 

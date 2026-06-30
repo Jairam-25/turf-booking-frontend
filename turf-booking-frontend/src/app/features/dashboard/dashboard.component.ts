@@ -5,101 +5,290 @@ import { Turf, TurfResponse } from '../../domain/models/turf.model';
 import { TurfCardComponent } from './ui/turf-card.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { FcmNotificationService } from '../../core/services/fcm-notification.service';
+import { Router } from '@angular/router';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
+import { AuthStore } from '../../core/services/auth.store';
 
 @Component({
  selector: 'app-dashboard',
  standalone: true,
  imports: [CommonModule, TurfCardComponent],
  template: `
- <!-- MOBILE APP LAYOUT -->
- <div class="mobile-app-layout bg-[#0c0f1a] min-h-screen text-white pb-[100px] font-manrope">
-   <!-- Location & Header -->
-   <div class="px-5 pt-12 pb-4 flex justify-between items-center sticky top-0 bg-[#0c0f1a]/95 backdrop-blur-xl z-50 border-b border-white/5">
-     <div class="flex items-center gap-3">
-       <div class="w-11 h-11 rounded-full bg-slate-800/80 border border-white/10 flex items-center justify-center overflow-hidden">
-         <img src="/images/logo.png" alt="Profile" class="w-full h-full object-cover p-1">
-       </div>
-       <div (click)="toggleLocationSelect()">
-         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Your Location</p>
-         <p class="text-sm font-extrabold flex items-center gap-1.5 text-white">{{ selectedLocation() || 'All Locations' }} <svg class="w-3.5 h-3.5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg></p>
-       </div>
-     </div>
-     <div class="w-11 h-11 rounded-full bg-slate-800/50 border border-white/5 flex items-center justify-center relative">
-       <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-       <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0c0f1a]"></span>
-     </div>
-   </div>
+    <!-- MOBILE APP LAYOUT (TurfXpert Premium) -->
+  <div class="mobile-app-layout min-h-screen pb-[100px] font-sans transition-colors duration-300 bg-white dark:bg-[#0A0E1A] text-slate-900 dark:text-white">
+    
+    <!-- Mobile Navbar Header -->
+    <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 backdrop-blur-xl" style="padding-top: max(1rem, env(safe-area-inset-top));">
+      <div class="flex justify-between items-center mb-5">
+        <!-- User Info & Location -->
+        <div class="flex flex-col">
+          <span class="text-lg font-bold">Hi, {{ userName() }}</span>
+          <div class="flex items-center gap-1 mt-1 cursor-pointer" (click)="toggleLocationSelect()">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span class="text-[13px] font-medium text-slate-500">{{ selectedLocation() || 'Select Location' }}</span>
+          </div>
+        </div>
+        
+        <!-- Action Icons (Theme, Favorites, Notifications) -->
+        <div class="flex items-center gap-4">
+          <button (click)="toggleTheme()" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <svg *ngIf="isDarkMode()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg *ngIf="!isDarkMode()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          </button>
+          <button class="text-slate-400 hover:text-slate-600 transition-colors" (click)="navigateToLiked()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </button>
+          <button class="text-slate-400 hover:text-slate-600 transition-colors relative" (click)="navigateToNotifications()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <div class="absolute top-0 right-1 w-2 h-2 bg-[#ea5b5b] rounded-full" *ngIf="hasNotifications()"></div>
+          </button>
+        </div>
+      </div>
 
-   <!-- Search Bar -->
-   <div class="px-5 mt-2 mb-6">
-     <div class="relative bg-slate-800/50 border border-white/5 rounded-2xl flex items-center p-1 shadow-inner focus-within:border-[var(--primary)]/50 transition-colors">
-       <svg class="w-5 h-5 text-slate-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-       <input class="bg-transparent border-none text-sm font-medium p-3.5 w-full outline-none text-white placeholder-slate-400" placeholder="Search for turfs, arenas..." [value]="searchTerm()" #mobileSearch (input)="onSearch(mobileSearch.value)" />
-       <button class="bg-[var(--primary)] hover:bg-[#8e52ff] p-3 rounded-xl transition-colors shadow-[0_0_15px_rgba(123,57,252,0.4)]" (click)="toggleFilter()">
-         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-       </button>
-     </div>
-   </div>
+      <!-- Search & Filter Row -->
+      <div class="flex items-center gap-3">
+        <div class="relative bg-[#f3f9f0] dark:bg-slate-800/40 rounded-full flex items-center p-1 flex-grow transition-all">
+          <svg class="w-5 h-5 text-slate-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input class="bg-transparent border-none text-[14px] font-medium p-3 w-full outline-none text-slate-800 dark:text-white placeholder-slate-400" placeholder="What sport are you looking for?" [value]="searchTerm()" #mobileSearch (input)="onSearch(mobileSearch.value)" />
+        </div>
+        <button class="text-slate-500 hover:text-slate-800 transition-colors p-2" (click)="toggleFilter()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        </button>
+      </div>
 
-   <!-- Banner Slider -->
-   <div class="px-5 mb-8">
-     <div class="relative w-full h-36 rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-r from-purple-900 to-indigo-900 flex items-center justify-between px-6 border border-white/10">
-       <div class="z-10 w-2/3">
-         <span class="inline-block px-2 py-1 bg-white/20 backdrop-blur-md rounded-md text-[10px] font-bold uppercase tracking-wider mb-2">Weekend Special</span>
-         <h2 class="text-xl font-bold font-instrument-serif leading-tight">Get 20% off on your first match!</h2>
-       </div>
-       <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-[var(--primary)] opacity-30 rounded-full blur-3xl"></div>
-     </div>
-   </div>
+          </div>
+  
+    <!-- Banner Slider -->
+    <div class="px-5 mb-8">
+      <div class="relative w-full rounded-[24px] overflow-hidden shadow-lg bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] px-6 py-6 cursor-pointer transition-transform active:scale-95 flex" (click)="navigateToOffers()">
+        <div class="z-10 w-2/3">
+          <p class="text-[11px] font-medium text-white/90 mb-1">Batdoor Badminton Academy</p>
+          <h2 class="text-[20px] font-bold text-white leading-tight mb-4">Get Special offer<br><span class="font-normal text-sm">Up to</span> 40%</h2>
+          <button class="bg-white text-[#22c55e] text-xs font-bold px-4 py-2 rounded-full shadow-sm">View details</button>
+        </div>
+        <div class="absolute right-[-20px] top-1/2 transform -translate-y-1/2 opacity-90 text-[100px]">⚽</div>
+      </div>
+    </div>
+  
+    <!-- Categories -->
+    <div class="px-0 mb-8">
+      <div class="flex justify-between items-center px-5 mb-4">
+        <h3 class="text-[18px] font-bold">Categories</h3>
+        <span class="text-[12px] text-[#9b51e0] font-bold uppercase cursor-pointer active:scale-95 transition-transform" (click)="selectAllGamesAndScroll()">See All</span>
+      </div>
+      <div class="flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x">
+        
+        <div class="flex flex-col items-center gap-2 min-w-[72px] snap-start cursor-pointer" (click)="selectGame('All')">
+          <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-xl transition-all duration-300"
+               [ngClass]="selectedGame() === 'All' ? 'bg-slate-900 text-white shadow-md' : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white'">
+            <span class="font-bold text-sm">All</span>
+          </div>
+        </div>
 
-   <!-- Categories -->
-   <div class="px-0 mb-8">
-     <h3 class="text-sm font-extrabold px-5 mb-4 text-slate-100">Play by Sport</h3>
-     <div class="flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x">
-       <div class="flex flex-col items-center gap-2 min-w-[76px] snap-start" *ngFor="let game of gameTypes" (click)="selectGame(game)">
-         <div class="w-[76px] h-[76px] rounded-[1.25rem] bg-slate-800/50 border border-white/5 flex items-center justify-center text-3xl transition-all duration-300"
-              [ngClass]="selectedGame() === game ? 'bg-[var(--primary)] border-[var(--primary)] shadow-[0_0_20px_rgba(123,57,252,0.3)] scale-105' : 'hover:bg-slate-800'">
-           <span *ngIf="game === 'Cricket'">🏏</span>
-           <span *ngIf="game === 'Football'">⚽</span>
-           <span *ngIf="game === 'Badminton'">🏸</span>
-           <span *ngIf="game === 'Tennis'">🎾</span>
-           <span *ngIf="game === 'Volleyball'">🏐</span>
-           <span *ngIf="game === 'Basketball'">🏀</span>
-         </div>
-         <span class="text-[11px] font-bold text-slate-400 transition-colors duration-300"
-               [class.text-white]="selectedGame() === game">{{ game }}</span>
-       </div>
-     </div>
-   </div>
+        <div class="flex flex-col items-center gap-2 min-w-[72px] snap-start cursor-pointer" *ngFor="let game of ['Cricket', 'Football', 'Badminton', 'Basketball', 'Volleyball']" (click)="selectGame(game)">
+          <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-3xl transition-all duration-300 relative"
+               [ngClass]="{
+                 'bg-[#eef2fc] text-[#5b73e8]': game === 'Cricket',
+                 'bg-[#fdebea] text-[#ea5b5b]': game === 'Football',
+                 'bg-[#fdf4e7] text-[#f2a74c]': game === 'Badminton',
+                 'bg-[#fdf0e7] text-[#ea7f41]': game === 'Basketball',
+                 'bg-[#f3ebfe] text-[#9b51e0]': game === 'Volleyball',
+                 'shadow-lg scale-105 border-2 border-current': selectedGame() === game
+               }">
+            <span *ngIf="game === 'Cricket'">🏏</span>
+            <span *ngIf="game === 'Football'">⚽</span>
+            <span *ngIf="game === 'Badminton'">🏸</span>
+            <span *ngIf="game === 'Tennis'">🎾</span>
+            <span *ngIf="game === 'Volleyball'">🏐</span>
+            <span *ngIf="game === 'Basketball'">🏀</span>
+          </div>
+          <span class="text-[12px] font-medium transition-colors" [class.font-bold]="selectedGame() === game"
+            [ngClass]="{
+                 'text-[#5b73e8]': game === 'Cricket' && selectedGame() === game,
+                 'text-[#ea5b5b]': game === 'Football' && selectedGame() === game,
+                 'text-[#f2a74c]': game === 'Badminton' && selectedGame() === game,
+                 'text-[#ea7f41]': game === 'Basketball' && selectedGame() === game,
+                 'text-[#9b51e0]': game === 'Volleyball' && selectedGame() === game,
+                 'text-slate-500': selectedGame() !== game
+               }">{{ game }}</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Popular Turfs -->
+    <div class="px-5">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-[18px] font-bold">Nearby Arenas</h3>
+        <span class="text-[14px] text-[#7b39fc] font-bold capitalize cursor-pointer active:scale-95 transition-transform" (click)="resetFiltersAndScroll()">View all</span>
+      </div>
+      
+      <div class="flex flex-col gap-5" *ngIf="!isLoading() && viewMode() === 'grid'">
+        <app-turf-card *ngFor="let turf of turfs()" [turf]="turf"></app-turf-card>
+      </div>
+      <div class="flex flex-col gap-5" *ngIf="isLoading()">
+        <div class="h-[280px] w-full bg-slate-100 dark:bg-slate-800/50 rounded-3xl animate-pulse"></div>
+        <div class="h-[280px] w-full bg-slate-100 dark:bg-slate-800/50 rounded-3xl animate-pulse"></div>
+      </div>
+      
+      <!-- Mobile Map View -->
+      <div *ngIf="viewMode() === 'map' && !isLoading()" class="w-full h-[60vh] rounded-[24px] overflow-hidden relative z-10 border border-slate-200 dark:border-white/10 shadow-lg mt-4">
+         <div id="turf-map-mobile" class="w-full h-full bg-slate-200 dark:bg-slate-900"></div>
+      </div>
 
-   <!-- Popular Turfs -->
-   <div class="px-5">
-     <div class="flex justify-between items-end mb-5">
-       <h3 class="text-lg font-extrabold text-slate-100">Popular Near You</h3>
-       <span class="text-[11px] text-[var(--primary)] font-bold uppercase tracking-wider">See All</span>
-     </div>
-     
-     <div class="flex flex-col gap-5" *ngIf="!isLoading()">
-       <app-turf-card *ngFor="let turf of turfs()" [turf]="turf"></app-turf-card>
-     </div>
-     <div class="flex flex-col gap-5" *ngIf="isLoading()">
-       <div class="h-[280px] w-full bg-slate-800/50 rounded-[2rem] animate-pulse"></div>
-       <div class="h-[280px] w-full bg-slate-800/50 rounded-[2rem] animate-pulse"></div>
-     </div>
-     
-     <!-- Empty State -->
-     <div class="empty-state text-center py-10" *ngIf="!isLoading() && turfs().length === 0">
-       <div class="w-16 h-16 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-4">
-         <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-       </div>
-       <h3 class="text-lg font-bold text-slate-300">No arenas found</h3>
-       <p class="text-xs text-slate-500 mt-2">Try switching sports or location</p>
-     </div>
-   </div>
- </div>
+      <!-- Floating Map/List Toggle for Mobile -->
+      <div class="fixed left-1/2 transform -translate-x-1/2 z-[90]" style="bottom: 110px;">
+        <button class="bg-[#1e293b] text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2 active:scale-95 transition-transform" (click)="toggleMobileViewMode()">
+          <span class="font-bold text-[13px] tracking-wide">{{ viewMode() === 'grid' ? 'Map' : 'List' }}</span>
+          <svg *ngIf="viewMode() === 'grid'" class="w-4 h-4 text-[#7b39fc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          <svg *ngIf="viewMode() === 'map'" class="w-4 h-4 text-[#7b39fc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+        </button>
+      </div>
 
- <!-- DESKTOP WEB LAYOUT -->
+      <!-- Empty State -->
+      <div class="empty-state text-center py-10 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-white/5 backdrop-blur-sm" *ngIf="!isLoading() && turfs().length === 0">
+        <div class="w-16 h-16 mx-auto bg-slate-100 dark:bg-slate-800/80 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-lg font-bold">No arenas found</h3>
+        <p class="text-sm text-slate-500 mt-2">Try switching sports or location</p>
+      </div>
+    </div>
+
+    
+    <!-- Filter Modal (Full Screen / Bottom Sheet) -->
+    <div class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm transition-opacity flex items-end justify-center" *ngIf="isFilterOpen()" (click)="toggleFilter()">
+      <div class="w-full h-[90vh] bg-[#f8f9fa] dark:bg-[#0A0E1A] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)] flex flex-col relative overflow-hidden" (click)="$event.stopPropagation()">
+        
+        <!-- Header -->
+        <div class="flex items-center p-5 bg-[#f8f9fa] dark:bg-[#121212] rounded-t-3xl">
+          <button class="p-1 -ml-2" (click)="toggleFilter()">
+            <svg class="w-6 h-6 text-slate-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <h2 class="text-xl font-bold ml-2 text-slate-900 dark:text-white">Filters</h2>
+        </div>
+        
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto px-5 pt-2 pb-32">
+          <div class="bg-white dark:bg-[#1A1F2E] rounded-[32px] p-6 shadow-sm border border-slate-100 dark:border-white/5 space-y-8">
+            
+            <!-- Availability Dummy Toggle -->
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-[13px] text-slate-400 font-semibold mb-1">Availability</p>
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-white/5 rounded-full border border-slate-100 dark:border-white/10 text-sm font-bold text-slate-700 dark:text-slate-200">
+                  This week
+                  <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-[13px] font-bold text-slate-400">Immediate</span>
+                <div class="w-12 h-7 bg-[#38bdf8] rounded-full flex items-center justify-end px-1 cursor-pointer">
+                  <div class="w-5 h-5 bg-white rounded-full shadow-sm"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div>
+              <p class="text-[13px] text-slate-400 font-semibold mb-3">Fees Range Per schedule</p>
+              <div class="flex justify-between mb-2">
+                <span class="text-[13px] font-bold text-slate-700 dark:text-slate-300">INR 500 - {{ maxPrice() }} Rs</span>
+              </div>
+              <input type="range" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-800 dark:accent-[#4ade80]" min="500" max="5000" step="100" [value]="maxPrice()" (input)="onPriceChange($event)">
+            </div>
+            
+            <!-- Sports -->
+            <div>
+              <p class="text-[13px] text-slate-400 font-semibold mb-3">Sports</p>
+              <div class="flex flex-wrap gap-2.5">
+                <button *ngFor="let game of gameTypes" 
+                        class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border"
+                        [ngClass]="selectedGame() === game ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'"
+                        (click)="selectGame(game)">
+                  {{ game }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Rating -->
+            <div>
+              <p class="text-[13px] text-slate-400 font-semibold mb-3">Rating</p>
+              <div class="flex flex-wrap gap-2.5">
+                <button class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border flex items-center gap-1" [ngClass]="minRating() === 4 ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50'" (click)="selectRating(4)">4+ <span class="text-[#fbbf24] text-lg leading-none">★</span></button>
+                <button class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border flex items-center gap-1" [ngClass]="minRating() === 5 ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50'" (click)="selectRating(5)">5+ <span class="text-[#fbbf24] text-lg leading-none">★</span></button>
+                <button class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border" [ngClass]="minRating() === 0 ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50'" (click)="selectRating(0)">All</button>
+              </div>
+            </div>
+
+            <!-- Sort By -->
+            <div>
+              <p class="text-[13px] text-slate-400 font-semibold mb-3">Sort By</p>
+              <div class="flex flex-wrap gap-2.5">
+                <button class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border" [ngClass]="sortBy() === 'recommended' ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50'" (click)="selectSort('recommended')">Recommended</button>
+                <button class="px-5 py-2.5 rounded-[20px] text-[13px] font-bold transition-all border" [ngClass]="sortBy() === 'price_asc' ? 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white shadow-sm' : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-50'" (click)="selectSort('price_asc')">Lowest Price</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="absolute bottom-0 left-0 right-0 p-5 bg-[#f8f9fa] dark:bg-[#0A0E1A] flex gap-4 z-10 items-center justify-between shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+          <button class="flex-1 py-4 bg-[#0ea5e9] dark:bg-[#7b39fc] text-white rounded-full font-bold text-[16px] shadow-lg active:scale-95 transition-transform" (click)="resetFiltersAndScroll(); toggleFilter()">Reset</button>
+          <button class="flex-1 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-full font-bold text-[16px] border border-slate-200 dark:border-white/10 shadow-sm active:scale-95 transition-transform" (click)="toggleFilter()">Apply</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile Location Selector Modal -->
+    <div class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm transition-opacity" *ngIf="isLocationSelectOpen()" (click)="toggleLocationSelect()">
+      <div class="absolute bottom-0 left-0 right-0 bg-[#141A28] rounded-t-3xl border-t border-white/10 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transform transition-transform" (click)="$event.stopPropagation()">
+        <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div>
+        <h3 class="text-xl font-bold text-white mb-4">Select Location</h3>
+        <div class="max-h-[60vh] overflow-y-auto scrollbar-hide pr-2 pb-10">
+          
+          <ng-container *ngIf="!viewingDistrictsForState()">
+            <div class="py-3 px-4 rounded-xl border border-white/5 mb-2 cursor-pointer transition-colors" (click)="selectLocation($event, '', '')" [ngClass]="{'bg-[var(--primary)]/20 border-[var(--primary)]/50 text-[var(--primary)]': selectedState() === '' && selectedDistrict() === '', 'hover:bg-white/5 text-slate-300': selectedState() !== '' || selectedDistrict() !== ''}">
+              <span class="font-bold text-base">All Locations</span>
+            </div>
+            
+            <div class="py-3 px-4 rounded-xl border border-white/5 mb-2 cursor-pointer transition-colors flex justify-between items-center" *ngFor="let state of statesList()" (click)="openStateDistricts($event, state)" [ngClass]="{'bg-[var(--primary)]/10 border-[var(--primary)]/30 text-white': selectedState() === state, 'hover:bg-white/5 text-slate-300': selectedState() !== state}">
+              <span class="font-bold text-base">{{ state }}</span>
+              <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+          </ng-container>
+          
+          <ng-container *ngIf="viewingDistrictsForState() as stateName">
+            <div class="py-2 px-3 flex items-center gap-2 font-bold text-[var(--primary)] mb-4 cursor-pointer" (click)="backToStates($event)">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              Back to States
+            </div>
+            
+            <div class="py-3 px-4 rounded-xl border border-white/5 mb-2 cursor-pointer transition-colors" (click)="selectLocation($event, stateName, '')" [ngClass]="{'bg-[var(--primary)]/20 border-[var(--primary)]/50 text-[var(--primary)]': selectedState() === stateName && selectedDistrict() === '', 'hover:bg-white/5 text-slate-300': selectedState() !== stateName || selectedDistrict() !== ''}">
+              <span class="font-bold text-base">All of {{ stateName }}</span>
+            </div>
+            
+            <div class="py-3 px-4 rounded-xl border border-white/5 mb-2 cursor-pointer transition-colors" *ngFor="let dist of getDistrictsForState(stateName)" (click)="selectLocation($event, stateName, dist)" [ngClass]="{'bg-[var(--primary)]/20 border-[var(--primary)]/50 text-[var(--primary)]': selectedDistrict() === dist, 'hover:bg-white/5 text-slate-300': selectedDistrict() !== dist}">
+              <span class="font-medium text-[15px]">{{ dist }}</span>
+            </div>
+            
+            <div *ngIf="getDistrictsForState(stateName).length === 0" class="py-4 text-center text-slate-500">
+              No districts available
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKTOP WEB LAYOUT -->
  <div class="desktop-web-layout dashboard-page container-fluid spacing-vertical-48 fade-in">
  <header class="dashboard-header glass">
  <div class="header-content">
@@ -893,6 +1082,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
  allTurfs = signal<Turf[]>([]);
  turfs = signal<Turf[]>([]);
  isLoading = signal(true);
+  isDarkMode = signal<boolean>(false);
+  hasNotifications = signal<boolean>(true);
+  userName = signal<string>('Guest');
  
  // Load state from sessionStorage if available
  searchTerm = signal<string>(sessionStorage.getItem('dashboard_search') || '');
@@ -933,19 +1125,48 @@ export class DashboardComponent implements OnInit, OnDestroy {
  typingTimeout: any;
 
  constructor(
- private turfRepository: TurfRepository,
- private notificationService: NotificationService,
- private fcmService: FcmNotificationService
- ) {}
+  private turfRepository: TurfRepository,
+  private notificationService: NotificationService,
+  private fcmService: FcmNotificationService,
+  private authStore: AuthStore,
+  private router: Router
+  ) {}
 
  ngOnInit() {
- this.loadInitialLocationsAndTurfs();
- this.startTypingAnimation();
- 
- // Ask for Push Notification permission and save token to DB
- this.fcmService.requestNotificationPermission();
- this.fcmService.listenForMessages();
- }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode.set(true);
+      document.body.classList.add('dark');
+    } else {
+      this.isDarkMode.set(false);
+      document.body.classList.remove('dark');
+    }
+
+  this.loadInitialLocationsAndTurfs();
+  this.startTypingAnimation();
+  
+  const user = this.authStore.user();
+  if (user && user.name) {
+    this.userName.set(user.name.split(' ')[0]);
+  }
+
+  // Ask for Push Notification permission and save token to DB
+  this.fcmService.requestNotificationPermission();
+  this.fcmService.listenForMessages();
+  }
+
+  navigateToLiked() {
+    this.router.navigate(['/liked-turfs']);
+  }
+
+  navigateToOffers() {
+    this.router.navigate(['/offers']);
+  }
+
+  navigateToNotifications() {
+    this.hasNotifications.set(false);
+    this.notificationService.info('No notifications found');
+  }
 
  ngOnDestroy() {
  if (this.typingTimeout) {
@@ -1157,10 +1378,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
  });
  L.Marker.prototype.options.icon = iconDefault;
 
- const mapEl = document.getElementById('turf-map');
- if (!mapEl) return;
+ const mapId = document.body.classList.contains('is-mobile-app') ? 'turf-map-mobile' : 'turf-map';
+  const mapEl = document.getElementById(mapId);
+  if (!mapEl) return;
 
- this.map = L.map('turf-map', { attributionControl: false }).setView([13.0827, 80.2707], 10);
+  this.map = L.map(mapId, { attributionControl: false }).setView([13.0827, 80.2707], 10);
  
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
  // Attribution removed as requested
@@ -1279,7 +1501,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
  this.loadTurfs();
  }
 
- toggleFilter() {
+ selectAllGamesAndScroll() {
+    this.selectGame('All');
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  }
+
+  resetFiltersAndScroll() {
+    this.resetFilters();
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  }
+
+  toggleTheme() {
+    this.isDarkMode.update(v => !v);
+    if (this.isDarkMode()) {
+      document.body.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  resetFilters() {
+    this.searchTerm.set('');
+    this.selectedGame.set('All');
+    this.maxPrice.set(5000);
+    this.minRating.set(0);
+    this.selectedState.set('');
+    this.selectedDistrict.set('');
+    this.selectedLocation.set('');
+    this.loadTurfs();
+  }
+
+  toggleMobileViewMode() {
+    this.setViewMode(this.viewMode() === 'grid' ? 'map' : 'grid');
+  }
+
+  toggleFilter() {
  this.isFilterOpen.update(v => !v);
  }
 

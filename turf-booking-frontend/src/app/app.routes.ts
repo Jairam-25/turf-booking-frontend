@@ -17,7 +17,7 @@ export const authRoutes: Routes = [
 ];
 
 export const routes: Routes = [
- { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+ { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
  {
  path: 'auth',
  children: authRoutes

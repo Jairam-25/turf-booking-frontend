@@ -6,6 +6,8 @@ export interface User {
  role: string;
  address?: string;
  state?: string;
+ district?: string;
+ pincode?: string;
  maritalStatus?: string;
  playerType?: string;
  playingLevel?: string;

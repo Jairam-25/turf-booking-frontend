@@ -46,9 +46,9 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     </div>
   </div>
 
-  <!-- MOBILE APP VIEW (SPOTZ Flat Design) -->
+  <!-- MOBILE APP VIEW (TurfXpert Premium) -->
   <div class="mobile-app-view-only h-full">
-    <div class="turf-card-mobile h-full">
+    <div class="turf-card-mobile h-full cursor-pointer" (click)="onBook()">
       <div class="card-image-wrapper-mobile">
         <magic-pixel-image [src]="getImageSrc()"></magic-pixel-image>
         
@@ -196,22 +196,28 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     }
 
 
-    /* --- MOBILE APP CSS (SPOTZ Flat Design) --- */
+    /* --- MOBILE APP CSS (TurfXpert Premium) --- */
     .turf-card-mobile {
-      background-color: var(--bg-card);
-      border-radius: 20px;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255,255,255,0.03);
+      background: #ffffff;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    
+      cursor: pointer;
+    }
+    :host-context(body.dark) .turf-card-mobile {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
     .card-image-wrapper-mobile {
       position: relative;
       width: 100%;
       padding-top: 56.25%;
-      background-color: #0A0E1A;
+      background-color: #0c0f1a;
     }
     .card-image-wrapper-mobile magic-pixel-image {
       position: absolute;
@@ -223,29 +229,35 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     }
     .like-btn-mobile {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      bottom: 12px;
+      right: 12px;
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: rgba(10,14,26,0.5);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: #94a3b8;
       cursor: pointer;
       z-index: 10;
     }
-    .like-btn-mobile.liked { color: #ef4444; }
+    :host-context(body.dark) .like-btn-mobile {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    .like-btn-mobile:active { transform: scale(0.9); }
+    .like-btn-mobile.liked { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); }
     .rating-badge-mobile {
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(10, 14, 26, 0.7);
-      backdrop-filter: blur(8px);
-      padding: 4px 10px;
+      background: rgba(12, 15, 26, 0.8);
+      backdrop-filter: blur(12px);
+      padding: 6px 12px;
       border-radius: 12px;
       color: #fff;
       font-weight: 700;
@@ -253,10 +265,11 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       display: flex;
       align-items: center;
       gap: 4px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .star-icon-mobile { width: 14px; height: 14px; color: #FBBF24; }
-    .new-badge-mobile { background: #7b39fc; border: none; }
+    .new-badge-mobile { background: var(--primary); border: none; color: white; box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4); }
     .card-body-mobile {
       padding: 16px;
       display: flex;
@@ -265,14 +278,14 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
       gap: 8px;
     }
     .turf-name-mobile {
-      margin: 0;
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
+      color: #121212;
+      margin-bottom: 4px;
       line-height: 1.3;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    }
+    :host-context(body.dark) .turf-name-mobile {
+      color: white;
     }
     .turf-location-mobile {
       display: flex;
@@ -284,19 +297,21 @@ import { PixelImageComponent } from '../../../shared/components/magic-ui/magic-p
     .loc-icon-mobile { width: 14px; height: 14px; flex-shrink: 0; }
     .loc-text-mobile { flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .price-row-mobile { margin-top: 4px; margin-bottom: 12px; }
-    .price-val-mobile { color: #10B981; font-size: 18px; font-weight: 800; }
+    .price-val-mobile {
+      font-size: 14px;
+      font-weight: 800;
+      color: #121212;
+    }
+    :host-context(body.dark) .price-val-mobile {
+      color: white;
+    }
     .price-unit-mobile { font-size: 13px; font-weight: 500; color: #64748B; margin-left: 2px; }
     .btn-book-mobile {
-      margin-top: auto;
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(135deg, #7b39fc 0%, #6025c0 100%);
-      color: white;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
+      display: none; /* User's image has no book button on the card! */
+    }
+    .btn-book-mobile:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.2);
     }
   `]
 })

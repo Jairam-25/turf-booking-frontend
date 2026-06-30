@@ -13,7 +13,10 @@ import { Router, RouterModule } from '@angular/router';
  templateUrl: './profile.html',
  styleUrl: './profile.css',
 })
-export class ProfileComponent implements OnInit {
+ export class ProfileComponent implements OnInit {
+  isLogoutModalOpen = signal(false);
+  viewState = signal<'menu' | 'edit'>('menu');
+
  // Account Form
  profileForm: FormGroup;
  isSaving = signal<boolean>(false);
@@ -117,7 +120,17 @@ export class ProfileComponent implements OnInit {
  });
  }
 
- deleteAccount() {
+  logout() {
+    this.isLogoutModalOpen.set(true);
+  }
+
+  confirmLogout() {
+    this.isLogoutModalOpen.set(false);
+    this.authStore.clearSession();
+    this.router.navigate(['/auth/login']);
+  }
+
+  deleteAccount() {
  if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) {
  this.isDeleting.set(true);
  

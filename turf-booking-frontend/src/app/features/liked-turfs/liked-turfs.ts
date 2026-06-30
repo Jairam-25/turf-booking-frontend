@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Turf } from '../../domain/models/turf.model';
 import { NotificationService } from '../../core/services/notification.service';
@@ -16,10 +16,15 @@ export class LikedTurfsComponent implements OnInit {
 
  constructor(
  private notificationService: NotificationService,
- private turfRepository: TurfRepository
+ private turfRepository: TurfRepository,
+    private location: Location
  ) {}
 
- ngOnInit() {
+ goBack() {
+    this.location.back();
+  }
+
+  ngOnInit() {
  this.loadLikedTurfs();
  }
 

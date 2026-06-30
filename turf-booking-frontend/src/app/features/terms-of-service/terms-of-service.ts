@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
  selector: 'app-terms-of-service',
@@ -6,4 +7,10 @@ import { Component } from '@angular/core';
  templateUrl: './terms-of-service.html',
  styleUrl: './terms-of-service.css',
 })
-export class TermsOfService {}
+export class TermsOfService {
+  private location = inject(Location);
+
+  goBack() {
+    this.location.back();
+  }
+}

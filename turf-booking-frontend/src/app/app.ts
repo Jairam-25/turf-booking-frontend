@@ -4,6 +4,8 @@ import { NavigationEnd, Router, RouterOutlet, RouteConfigLoadStart, NavigationSt
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer-component/footer-component';
 import { filter } from 'rxjs/operators';
+import { Location } from '@angular/common';
+import { inject } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { ChatbotComponent } from './layout/chatbot/chatbot.component';
 import { BottomNavComponent } from './layout/bottom-nav/bottom-nav.component';
@@ -28,6 +30,7 @@ import { NotificationService } from './core/services/notification.service';
  styleUrl: './app.css'
 })
 export class App implements OnInit {
+  private location = inject(Location);
  hideNavbar = signal(false);
  hideFooter = signal(false);
  hideBottomNav = signal(false);
@@ -45,6 +48,22 @@ export class App implements OnInit {
  ) {}
 
  ngOnInit() {
+    import('@capacitor/app').then(({ App: CapacitorApp }) => {
+      import('@capacitor/core').then(({ Capacitor }) => {
+        if (Capacitor.isNativePlatform()) {
+          CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+            const url = this.router.url.split('?')[0];
+            
+            if (url === '/dashboard' || url === '/auth/login' || url === '/auth/welcome' || url === '/' || url === '/home') {
+              CapacitorApp.exitApp();
+            } else {
+              this.location.back();
+            }
+          });
+        }
+      });
+    });
+
     import('@capacitor/splash-screen').then(({ SplashScreen }) => {
       import('@capacitor/core').then(({ Capacitor }) => {
         if (Capacitor.isNativePlatform()) {
@@ -74,9 +93,9 @@ export class App implements OnInit {
  this.router.navigate(['/dashboard']);
  }
  } else {
- if (!this.router.url.startsWith('/auth')) {
- this.router.navigate(['/auth/login']);
- }
+ if (this.router.url === '/home' || this.router.url === '/') {
+            this.router.navigate(['/dashboard']);
+          }
  }
  }
  });
@@ -150,13 +169,14 @@ export class App implements OnInit {
  });
  }
 
- private updateVisibility(url: string) {
- const cleanUrl = url.split('?')[0];
- const isAuth = cleanUrl.startsWith('/auth');
+  private updateVisibility(url: string) {
+    const cleanUrl = url.split('?')[0];
+    const isAuth = cleanUrl.startsWith('/auth');
+    const isMobile = document.body.classList.contains('is-mobile-app');
 
- this.hideNavbar.set(isAuth);
- this.hideBottomNav.set(isAuth);
- // Hide footer on auth pages, payment, and possibly others if needed
- this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment'));
- }
+    this.hideNavbar.set(isAuth || isMobile);
+    this.hideBottomNav.set(isAuth);
+    // Hide footer on auth pages, payment, and mobile app
+    this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment') || isMobile);
+  }
 }
