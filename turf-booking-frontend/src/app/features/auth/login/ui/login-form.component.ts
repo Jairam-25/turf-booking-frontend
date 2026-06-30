@@ -383,7 +383,7 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
 })
 export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   
-    ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['initialEmail'] && changes['initialEmail'].currentValue) {
       this.loginForm.patchValue({ emailOrPhone: changes['initialEmail'].currentValue });
     }
@@ -416,12 +416,7 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
     otp?.updateValueAndValidity();
     this.loginForm.get('emailOrPhone')?.updateValueAndValidity();
   }
-);
-    }
-    if (this.initialPassword) {
-      this.loginForm.patchValue({ password: this.initialPassword });
-    }
-  }
+
   @Input() loading = false;
   @Input() initialEmail = '';
   @Input() initialPassword = '';
