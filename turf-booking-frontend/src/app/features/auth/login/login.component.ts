@@ -242,9 +242,13 @@ export class LoginComponent implements OnInit {
  const sports: ('football' | 'cricket' | 'pingpong')[] = ['football', 'cricket', 'pingpong'];
  this.activeSport.set(sports[Math.floor(Math.random() * sports.length)]);
 
+    const state = window.history.state;
+    if (state && state.email) this.initialEmail = state.email;
+    if (state && state.password) this.initialPassword = state.password;
+
     this.route.queryParams.subscribe(params => {
-      if (params['email']) this.initialEmail = params['email'];
-      if (params['password']) this.initialPassword = params['password'];
+      if (params['email'] && !this.initialEmail) this.initialEmail = params['email'];
+      // We removed reading password from queryParams for security
     });
 
  // Fade out the entry overlay transition after component loads
