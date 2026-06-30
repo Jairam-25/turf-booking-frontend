@@ -347,8 +347,7 @@ export class RegisterFormComponent implements OnInit {
 
   
   copyEmail() {
-    const ctrl = this.loginForm ? this.loginForm.get('emailOrPhone') : this.emailControl;
-    const email = ctrl?.value;
+    const email = this.emailControl.value;
     if (email) {
       navigator.clipboard.writeText(email).then(() => {
         this.notificationService.success('Email copied to clipboard!');

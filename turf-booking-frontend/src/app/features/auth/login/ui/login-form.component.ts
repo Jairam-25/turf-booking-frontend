@@ -447,8 +447,7 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
 
   
   copyEmail() {
-    const ctrl = this.loginForm ? this.loginForm.get('emailOrPhone') : this.emailControl;
-    const email = ctrl?.value;
+    const email = this.loginForm.get('emailOrPhone')?.value;
     if (email) {
       navigator.clipboard.writeText(email).then(() => {
         this.notificationService.success('Email copied to clipboard!');
