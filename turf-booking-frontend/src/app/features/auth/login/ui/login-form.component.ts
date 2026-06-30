@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -381,8 +381,28 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
     }
   `]
 })
-export class LoginFormComponent implements OnDestroy {
+export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['initialEmail'] && changes['initialEmail'].currentValue) {
+      this.loginForm.patchValue({ emailOrPhone: changes['initialEmail'].currentValue });
+    }
+    if (changes['initialPassword'] && changes['initialPassword'].currentValue) {
+      this.loginForm.patchValue({ password: changes['initialPassword'].currentValue });
+    }
+  }
+
+  ngOnInit() {
+    if (this.initialEmail) {
+      this.loginForm.patchValue({ emailOrPhone: this.initialEmail });
+    }
+    if (this.initialPassword) {
+      this.loginForm.patchValue({ password: this.initialPassword });
+    }
+  }
   @Input() loading = false;
+  @Input() initialEmail = '';
+  @Input() initialPassword = '';
   @Output() login = new EventEmitter<any>();
 
   loginForm: FormGroup;

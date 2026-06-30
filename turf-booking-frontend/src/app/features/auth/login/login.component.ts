@@ -189,6 +189,8 @@ import { MagicHexagonComponent } from '../../../shared/components/magic-ui/magic
  <!-- Login Form component itself -->
  <app-login-form 
  [loading]="isLoading()" 
+  [initialEmail]="initialEmail" 
+  [initialPassword]="initialPassword" 
  (login)="handleLogin($event)"
  ></app-login-form>
 
@@ -223,6 +225,9 @@ export class LoginComponent implements OnInit {
  isOverlayActive = signal(true);
  isTransitioning = signal(false);
  errorMessage = signal<string>('');
+
+  initialEmail = '';
+  initialPassword = '';
 
  constructor(
  private authRepository: AuthRepository,

@@ -188,7 +188,9 @@ export class RegisterComponent implements OnInit {
  setTimeout(() => {
  this.notificationService.success(message || 'Registration successful! Please login.');
  const returnUrl = this.route.snapshot.queryParams['returnUrl'];
- this.router.navigate(['/auth/login'], { queryParams: returnUrl ? { returnUrl } : undefined });
+ let queryParams: any = { email: data.email, password: data.password };
+  if (returnUrl) queryParams.returnUrl = returnUrl;
+  this.router.navigate(['/auth/login'], { queryParams });
  this.isLoading.set(false);
  }, 1500);
  },
