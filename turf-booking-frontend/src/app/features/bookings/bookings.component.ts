@@ -735,33 +735,45 @@ export interface GroupedBooking {
         font-size: 0.8rem;
       }
       .bookings-list {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem;
       }
       .booking-card {
-        padding: 1rem;
-        gap: 1rem;
+        padding: 0.75rem;
+        gap: 0.5rem;
         min-height: auto;
       }
       .turf-info h3 {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .location-link {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
       }
       .status-badge {
-        font-size: 0.65rem;
-        padding: 2px 8px;
+        font-size: 0.6rem;
+        padding: 2px 6px;
+      }
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
       }
       .label {
         font-size: 0.65rem;
       }
       .value {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
       }
       .value.price {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
+      .booking-actions {
+        flex-direction: column;
+      }
+      
       .btn-cancel, .btn-share {
         padding: 8px;
         font-size: 0.8rem;
