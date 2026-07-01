@@ -111,7 +111,7 @@
 }
 
 
-body[data-theme="light"] {
+:root:not(.dark), body[data-theme="light"] {
   /* Light Theme variables */
   --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   --bg-card: #ffffff;
