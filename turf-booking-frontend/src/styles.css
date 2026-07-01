@@ -1150,7 +1150,7 @@ body.is-mobile-app { overscroll-behavior-y: none; }
   height: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-gradient, #f8fafc);
+  background: var(--bg-card, #f8fafc);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(123, 57, 252, 0.3);
@@ -1161,3 +1161,5 @@ body.is-mobile-app { overscroll-behavior-y: none; }
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(123, 57, 252, 0.6);
 }
+
+html { background-color: var(--bg-card); }
