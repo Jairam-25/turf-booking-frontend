@@ -6,6 +6,7 @@ import { TurfCardComponent } from './ui/turf-card.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { FcmNotificationService } from '../../core/services/fcm-notification.service';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../core/services/theme.service';
 import { TurfRepository } from '../../domain/repositories/turf.repository';
 import { AuthStore } from '../../core/services/auth.store';
 
@@ -15,7 +16,20 @@ import { AuthStore } from '../../core/services/auth.store';
  imports: [CommonModule, TurfCardComponent],
  template: `
     <!-- MOBILE APP LAYOUT (TurfXpert Premium) -->
-  <div class="mobile-app-layout min-h-screen pb-[100px] font-sans transition-colors duration-300 bg-white dark:bg-[#0A0E1A] text-slate-900 dark:text-white">
+  <div class="mobile-app-layout min-h-screen pb-[100px] font-sans transition-colors duration-300 bg-white dark:bg-[#0A0E1A] text-slate-900 dark:text-white"
+       (touchstart)="onTouchStart($event)" 
+       (touchmove)="onTouchMove($event)" 
+       (touchend)="onTouchEnd()">
+       
+    <!-- Custom Pull to Refresh Indicator -->
+    <div class="w-full flex justify-center items-end overflow-hidden transition-all duration-300 pointer-events-none"
+         [style.height.px]="pullDownDistance()">
+      <div class="mb-4 bg-white dark:bg-slate-800 shadow-lg rounded-full p-2 flex items-center justify-center border border-slate-100 dark:border-slate-700"
+           [style.transform]="'rotate(' + (pullDownDistance() * 3) + 'deg)'"
+           [style.opacity]="pullDownDistance() / 80">
+        <svg class="w-6 h-6 text-[#7b39fc]" [class.animate-spin]="isRefreshing()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+      </div>
+    </div>
     
     <!-- Mobile Navbar Header -->
     <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 backdrop-blur-xl" style="padding-top: max(1rem, env(safe-area-inset-top));">
@@ -34,9 +48,9 @@ import { AuthStore } from '../../core/services/auth.store';
         
         <!-- Action Icons (Theme, Favorites, Notifications) -->
         <div class="flex items-center gap-4">
-          <button (click)="toggleTheme()" class="text-slate-400 hover:text-slate-600 transition-colors">
-            <svg *ngIf="isDarkMode()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <svg *ngIf="!isDarkMode()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <button (click)="toggleTheme($event)" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <svg *ngIf="themeService.theme() === 'dark'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg *ngIf="themeService.theme() !== 'dark'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           </button>
           <button class="text-slate-400 hover:text-slate-600 transition-colors" (click)="navigateToLiked()">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,8 +100,8 @@ import { AuthStore } from '../../core/services/auth.store';
       <div class="flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x">
         
         <div class="flex flex-col items-center gap-2 min-w-[72px] snap-start cursor-pointer" (click)="selectGame('All')">
-          <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-xl transition-all duration-300"
-               [ngClass]="selectedGame() === 'All' ? 'bg-slate-900 text-white shadow-md' : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white'">
+          <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-xl transition-all duration-300 relative"
+               [ngClass]="selectedGame() === 'All' ? 'bg-slate-900 text-white shadow-lg scale-105 border-2 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white'">
             <span class="font-bold text-sm">All</span>
           </div>
         </div>
@@ -178,22 +192,6 @@ import { AuthStore } from '../../core/services/auth.store';
         <div class="flex-1 overflow-y-auto px-5 pt-2 pb-32">
           <div class="bg-white dark:bg-[#1A1F2E] rounded-[32px] p-6 shadow-sm border border-slate-100 dark:border-white/5 space-y-8">
             
-            <!-- Availability Dummy Toggle -->
-            <div class="flex justify-between items-center">
-              <div>
-                <p class="text-[13px] text-slate-400 font-semibold mb-1">Availability</p>
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-white/5 rounded-full border border-slate-100 dark:border-white/10 text-sm font-bold text-slate-700 dark:text-slate-200">
-                  This week
-                  <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-[13px] font-bold text-slate-400">Immediate</span>
-                <div class="w-12 h-7 bg-[#38bdf8] rounded-full flex items-center justify-end px-1 cursor-pointer">
-                  <div class="w-5 h-5 bg-white rounded-full shadow-sm"></div>
-                </div>
-              </div>
-            </div>
 
             <!-- Price Range -->
             <div>
@@ -1120,7 +1118,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
  private markersLayer: L.LayerGroup | null = null;
 
  // Typing animation properties
- words = ['Turf', 'Court', 'Pitch', 'Match', 'Arena', 'Game'];
+ 
+  // Pull to refresh state
+  isRefreshing = signal(false);
+  pullDownDistance = signal(0);
+  private touchStartY = 0;
+
+  words = ['Turf', 'Court', 'Pitch', 'Match', 'Arena', 'Game'];
  currentWordIndex = 0;
  displayedWord = signal('');
  isDeleting = false;
@@ -1131,18 +1135,53 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private notificationService: NotificationService,
   private fcmService: FcmNotificationService,
   private authStore: AuthStore,
-  private router: Router
+  private router: Router,
+  public themeService: ThemeService
   ) {}
 
- ngOnInit() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      this.isDarkMode.set(true);
-      document.body.classList.add('dark');
+ 
+  onTouchStart(event: TouchEvent) {
+    if (window.scrollY === 0) {
+      this.touchStartY = event.touches[0].clientY;
     } else {
-      this.isDarkMode.set(false);
-      document.body.classList.remove('dark');
+      this.touchStartY = 0;
     }
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (this.touchStartY === 0 || this.isRefreshing()) return;
+    
+    const currentY = event.touches[0].clientY;
+    const diff = currentY - this.touchStartY;
+    
+    if (diff > 0 && diff < 150) {
+      this.pullDownDistance.set(diff);
+    }
+  }
+
+  onTouchEnd() {
+    if (this.pullDownDistance() > 80) {
+      this.triggerRefresh();
+    } else {
+      this.pullDownDistance.set(0);
+    }
+  }
+
+  triggerRefresh() {
+    this.isRefreshing.set(true);
+    this.pullDownDistance.set(80);
+    
+    this.loadInitialLocationsAndTurfs();
+    
+    setTimeout(() => {
+      this.isRefreshing.set(false);
+      this.pullDownDistance.set(0);
+    }, 1500);
+  }
+
+
+  ngOnInit() {
+    
 
   this.loadInitialLocationsAndTurfs();
   this.startTypingAnimation();
@@ -1513,15 +1552,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   }
 
-  toggleTheme() {
-    this.isDarkMode.update(v => !v);
-    if (this.isDarkMode()) {
-      document.body.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+  toggleTheme(event?: MouseEvent) {
+    this.themeService.toggle(event);
   }
 
   resetFilters() {

@@ -65,11 +65,15 @@ export class ThemeService {
  this.apply(theme);
  }
 
- private apply(theme: AppTheme): void {
- if (theme === 'light') {
- document.body.setAttribute('data-theme', 'light');
- } else {
- document.body.removeAttribute('data-theme');
- }
- }
+  private apply(theme: AppTheme): void {
+    if (theme === 'light') {
+      document.body.setAttribute('data-theme', 'light');
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    } else {
+      document.body.removeAttribute('data-theme');
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    }
+  }
 }

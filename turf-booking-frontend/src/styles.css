@@ -1137,3 +1137,5 @@ body.is-mobile-app .nav-item.active .nav-label {
 body.is-mobile-app .nav-item.active::after {
   display: none !important;
 }
+
+body.is-mobile-app { overscroll-behavior-y: none; }
