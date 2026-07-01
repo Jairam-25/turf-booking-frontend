@@ -288,6 +288,8 @@ import { AuthStore } from '../../core/services/auth.store';
       </div>
     </div>
 
+  </div>
+
     <!-- DESKTOP WEB LAYOUT -->
  <div class="desktop-web-layout dashboard-page container-fluid spacing-vertical-48 fade-in">
  <header class="dashboard-header glass">
