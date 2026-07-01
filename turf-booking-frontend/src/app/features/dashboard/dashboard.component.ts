@@ -32,7 +32,7 @@ import { AuthStore } from '../../core/services/auth.store';
     </div>
     
     <!-- Mobile Navbar Header -->
-    <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 backdrop-blur-xl" style="padding-top: max(1rem, env(safe-area-inset-top));">
+    <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 " style="padding-top: max(1rem, env(safe-area-inset-top));">
       <div class="flex justify-between items-center mb-5">
         <!-- User Info & Location -->
         <div class="flex flex-col">
@@ -101,7 +101,7 @@ import { AuthStore } from '../../core/services/auth.store';
         
         <div class="flex flex-col items-center gap-2 min-w-[72px] snap-start cursor-pointer" (click)="selectGame('All')">
           <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-xl transition-all duration-300 relative"
-               [ngClass]="selectedGame() === 'All' ? 'bg-slate-900 text-white shadow-lg scale-105 border-2 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white'">
+               [ngClass]="selectedGame() === 'All' ? 'bg-slate-900 text-white shadow-lg border-2 border-slate-900 dark:border-white' : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white'">
             <span class="font-bold text-sm">All</span>
           </div>
         </div>
@@ -114,7 +114,7 @@ import { AuthStore } from '../../core/services/auth.store';
                  'bg-[#fdf4e7] text-[#f2a74c]': game === 'Badminton',
                  'bg-[#fdf0e7] text-[#ea7f41]': game === 'Basketball',
                  'bg-[#f3ebfe] text-[#9b51e0]': game === 'Volleyball',
-                 'shadow-lg scale-105 border-2 border-current': selectedGame() === game
+                 'shadow-lg border-2 border-current': selectedGame() === game
                }">
             <span *ngIf="game === 'Cricket'">🏏</span>
             <span *ngIf="game === 'Football'">⚽</span>
@@ -166,7 +166,7 @@ import { AuthStore } from '../../core/services/auth.store';
       </div>
 
       <!-- Empty State -->
-      <div class="empty-state text-center py-10 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-white/5 backdrop-blur-sm" *ngIf="!isLoading() && turfs().length === 0">
+      <div class="empty-state text-center py-10 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-white/5 " *ngIf="!isLoading() && turfs().length === 0">
         <div class="w-16 h-16 mx-auto bg-slate-100 dark:bg-slate-800/80 rounded-full flex items-center justify-center mb-4">
           <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
@@ -177,7 +177,7 @@ import { AuthStore } from '../../core/services/auth.store';
 
     
     <!-- Filter Modal (Full Screen / Bottom Sheet) -->
-    <div class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm transition-opacity flex items-end justify-center" *ngIf="isFilterOpen()" (click)="toggleFilter()">
+    <div class="fixed inset-0 z-[2000] bg-black/60  transition-opacity flex items-end justify-center" *ngIf="isFilterOpen()" (click)="toggleFilter()">
       <div class="w-full h-[90vh] bg-[#f8f9fa] dark:bg-[#0A0E1A] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)] flex flex-col relative overflow-hidden" (click)="$event.stopPropagation()">
         
         <!-- Header -->
@@ -246,7 +246,7 @@ import { AuthStore } from '../../core/services/auth.store';
     </div>
     
     <!-- Mobile Location Selector Modal -->
-    <div class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm transition-opacity" *ngIf="isLocationSelectOpen()" (click)="toggleLocationSelect()">
+    <div class="fixed inset-0 z-[2000] bg-black/60  transition-opacity" *ngIf="isLocationSelectOpen()" (click)="toggleLocationSelect()">
       <div class="absolute bottom-0 left-0 right-0 bg-[#141A28] rounded-t-3xl border-t border-white/10 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transform transition-transform" (click)="$event.stopPropagation()">
         <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div>
         <h3 class="text-xl font-bold text-white mb-4">Select Location</h3>

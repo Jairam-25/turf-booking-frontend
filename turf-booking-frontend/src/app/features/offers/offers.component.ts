@@ -36,8 +36,8 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
 
       <!-- Premium Hero Header -->
       <header class="offers-hero glass">
-        <div class="glow-blob -top-20 -left-20"></div>
-        <div class="glow-blob bottom-[-150px] right-[-150px]" style="background: radial-gradient(circle, rgba(123, 57, 252, 0.15) 0%, transparent 70%);"></div>
+        
+        
         
         <div class="hero-text-content">
           <span class="promo-badge">EXCLUSIVE DEALS</span>
@@ -262,15 +262,15 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
       top: 80px; /* Accounts for mobile navbar */
       z-index: 30;
       padding: 10px 0;
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(17, 24, 39, 0.98);
+      
+      
       margin: 0 -1rem; /* Full bleed on mobile */
       padding: 10px 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     :host-context(body[data-theme="light"]) .category-tabs-wrapper {
-      background: rgba(248, 250, 252, 0.85);
+      background: rgba(248, 250, 252, 0.98);
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
