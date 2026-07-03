@@ -1144,6 +1144,15 @@ body.is-mobile-app .nav-item.active::after {
 
 body.is-mobile-app { overscroll-behavior-y: none; }
 
+/* Scrollbar Hide Utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Global Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
