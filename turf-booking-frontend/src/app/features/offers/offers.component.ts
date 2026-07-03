@@ -301,6 +301,12 @@ import { PromoService, PromoOfferDto } from '../../core/services/promo.service';
       color: var(--text-secondary);
       animation: pulseRight 2s infinite;
     }
+
+    @media (min-width: 768px) {
+      .scroll-indicator-right {
+        display: none !important;
+      }
+    }
     
     @keyframes pulseRight {
       0%, 100% { transform: translateX(0); opacity: 0.5; }
