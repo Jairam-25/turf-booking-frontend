@@ -1,28 +1,26 @@
 
 @if (showAppSplash()) {
-  <div class="custom-splash-screen fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-slate-900 overflow-hidden" style="background-color: #0f172a;">
-    <!-- Animated Bubbles Background -->
-    <div class="bubbles-container absolute inset-0 z-0 pointer-events-none">
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-    </div>
+  <div class="custom-splash-screen fixed inset-0 z-[99999] flex flex-col items-center justify-center overflow-hidden">
+    <!-- Gradient Background -->
+    <div class="splash-background"></div>
     
-    <div class="z-10 relative flex flex-col items-center">
-    <div class="splash-logo-container relative mb-6">
-       <!-- App icon (the one we generated) -->
-       <img src="images/app-icon.jpg" alt="Logo" class="w-28 h-28 rounded-3xl shadow-[0_0_30px_rgba(123,57,252,0.4)] animate-float">
-    </div>
-    <div class="typing-container">
-      <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#7b39fc] to-[#38bdf8] tracking-wider">
-        TurfXpert
-      </h1>
-    </div>
+    <div class="z-10 relative flex flex-col items-center justify-center h-full w-full">
+      <div class="splash-content">
+        <!-- Bouncing Ball -->
+        <div class="splash-ball">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+        </div>
+        
+        <!-- Logo -->
+        <div class="splash-logo">
+          TurfXpert
+        </div>
+        
+        <!-- Tagline -->
+        <div class="splash-tagline">
+          Book. Play. Repeat.
+        </div>
+      </div>
     </div>
   </div>
 }
