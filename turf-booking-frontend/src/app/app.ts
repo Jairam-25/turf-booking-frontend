@@ -70,12 +70,17 @@ export class App implements OnInit {
     import('@capacitor/splash-screen').then(({ SplashScreen }) => {
       import('@capacitor/core').then(({ Capacitor }) => {
         if (Capacitor.isNativePlatform()) {
-          setTimeout(() => {
-            SplashScreen.hide(); // Hide native splash to show our custom web splash
-          }, 500); // Wait 500ms before hiding native splash
+          // Hide native splash immediately (0ms delay) to avoid static blank screen
+          SplashScreen.hide(); 
         }
       });
     });
+
+    // Start our web-animated splash screen
+    this.showAppSplash.set(true);
+    // Destroy component at 2200ms (1.8s animation + 0.4s fadeout)
+    setTimeout(() => this.showAppSplash.set(false), 2200);
+
  this.themeService.init();
  this.updateVisibility(this.router.url);
 

@@ -1038,15 +1038,15 @@ body:not([data-theme="light"]) .theme-toggle-animated {
 }
 /* Splash Screen Animations */
 .custom-splash-screen {
-  background: #0f172a;
-  animation: splashFadeOut 0.5s ease-in-out 2.2s forwards;
+  background: linear-gradient(-45deg, var(--bg-card), var(--primary), #38bdf8, #7b39fc);
+  background-size: 300% 300%;
+  animation: gradientFlow 5s ease infinite, splashFadeOut 0.4s ease-in-out 1.8s forwards;
 }
 
-.splash-background {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, var(--primary) 0%, rgba(15,23,42,1) 100%);
-  opacity: 0.15;
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .splash-content {
@@ -1057,49 +1057,34 @@ body:not([data-theme="light"]) .theme-toggle-animated {
 }
 
 .splash-logo {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: 0.05em;
-  background: linear-gradient(to right, #fff, #e2e8f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: logoEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  transform: scale(0);
+  display: flex;
 }
 
-.splash-ball {
-  width: 48px;
-  height: 48px;
-  color: var(--primary);
-  margin-bottom: 1rem;
-  animation: ballBounce 0.8s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
-  transform: translateY(-150px) scale(0);
+.splash-logo span {
+  display: inline-block;
   opacity: 0;
+  transform: translateY(15px);
+  animation: letterReveal 0.4s ease-out forwards;
 }
-.splash-ball svg { width: 100%; height: 100%; }
 
 .splash-tagline {
   margin-top: 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0;
-  animation: taglineFadeIn 0.6s ease-out 0.8s forwards;
+  animation: taglineFadeIn 0.4s ease-out 1.1s forwards; /* Starts 200ms after last letter completes (0.69 + 0.2) */
 }
 
-@keyframes logoEntrance {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
-}
-
-@keyframes ballBounce {
-  0% { transform: translateY(-150px) scale(0) rotate(-180deg); opacity: 0; }
-  60% { transform: translateY(20px) scale(1.1) rotate(0deg); opacity: 1; }
-  80% { transform: translateY(-15px) scale(1) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+@keyframes letterReveal {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes taglineFadeIn {
