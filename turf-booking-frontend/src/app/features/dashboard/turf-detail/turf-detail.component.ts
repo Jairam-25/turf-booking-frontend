@@ -139,7 +139,7 @@ interface CategorizedSlot extends Slot {
                 <div class="quick-days-strip">
                   <div 
                     *ngFor="let day of upcomingDays" 
-                    class="day-chip glass" 
+                    class="day-chip" 
                     [class.active]="selectedDate() === day.dateStr"
                     (click)="selectDate(day.dateStr)"
                   >
@@ -148,7 +148,7 @@ interface CategorizedSlot extends Slot {
                   </div>
 
                   <!-- Custom Date Picker Trigger -->
-                  <div class="custom-date-picker glass" title="Pick custom date">
+                  <div class="custom-date-picker" title="Pick custom date">
                     <input 
                       type="date" 
                       [value]="selectedDate()" 

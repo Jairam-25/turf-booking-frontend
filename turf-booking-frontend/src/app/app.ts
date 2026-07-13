@@ -34,6 +34,7 @@ export class App implements OnInit {
  hideNavbar = signal(false);
  hideFooter = signal(false);
  hideBottomNav = signal(false);
+ hideChatbot = signal(false);
   showAppSplash = signal(false);
  isRouting = signal(false);
  routingText = signal('Loading page...');
@@ -184,5 +185,7 @@ export class App implements OnInit {
     this.hideBottomNav.set(isAuth || !isMobile);
     // Hide footer on auth pages, payment, and mobile app
     this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment') || isMobile);
+    const isTurfDetails = cleanUrl.includes('/dashboard/turf/');
+    this.hideChatbot.set(isAuth || isTurfDetails);
   }
 }

@@ -45,7 +45,9 @@
 }
 
 <app-toast></app-toast>
+@if (!hideChatbot()) {
 <app-chatbot></app-chatbot>
+}
 @if (!hideBottomNav()) {
  <app-bottom-nav></app-bottom-nav>
 }
