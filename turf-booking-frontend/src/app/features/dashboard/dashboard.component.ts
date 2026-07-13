@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, OnDestroy } from '@angular/core';
+import { Geolocation } from '@capacitor/geolocation';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
 import { Turf, TurfResponse } from '../../domain/models/turf.model';
@@ -1194,6 +1195,79 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Ask for Push Notification permission and save token to DB
   this.fcmService.requestNotificationPermission();
   this.fcmService.listenForMessages();
+
+  // Auto detect location on fresh login/open
+  if (!sessionStorage.getItem('dashboard_locationStr')) {
+    this.autoDetectLocation();
+  }
+  }
+
+  
+  async autoDetectLocation() {
+    try {
+      // Prompt for permissions
+      let perm = await Geolocation.checkPermissions();
+      if (perm.location !== 'granted') {
+        perm = await Geolocation.requestPermissions();
+        if (perm.location !== 'granted') {
+          return;
+        }
+      }
+
+      // Get Coordinates
+      const pos = await Geolocation.getCurrentPosition();
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      // Reverse Geocode
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const data = await res.json();
+      
+      const address = data.address || {};
+      const district = address.state_district || address.county || address.city || address.town;
+      const state = address.state;
+
+      if (state || district) {
+        // Try to match the closest available state and district in our list
+        let matchedState = '';
+        let matchedDistrict = '';
+        
+        // Find matching state
+        const sMatch = this.statesList().find(s => s.toLowerCase().includes(state?.toLowerCase() || '') || (state && state.toLowerCase().includes(s.toLowerCase())));
+        if (sMatch) {
+           matchedState = sMatch;
+           const dists = this.getDistrictsForState(sMatch);
+           const dMatch = dists.find(d => d.toLowerCase().includes(district?.toLowerCase() || '') || (district && district.toLowerCase().includes(d.toLowerCase())));
+           if (dMatch) {
+              matchedDistrict = dMatch;
+           }
+        }
+        
+        // Auto Select
+        if (matchedState || matchedDistrict) {
+           // We use a dummy event, but we don't need it for selectLocation since event is mostly unused or we can pass null
+           this.selectLocation(null as any, matchedState, matchedDistrict);
+           this.notificationService.success(`Location auto-detected: ${matchedDistrict || matchedState}`);
+        } else {
+           // Fallback to setting exact string if exact match isn't found
+           let locStr = '';
+           if (district && state) locStr = `${district}, ${state}`;
+           else if (state) locStr = state;
+           else if (district) locStr = district;
+           
+           if (locStr) {
+             this.selectedLocation.set(locStr);
+             this.selectedState.set(state || '');
+             this.selectedDistrict.set(district || '');
+             sessionStorage.setItem('dashboard_locationStr', locStr);
+             this.applyFiltersLocally();
+             this.notificationService.success(`Location auto-detected: ${locStr}`);
+           }
+        }
+      }
+    } catch (e) {
+      console.error('Auto location detection failed:', e);
+    }
   }
 
   navigateToLiked() {
@@ -1510,7 +1584,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
  }
 
  openStateDistricts(event: Event, state: string) {
- event.stopPropagation();
+ if(event) event.stopPropagation();
  this.viewingDistrictsForState.set(state);
  }
 
