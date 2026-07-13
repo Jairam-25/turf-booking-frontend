@@ -135,7 +135,7 @@ import { filter } from 'rxjs/operators';
   `,
   styles: [`
   .bottom-nav-mobile {
-    display: none;
+    display: block;
     position: fixed;
     bottom: 0;
     left: 0;

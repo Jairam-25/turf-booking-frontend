@@ -181,7 +181,7 @@ export class App implements OnInit {
     const isMobile = document.body.classList.contains('is-mobile-app');
 
     this.hideNavbar.set(isAuth || isMobile);
-    this.hideBottomNav.set(isAuth);
+    this.hideBottomNav.set(isAuth || !isMobile);
     // Hide footer on auth pages, payment, and mobile app
     this.hideFooter.set(isAuth || cleanUrl.startsWith('/payment') || isMobile);
   }

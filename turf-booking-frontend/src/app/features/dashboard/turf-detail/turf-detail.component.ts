@@ -451,23 +451,28 @@ interface CategorizedSlot extends Slot {
       border-radius: 14px;
     }
 
+    /* Native App Specific Layouts */
+    :host-context(body.is-mobile-app) .mobile-sticky-booking-bar {
+      display: flex;
+    }
+    :host-context(body.is-mobile-app) .detail-page-container {
+      padding-bottom: 120px; /* Space for the sticky bar */
+    }
+    :host-context(body.is-mobile-app) .pricing-rules-card,
+    :host-context(body.is-mobile-app) .booking-steps-indicator,
+    :host-context(body.is-mobile-app) .booking-panel .actions {
+      display: none; /* Make it more compact on native app */
+    }
+
+    /* Standard Responsive Web Layouts */
     @media (max-width: 768px) {
       .detail-page-container {
         padding: 1rem;
-        padding-bottom: 120px; /* Space for the sticky bar */
       }
       .detail-grid {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
-      }
-      .mobile-sticky-booking-bar {
-        display: flex;
-      }
-      
-      /* Hide some less critical elements on mobile to shorten the page */
-      .pricing-rules-card, .booking-steps-indicator {
-        display: none; /* Make it more compact */
       }
       .turf-details-content {
         padding: 1.5rem 1rem;
@@ -477,10 +482,6 @@ interface CategorizedSlot extends Slot {
       }
       .slots-grid-view {
         grid-template-columns: repeat(3, 1fr) !important;
-      }
-      /* Hide the desktop confirm button */
-      .booking-panel .actions {
-        display: none;
       }
     }
 
