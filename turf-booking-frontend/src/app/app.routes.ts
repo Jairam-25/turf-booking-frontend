@@ -24,7 +24,8 @@ export const routes: Routes = [
  },
  {
  path: 'home',
- loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+ loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+ canActivate: [authGuard]
  },
  {
  path: 'bookings',
@@ -33,7 +34,8 @@ export const routes: Routes = [
  },
  { 
  path: 'dashboard', 
- loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+ loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+ canActivate: [authGuard]
  },
  {
  path: 'offers',
@@ -94,11 +96,13 @@ export const routes: Routes = [
  },
  {
  path: 'about',
- loadComponent: () => import('./features/about/about').then(m => m.About)
+ loadComponent: () => import('./features/about/about').then(m => m.About),
+ canActivate: [authGuard]
  },
  {
  path: 'privacy-policy',
- loadComponent: () => import('./features/privacy-policy/privacy-policy').then(m => m.PrivacyPolicy)
+ loadComponent: () => import('./features/privacy-policy/privacy-policy').then(m => m.PrivacyPolicy),
+ canActivate: [authGuard]
  },
  {
  path: 'terms-of-service',
