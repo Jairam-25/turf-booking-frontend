@@ -141,10 +141,8 @@ import { filter } from 'rxjs/operators';
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(10, 14, 26, 0.95);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
     padding-bottom: env(safe-area-inset-bottom);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -234,7 +232,7 @@ import { filter } from 'rxjs/operators';
     width: 8px;
     height: 8px;
     background: #3b82f6;
-    border: 2px solid rgba(10, 14, 26, 1);
+    border: 2px solid var(--bg-card);
     border-radius: 50%;
   }
 
