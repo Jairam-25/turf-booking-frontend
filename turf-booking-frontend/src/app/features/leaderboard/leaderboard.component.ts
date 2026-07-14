@@ -19,7 +19,7 @@ interface Player {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="leaderboard-container max-w-6xl mx-auto py-8 px-4 font-manrope">
+    <div class="leaderboard-container max-w-6xl mx-auto pt-[calc(2rem+env(safe-area-inset-top))] pb-8 px-4 font-manrope">
       
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">

@@ -265,11 +265,11 @@ p {
 }
 
 .spacing-vertical-24 {
-  padding-top: 24px;
+  padding-top: calc(24px + env(safe-area-inset-top));
   padding-bottom: 24px;
 }
 .spacing-vertical-48 {
-  padding-top: 48px;
+  padding-top: calc(48px + env(safe-area-inset-top));
   padding-bottom: 48px;
 }
 

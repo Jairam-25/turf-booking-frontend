@@ -4,8 +4,8 @@
   <!-- MENU STATE -->
   <ng-container *ngIf="viewState() === 'menu'">
     <!-- Header with Background -->
-    <div class="relative bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] h-40 flex items-center justify-center rounded-b-[40px] shadow-lg">
-      <h1 class="text-white text-2xl font-bold absolute top-10">My Profile</h1>
+    <div class="relative bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] h-[calc(10rem+env(safe-area-inset-top))] flex items-center justify-center rounded-b-[40px] shadow-lg">
+      <h1 class="text-white text-2xl font-bold absolute top-[calc(2.5rem+env(safe-area-inset-top))]">My Profile</h1>
       
       <!-- Profile Picture (Overlapping) -->
       <div class="absolute -bottom-12 flex flex-col items-center">
@@ -100,7 +100,7 @@
   <ng-container *ngIf="viewState() === 'edit'">
     
     <!-- Top Nav -->
-    <div class="flex items-center p-5 bg-white dark:bg-[#121212] sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center p-5 pt-[calc(1.25rem+env(safe-area-inset-top))] bg-white dark:bg-[#121212] sticky top-0 z-50 shadow-sm">
       <button class="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" (click)="viewState.set('menu')">
         <svg class="w-6 h-6 text-slate-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
       </button>
