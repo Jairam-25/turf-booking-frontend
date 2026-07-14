@@ -1205,8 +1205,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   this.fcmService.listenForMessages();
 
   // Auto detect location on fresh login/open
-  if (!sessionStorage.getItem('dashboard_locationStr')) {
-    this.autoDetectLocation();
+  if (!sessionStorage.getItem('dashboard_has_prompted_location')) {
+    sessionStorage.setItem('dashboard_has_prompted_location', 'true');
+    this.isLocationSelectOpen.set(true);
   }
   }
 

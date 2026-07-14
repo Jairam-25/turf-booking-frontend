@@ -30,7 +30,7 @@ import { NotificationService } from '../../core/services/notification.service';
  styles: [`
  .toast-container {
  position: fixed;
- top: 2rem;
+ top: calc(1rem + env(safe-area-inset-top));
  right: 2rem;
  z-index: 9999;
  display: flex;
