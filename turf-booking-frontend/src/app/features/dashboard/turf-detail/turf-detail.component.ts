@@ -1528,11 +1528,26 @@ interface CategorizedSlot extends Slot {
         font-size: 1rem;
         margin-top: 0;
       }
-      .payment-options-grid {
+           .payment-options-grid {
         grid-template-columns: 1fr;
+        gap: 8px;
       }
       .payment-option-card {
-        padding: 1rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+        gap: 8px;
+      }
+      .payment-option-card .option-header {
+        margin-bottom: 0;
+      }
+      .payment-option-card .option-description {
+        display: none;
+      }
+      .payment-option-card .option-price {
+        margin-top: 0;
+        font-size: 1.15rem;
       }
       .success-card {
         padding: 1.5rem 1rem;
@@ -1624,9 +1639,10 @@ interface CategorizedSlot extends Slot {
       .price-tag {
         font-size: 0.95rem;
       }
-      .summary-row {
-        flex-direction: column;
-        gap: 4px;
+           .summary-row {
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
       }
       .summary-row.total {
         flex-direction: row;
