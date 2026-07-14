@@ -91,6 +91,16 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
         </div>
       </div>
 
+      
+      <!-- Options: Remember Me -->
+      <div class="form-options" *ngIf="!isOtpMode">
+        <label class="remember-me">
+          <input type="checkbox" formControlName="rememberMe">
+          <span class="checkmark"></span>
+          Remember me
+        </label>
+      </div>
+
       <magic-shiny-button type="submit" [loading]="loading || sendingOtp || verifyingOtp">
         {{ isOtpMode ? (otpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In' }}
       </magic-shiny-button>
@@ -175,6 +185,28 @@ import { FirebaseAuthService } from '../../../../core/services/firebase-auth.ser
     .error-text { font-size: 0.75rem; color: var(--error-color); }
     .invalid { border-color: var(--error-color) !important; }
 
+
+    .form-options {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: -0.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .remember-me input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
     .password-input-container {
       position: relative;
       display: flex;
@@ -465,7 +497,8 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
     this.loginForm = this.fb.group({
       emailOrPhone: ['', [Validators.required, this.emailOrPhoneValidator()]],
       password: [''],
-      otpCode: ['']
+      otpCode: [''],
+      rememberMe: [false]
     });
   }
 
