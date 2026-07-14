@@ -12,6 +12,6 @@ public class MainActivity extends BridgeActivity {
         
         // Enable Edge-to-Edge display (make navigation bar transparent)
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);\n        getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 }
