@@ -33,7 +33,7 @@ import { AuthStore } from '../../core/services/auth.store';
     </div>
     
     <!-- Mobile Navbar Header -->
-    <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 " style="padding-top: max(1rem, env(safe-area-inset-top));">
+    <div class="px-5 pt-4 pb-4 sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E1A]/95 " style="padding-top: calc(1.5rem + env(safe-area-inset-top));">
       <div class="flex justify-between items-center mb-5">
         <!-- User Info & Location -->
         <div class="flex flex-col">
