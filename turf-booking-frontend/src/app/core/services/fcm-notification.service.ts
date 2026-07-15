@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { NotificationService } from './notification.service';
+import { InAppNotificationService } from './in-app-notification.service';
 
 @Injectable({
  providedIn: 'root'
@@ -12,6 +13,7 @@ import { NotificationService } from './notification.service';
 export class FcmNotificationService {
  private http = inject(HttpClient);
  private notificationService = inject(NotificationService);
+ private inAppNotificationService = inject(InAppNotificationService);
  
  // The Firebase config provided by the user (Used for Web only)
  private firebaseConfig = {
@@ -65,6 +67,15 @@ export class FcmNotificationService {
        }
 
        // Register with Apple / Google to receive push via APNS/FCM
+       // Create a notification channel for Android 8.0+
+       await PushNotifications.createChannel({
+         id: 'fcm_default_channel',
+         name: 'TurfXpert Notifications',
+         description: 'General app notifications',
+         importance: 5,
+         visibility: 1
+       });
+       
        await PushNotifications.register();
        
        // Add registration listener to send token to backend
@@ -112,6 +123,7 @@ export class FcmNotificationService {
      PushNotifications.addListener('pushNotificationReceived', (notification) => {
        // Show in-app toast for foreground notifications
        if (notification.title && notification.body) {
+         this.inAppNotificationService.addNotification(notification.title, notification.body);
          this.notificationService.show(
            `${notification.title}: ${notification.body}`, 
            'info'
@@ -121,7 +133,10 @@ export class FcmNotificationService {
 
      // Action performed when notification is tapped
      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-       // Handle notification click if needed (e.g. routing to booking details)
+       // Handle notification click if needed
+       if (notification.notification.title && notification.notification.body) {
+         this.inAppNotificationService.addNotification(notification.notification.title, notification.notification.body);
+       }
      });
    } else {
      // WEB BROWSER FOREGROUND NOTIFICATION LISTENER
@@ -129,6 +144,7 @@ export class FcmNotificationService {
      
      onMessage(this.messaging, (payload) => {
        if (payload.notification) {
+         this.inAppNotificationService.addNotification(payload.notification.title || 'Notification', payload.notification.body || '');
          new Notification(payload.notification.title || 'Notification', {
            body: payload.notification.body,
            icon: '/favicon.ico'

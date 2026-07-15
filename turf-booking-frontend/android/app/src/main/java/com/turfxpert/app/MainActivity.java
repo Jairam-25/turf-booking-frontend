@@ -9,9 +9,9 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Enable Edge-to-Edge display (make navigation bar transparent)
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);\n        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);       getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 }

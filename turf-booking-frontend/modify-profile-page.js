@@ -1,0 +1,217 @@
+const fs = require('fs');
+
+let ts = fs.readFileSync('src/app/features/profile/profile.ts', 'utf8');
+if (!ts.includes('viewState = signal')) {
+  ts = ts.replace(
+    /isDeleting = signal<boolean>\(false\);/,
+    `isDeleting = signal<boolean>(false);\n  viewState = signal<'menu' | 'edit'>('menu');`
+  );
+  fs.writeFileSync('src/app/features/profile/profile.ts', ts);
+}
+
+let html = `
+<div class="profile-page min-h-[calc(100vh-80px)] bg-[#f8f9fa] dark:bg-[#0A0E1A] fade-in pb-24">
+  
+  <!-- MENU STATE -->
+  <ng-container *ngIf="viewState() === 'menu'">
+    <!-- Header with Background -->
+    <div class="relative bg-gradient-to-r from-[#4ade80] to-[#22c55e] h-40 flex items-center justify-center rounded-b-[40px] shadow-lg">
+      <h1 class="text-white text-2xl font-bold absolute top-10">My Profile</h1>
+      
+      <!-- Profile Picture (Overlapping) -->
+      <div class="absolute -bottom-12 flex flex-col items-center">
+        <div class="relative w-24 h-24 rounded-full border-4 border-white dark:border-[#0A0E1A] shadow-xl bg-white overflow-hidden cursor-pointer" (click)="fileInput.click()">
+          <img *ngIf="profilePictureUrl() && !isUploadingImage() && !profileImageError()" [src]="getFullProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError.set(true)">
+          <div *ngIf="(!profilePictureUrl() || profileImageError()) && !isUploadingImage()" class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-3xl">
+            {{ profileForm.get('name')?.value?.charAt(0) || 'U' }}
+          </div>
+          <div *ngIf="isUploadingImage()" class="w-full h-full bg-slate-100 flex items-center justify-center">
+            <span class="w-6 h-6 border-2 border-[#4ade80]/30 border-t-[#4ade80] rounded-full animate-spin"></span>
+          </div>
+        </div>
+        <input type="file" #fileInput class="hidden" accept="image/png, image/jpeg, image/jpg, image/webp" (change)="onImageSelected($event)">
+      </div>
+    </div>
+    
+    <!-- User Info -->
+    <div class="mt-16 text-center px-4">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ profileForm.get('name')?.value || 'User' }}</h2>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">{{ profileForm.get('email')?.value || 'email@example.com' }}</p>
+    </div>
+
+    <!-- Menu List -->
+    <div class="mt-8 px-5 max-w-md mx-auto space-y-3">
+      
+      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5">
+        
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" (click)="viewState.set('edit')">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">Edit Profile</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div class="h-px bg-slate-100 dark:bg-white/5 mx-4"></div>
+
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/liked-turfs">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-pink-50 dark:bg-pink-500/10 flex items-center justify-center text-pink-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">Favourites</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div class="h-px bg-slate-100 dark:bg-white/5 mx-4"></div>
+
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/bookings">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-500/10 flex items-center justify-center text-green-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">Payment Methods</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+      </div>
+
+      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5">
+        
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/privacy-policy">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">Privacy Policy</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+        <div class="h-px bg-slate-100 dark:bg-white/5 mx-4"></div>
+
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">Terms & Conditions</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </div>
+
+      </div>
+
+      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5 mt-6">
+        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" (click)="deleteAccount()">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </div>
+            <span class="font-bold text-red-500">Delete Account</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- EDIT STATE -->
+  <ng-container *ngIf="viewState() === 'edit'">
+    
+    <!-- Top Nav -->
+    <div class="flex items-center p-5 bg-white dark:bg-[#121212] sticky top-0 z-50 shadow-sm">
+      <button class="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" (click)="viewState.set('menu')">
+        <svg class="w-6 h-6 text-slate-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+      </button>
+      <h2 class="text-xl font-bold ml-2 text-slate-900 dark:text-white">Edit Profile</h2>
+    </div>
+
+    <main class="w-full max-w-3xl mx-auto p-4 md:p-8">
+      <!-- Personal Information Card -->
+      <div class="bg-white dark:bg-[#121212] rounded-3xl p-5 md:p-10 shadow-sm border border-slate-100 dark:border-white/5 mb-6">
+        
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-6">
+          <div class="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
+            <!-- Full Name -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Full Name</label>
+              <input type="text" formControlName="name" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all placeholder:text-slate-400" placeholder="John Doe" />
+            </div>
+
+            <!-- Email (Disabled) -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1 flex justify-between items-center">
+                Email Address
+                <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-md flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Verified</span>
+              </label>
+              <input type="email" formControlName="email" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-500 rounded-2xl px-4 py-3.5 cursor-not-allowed opacity-60" />
+            </div>
+            
+            <!-- Phone Number -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Phone Number</label>
+              <input type="tel" formControlName="phoneNumber" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all placeholder:text-slate-400" placeholder="+91 98765 43210" />
+            </div>
+
+            <!-- Address -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Address</label>
+              <input type="text" formControlName="address" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all placeholder:text-slate-400" placeholder="123 Street Name, City" />
+            </div>
+
+            <!-- State -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">State</label>
+              <input type="text" formControlName="state" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all placeholder:text-slate-400" placeholder="Your State" />
+            </div>
+
+            <!-- Marital Status -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Marital Status</label>
+              <select formControlName="maritalStatus" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all">
+                <option value="" disabled selected>Select Status</option>
+                <option value="Unmarried">Unmarried</option>
+                <option value="Married">Married</option>
+              </select>
+            </div>
+
+            <!-- Player Type -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Player Type</label>
+              <input type="text" formControlName="playerType" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all placeholder:text-slate-400" placeholder="e.g., Football, Cricket" />
+            </div>
+
+            <!-- Playing Level -->
+            <div class="form-group flex flex-col gap-2">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Playing Level</label>
+              <select formControlName="playingLevel" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#4ade80] outline-none transition-all">
+                <option value="" disabled selected>Select Level</option>
+                <option value="Amateur">Amateur</option>
+                <option value="District Level">District Level</option>
+                <option value="State Level">State Level</option>
+                <option value="National Level">National Level</option>
+                <option value="Professional">Professional</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-8 mt-4 border-t border-slate-100 dark:border-white/5">
+            <button type="submit" [disabled]="isSaving() || profileForm.invalid" class="w-full bg-[#4ade80] text-white px-8 py-4 rounded-full font-bold flex justify-center items-center gap-2 transition-all shadow-lg active:scale-95 disabled:opacity-50">
+              <span *ngIf="isSaving()" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              {{ isSaving() ? 'Saving Changes...' : 'Save Profile' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </ng-container>
+
+</div>
+`;
+
+fs.writeFileSync('src/app/features/profile/profile.html', html);
