@@ -243,14 +243,43 @@ export class SuperadminDashboardComponent implements OnInit {
 
       let dailySlots: any[] = [];
       
-      // Deduplicate slots by startTime just in case the backend returns duplicates
-      const uniqueSlots = Array.from(new Map(slots.map(s => [s.startTime, s])).values());
+      const standardSlots = [
+        { startTime: '06:00:00', endTime: '07:00:00', timeDisplay: '06:00 AM to 07:00 AM' },
+        { startTime: '07:00:00', endTime: '08:00:00', timeDisplay: '07:00 AM to 08:00 AM' },
+        { startTime: '08:00:00', endTime: '09:00:00', timeDisplay: '08:00 AM to 09:00 AM' },
+        { startTime: '09:00:00', endTime: '10:00:00', timeDisplay: '09:00 AM to 10:00 AM' },
+        { startTime: '10:00:00', endTime: '11:00:00', timeDisplay: '10:00 AM to 11:00 AM' },
+        { startTime: '11:00:00', endTime: '12:00:00', timeDisplay: '11:00 AM to 12:00 PM' },
+        { startTime: '12:00:00', endTime: '13:00:00', timeDisplay: '12:00 PM to 01:00 PM' },
+        { startTime: '13:00:00', endTime: '14:00:00', timeDisplay: '01:00 PM to 02:00 PM' },
+        { startTime: '14:00:00', endTime: '15:00:00', timeDisplay: '02:00 PM to 03:00 PM' },
+        { startTime: '15:00:00', endTime: '16:00:00', timeDisplay: '03:00 PM to 04:00 PM' },
+        { startTime: '16:00:00', endTime: '17:00:00', timeDisplay: '04:00 PM to 05:00 PM' },
+        { startTime: '17:00:00', endTime: '18:00:00', timeDisplay: '05:00 PM to 06:00 PM' },
+        { startTime: '18:00:00', endTime: '19:00:00', timeDisplay: '06:00 PM to 07:00 PM' },
+        { startTime: '19:00:00', endTime: '20:00:00', timeDisplay: '07:00 PM to 08:00 PM' },
+        { startTime: '20:00:00', endTime: '21:00:00', timeDisplay: '08:00 PM to 09:00 PM' },
+        { startTime: '21:00:00', endTime: '22:00:00', timeDisplay: '09:00 PM to 10:00 PM' }
+      ];
 
-      uniqueSlots.forEach(slot => {
-        const booking = bookings.find(b => b.slotId === slot.id && new Date(b.bookingDate).toDateString() === dateStr);
+      standardSlots.forEach(standardSlot => {
+        // Find if this standard slot exists in the turf's actual slots, and if it's booked
+        const actualSlot = slots.find(s => s.startTime === standardSlot.startTime);
+        
+        let booking = null;
+        if (actualSlot) {
+          booking = bookings.find(b => b.slotId === actualSlot.id && new Date(b.bookingDate).toDateString() === dateStr);
+        } else {
+          // Sometimes the backend might not send slots properly, but we can still try to match bookings by their startTime if they have it
+          booking = bookings.find(b => {
+             return new Date(b.bookingDate).toDateString() === dateStr && b.startTime === standardSlot.startTime;
+          });
+        }
+        
         dailySlots.push({
-          startTime: slot.startTime,
-          endTime: slot.endTime,
+          timeDisplay: standardSlot.timeDisplay,
+          startTime: standardSlot.startTime,
+          endTime: standardSlot.endTime,
           isBooked: !!booking,
           userName: booking ? booking.userName : 'No booked',
           userEmail: booking ? booking.userEmail : '-',
@@ -271,20 +300,6 @@ export class SuperadminDashboardComponent implements OnInit {
 
       // If we have slots after search filtering, add the group
       if (dailySlots.length > 0) {
-        // Sort slots by time safely
-        dailySlots.sort((a, b) => {
-          let timeA = new Date(a.startTime).getTime();
-          let timeB = new Date(b.startTime).getTime();
-          
-          if (isNaN(timeA)) {
-            timeA = new Date('1970/01/01 ' + a.startTime).getTime();
-          }
-          if (isNaN(timeB)) {
-            timeB = new Date('1970/01/01 ' + b.startTime).getTime();
-          }
-          
-          return timeA - timeB;
-        });
 
         groupedSchedule.push({
           date: d,

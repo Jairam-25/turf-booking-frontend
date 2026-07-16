@@ -595,7 +595,7 @@
               <!-- Slots Rows -->
               <tr *ngFor="let row of group.slots" class="hover:bg-black/10 dark:hover:bg-white/5 transition-colors" [ngClass]="{'opacity-60': !row.isBooked}">
                 <td class="p-4 align-top pl-6 border-l-2 border-transparent hover:border-yellow-500 transition-all">
-                  <span class="text-sm font-bold text-blue-400 whitespace-nowrap">{{ row.startTime | date:'shortTime' }} to {{ row.endTime | date:'shortTime' }}</span>
+                  <span class="text-sm font-bold text-blue-400 whitespace-nowrap">{{ row.timeDisplay }}</span>
                 </td>
                 <td class="p-4 align-top">
                   <span class="text-xs text-[var(--text-primary)] font-medium">{{ group.date | date:'dd-MM-yyyy' }}</span>
