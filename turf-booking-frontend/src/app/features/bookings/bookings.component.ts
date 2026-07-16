@@ -429,138 +429,134 @@ export interface GroupedBooking {
       gap: 1rem;
     }
 
+    
     .booking-card {
-      padding: 1rem;
+      padding: 1.75rem;
       border-radius: 20px;
-      min-height: 250px;
+      min-height: 280px;
       transition: var(--transition-smooth);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
     }
     .booking-card:hover {
       transform: translateY(-6px);
-      border-color: var(--primary);
-      box-shadow: var(--shadow-glow-primary);
+      box-shadow: var(--shadow-lg);
     }
-
+    
     .booking-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 1rem;
-    }
-    .turf-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      margin-bottom: 0.5rem;
     }
     .turf-info h3 {
       font-size: 1.25rem;
-      font-weight: 700;
+      font-weight: 800;
+      margin: 0 0 0.25rem 0;
       color: var(--text-primary);
-      margin: 0;
     }
     .location-link {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 0.25rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-decoration: none;
       transition: var(--transition-smooth);
     }
     .location-link:hover {
       color: var(--primary);
     }
-
+    .location-link svg {
+      width: 14px;
+      height: 14px;
+    }
+    
     .status-badge {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success-color);
       padding: 4px 12px;
-      border-radius: 12px;
+      border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
       border: 1px solid rgba(16, 185, 129, 0.2);
-      white-space: nowrap;
     }
-
-    .booking-body {
+    
+    .flex-card-body {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       padding: 1rem 0;
-      border-top: 1px solid var(--glass-border);
-      border-bottom: 1px solid var(--glass-border);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
     }
+    
     .info-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .label {
-      font-size: 0.75rem;
       color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-size: 0.85rem;
     }
     .value {
-      font-size: 0.9375rem;
-      font-weight: 600;
       color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
     }
     .value.price {
-      color: var(--primary);
-      font-weight: 700;
       font-size: 1.1rem;
+      color: var(--primary);
     }
-
+    
     .booking-actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      width: 100%;
+      gap: 1rem;
+      margin-top: 0.5rem;
     }
-    .btn-cancel {
-      width: 100%;
-      background: rgba(239, 68, 68, 0.08);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 10px;
+    
+    .btn-uniform {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 12px;
       border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 600;
+      transition: all 0.2s ease;
       cursor: pointer;
-      transition: var(--transition-smooth);
-    }
-    .btn-cancel:hover {
-      background: var(--error-color);
-      color: #ffffff;
-      border-color: var(--error-color);
     }
     .btn-share {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      transition: var(--transition-smooth);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-share:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
     }
     .btn-share svg {
       width: 18px;
       height: 18px;
     }
-    .btn-share:hover {
-      background: rgba(var(--primary-rgb), 0.1);
-      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
-    }
     
-    .empty-state {
+    .btn-cancel {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .btn-cancel:hover {
+      background: rgba(239, 68, 68, 0.2);
+      transform: translateY(-2px);
+    }
+.empty-state {
       padding: 5rem;
       text-align: center;
       display: flex;

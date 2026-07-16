@@ -144,7 +144,7 @@ import { filter } from 'rxjs/operators';
     background: var(--bg-card);
     border-top: 1px solid var(--border-color);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -156,7 +156,7 @@ import { filter } from 'rxjs/operators';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 64px;
+    height: 72px;
     padding: 0 16px;
   }
 

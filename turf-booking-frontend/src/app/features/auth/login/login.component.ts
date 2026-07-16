@@ -1,6 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
+import { InAppNotificationService } from '../../../core/services/in-app-notification.service';
+import { InboxService } from '../../../core/services/inbox.service';
+import { FcmNotificationService } from '../../../core/services/fcm-notification.service';
 import { AuthRepository } from '../../../domain/repositories/auth.repository';
 import { AuthStore } from '../../../core/services/auth.store';
 import { NotificationService } from '../../../core/services/notification.service';
