@@ -1,193 +1,167 @@
-
-<div class="profile-page min-h-[calc(100vh-80px)] bg-[#f8f9fa] dark:bg-[#0A0E1A] fade-in pb-24">
+<div class="profile-page min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0A0E1A] py-8 px-4 md:px-8 fade-in">
   
-  <!-- MENU STATE -->
-  <ng-container *ngIf="viewState() === 'menu'">
-    <!-- Header with Background -->
-    <div class="relative bg-gradient-to-r from-[#7b39fc] to-[#5a24c3] h-[calc(10rem+env(safe-area-inset-top))] flex items-center justify-center rounded-b-[40px] shadow-lg">
-      <h1 class="text-white text-2xl font-bold absolute top-[calc(2.5rem+env(safe-area-inset-top))]">My Profile</h1>
-      
-      <!-- Profile Picture (Overlapping) -->
-      <div class="absolute -bottom-12 flex flex-col items-center">
-        <div class="relative w-24 h-24 rounded-full border-4 border-white dark:border-[#0A0E1A] shadow-xl bg-white overflow-hidden cursor-pointer" (click)="fileInput.click()">
-          <img *ngIf="profilePictureUrl() && !isUploadingImage() && !profileImageError()" [src]="getFullProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError.set(true)">
-          <div *ngIf="(!profilePictureUrl() || profileImageError()) && !isUploadingImage()" class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-3xl">
-            {{ profileForm.get('name')?.value?.charAt(0) || 'U' }}
-          </div>
-          <div *ngIf="isUploadingImage()" class="w-full h-full bg-slate-100 flex items-center justify-center">
-            <span class="w-6 h-6 border-2 border-[#7b39fc]/30 border-t-[#7b39fc] rounded-full animate-spin"></span>
-          </div>
-        </div>
-        <input type="file" #fileInput class="hidden" accept="image/png, image/jpeg, image/jpg, image/webp" (change)="onImageSelected($event)">
-      </div>
-    </div>
-    
-    <!-- User Info -->
-    <div class="mt-16 text-center px-4">
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ profileForm.get('name')?.value || 'User' }}</h2>
-      <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">{{ profileForm.get('email')?.value || 'email@example.com' }}</p>
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Account Settings</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-2">Manage your profile details and preferences.</p>
     </div>
 
-    <!-- Menu List -->
-    <div class="mt-8 px-5 max-w-md mx-auto space-y-3">
+    <div class="flex flex-col lg:flex-row gap-8">
       
-      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5">
+      <!-- Left Sidebar (Profile & Navigation) -->
+      <div class="w-full lg:w-1/3 xl:w-1/4 flex flex-col gap-6">
         
-        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" (click)="viewState.set('edit')">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        <!-- Profile Card -->
+        <div class="bg-white dark:bg-[#121212] rounded-3xl p-6 shadow-sm border border-slate-200/60 dark:border-white/5 flex flex-col items-center text-center relative overflow-hidden">
+          <!-- Banner inside card -->
+          <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-[#7b39fc] to-[#4c1d95]"></div>
+          
+          <div class="relative w-28 h-28 rounded-full border-4 border-white dark:border-[#121212] shadow-lg bg-white overflow-hidden cursor-pointer mt-6 z-10 group" (click)="fileInput.click()" title="Change Profile Picture">
+            <img *ngIf="profilePictureUrl() && !isUploadingImage() && !profileImageError()" [src]="getFullProfilePictureUrl()" alt="Profile" class="w-full h-full object-cover" (error)="profileImageError.set(true)">
+            <div *ngIf="(!profilePictureUrl() || profileImageError()) && !isUploadingImage()" class="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-4xl">
+              {{ profileForm.get('name')?.value?.charAt(0) || 'U' }}
             </div>
-            <span class="font-bold text-slate-800 dark:text-slate-200">Edit Profile</span>
+            <div *ngIf="isUploadingImage()" class="w-full h-full bg-slate-100 flex items-center justify-center">
+              <span class="w-6 h-6 border-2 border-[#7b39fc]/30 border-t-[#7b39fc] rounded-full animate-spin"></span>
+            </div>
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+               <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
           </div>
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <input type="file" #fileInput class="hidden" accept="image/png, image/jpeg, image/jpg, image/webp" (change)="onImageSelected($event)">
+          
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-4">{{ profileForm.get('name')?.value || 'User' }}</h2>
+          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">{{ profileForm.get('email')?.value || 'email@example.com' }}</p>
+          <span class="mt-4 px-4 py-1.5 bg-[#7b39fc]/10 text-[#7b39fc] text-[11px] font-bold rounded-full border border-[#7b39fc]/20 uppercase tracking-wider">{{ profileForm.get('playerType')?.value || 'Player' }}</span>
         </div>
 
-        <div class="h-px bg-slate-100 dark:bg-white/5 mx-4"></div>
-
-        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/liked-turfs">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-pink-50 dark:bg-pink-500/10 flex items-center justify-center text-pink-500">
+        <!-- Navigation Menu -->
+        <div class="bg-white dark:bg-[#121212] rounded-3xl p-4 shadow-sm border border-slate-200/60 dark:border-white/5">
+          <nav class="flex flex-col gap-1.5">
+            <button class="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all text-left bg-[#7b39fc]/10 text-[#7b39fc] font-bold">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              Personal Information
+            </button>
+            <button routerLink="/liked-turfs" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-left font-medium hover:text-slate-900 dark:hover:text-white">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-            </div>
-            <span class="font-bold text-slate-800 dark:text-slate-200">Favourites</span>
-          </div>
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </div>
-      </div>
-
-      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5">
-        
-        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/privacy-policy">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-500">
+              Favourites
+            </button>
+            <button routerLink="/privacy-policy" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-left font-medium hover:text-slate-900 dark:hover:text-white">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-            </div>
-            <span class="font-bold text-slate-800 dark:text-slate-200">Privacy Policy</span>
-          </div>
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </div>
-
-        <div class="h-px bg-slate-100 dark:bg-white/5 mx-4"></div>
-
-        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" routerLink="/terms-of-service">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+              Privacy Policy
+            </button>
+            <button routerLink="/terms-of-service" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-left font-medium hover:text-slate-900 dark:hover:text-white">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            </div>
-            <span class="font-bold text-slate-800 dark:text-slate-200">Terms & Conditions</span>
-          </div>
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </div>
-
-      </div>
-
-      <div class="bg-white dark:bg-[#121212] rounded-2xl p-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:border dark:border-white/5 mt-6">
-        <div class="flex items-center justify-between p-3 cursor-pointer active:scale-95 transition-transform" (click)="deleteAccount()">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-            </div>
-            <span class="font-bold text-red-500">Delete Account</span>
-          </div>
+              Terms & Conditions
+            </button>
+            
+            <div class="h-px bg-slate-100 dark:bg-white/5 my-3 mx-4"></div>
+            
+            <button (click)="deleteAccount()" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all text-left font-bold">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              Delete Account
+            </button>
+          </nav>
         </div>
       </div>
 
-    </div>
-  </ng-container>
-
-  <!-- EDIT STATE -->
-  <ng-container *ngIf="viewState() === 'edit'">
-    
-    <!-- Top Nav -->
-    <div class="flex items-center p-5 pt-[calc(1.25rem+env(safe-area-inset-top))] bg-white dark:bg-[#121212] sticky top-0 z-50 shadow-sm">
-      <button class="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" (click)="viewState.set('menu')">
-        <svg class="w-6 h-6 text-slate-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-      </button>
-      <h2 class="text-xl font-bold ml-2 text-slate-900 dark:text-white">Edit Profile</h2>
-    </div>
-
-    <main class="w-full max-w-3xl mx-auto p-4 md:p-8">
-      <!-- Personal Information Card -->
-      <div class="bg-white dark:bg-[#121212] rounded-3xl p-5 md:p-10 shadow-sm border border-slate-100 dark:border-white/5 mb-6">
+      <!-- Right Content Area (Form) -->
+      <div class="w-full lg:w-2/3 xl:w-3/4">
         
-        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-6">
-          <div class="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
-            <!-- Full Name -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Full Name</label>
-              <input type="text" formControlName="name" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="John Doe" />
-            </div>
-
-            <!-- Email (Disabled) -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1 flex justify-between items-center">
-                Email Address
-                <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-md flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Verified</span>
-              </label>
-              <input type="email" formControlName="email" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-500 rounded-2xl px-4 py-3.5 cursor-not-allowed opacity-60" />
+        <div class="bg-white dark:bg-[#121212] rounded-3xl p-6 md:p-10 shadow-sm border border-slate-200/60 dark:border-white/5 transition-all h-full">
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-5 border-b border-slate-100 dark:border-white/5 gap-4">
+            <div>
+              <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Personal Information</h3>
+              <p class="text-slate-500 text-sm mt-1">Update your personal details here.</p>
             </div>
             
-            <!-- Phone Number -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Phone Number</label>
-              <input type="tel" formControlName="phoneNumber" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="+91 98765 43210" />
-            </div>
-
-            <!-- Address -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Address</label>
-              <input type="text" formControlName="address" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="123 Street Name, City" />
-            </div>
-
-            <!-- State -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">State</label>
-              <input type="text" formControlName="state" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="Your State" />
-            </div>
-
-            <!-- Marital Status -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Marital Status</label>
-              <select formControlName="maritalStatus" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all">
-                <option value="" disabled selected>Select Status</option>
-                <option value="Unmarried">Unmarried</option>
-                <option value="Married">Married</option>
-              </select>
-            </div>
-
-            <!-- Player Type -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Player Type</label>
-              <input type="text" formControlName="playerType" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="e.g., Football, Cricket" />
-            </div>
-
-            <!-- Playing Level -->
-            <div class="form-group flex flex-col gap-2">
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Playing Level</label>
-              <select formControlName="playingLevel" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-transparent text-slate-900 dark:text-white rounded-2xl px-4 py-3.5 focus:border-[#7b39fc] outline-none transition-all">
-                <option value="" disabled selected>Select Level</option>
-                <option value="Amateur">Amateur</option>
-                <option value="District Level">District Level</option>
-                <option value="State Level">State Level</option>
-                <option value="National Level">National Level</option>
-                <option value="Professional">Professional</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="pt-8 mt-4 border-t border-slate-100 dark:border-white/5">
-            <button type="submit" [disabled]="isSaving() || profileForm.invalid" class="w-full bg-[#7b39fc] text-white px-8 py-4 rounded-full font-bold flex justify-center items-center gap-2 transition-all shadow-lg active:scale-95 disabled:opacity-50">
-              <span *ngIf="isSaving()" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-              {{ isSaving() ? 'Saving Changes...' : 'Save Profile' }}
+            <button type="button" (click)="saveProfile()" [disabled]="isSaving() || profileForm.invalid" class="hidden md:flex bg-[#7b39fc] hover:bg-[#6b21a8] text-white px-6 py-2.5 rounded-xl font-bold items-center justify-center gap-2 transition-all shadow-[0_4px_14px_rgba(123,57,252,0.3)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="isSaving()" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              {{ isSaving() ? 'Saving...' : 'Save Changes' }}
             </button>
           </div>
-        </form>
+          
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              
+              <!-- Full Name -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Full Name</label>
+                <input type="text" formControlName="name" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="John Doe" />
+              </div>
+
+              <!-- Email (Disabled) -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex justify-between items-center">
+                  Email Address
+                  <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded flex items-center gap-1 font-bold"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg> Verified</span>
+                </label>
+                <input type="email" formControlName="email" class="w-full bg-slate-100/50 dark:bg-white/5 border border-slate-200/60 dark:border-transparent text-slate-500 rounded-xl px-4 py-3.5 cursor-not-allowed opacity-70" />
+              </div>
+              
+              <!-- Phone Number -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Phone Number</label>
+                <input type="tel" formControlName="phoneNumber" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="+91 98765 43210" />
+              </div>
+
+              <!-- Address -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Address</label>
+                <input type="text" formControlName="address" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="123 Street Name, City" />
+              </div>
+
+              <!-- State -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">State</label>
+                <input type="text" formControlName="state" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="Your State" />
+              </div>
+
+              <!-- Marital Status -->
+              <div class="form-group flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Marital Status</label>
+                <select formControlName="maritalStatus" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all">
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Unmarried">Unmarried</option>
+                  <option value="Married">Married</option>
+                </select>
+              </div>
+
+              <!-- Player Type -->
+              <div class="form-group flex flex-col gap-2 md:col-span-1">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Player Type</label>
+                <input type="text" formControlName="playerType" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all placeholder:text-slate-400" placeholder="e.g., Football, Cricket" />
+              </div>
+
+              <!-- Playing Level -->
+              <div class="form-group flex flex-col gap-2 md:col-span-1">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Playing Level</label>
+                <select formControlName="playingLevel" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:border-[#7b39fc] focus:ring-1 focus:ring-[#7b39fc] outline-none transition-all">
+                  <option value="" disabled selected>Select Level</option>
+                  <option value="Amateur">Amateur</option>
+                  <option value="District Level">District Level</option>
+                  <option value="State Level">State Level</option>
+                  <option value="National Level">National Level</option>
+                  <option value="Professional">Professional</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mobile Save Button (Hidden on Desktop, Visible on Mobile) -->
+            <div class="pt-6 mt-4 flex justify-end md:hidden">
+              <button type="submit" [disabled]="isSaving() || profileForm.invalid" class="w-full bg-[#7b39fc] hover:bg-[#6b21a8] text-white px-8 py-3.5 rounded-xl font-bold flex justify-center items-center gap-2 transition-all shadow-[0_4px_14px_rgba(123,57,252,0.3)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="isSaving()" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
-    </main>
-  </ng-container>
 
-
+    </div>
+  </div>
 
   <!-- Logout Confirmation Modal -->
   <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1200] transition-opacity flex items-center justify-center p-4" *ngIf="isLogoutModalOpen()">
