@@ -144,7 +144,7 @@ import { filter } from 'rxjs/operators';
     background: var(--bg-card);
     border-top: 1px solid var(--border-color);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -196,13 +196,13 @@ import { filter } from 'rxjs/operators';
   }
 
   .nav-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.3px;
     opacity: 0;
     transform: translateY(4px);
     position: absolute;
-    bottom: 10px;
+    bottom: 14px;
     transition: all 0.3s ease;
   }
 
@@ -212,7 +212,7 @@ import { filter } from 'rxjs/operators';
 
   .nav-item-mobile.active .nav-icon-container {
     background: rgba(123, 57, 252, 0.2);
-    transform: translateY(-4px);
+    transform: translateY(-8px);
     box-shadow: 0 4px 12px rgba(123, 57, 252, 0.3);
   }
 
