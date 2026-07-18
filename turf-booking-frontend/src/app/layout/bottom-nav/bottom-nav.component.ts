@@ -200,8 +200,7 @@ import { filter } from 'rxjs/operators';
     font-weight: 700;
     letter-spacing: 0.3px;
     opacity: 0;
-    transform: translateY(4px);
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, color 0.3s ease;
   }
 
   .nav-item-mobile.active {
@@ -210,7 +209,6 @@ import { filter } from 'rxjs/operators';
 
   .nav-item-mobile.active .nav-icon-container {
     background: rgba(123, 57, 252, 0.2);
-    transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(123, 57, 252, 0.3);
   }
 
@@ -220,7 +218,6 @@ import { filter } from 'rxjs/operators';
 
   .nav-item-mobile.active .nav-label {
     opacity: 1;
-    transform: translateY(-2px);
     color: #7b39fc;
   }
 
