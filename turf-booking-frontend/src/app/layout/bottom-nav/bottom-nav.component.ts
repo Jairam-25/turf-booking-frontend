@@ -161,6 +161,7 @@ import { filter } from 'rxjs/operators';
   }
 
   .nav-item-mobile {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -201,7 +202,7 @@ import { filter } from 'rxjs/operators';
     opacity: 0;
     transform: translateY(4px);
     position: absolute;
-    bottom: 6px;
+    bottom: 10px;
     transition: all 0.3s ease;
   }
 
@@ -211,7 +212,7 @@ import { filter } from 'rxjs/operators';
 
   .nav-item-mobile.active .nav-icon-container {
     background: rgba(123, 57, 252, 0.2);
-    transform: translateY(-8px);
+    transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(123, 57, 252, 0.3);
   }
 
