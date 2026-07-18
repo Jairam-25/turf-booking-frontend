@@ -202,7 +202,7 @@ import { filter } from 'rxjs/operators';
     opacity: 0;
     transform: translateY(4px);
     position: absolute;
-    top: 48px;
+    top: 46px;
     transition: all 0.3s ease;
   }
 
