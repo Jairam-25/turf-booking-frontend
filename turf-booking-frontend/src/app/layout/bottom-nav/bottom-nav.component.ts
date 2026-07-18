@@ -202,7 +202,7 @@ import { filter } from 'rxjs/operators';
     opacity: 0;
     transform: translateY(4px);
     position: absolute;
-    bottom: 14px;
+    top: 48px;
     transition: all 0.3s ease;
   }
 
@@ -222,7 +222,7 @@ import { filter } from 'rxjs/operators';
 
   .nav-item-mobile.active .nav-label {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-2px);
     color: #7b39fc;
   }
 
