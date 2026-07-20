@@ -255,12 +255,16 @@ import { AuthStore } from '../../core/services/auth.store';
         <div class="max-h-[60vh] overflow-y-auto scrollbar-hide pr-2 pb-10">
           
           <ng-container *ngIf="!viewingDistrictsForState()">
-            <div class="py-3 px-4 rounded-xl bg-[#7b39fc]/10 border border-[#7b39fc]/30 text-[#7b39fc] mb-3 cursor-pointer hover:bg-[#7b39fc]/20 transition-colors flex items-center justify-center gap-2" (click)="autoDetectLocation(true)">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="py-3 px-4 rounded-xl bg-[#7b39fc]/10 border border-[#7b39fc]/30 text-[#7b39fc] mb-3 cursor-pointer hover:bg-[#7b39fc]/20 transition-colors flex items-center justify-center gap-2" (click)="!isDetectingLocation() && autoDetectLocation(true)">
+              <svg *ngIf="!isDetectingLocation()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              <span class="font-bold text-base">Detect My Location</span>
+              <svg *ngIf="isDetectingLocation()" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span class="font-bold text-base">{{ isDetectingLocation() ? 'Detecting...' : 'Detect My Location' }}</span>
             </div>
 
             <div class="py-3 px-4 rounded-xl border border-white/5 mb-2 cursor-pointer transition-colors" (click)="selectLocation($event, '', '')" [ngClass]="{'bg-[var(--primary)]/20 border-[var(--primary)]/50 text-[var(--primary)]': selectedState() === '' && selectedDistrict() === '', 'hover:bg-white/5 text-slate-300': selectedState() !== '' || selectedDistrict() !== ''}">
@@ -1107,6 +1111,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
  viewingDistrictsForState = signal<string | null>(null);
 
  isLocationSelectOpen = signal(false);
+ isDetectingLocation = signal(false);
   isNotificationsOpen = signal(false);
   inAppNotifications = inject(InAppNotificationService);
  isFilterOpen = signal(false);
@@ -1217,7 +1222,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   async autoDetectLocation(manualTrigger = false) {
     if (manualTrigger) {
-      this.notificationService.success('Detecting your location...');
+      this.isDetectingLocation.set(true);
     }
     try {
       // Prompt for permissions
@@ -1285,6 +1290,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } catch (e) {
       if (manualTrigger) {
         this.notificationService.error('Failed to get location. Please enable location services.');
+      }
+    } finally {
+      if (manualTrigger) {
+        this.isDetectingLocation.set(false);
       }
     }
   }
