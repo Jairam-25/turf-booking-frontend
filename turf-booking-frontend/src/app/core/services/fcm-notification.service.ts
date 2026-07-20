@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { NotificationService } from './notification.service';
-import { InAppNotificationService } from './in-app-notification.service';
+import { InboxService } from './inbox.service';
 
 @Injectable({
  providedIn: 'root'
@@ -13,7 +13,7 @@ import { InAppNotificationService } from './in-app-notification.service';
 export class FcmNotificationService {
  private http = inject(HttpClient);
  private notificationService = inject(NotificationService);
- private inAppNotificationService = inject(InAppNotificationService);
+ private inboxService = inject(InboxService);
  
  // The Firebase config provided by the user (Used for Web only)
  private firebaseConfig = {
@@ -122,8 +122,12 @@ export class FcmNotificationService {
      // CAPACITOR FOREGROUND NOTIFICATION LISTENER
      PushNotifications.addListener('pushNotificationReceived', (notification) => {
        // Show in-app toast for foreground notifications
-       if (notification.title && notification.body) {
-         this.inAppNotificationService.addNotification(notification.title, notification.body);
+        if (notification.title && notification.body) {
+          this.inboxService.addNotification({
+            title: notification.title,
+            message: notification.body,
+            type: 'System'
+          });
          this.notificationService.show(
            `${notification.title}: ${notification.body}`, 
            'info'
@@ -134,17 +138,25 @@ export class FcmNotificationService {
      // Action performed when notification is tapped
      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
        // Handle notification click if needed
-       if (notification.notification.title && notification.notification.body) {
-         this.inAppNotificationService.addNotification(notification.notification.title, notification.notification.body);
-       }
+        if (notification.notification.title && notification.notification.body) {
+          this.inboxService.addNotification({
+            title: notification.notification.title,
+            message: notification.notification.body,
+            type: 'System'
+          });
+        }
      });
    } else {
      // WEB BROWSER FOREGROUND NOTIFICATION LISTENER
      if (!this.messaging) return;
      
      onMessage(this.messaging, (payload) => {
-       if (payload.notification) {
-         this.inAppNotificationService.addNotification(payload.notification.title || 'Notification', payload.notification.body || '');
+        if (payload.notification) {
+          this.inboxService.addNotification({
+            title: payload.notification.title || 'Notification',
+            message: payload.notification.body || '',
+            type: 'System'
+          });
          new Notification(payload.notification.title || 'Notification', {
            body: payload.notification.body,
            icon: '/favicon.ico'

@@ -14,6 +14,7 @@ import { AuthRepository } from './domain/repositories/auth.repository';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { NotificationService } from './core/services/notification.service';
+import { FcmNotificationService } from './core/services/fcm-notification.service';
 
 @Component({
  selector: 'app-root',
@@ -29,6 +30,7 @@ import { NotificationService } from './core/services/notification.service';
  templateUrl: './app.html',
  styleUrl: './app.css'
 })
+
 export class App implements OnInit {
   private location = inject(Location);
  hideNavbar = signal(false);
@@ -36,8 +38,8 @@ export class App implements OnInit {
  hideBottomNav = signal(false);
  hideChatbot = signal(false);
   showAppSplash = signal(false);
- isRouting = signal(false);
- routingText = signal('Loading page...');
+  isRouting = signal(false);
+  routingText = signal('Loading page...');
 
  constructor(
  private router: Router,
@@ -45,7 +47,8 @@ export class App implements OnInit {
  private authStore: AuthStore,
  private authRepo: AuthRepository,
  private http: HttpClient,
- private notificationService: NotificationService
+ private notificationService: NotificationService,
+ private fcmService: FcmNotificationService
  ) {}
 
  ngOnInit() {
@@ -82,15 +85,19 @@ export class App implements OnInit {
     // Destroy component at 2200ms (1.8s animation + 0.4s fadeout)
     setTimeout(() => this.showAppSplash.set(false), 2200);
 
- this.themeService.init();
- this.updateVisibility(this.router.url);
+  this.themeService.init();
+  this.updateVisibility(this.router.url);
 
- // Silent refresh on app init
- const token = this.authStore.token();
- const refreshToken = this.authStore.refreshToken();
+  // Init Global Push Notifications
+  this.fcmService.requestNotificationPermission();
+  this.fcmService.listenForMessages();
+
+  // Silent refresh on app init
+  const token = this.authStore.token();
+  const refreshToken = this.authStore.refreshToken();
  
- import('@capacitor/core').then(({ Capacitor }) => {
- const isNative = Capacitor.isNativePlatform();
+  import('@capacitor/core').then(({ Capacitor }) => {
+  const isNative = Capacitor.isNativePlatform();
  
  if (isNative) {
  document.body.classList.add('is-mobile-app');
