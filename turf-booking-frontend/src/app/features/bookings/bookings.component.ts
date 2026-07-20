@@ -766,49 +766,51 @@ export interface GroupedBooking {
         font-size: 0.8rem;
       }
       .bookings-list {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.75rem;
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem;
       }
       .booking-card {
-        padding: 0.75rem;
-        gap: 0.5rem;
+        padding: 1.25rem;
+        gap: 1rem;
         min-height: auto;
       }
       .turf-info h3 {
-        font-size: 0.95rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: 1.1rem;
+        white-space: normal;
       }
       .location-link {
-        font-size: 0.65rem;
-      }
-      .status-badge {
-        font-size: 0.6rem;
-        padding: 2px 6px;
-      }
-      .info-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-      }
-      .label {
-        font-size: 0.65rem;
-      }
-      .value {
         font-size: 0.75rem;
       }
-      .value.price {
+      .status-badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+      }
+      .info-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .label {
+        font-size: 0.8rem;
+      }
+      .value {
         font-size: 0.85rem;
+      }
+      .value.price {
+        font-size: 0.95rem;
       }
       .booking-actions {
         flex-direction: column;
+        gap: 0.75rem;
       }
-      
+      .booking-actions-row {
+        flex-direction: row;
+        gap: 0.75rem;
+      }
       .btn-cancel, .btn-share {
-        padding: 8px;
-        font-size: 0.8rem;
-        border-radius: 8px;
+        padding: 10px;
+        font-size: 0.9rem;
+        border-radius: 10px;
       }
       .empty-state {
         padding: 2rem 1rem;
