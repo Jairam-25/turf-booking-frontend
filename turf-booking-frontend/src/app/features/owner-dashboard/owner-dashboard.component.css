@@ -1,5 +1,6 @@
 .owner-dashboard-page {
   padding: 1.5rem 1rem;
+  padding-top: calc(2.5rem + env(safe-area-inset-top));
   max-width: 1400px;
   margin: 0 auto;
   font-family: 'Inter', system-ui, sans-serif;
@@ -334,7 +335,7 @@ canvas {
 }
 
 @media (max-width: 768px) {
-  .owner-dashboard-page { padding: 0.5rem; }
+  .owner-dashboard-page { padding: 0.5rem; padding-top: calc(3rem + env(safe-area-inset-top)); }
   .dashboard-header { padding: 1rem; margin-bottom: 1rem; }
   .dashboard-sidebar { padding: 1rem; }
   .section-title { font-size: 1.25rem; }
