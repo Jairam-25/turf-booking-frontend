@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import confetti from 'canvas-confetti';
 import { MagicCardDirective } from '../../../shared/directives/magic-card.directive';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 declare var Razorpay: any;
 
@@ -256,6 +258,34 @@ export class PaymentComponent implements OnInit {
           type: 'Booking'
         });
         this.triggerConfetti();
+
+        // Trigger OS level Push Notification
+        const notifTitle = 'Booking Confirmed! 🎉';
+        const notifBody = `Your booking for ${this.bookingData?.turfName || 'Turf'} is successful.`;
+        
+        if (Capacitor.isNativePlatform()) {
+          LocalNotifications.requestPermissions().then((perm) => {
+            if (perm.display === 'granted') {
+              LocalNotifications.schedule({
+                notifications: [
+                  {
+                    title: notifTitle,
+                    body: notifBody,
+                    id: Math.floor(Math.random() * 100000),
+                    schedule: { at: new Date(Date.now() + 1000) }
+                  }
+                ]
+              });
+            }
+          });
+        } else {
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(notifTitle, {
+              body: notifBody,
+              icon: '/favicon.ico'
+            });
+          }
+        }
       },
       error: (err) => {
         this.notificationService.error(err.error?.message || 'Booking failed after payment.');
