@@ -22,7 +22,7 @@ interface Player {
     <div class="leaderboard-container max-w-6xl mx-auto pt-[calc(2rem+env(safe-area-inset-top))] pb-8 px-4 font-manrope">
       
       <!-- Header -->
-      <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center justify-between mb-8 mt-[25px]">
         <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.05)] hover:border-[#7b39fc] transition-all font-semibold" routerLink="/dashboard" title="Back">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />

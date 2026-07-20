@@ -34,7 +34,7 @@ interface ChatMessage {
     <div class="support-page-container fade-in">
       
       <!-- Back Button -->
-      <div class="navigation-bar">
+      <div class="navigation-bar mt-[25px]">
         <button class="btn-back" routerLink="/dashboard" title="Back">
           <svg  class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
