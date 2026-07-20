@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ToastComponent } from './layout/toast/toast.component';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { NavigationEnd, Router, RouterOutlet, RouteConfigLoadStart, NavigationStart, RouteConfigLoadEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer-component/footer-component';
@@ -91,6 +92,18 @@ export class App implements OnInit {
   // Init Global Push Notifications
   this.fcmService.requestNotificationPermission();
   this.fcmService.listenForMessages();
+
+  // Listen for local push notification clicks
+  import('@capacitor/core').then(({ Capacitor }) => {
+    if (Capacitor.isNativePlatform()) {
+      LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
+        const extra = action.notification.extra;
+        if (extra && extra.action === 'view_booking') {
+          this.router.navigate(['/bookings'], { queryParams: { highlightTurf: extra.turfName } });
+        }
+      });
+    }
+  });
 
   // Silent refresh on app init
   const token = this.authStore.token();

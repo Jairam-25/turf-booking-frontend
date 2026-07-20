@@ -272,7 +272,8 @@ export class PaymentComponent implements OnInit {
                     title: notifTitle,
                     body: notifBody,
                     id: Math.floor(Math.random() * 100000),
-                    schedule: { at: new Date(Date.now() + 1000) }
+                    schedule: { at: new Date(Date.now() + 1000) },
+                    extra: { action: 'view_booking', turfName: this.bookingData?.turfName }
                   }
                 ]
               });
@@ -280,10 +281,14 @@ export class PaymentComponent implements OnInit {
           });
         } else {
           if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(notifTitle, {
+            const notif = new Notification(notifTitle, {
               body: notifBody,
               icon: '/favicon.ico'
             });
+            notif.onclick = () => {
+              window.focus();
+              this.router.navigate(['/bookings'], { queryParams: { highlightTurf: this.bookingData?.turfName } });
+            };
           }
         }
       },

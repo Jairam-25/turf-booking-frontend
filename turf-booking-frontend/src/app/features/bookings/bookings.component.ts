@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { BookingRepository } from '../../domain/repositories/booking.repository';
 import { Booking } from '../../domain/models/booking.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { ActivatedRoute } from '@angular/router';
 
 export interface GroupedBooking {
   bookingIds: number[];
@@ -115,7 +116,9 @@ export interface GroupedBooking {
       <div class="bookings-list" *ngIf="!isLoading(); else loadingTemplate">
         <div 
           *ngFor="let booking of bookings()" 
-          class="glass booking-card"
+          class="glass booking-card transition-all duration-500 ease-in-out"
+          [ngClass]="{'highlight-booking': booking.turfName === highlightedTurfName()}"
+          [attr.id]="'booking-' + booking.turfName.replaceAll(' ', '-')"
         >
           <div class="booking-header">
             <div class="turf-info">
@@ -243,6 +246,16 @@ export interface GroupedBooking {
       display: flex;
       flex-direction: column;
       gap: 2rem;
+    }
+    .highlight-booking {
+      animation: highlightPulse 2s ease-out;
+      border: 2px solid var(--primary) !important;
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4) !important;
+    }
+    @keyframes highlightPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(var(--primary-rgb), 0); }
+      50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.6); }
+      100% { transform: scale(1); box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4); }
     }
     .navigation-bar {
       display: flex;
@@ -839,6 +852,7 @@ export class BookingsComponent implements OnInit {
 
   allBookings = signal<GroupedBooking[]>([]);
   activeTab = signal<'today' | 'history'>('today');
+  highlightedTurfName = signal<string | null>(null);
   
   historySearchQuery = signal<string>('');
   historyTurfFilter = signal<string>('all');
@@ -922,11 +936,19 @@ export class BookingsComponent implements OnInit {
 
   constructor(
     private bookingRepository: BookingRepository,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.loadBookings();
+    
+    this.route.queryParams.subscribe(params => {
+      if (params['highlightTurf']) {
+        this.highlightedTurfName.set(params['highlightTurf']);
+        this.activeTab.set('history');
+      }
+    });
   }
 
   loadBookings() {
@@ -937,6 +959,16 @@ export class BookingsComponent implements OnInit {
         this.allBookings.set(grouped);
         this.calculateAnalytics(grouped);
         this.isLoading.set(false);
+        
+        if (this.highlightedTurfName()) {
+          setTimeout(() => {
+            const elId = 'booking-' + this.highlightedTurfName()!.replaceAll(' ', '-');
+            const el = document.getElementById(elId);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 300);
+        }
       },
       error: () => {
         this.notificationService.error('Failed to load your bookings.');
