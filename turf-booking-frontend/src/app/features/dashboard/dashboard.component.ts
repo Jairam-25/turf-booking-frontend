@@ -1611,9 +1611,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
  }
  }
 
- locateUser() {
- if (navigator.geolocation && this.map) {
- navigator.geolocation.getCurrentPosition((position) => {
+ locateUser = async () => {
+ if (this.map) {
+ try {
+ let perm = await Geolocation.checkPermissions();
+ if (perm.location !== 'granted') {
+ perm = await Geolocation.requestPermissions();
+ if (perm.location !== 'granted') return;
+ }
+ const position = await Geolocation.getCurrentPosition();
  const { latitude, longitude } = position.coords;
  const userIcon = L.icon({
  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1004/1004313.png',
@@ -1625,9 +1631,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
  L.marker([latitude, longitude], { icon: userIcon })
  .bindPopup('<b style="font-size: 1.1rem; color: #7b39fc">You are here!</b>')
  .addTo(this.map!);
- }, () => {
- // Geolocation denied or failed.
- });
+ } catch (error) {
+ console.error('Error locating user', error);
+ }
  }
  }
 
