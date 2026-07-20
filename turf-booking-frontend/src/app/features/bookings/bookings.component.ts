@@ -843,6 +843,71 @@ export interface GroupedBooking {
         font-size: 0.85rem;
       }
     }
+
+    /* Native Mobile App Specific Compact Two-Column Layout */
+    :host-context(.is-mobile-app) .bookings-list {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem !important;
+    }
+    :host-context(.is-mobile-app) .booking-card {
+      padding: 0.75rem !important;
+      gap: 0.5rem !important;
+    }
+    :host-context(.is-mobile-app) .booking-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+    :host-context(.is-mobile-app) .turf-info h3 {
+      font-size: 0.85rem !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 100%;
+    }
+    :host-context(.is-mobile-app) .location-link {
+      font-size: 0.6rem !important;
+    }
+    :host-context(.is-mobile-app) .status-badge {
+      font-size: 0.55rem !important;
+      padding: 2px 4px !important;
+    }
+    :host-context(.is-mobile-app) .flex-card-body {
+      padding: 0.5rem 0 !important;
+      gap: 0.5rem !important;
+    }
+    :host-context(.is-mobile-app) .info-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 2px !important;
+    }
+    :host-context(.is-mobile-app) .label {
+      font-size: 0.6rem !important;
+    }
+    :host-context(.is-mobile-app) .value {
+      font-size: 0.75rem !important;
+    }
+    :host-context(.is-mobile-app) .value.price {
+      font-size: 0.8rem !important;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    :host-context(.is-mobile-app) .booking-actions {
+      gap: 0.5rem !important;
+    }
+    :host-context(.is-mobile-app) .booking-actions-row {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+    }
+    :host-context(.is-mobile-app) .btn-cancel, 
+    :host-context(.is-mobile-app) .btn-share,
+    :host-context(.is-mobile-app) .booking-actions > button {
+      padding: 6px !important;
+      font-size: 0.7rem !important;
+      width: 100% !important;
+      border-radius: 6px !important;
+    }
   `]
 })
 export class BookingsComponent implements OnInit {
