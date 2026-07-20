@@ -26,6 +26,7 @@ export class PaymentComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private bookingRepository = inject(BookingRepository);
   private promoService = inject(PromoService);
+  private inboxService = inject(InboxService);
 
   bookingData: any;
   selectedMethod = signal<string>('razorpay');
@@ -249,6 +250,11 @@ export class PaymentComponent implements OnInit {
         this.isProcessing.set(false);
         this.isSuccess.set(true);
         this.notificationService.success('Payment successful! Booking confirmed.');
+        this.inboxService.addNotification({
+          title: 'Booking Confirmed!',
+          message: `Your booking for ${this.bookingData?.turfName || 'Turf'} is successful.`,
+          type: 'Booking'
+        });
         this.triggerConfetti();
       },
       error: (err) => {
