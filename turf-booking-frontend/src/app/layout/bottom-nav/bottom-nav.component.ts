@@ -137,14 +137,14 @@ import { filter } from 'rxjs/operators';
   .bottom-nav-mobile {
     display: block;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
     z-index: 1000;
     background: var(--bg-card);
-    border-top: 1px solid var(--border-color);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border-radius: 30px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -156,7 +156,7 @@ import { filter } from 'rxjs/operators';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 72px;
+    height: 64px;
     padding: 0 16px;
   }
 
