@@ -37,7 +37,8 @@ export class AuthRepositoryImpl implements AuthRepository {
 
  
   sendRegistrationOtp(emailOrPhone: string): Observable<string> {
-    return this.http.post<any>(`${this.apiUrl}/send-registration-otp`, { emailOrPhone })
+    const fcmToken = typeof window !== 'undefined' ? localStorage.getItem('fcm_token') : null;
+    return this.http.post<any>(`${this.apiUrl}/send-registration-otp`, { emailOrPhone, fcmToken })
       .pipe(map(res => res.data));
   }
 
@@ -47,8 +48,9 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
 
   sendOtp(emailOrPhone: string): Observable<string> {
- return this.http.post<string>(`${this.apiUrl}/send-otp`, { emailOrPhone });
- }
+    const fcmToken = typeof window !== 'undefined' ? localStorage.getItem('fcm_token') : null;
+    return this.http.post<string>(`${this.apiUrl}/send-otp`, { emailOrPhone, fcmToken });
+  }
 
  verifyOtp(emailOrPhone: string, otpCode: string): Observable<AuthResponse> {
  return this.http.post<any>(`${this.apiUrl}/verify-otp`, { emailOrPhone, otpCode })

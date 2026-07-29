@@ -80,6 +80,9 @@ export class FcmNotificationService {
        
        // Add registration listener to send token to backend
        PushNotifications.addListener('registration', (token) => {
+         if (typeof window !== 'undefined') {
+           localStorage.setItem('fcm_token', token.value);
+         }
          this.http.post('https://turf-booking-backend-fixl.onrender.com/api/v1/auth/update-fcm-token', { token: token.value }).subscribe({
            next: () => {},
            error: (err) => {}
